@@ -126,6 +126,14 @@ public class ValueTestMain {
 		vt.test(su);// su에 있는 값이 복사되어 전달된다.
 
 		System.out.println("su: " + su);
+		
+		-----------------------------------------------------------함수 문제
+		//두개의 정수를 더하는 add함수를 구현하고,
+		//main에서 add함수를 호출하여 두개의 숫자를 입력하고
+		//결과를 출력하세요.
+		
+		
+		
 	}
 }
 ```
@@ -384,7 +392,7 @@ Up!!
 숫자입력 : 25
 3회 만에 정답!!!!
 
-```java
+
 public class Start {
 
 	Random rnd = new Random();
