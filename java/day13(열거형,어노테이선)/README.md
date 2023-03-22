@@ -1,8 +1,10 @@
 ### 열거형
-열거형은 상수를 가지고 생성되는 객체들을 한곳에 모아둔 하나의 묶음이다.
-상수를 사용자가 지정한 이름으로부터 0부터 순차적으로 증가시켜준다.
+- 열거형은 상수를 가지고 생성되는 객체들을 한곳에 모아둔 하나의 묶음이다.
+- 상수를 사용자가 지정한 이름으로부터 0부터 순차적으로 증가시켜준다.(index값을 가진다)
+- 클래스처럼 보이게 하는 상수
+- 서로 관련있는 상수들끼리 모아 상수들을 정의하는것
 
-- 상수만 들어갈 수 있다.
+※상수만 들어갈 수 있다.
 
 ex1_Enum 패키지 생성
 
@@ -19,9 +21,9 @@ public enum Item {START,STOP,EXIT}
 - getDeclaringClass()
 - name() : 열거형 상수의 이름을 문자열로 반환
 - ordinal() : 열거형 상수가 정의된 순서를 반환
-- valueof("상수명")
-- valueof(Item.class, "START);
-- values() : 열거형 상수안에 들어있는 내용들을 배열로 반환
+- valueof("상수명") : String값을 enum에서 가져온다 값이 없으면 Exception을 살생시킨다.
+- valueof(Item.class, "START); : 넘겨받은 class에서 String을 찾아, enum에서 가져온다.
+- values() : 열거형 상수안에 들어있는 내용들을 enum타입의 배열로 반환
 
 ### 열거형 데이터 비교 특징
 - 열거형 상수간의 비교에는 ==을 사용할 수 있다.(상수의 주소를 비교)
@@ -46,8 +48,6 @@ public class Ex1_Enum {
 		Item i4 = Item.STOP;
 		System.out.println(i1 == i2);
 		
-		
-    
     System.out.println(d1 > d4);//오류남
     
 	switch(i1) {
@@ -74,9 +74,9 @@ public enum Item {
 	START("시작",">"),STOP("멈춤","<"),EXIT("종료","V");//값을 직접 대입하면 생성자를 만들어줘야 한다.
 	
 	protected String itemStr;
-	protected String Sysmbol
+	protected String Symbol;
 	하지만 다른 클래스에서 생성자를 호출할 수 없다.
-	Item(String str){//private
+	Item(String str){ //private
 	    this.itemStr = str;
 	}
 	
@@ -96,6 +96,7 @@ public class Ex2_Enum {
 	public static void main(String[] args) {
 		
 		/*
+		 * Item item = new Item(); -> 생성자를 외부에서 호출하는것이 불가능하다.
 		 * Item start = Item.START; 
 		 * String str = start.getItemStr(); //하나만 출력하기
 		 * System.out.println(str);
@@ -116,7 +117,7 @@ public class Ex2_Enum {
 package test;
 
 public enum Item {
-	START("시작",">"),STOP("멈춤","<"),EXIT("종료","V");//값을 직접 대입하면 생성자를 만들어줘야 한다.
+	START("시작","s"),STOP("멈춤","p"),EXIT("종료","e");//값을 직접 대입하면 생성자를 만들어줘야 한다.
 	
 	protected String itemStr;
 	protected String symbol;
@@ -143,7 +144,7 @@ package test;
 public class Ex2_Enum {
 	public static void main(String[] args) {
 		
-		/*
+		/*하나의 상수만 출력하기
 		 * Item start = Item.START; 
 		 * String str = start.getItemStr();
 		 * System.out.println(str);
@@ -156,15 +157,19 @@ public class Ex2_Enum {
 	}
 }
 ```
-열거형을 따로 따로 쓴다면
+사실은 열거형 상수 하나하나가 객체이다.<br>
+열거형을 일반적인 클래스로 만들고 상수로 정의를 한다면... 아래와 같은 결과가 된다.<br>
+
 ```java
 public enum Item {
 	START("시작","s"),STOP("멈춤","p"),EXIT("종료","e");
-	
+	↓↓↓↓↓↓		
 public class Item {
 	public static final Item START =  new ITEM("시작","s");
 	public static final Item STOP =  new ITEM("멈춤","p");
 	public static final Item EXIT =  new ITEM("종료","e");
+		
+	정적 상수로 만들어지는 정적 객체이기 때문에 메모리에 한번만 올라간다.
 ```
 
 ### 열거형에 추상메서드 추가하기
@@ -226,7 +231,8 @@ public enum Transportaion {
 		this.fare = fare;
 	}
 	
-	abstract int totalFare(int distance);//사실 추상클래스로 정의할 필요는 없긴하지만 추상클래스가 있을 때 어떻게 작성해야 하는지 보여주기 위한 예제
+	abstract int totalFare(int distance);
+	//사실 추상클래스로 정의할 필요는 없긴하지만 추상클래스가 있을 때 어떻게 작성해야 하는지 보여주기 위한 예제
 	//추상클래스가 들어갈 수 있다는 것은 enum도 추상클래스이다.
 }
 
