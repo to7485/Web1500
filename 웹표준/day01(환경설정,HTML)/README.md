@@ -133,6 +133,30 @@ File > New > Dynamic Web Project
 
 ## HTML
 
+## HTML 주석(Comments)
+-- 주석은 브라우저에서 출력이 되지 않는 설명문장 입니다. 
+-- 소스코드에 대한 설명을 할때 사용합니다.
+\<!-- 로 시작해서 --\>로 마무리 합니다.
+- 주석은 여러줄 입력 할수 있습니다.
+
+```
+예)
+<!DOCTYPE html>
+<html>
+	<head>
+	<!-- Hyper Text Markup Language
+	웹 브라우저의 디자인을 위해 고안된 언어 -->
+		<meta charset="UTF-8">
+		<title>웹표준의 시작</title>
+	</head>
+	
+	<body>
+	<!-- body태그에 작성된 내용이 실제 웹페이지에 표시되는 내용 -->
+		안녕하세요
+	</body>
+</html>
+```
+
 ### 정의
 - HTML은 Hyper Text Markup Language의 약자입니다.
 - HTML은 웹페이지를 만드는 대표적인 마크업 언어입니다
@@ -186,4 +210,330 @@ File > New > Dynamic Web Project
 
 - \<body\>~\</body\>
 	- HTML문서에서 실질적으로 보이는 영역을 정의하는 구간입니다.
-	- 예) 이미지, 본문내용, 링크, 테이블, 제목 등등 
+	- 예) 이미지, 본문내용, 링크, 테이블, 제목 등등
+
+
+## HTML 요소 
+
+![image](https://user-images.githubusercontent.com/54658614/226809179-689d77ca-eca9-4989-8b6c-c8888bdcfc9a.png)
+
+
+- HTML 요소는 일반적으로 태그라는 명칭이 익숙할 수 있습니다.
+-  HTML 요소는 일반적으로 시작 태그와 닫힘 태그로 정의가 됩니다. 다만 시작 태그와 닫힘태그가 없는 유일한 태그도 있습니다.
+```
+   (예 - 줄바꿈 태그 <br> 또는 <br />)
+   <태그> 내용 </태그>
+```
+
+## HTML 속성(attributes)
+- 모든 HTML 요소들은 속성(attributes)를 가지고 있습니다. 
+- 속성(attributes)는 HTML 요소에 대한 추가적인 정보를 제공 합니다.
+- 특정 태그에서의 속성이나 사전 정의된 속성은 적용된 기능으로서 추가정보를 활용합니다.
+
+- 예) 특정기능으로써 속성 예시 a태그, input 태그, img 태그
+```
+<a href='https://www.naver.com' target='_blank'>네이버</a>
+<input type='text' name='subject'>
+<img src='이미지 경로'>
+```
+
+- 예) 추가적인 정보로써 속성 예시
+```
+<div data-sido='인천광역시'>인천광역시</div>
+```
+
+#### HTML 속성 예시
+- href  - 이동할 페이지 링크를 지정할 수 있습니다.
+```
+<a href='https://www.naver.com'>네이버</a>
+```
+
+s- rc - 이미지 경로를 지정할 수 있습니다.
+```
+<img src='photo.jpg'>
+```
+- width, height - 요소의 너비, 높이를 지정합니다.
+```
+<img src='photo.jpg' width='500' height='600'>
+```
+
+- alt -이미지 대체 문구(이미지가 노출이 되지 않는 경우에 대체 노출되는 문구)
+```
+<img src='photo.jpg' alt='배경사진'>
+```
+
+- style - 요소에 직접 스타일을 지정할 수 있습니다(CSS 인라인 형태)
+```
+<p style='color: red;'>빨간색 글씨</p>
+```
+- lang - 웹페이지의 언어를 선언할 수 있습니다. 다만 <html>태그에만 지정할 수 있습니다.
+```
+<html lang="ko">
+```
+- title - 툴팁 형태로 노출되는 추가 정보를 지정할 수 있습니다.
+```
+<p title='툴팁 메세지로 노출됩니다.'>안녕하세요</p>
+```
+	
+### HTML 속성 권장사항
+- 소문자로 사용
+- 속성은 소문자, 대문자 상관 없이 인식을 하나 소문자로 쓰는것을 권장합니다(W3C 권장사항)
+- (title, TITLE 상관없이 인식 가능)
+		
+## HTML의 태그들
+
+### HTML 헤더(Headings)태그
+
+### 정의
+- 헤더는 글의 제목이나 부제목을 표기할 때 사용합니다.
+- 태그는 h1~h6까지 있으며, 숫자가 작을수록 크기가 큽니다.
+
+```
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>heading tag</title>
+	</head>
+	
+		<body>
+			<!--h1이 32px
+			일반적으로 1에서 3정도 까지 주로 사용한다.  -->
+			<h1>Heading 1 tag </h1>
+			<h2>Heading 2 tag </h2>
+			<h3>Heading 3 tag </h3>
+			<h4>Heading 4 tag </h4>
+			<h5>Heading 5 tag </h5>
+			<h6>Heading 6 tag </h6>	
+		</body>
+</html>	
+```
+### 주의사항
+- h1~6 태그의 용도로 헤더 태그를 사용하여야 하며 단순히 글자 크기를 크게하거나(font-size) 강조(bold)표기 용도로 사용하지 말아야 합니다.
+
+### HTML 문단(Paragrahs) 태그
+- 하나의 문단을 표기 표기하는 용도로 사용하며 \<p\>~\</p\> 형태로 사용합니다.
+- 문단을 나누는 용도로 사용하는 태그이므로 \<p\> 태그 전 후로 공백이 추가 됩니다.
+
+```
+예)
+<p>
+This paragraph
+contains a lot of lines
+in the source code,
+but the browser
+ignores it.
+</p>
+```
+
+```
+<p>
+This paragraph
+contains         a lot of spaces
+in the source         code,
+but the        browser
+ignores it.
+</p>
+```
+
+## HTML 서식(Text Formatting) 태그
+- 텍스트 서식을 표현할수 있는 태그
+
+- \<b\>    굵은 텍스트 정의
+- \<em\>  강조된 텍스트 정의
+- \<i\>     기울임 꼴 텍스트 정의
+- \<small\>	더 작은 텍스트 정의
+- \<strong\> 중요한 텍스트 정의
+-\<sub\>	아래 첨자 텍스트 정의
+-\<sup\>	윗 첨자 텍스트 정의
+-\<ins\>	첨가 텍스트 정의
+-\<del\>	지운 텍스트 정의
+-\<mark\>	마킹 / 강조된 텍스트 정의
+
+## HTML 링크(Links)
+- HTML에서 링크는 하이퍼링크입니다.
+
+- 하이퍼링크란 
+- 하이퍼링크는 하이퍼텍스트 문서 안에서 직접 모든 형식의 자료를 연결하고 가리킬 수 있는 참조 고리이다. 이를테면 동영상, 음악, 그림, 프로그램, 파일, 글 등의 특정 위치를 지정할 수 있다. 이는 하이퍼텍스트의 핵심 개념이며, HTML을 비롯한 마크업 언어에서 구현하고 있다. 
+
+- 즉, 하이퍼텍스트 문서는 문서에 다른 문서(다른 HTML)나 이미지, 그림등의 링크를 다수 포함할 수 있고 이동할 수 있는 것을 말하여 그 링크를 하이퍼링크라고 합니다.
+ 
+
+### href 속성
+HTML <a>태그는 하이퍼링크를 정의합니다. a 태그에서 가장 중요한 속성(attribute)는 href 이며 페이지를 이동할 링크(URL)을 지정할 수 있습니다.
+```
+<a href='https://www.naver.com'>네이버</a>
+```
+
+### 경로
+- 절대경로
+	- 절대 경로란 특정문서 페이지 또는 이미지등 자원에 접근할 수 있는 전체 URL을 의미 합니다.
+	- photo.jpg 파일이 서버에서 /web/public/img/photo.jpg에 위치 해 있다면 \<a href='/web/public/img/photo.jpg'\>사진\</a\>과 같이 표현할 수 있습니다.
+
+- 상대경로
+	- 서버에서 /web/public/img/photo.jpg에 위치해 있고 현재 html 경로가 /web/public이라면 \<a href='img/photo.jpg'\> 형태로 표현할 수 있습니다.(현재 경로 기준)
+
+	- 상대경로를 표현하는 방식
+	- ./ 현재 파일이 열려 있는 경로
+	- ../ 현재 파일이 열려 있는 경로보다 1단계 상위 경로
+	- ../../ 현재 파일이 열려 있는 경로보다 2단계 상위 경로
+	
+## HTML 이미지(Images)
+- HTML <img>태그는 웹페이지에서 이미지를 표시하기 위해 사용합니다.
+
+### 필수 속성
+\<img\>태그에는 다음 2개의 필수 속성이 있습니다.
+- src - 이미지 경로를 지정할수 있습니다.
+- alt - 이미지 대체 문구(이미지가 노출이 되지 않는 경우에 대체 노출되는 문구)
+
+### width, height 속성
+- 이미지의 너비와 높이를 지정할 수 있습니다. 다만 이미지의 사이즈는 속성으로 지정하기 보다는 CSS Style로 width, height를 지정하는것이 좋습니다.
+
+```
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>이미지태그</title>
+	</head>
+		
+		<body>
+			<!--alt는 이미지에 대한 대체 텍스트, 이미지에 대한 설명  -->
+			<!--img태그는 인라인 태그  -->
+			<img alt="흙산" src="image/background.jpg">
+			<!--title속성은 툴팁(도움말)으로써 마우스 오버시 화면에 표시  -->
+			<img src="image/float.jpg" alt="구름떼" title="새털구름">
+		</body>
+</html>
+```
+## HTML 테이블(Tables)
+- HTML 테이블은 table, tr, th, td, thead, tbody, tfoot 등으로 구성되어 있으며 
+- tr은 데이터의 행 td, 
+- th는 데이터의 열로 생각할 수 있습니다.
+- th는 테이블 헤더로 테이블 각 열을 대표하는 셀
+- 또한 테이블 태그는 thead - 헤더영역, tbody - 본문영역, tfoot - 본문영역으로 구분하여 사용할 수 있습니다. 
+```
+<!DOCTYPE html>
+	<html>
+		<head>
+			<meta charset="UTF-8">
+			<title>테이블(표)</title>
+		</head>
+		
+		<body>
+			<!-- 1행 1열 -->
+			<table border = "1"> <!-- border : 선의 두께 -->
+				<tr><!-- 행 -->
+					<td>1행 1열</td> <!-- 열 -->
+				</tr>
+				
+				
+			</table>
+			<hr>
+			
+			<!-- 1행 2열 -->
+			
+			<table border = "1"> 
+				<tr><!-- 행 -->
+					<td>1행 1열</td> 
+					<td>1행 2열</td> 
+				</tr>	
+			</table>
+			<hr>
+			
+			<!-- 2행 1열 -->
+			
+			<table border = "1"> 
+				<tr><!-- 행 -->
+					<td>1행 1열</td> <!-- 열 --> 
+				</tr>
+				<tr><!-- 행 -->
+					<td>2행 1열</td>  
+				</tr>		
+			</table>
+			
+			<hr>
+			
+			<table border = "1"> 
+				<tr>
+					<td>1행 1열</td> 
+					<td>1행 2열</td>
+				</tr>
+				<tr>
+					<td>2행 1열</td>
+					<td>2행 2열</td>  
+				</tr>		
+			</table>
+		</body>
+	</html>
+```
+테이블 열 합치기
+```
+<!DOCTYPE html>
+	<html>
+		<head>
+			<meta charset="UTF-8">
+			<title>테이블 열 합치기</title>
+		</head>
+		
+		<body>
+			<table border = "1">
+				<tr>
+					<td colspan="3">메뉴판</td>
+				</tr>
+				
+				<tr>
+					<td>짜장</td>
+					<td>짬뽕</td>
+					<td>탕수육</td>
+				</tr>
+			</table>
+		</body>
+	</html>
+```
+테이블 행 합치기
+
+```
+<!DOCTYPE html>
+	<html>
+		<head>
+			<meta charset="UTF-8">
+			<title>테이블 행 합치기</title>
+		</head>
+		
+		<body>
+			<table border="1">
+				<tr>
+					<td rowspan="2">메뉴판</td>
+					<td>짜장</td>
+				</tr>
+					
+					<td>짬뽕</td>
+				<tr>
+				
+				</tr>
+			</table>
+		</body>
+	</html>
+```
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
