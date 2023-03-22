@@ -311,6 +311,133 @@ s- rc - 이미지 경로를 지정할 수 있습니다.
 ### 주의사항
 - h1~6 태그의 용도로 헤더 태그를 사용하여야 하며 단순히 글자 크기를 크게하거나(font-size) 강조(bold)표기 용도로 사용하지 말아야 합니다.
 
+## HTML Block & Inline 요소
+- 모든 HTML 요소들은 각 태그(요소)에 따른 기본 출력 값(display value)를 가지고 있습니다.
+
+- 출력 값은 block과 inline이 있습니다.
+
+### Block-level 요소
+- 항상 줄개행을 합니다.
+- 공간을 지정할 수 있습니다. 즉, width, height(너비와 높이)를 가질 수 있습니다.(CSS에서 지정)
+- 아래 위 또는 왼쪽 오른쪽에 공백(margin)을 지정할 수 있습니다.
+- 대표적으로 \<div\> 태그는 block-level 요소 입니다.
+- block-level 태그(요소) 
+```
+<address>
+<article>
+<aside>
+<blockquote>
+<canvas>
+<dd>
+<div>
+<dl>
+<dt>
+<fieldset>
+<figcaption>
+<figure>
+<footer>
+<form>
+<h1>
+<h6>
+<header>
+<hr>
+<li>
+<main>
+<nav>
+<noscript>
+<ol>
+<p>
+<pre>
+<section>
+<table>
+<tfoot>
+<ul>
+<video>
+```
+
+### Inline-level 요소
+- 줄개행을 하지 않습니다.
+- 공간을 지정할 수 없습니다. 요소 안에 있는 내용만큼의 공간만 차지합니다.
+- 위 아래 공백(margin)을 지정할 수 없으나, 내부 공백(padding)은 지정할 수 있습니다.
+- 대표적으로 \<span\>태그는 inline-level 요소 입니다.
+```
+<a>
+<abbr>
+<acronym>
+<b>
+<bdo>
+<big>
+<br>
+<button>
+<cite>
+<code>
+<dfn>
+<em>
+<i>
+<img>
+<input>
+<kbd>
+<label>
+<map>
+<object>
+<output>
+<q>
+<samp>
+<script>
+<select>
+<small>
+<span>
+<strong>
+<sub>
+<sup>
+<textarea>
+<time>
+<tt>
+<var>
+```
+
+#### block, inline 태그 실습
+```
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>블록요소와 인라인 요소</title>
+	</head>
+	
+	<body>
+		안녕하세요
+		반갑습니다.
+		저		는 홍길동		입니다.
+		
+		<!--블록요소는 현재 브라우저의 너비만큼 너비를 가득 채우는 영역을 잡고 있다.  -->
+		<p><b>단락</b>을 구별하는 p태그는 블록요소입니다.</p>
+		
+		<!--strong을 쓰는게 권장 사항  -->
+		<p><strong>단락</strong>과 단락 사이는 마진이라는 여백을 통해서 구별되고 있다.</p>
+		<p>
+			<i>링크태그</i>
+			<!--i 와 em 둘다 기울여 쓰기 이지만 em을 권장한다.  -->
+			<em>링크태그2</em>
+			<!--<a>태그는 인라인 요소 : 내가 가지고 있는 내용만큼만 요소를 잡는다  -->
+			<a href="https://www.naver.com/">네이버</a>로가기
+		</p>
+		<p>
+			<a href="ex01_first.html"> ex01로 이동</a>
+			<a href="#"> 페이지4로 이동</a>
+			
+			<!--수평선 태그 : 주로 주제별로 단락을 구별하는 용도로 사용  -->
+			<hr>
+			
+			<!-- br은 강제개행 태그  -->
+			첫번째 줄<br>
+			두번째 줄<br>
+			세번째 줄<br>
+		</p>
+	</body>
+</html>
+```
+
 ### HTML 문단(Paragrahs) 태그
 - 하나의 문단을 표기 표기하는 용도로 사용하며 \<p\>~\</p\> 형태로 사용합니다.
 - 문단을 나누는 용도로 사용하는 태그이므로 \<p\> 태그 전 후로 공백이 추가 됩니다.
@@ -516,24 +643,198 @@ HTML <a>태그는 하이퍼링크를 정의합니다. a 태그에서 가장 중�
 		</body>
 	</html>
 ```
+## HTML 리스트(Lists)태그
+
+- 순서없는 리스트(Unordered HTML List)
+- 순서 없는 리스트는 <ul>태그로 시작하며 리스트 항목들은 <li>~</li> 태그를 사용합니다.
+
+```
+예)
+<ul>
+	<li>홍길동</li>
+	<li>김길동</li>
+	<li>마루치</li>
+</ul>
+
+
+<ul>
+	<li>
+	<a href="#">링크 테스트</a>
+	</li>
+	<li>
+	<img alt="스마일" src="image/acid2Test.jpg">
+	</li>
+	<li>일반 텍스트</li>
+
+</ul>
+```
+
+- 리스트 구분 기본 값은 disc로 색이 채워진 둥근 점 모양입니다.
+- 리스트 구분 값은 css의 list-style-type으로 지정할 수 있습니다.
+	- disc - 기본 값, 채워진 둥근 점
+	- circle - 책이 미워진 둥근 점
+	- square - 사각형 모양 점
+	- none - 구분값 없음
+
+- 적용방식
+```
+<ul style="list-style-type:disc 또는 circle, square, none 중 하나 입력">
+```
+
+
+### 순서 있는 리스트(Ordered HTML List)
+순서 있는 리스트는 \<ol\>태그로 시작하며 리스트 항목들은 \<li\>~\</li\> 태그를 사용합니다.
+
+```
+예) 
+<!-- ol(Ordered List) : 순위, 게시판 등의 순서목록 -->
+<ol>
+	<li>임창정</li>
+	<li>힘든건 사랑이 아니다</li>
+	<li>노래 짱좋아</li>
+</ol>
+```
+
+- 리스트 구분 값은 순서가 있는 숫자나 문자로 표현이 되며 다음과 같은 타입으로 지정하실 수 있습니다.
+
+- \1 - 기본값이며 숫자 순서로 표시됩니다.
+- A - 대문자 알파벳 순서로 표시됩니다.
+- a - 소문자 알파벳 순서로 표시됩니다.I - 대문자 로마 숫자 형식으로 표시됩니다.
+- i - 소문자 로마 숫자 형식으로 표시됩니다.
+
+- 적용방식
+```
+<ol type="1 또는 A, a, I, i 중 하나 입력">
+```
+
+- 시작번호 지정할 경우 start="시작번호"로 지정하며 숫자를 변경할 경우 \<li value="변경숫자"\>로 입력합니다.
+
+#### 깊이가 있는 리스트
+```
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>깊이를 가지는 목록들</title>
+	</head>
+	
+	<body>
+		<ul>
+			<li> 
+				HTML
+				<ul>
+					<li>마루치</li>
+					<li>아라치</li>
+					
+					<li>
+						파란해골13호
+						<ul>
+							<li>14호</li>
+							<li>15호</li>
+						</ul>
+					</li>
+				</ul>
+			</li>
+		</ul>
+		
+		<ol>
+			<li>나는 OL이다.</li>
+			<li>
+				OL의 하위 요소
+				<ol>
+					<li>날슈</li>
+					<li>달하</li>
+				</ol>
+			</li>
+		</ol>
+	</body>
+</html>
+```
+#### 깊이가 있는 리스트 실습
+```
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>깊이가 있는 ul 문제</title>
+	</head>
+	
+	<body>
+		<ul>
+			<li><a href="#">개인뱅킹</a>
+				<ul>
+					<li><a href="#">조회</a></li>
+					<li><a href="#">이체</a></li>
+					<li><a href="#">신규/해지</a></li>
+					<li><a href="#">공과금/법원</a></li>
+					<li><a href="#">뱅킹보안센터</a></li>
+				</ul>			
+			</li>
+			<li><a href="#">자산관리</a>
+				<ul>
+					<li><a href="#">나의지출</a></li>
+					<li><a href="#">이체</a></li>
+					<li><a href="#">신규/해지</a></li>
+					<li><a href="#">공과금/법원</a></li>
+				</ul>
+			</li>
+			<li><a href="#">예금/신탁</a></li>
+			<li><a href="#">대출</a></li>
+			<li><a href="#">펀드</a></li>
+			<li><a href="#">외환</a></li>
+		</ul>
+	</body>
+</html>
+```
+
+### 설명 리스트(Description List)
+- 용어에 대한 설명을 위한 구조로 구성되어 있는 리스트 입니다.
+- \<dl\>~\</dl\> 태그이며 하나의 행을 구성합니다. 
+- 각 행은 \<dt\>~\</dt\>(항목명)와 \<dd\>~\</dd\>(항목 설명)으로 구성되어 있습니다.
+
+```
+예)
+<dl>
+   <dt>상품명</dt>
+   <dd>갤럭시 A12</dd>
+</dl>
+<dl>
+   <dt>판매가</dt>
+   <dd>275,000원</dd>
+</dl>
+```	
+### /<div/>태그
+- div 태그는 Division의 약자로, 레이아웃을 나누는데 주로 쓰입니다.
+- 다른 태그와 다르게 특별한 기능을 갖고 있지는 않지만, 가상의 레이아웃을 설계하는데 쓰이며 주로 CSS와 연동하여 쓰입니다.
+
+#### div 실습
+```
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>div(영역지정 태그)</title>
+	</head>
+	
+	<body>
+		<!-- div : 특정영역별로 묶어서 표시되어야 할 태그들을 하나의 영역으로
+			합쳐서 관리할 수 있도록 해 주는 태그 -->
+		<div>
+			<a href="#">메뉴1</a>
+			<a href="#">메뉴2</a>
+			<a href="#">메뉴3</a>
+		</div>
+		
+		<div>
+			<a href="#">메뉴4</a>
+			<a href="#">메뉴5</a>
+			<a href="#">메뉴6</a>
+		</div>
+			<p>나는 p태그다</p>
+			<p>나는 p태그다2</p>
+	</body>
+</html>
+```
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
