@@ -141,6 +141,10 @@ File > New > Dynamic Web Project
 - HTML은 브라우저에 어떻게 내용을 표시할지 알려주는 역할을 합니다.
 
 ### 기본 구조
+
+![image](https://user-images.githubusercontent.com/54658614/226808086-fb78d205-363b-4f50-a8b3-739b11d256b3.png)
+
+
 ```
 <!DOCTYPE html>
 <html>
@@ -148,8 +152,7 @@ File > New > Dynamic Web Project
     <title>Page Title</title>
   </head>
   <body>
-    <h1>My First Heading</h1>
-    <p>My first paragraph.</p>
+
   </body>
 </html>
 ```
