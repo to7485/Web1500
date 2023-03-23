@@ -130,7 +130,7 @@ CSS는 만들어진 집에 침대는 어디에 배치할지, 조명은 어디에
 ```
       
 ### id
--
+- id의 경우 나중에 서버로 데이터를 넘겨야 하는 경우도 있기 때문에 혼란을 야기할 수 있다.
 ```
 <!DOCTYPE html>
 	<html>
@@ -183,9 +183,11 @@ CSS는 만들어진 집에 침대는 어디에 배치할지, 조명은 어디에
 			.box8{ border-style:ridge;}
 			.box9{ border-style:inset;} /* 두께감은 없지만 그림자는 있음 */
 			
-			.box10{ border:10px outset red;}  /* 한번에 스타일주기 (두께, 스타일, 색깔)  */
+			.box10{ border:20px outset red;}  /* 한번에 스타일주기 (두께, 스타일, 색깔)  */
 			
-			.div1{ border:10px solid green;}
+			.div1{ border:20px green solid;
+				width:200px;
+				height:100px;}
 			
 			.div2{ border-bottom:10px solid blue;
 				   border-right:10px solid blue;}
@@ -223,12 +225,6 @@ CSS는 만들어진 집에 침대는 어디에 배치할지, 조명은 어디에
 ```
 ![image](https://user-images.githubusercontent.com/54658614/227111864-c03a45d0-44c9-4066-a2cf-70c9c9091afe.png)
       
-      
-      
-      
-      
-      
-  
  ### 외부 파일로 적용하는 방법
 - CSS를 외부 파일로 따로 분리하여 작성하는 방식 입니다.
 ```
