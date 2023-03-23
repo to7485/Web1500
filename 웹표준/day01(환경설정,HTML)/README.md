@@ -134,9 +134,9 @@ File > New > Dynamic Web Project
 ## HTML
 
 ## HTML 주석(Comments)
--- 주석은 브라우저에서 출력이 되지 않는 설명문장 입니다. 
--- 소스코드에 대한 설명을 할때 사용합니다.
-\<!-- 로 시작해서 --\>로 마무리 합니다.
+- 주석은 브라우저에서 출력이 되지 않는 설명문장 입니다. 
+- 소스코드에 대한 설명을 할때 사용합니다.
+- \<!-- 로 시작해서 --\>로 마무리 합니다.
 - 주석은 여러줄 입력 할수 있습니다.
 
 ```
@@ -397,6 +397,11 @@ s- rc - 이미지 경로를 지정할 수 있습니다.
 ```
 
 #### block, inline 태그 실습
+
+### HTML 문단(Paragrahs) 태그
+- 하나의 문단을 표기 표기하는 용도로 사용하며 \<p\>~\</p\> 형태로 사용합니다.
+- 문단을 나누는 용도로 사용하는 태그이므로 \<p\> 태그 전 후로 공백이 추가 됩니다.
+
 ```
 <!DOCTYPE html>
 <html>
@@ -436,31 +441,6 @@ s- rc - 이미지 경로를 지정할 수 있습니다.
 		</p>
 	</body>
 </html>
-```
-
-### HTML 문단(Paragrahs) 태그
-- 하나의 문단을 표기 표기하는 용도로 사용하며 \<p\>~\</p\> 형태로 사용합니다.
-- 문단을 나누는 용도로 사용하는 태그이므로 \<p\> 태그 전 후로 공백이 추가 됩니다.
-
-```
-예)
-<p>
-This paragraph
-contains a lot of lines
-in the source code,
-but the browser
-ignores it.
-</p>
-```
-
-```
-<p>
-This paragraph
-contains         a lot of spaces
-in the source         code,
-but the        browser
-ignores it.
-</p>
 ```
 
 ## HTML 서식(Text Formatting) 태그
@@ -507,6 +487,11 @@ HTML <a>태그는 하이퍼링크를 정의합니다. a 태그에서 가장 중�
 	
 ## HTML 이미지(Images)
 - HTML <img>태그는 웹페이지에서 이미지를 표시하기 위해 사용합니다.
+
+프로젝트에 WebContent에 image 폴더 복사해서 넣기
+
+![image](https://user-images.githubusercontent.com/54658614/227101972-884fc663-2d4f-47d6-9940-4c084687c08f.png)
+
 
 ### 필수 속성
 \<img\>태그에는 다음 2개의 필수 속성이 있습니다.
@@ -681,19 +666,8 @@ HTML <a>태그는 하이퍼링크를 정의합니다. a 태그에서 가장 중�
 <ul style="list-style-type:disc 또는 circle, square, none 중 하나 입력">
 ```
 
-
 ### 순서 있는 리스트(Ordered HTML List)
 순서 있는 리스트는 \<ol\>태그로 시작하며 리스트 항목들은 \<li\>~\</li\> 태그를 사용합니다.
-
-```
-예) 
-<!-- ol(Ordered List) : 순위, 게시판 등의 순서목록 -->
-<ol>
-	<li>임창정</li>
-	<li>힘든건 사랑이 아니다</li>
-	<li>노래 짱좋아</li>
-</ol>
-```
 
 - 리스트 구분 값은 순서가 있는 숫자나 문자로 표현이 되며 다음과 같은 타입으로 지정하실 수 있습니다.
 
@@ -708,6 +682,16 @@ HTML <a>태그는 하이퍼링크를 정의합니다. a 태그에서 가장 중�
 ```
 
 - 시작번호 지정할 경우 start="시작번호"로 지정하며 숫자를 변경할 경우 \<li value="변경숫자"\>로 입력합니다.
+
+```
+예) 
+<!-- ol(Ordered List) : 순위, 게시판 등의 순서목록 -->
+<ol>
+	<li>임창정</li>
+	<li>힘든건 사랑이 아니다</li>
+	<li>노래 짱좋아</li>
+</ol>
+```
 
 #### 깊이가 있는 리스트
 ```
@@ -794,14 +778,23 @@ HTML <a>태그는 하이퍼링크를 정의합니다. a 태그에서 가장 중�
 
 ```
 예)
-<dl>
-   <dt>상품명</dt>
-   <dd>갤럭시 A12</dd>
-</dl>
-<dl>
-   <dt>판매가</dt>
-   <dd>275,000원</dd>
-</dl>
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>dl(정의목록)</title>
+	</head>
+	
+	<body>
+		<!-- dl은 ul, ol과 같이 목록화 한 내용을 표기하지만
+			일반적으로 사전적인 명확한 뜻을 가지고 있는 것들 위주로 사용하는 편(영단어) -->
+		<dl>
+			<dt>Bear</dt>
+			<dd>곰</dd>
+			<dd>참다,견디다</dd>
+		</dl>
+	</body>
+</html>
 ```	
 ### \<div\>태그
 - div 태그는 Division의 약자로, 레이아웃을 나누는데 주로 쓰입니다.
