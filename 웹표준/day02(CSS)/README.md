@@ -313,10 +313,42 @@ CSS는 만들어진 집에 침대는 어디에 배치할지, 조명은 어디에
 
 ## Font(폰트)
 ```
-
+<!DOCTYPE html>
+	<html>
+		<head>
+			<meta charset="UTF-8">
+			<title>font</title>
+			
+			<style>
+			.a1{font-size: 30px;} /* 글자 크기 */
+			.a2{font-style: italic;} /* 기본값 : normal */
+			.a3{font-weight: bold;} /* 기본값 : normal */
+			
+			/* 글꼴을 여러종류 준비해두고, 브라우저에서 지원한다면 그것을 사용하되, 지원하지 않는다면 가장 표준적인 글꼴인 sans-serif를 사용한다. */
+			.a4{font-family: "궁서","굴림",sans-serif;}/* 콤마로 구별하는 스타일 */
+			
+			/* 폰트에 속성을 한번에 적용하려면 weight,style,size, family 순으로 적용해야 한다!! 순서를 지키지 않으면 속성 적용이 안된다.  */
+			.a5{font: bold	/* weight */
+					  italic /* style */
+					  30px	/* size */
+					  "궁서","돋움",sans-serif;} /* family */
+					  
+			.a6{font-variant: small-caps;}
+			</style>
+		</head>
+		
+		<body>
+			<p class="a1"> 글자크기</p>
+			<p class="a2"> 글자 스타일</p>
+			<p class="a3"> 글자 두께</p>
+			<p class="a4"> 글꼴 변경</p>
+			<p class="a5"> 글꼴 최종</p>
+			<p class="a6"> The end</p>
+		</body>
+	</html>
 
 ```
-![image](https://user-images.githubusercontent.com/54658614/227429533-c283adb2-ad99-44e0-8323-be2525aa9b1d.png)
+![image](https://user-images.githubusercontent.com/54658614/227431347-f422214c-35e1-4b14-873b-cd59797bd9d8.png)
 
     
  ### 외부 파일로 적용하는 방법
