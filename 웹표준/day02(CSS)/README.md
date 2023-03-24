@@ -348,7 +348,7 @@ CSS는 만들어진 집에 침대는 어디에 배치할지, 조명은 어디에
 	</html>
 
 ```
-![image](https://user-images.githubusercontent.com/54658614/227431347-f422214c-35e1-4b14-873b-cd59797bd9d8.png)
+![image](https://user-images.githubusercontent.com/54658614/227431474-fb561cc2-3f97-46c1-b564-d78abac58010.png)
 
     
  ### 외부 파일로 적용하는 방법
