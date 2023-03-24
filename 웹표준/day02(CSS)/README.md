@@ -179,23 +179,28 @@ CSS는 만들어진 집에 침대는 어디에 배치할지, 조명은 어디에
 			.box4{ border-style:dashed;} /* 긴 점선 */
 			.box5{ border-style:solid;} /* 가장 많이 사용하는 스타일 */
 			.box6{ border-style:double;}
-			.box7{ border-style:groove;} /* 두께감을 가지는 테두리 */
-			.box8{ border-style:ridge;}
-			.box9{ border-style:inset;} /* 두께감은 없지만 그림자는 있음 */
+			.box7{ border:20px groove red;} /* 두께감을 가지는 테두리 */
+			.box8{ border:20px green ridge;}
+			.box9{ border-style:inset 20px green;} /* 두께감은 없지만 그림자는 있음 */
 			
-			.box10{ border:20px outset red;}  /* 한번에 스타일주기 (두께, 스타일, 색깔)  */
+			.box10{ border:20px outset #F00;} /* 한번에 스타일주기 (두께, 스타일, 색깔)  */
 			
-			.div1{ border:20px green solid;
-				width:200px;
-				height:100px;}
+			.div1{ border:10px solid #0f0;}
 			
-			.div2{ border-bottom:10px solid blue;
-				   border-right:10px solid blue;}
+			.div2{ border:10px solid red;
+				   width:200px;
+				   height:100px;}
+			/*옆에 공간이 생겨도 요소가 들어올수 없다 왜 block요소니까*/
 			
 			/* 상,우,하,좌 순으로 각각 다른 두께의 테두리를 주고 싶다면 반드시 border-로 시작하는 속성을 사용해야 한다. */
-			.div3{ border-width:10px 20px 30px 40px;
-			       border-style:solid;
-			       border-color:green;}
+			.div3{ border-bottom : 10px solid blue;
+					border-top : 10px solid green;
+					border-left : 10px solid red;}
+					
+			/*inline태그이기 때문에 원하지 않는 영역까지 침범할 수 있다. */
+			span{border : 5px solid #aaf;
+				width : 500px;
+				height:100px;}
 		</style>
 	</head>
 	
@@ -220,11 +225,100 @@ CSS는 만들어진 집에 침대는 어디에 배치할지, 조명은 어디에
 		<div class="div3">
 			div에 테두리 주기
 		</div>
+		
+		<span>hi</span>
+		<span>hello</span>
 	</body>
 	</html>
 ```
-![image](https://user-images.githubusercontent.com/54658614/227111864-c03a45d0-44c9-4066-a2cf-70c9c9091afe.png)
-      
+![image](https://user-images.githubusercontent.com/54658614/227424421-e35f6ce4-b5e1-4f27-bd4a-b73cfe5d9a04.png)
+
+## padding(패딩)
+- 내용(content)와 테두리(border) 사이의 간격의 크기를 설정해주는 속성
+```
+<!DOCTYPE html>
+	<html>
+		<head>
+		<meta charset="UTF-8">
+		<title>padding(안쪽여백)</title>
+		<style>
+			p{ border:5px solid red;
+		 	background:yellow;}
+		 	
+			.box1{ padding:20px;} /*상자 안에 상,하,좌,우 여백을 준다. */
+		 	.box2{ padding:20px 50px;}/* 상하,좌우 적용*/
+		 	.box3{ padding:20px 50px 30px;}/*상,좌우,하 적용  */
+		 	.box4{ padding:20px 30px 50px 70px;}/*상,우,하,좌 적용 */
+		 	/* 0픽셀인 경우 px단위는 생략이 가능하다. */
+		 	
+		 	/* padding- 방향을 통해 방향별로 패딩을 설정할 수도 있다. */
+		 	.box5{ padding-left : 20px;}
+		 	/* .box5{ padding-left : 0 0 0 20px;} */
+		 		   
+		 	
+		</style>
+		</head>
+		
+		<body>
+			<p class="box1">패딩적용 연습중</p>
+			<p class="box2">패딩적용 연습중</p>
+			<p class="box3">패딩적용 연습중</p>
+			<p class="box4">패딩적용 연습중</p>
+			<p class="box5">패딩적용 연습중</p>
+		</body>
+	</html>
+```
+
+![image](https://user-images.githubusercontent.com/54658614/227425331-8a4d70bd-286f-454b-b881-0b995292104b.png)
+
+- padding을 주다보면 태그의 크기가 커질 수 있다.
+
+## margin(마진)
+- 요소 주변 여백을 뜻합니다.
+```
+<!DOCTYPE html>
+	<html>
+		<head>
+			<meta charset="UTF-8">
+			<title>margin(바깥쪽 여백)</title>
+			<style>
+				p{border:2px solid red;
+				  background: aqua;}
+				  
+				div{border:2px solid red;}
+				
+				#box1{ margin:0;}/* 상,하,좌,우 적용 */
+				#box2{ margin:20px 50px;} /* 상하,좌우 적용 */
+				#box3{ margin:30px 50px 30px;} /*상,좌우,하 적용  */
+				#box4{ margin:50px 30px 40px 70px;}
+				
+				div{ margin: 50px;}
+			</style>
+		</head>
+		
+		<body>
+			<p id="box1">마진적용 테스트중</p>
+			<p id="box2">마진적용 테스트중</p>
+			<p id="box3">마진적용 테스트중</p>
+			<p id="box4">마진적용 테스트중</p>
+			
+			<div id="box5">div마진</div>
+			<div id="box6">div마진</div>
+		</body>
+	</html>
+```
+![image](https://user-images.githubusercontent.com/54658614/227426311-b60e2466-8961-48d5-b924-d8cab96f7321.png)
+
+- margin을 주다보면 태그의 크기가 줄어들 수 있다.
+
+## Font(폰트)
+```
+
+
+```
+![image](https://user-images.githubusercontent.com/54658614/227429533-c283adb2-ad99-44e0-8323-be2525aa9b1d.png)
+
+    
  ### 외부 파일로 적용하는 방법
 - CSS를 외부 파일로 따로 분리하여 작성하는 방식 입니다.
 ```
@@ -243,7 +337,60 @@ CSS는 만들어진 집에 침대는 어디에 배치할지, 조명은 어디에
      </body>
   </html> 
 ```
-  
+## dl CSS 응용 실습
+- 아래와 같은 모습 만들어보기
+
+![image](https://user-images.githubusercontent.com/54658614/227429600-87563155-f888-4604-b2ee-7f405a75e832.png)
+
+    - 우리가 margin이나 padding을 주지 않아도 어느정도 값을 갖고있는 태그들이 있다.
+    
+![image](https://user-images.githubusercontent.com/54658614/227430215-3fd3cb4b-b965-4577-b9fc-a669704b47a1.png)
+
+
+```
+<!DOCTYPE html>
+	<html>
+		<head>
+		<meta charset="UTF-8">
+		<title>Insert title here</title>
+		<style>
+			*{ margin:0; padding:0;} /* *: body안에 있는 모든 태그를 의미한다. */
+			
+			dl{ width: 650px;
+				border: 5px double gray;
+				
+				/* 상하마진0, 좌우마진 브라우저 자동정렬 -> auto를 사용하려면 반드시 width속성이 적용되어 있어야 한다. */
+				margin: 0 auto;}
+			
+			dt{ padding: 15px 0;
+				text-align:center;
+				background:#aaf;
+				border-bottom:10px solid blue;
+				letter-spacing:10px;}/* 자간 */
+			
+			dd{ padding: 10px 0;
+				text-indent:15px;}
+		
+			.line{ border-bottom:3px dotted black;}
+			
+		</style>
+		</head>
+		
+		<body>
+			<dl>
+				<dt>한국의 속담</dt>
+					<dd class="line">
+						까마귀 날자 배 떨어진다.
+					</dd>
+					<dd>
+						발없는 말이 천리 간다.
+					</dd>
+			</dl>
+		
+		</body>
+	</html>
+```
+
   
   
   
