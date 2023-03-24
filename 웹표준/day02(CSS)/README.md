@@ -401,7 +401,7 @@ CSS는 만들어진 집에 침대는 어디에 배치할지, 조명은 어디에
 				letter-spacing:10px;}/* 자간 */
 			
 			dd{ padding: 10px 0;
-				text-indent:15px;}
+				text-indent:15px;}/*  */
 		
 			.line{ border-bottom:3px dotted black;}
 			
