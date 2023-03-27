@@ -68,12 +68,12 @@ CSS는 만들어진 집에 침대는 어디에 배치할지, 조명은 어디에
 			   /* class의 개념은 똑같은 태그가 있을때 구별하기 위한 식별자가 된다. */
 			h2.text{color:#f00;}
             
-          /* p태그중에서 text라는 클래스 이름을 가진것에만 css를 적용해줘
+         	 	/* p태그중에서 text라는 클래스 이름을 가진것에만 css를 적용해줘
 			같은 클래스 이름을 갖고 있어도 좀더 세밀하게 설정할 수 있다.
 			주의! 중간에 띄어쓰기를 넣지 말 것. */
 			p.text{ color:#00f; }
             
-         /* .class명 <-- 특정클래스로 접근할 수 있다.*/
+         		/* .class명 <-- 특정클래스로 접근할 수 있다.*/
 			.text2{ color:#0f0;}
 			</style>
 		</head>
@@ -105,7 +105,7 @@ CSS는 만들어진 집에 침대는 어디에 배치할지, 조명은 어디에
 			<title>일부분 지정 태그(span)를 통한 css변경</title>
 			<style type="text/css">
 				/* .box라는 이름을 가진 클래스의 자식(내부태그)중 h2태그에게만 속성을 적용  중요!
-            띄어쓰기가 내 안에 있는 자식 요소에 적용되기 때문에 띄어쓰기는 주의해서 써야 한다.*/
+            			띄어쓰기가 내 안에 있는 자식 요소에 적용되기 때문에 띄어쓰기는 주의해서 써야 한다.*/
 				body .box h2{color:aqua;}
 				span{color : gray;}
 				body div.box h2 span{color : red;};
@@ -130,7 +130,7 @@ CSS는 만들어진 집에 침대는 어디에 배치할지, 조명은 어디에
 ```
       
 ### id
-- id의 경우 나중에 서버로 데이터를 넘겨야 하는 경우도 있기 때문에 혼란을 야기할 수 있다.
+- id의 경우 나중에 서버로 데이터를 넘겨야 하는 경우도 있기 때문에 중복이 되면 혼란을 야기할 수 있다.
 ```
 <!DOCTYPE html>
 	<html>
@@ -423,12 +423,457 @@ CSS는 만들어진 집에 침대는 어디에 배치할지, 조명은 어디에
 	</html>
 ```
 
+## 배경이미지
+배포받은 이미지 폴더 넣기
+![image](https://user-images.githubusercontent.com/54658614/227840344-1e3bbe4b-cb09-4fdd-bee7-e8e079fd3a93.png)
+```
+<!DOCTYPE html>
+	<html>
+		<head>
+			<meta charset="UTF-8">
+			<title>배경</title>
+			<style>
+				p{border : 1px solid black;
+				  width:300px;
+				  height:300px;
+				  background:url(image/backgroundImage.gif);} 
+				  /* no-repeat(한번만 찍기), 
+				     repeat(바둑판)
+				     repeat-x(x좌표로 출력)
+ 				     repeat-y(y좌표로 출력) */
+				
+			</style>
+		</head>
+		
+		<body>
+			<p></p>
+		</body>
+	</html>
+```
+![image](https://user-images.githubusercontent.com/54658614/227840955-6482ede1-6037-41f0-9223-0f3ea3523797.png)
+
+```
+p{border : 1px solid black;
+  width:300px;
+  height:300px;
+  background:yellow url(image/backgroundImage.gif) repeat-x;} 
+```
+![image](https://user-images.githubusercontent.com/54658614/227841459-c959f15c-a20a-4294-815c-449fb41ce459.png)
   
+### 이미지 위치 지정하기
+```
+<!DOCTYPE html>
+	<html>
+		<head>
+			<meta charset="UTF-8">
+			<title>배경</title>
+			<style>
+				p{border : 1px solid black;
+				  width:300px;
+				  height:300px;
+				  background:url(image/backgroundImage.gif);} 
+				  /* no-repeat(한번만 찍기), 
+				     repeat(바둑판)
+				     repeat-x(x좌표로 출력)
+ 				     repeat-y(y좌표로 출력) */
+				     
+				.b1{ background : url(image/background.jpg) no-repeat right bottom;}
+				.b2{ background : url(image/background.jpg) no-repeat 20px 100px;} /* x좌표 y좌표 */
+				.b3{ background : url(image/background.jpg) no-repeat center;} /* 중앙배치 */
+				.b4{ background : url(image/background.jpg) no-repeat 70% 10%;}
+				
+			</style>
+		</head>
+		
+		<body>
+			<p></p>
+			<p class="b1">
+			나는 눈이 좋아서 꿈에 눈이 오나봐
+			</p>
+			<p class="b2">
+			나는 눈이 좋아서 꿈에 눈이 오나봐
+			</p>
+			<p class="b3">
+			나는 눈이 좋아서 꿈에 눈이 오나봐
+			</p>
+			<p class="b4">
+			나는 눈이 좋아서 꿈에 눈이 오나봐
+			</p>
+		</body>
+	</html>
+```
+![image](https://user-images.githubusercontent.com/54658614/227842541-0b16dcd1-b383-4e69-847f-60baf3dd0032.png)
   
+### ul_background
+```
+<!DOCTYPE html>
+	<html>
+		<head>
+			<meta charset="UTF-8">
+			<title>ul의 CSS 활용</title>
+			
+			<style>
+				.u1 li{ border: 1px solid black;
+						list-style:none/* li에 있는 점을 제거*/;
+						padding-left : 10px;
+						background: url(image/arrow.gif) no-repeat 0 50%;}
+						
+						
+				.u2 li{ background: url(image/arrow.gif) no-repeat 0 50%;
+						padding-left: 10px;
+						list-style:none;
+						margin-left: -10px}
+			</style>
+			
+		</head>
+		
+		<body>
+			<ul class="u1">
+				<li>홈</li>
+				<li>갤러리</li>
+				<li>게시판</li>
+				<li>오시는길</li>
+			</ul>
+			
+			<ul class="u2">
+				<li>홈</li>
+				<li>갤러리</li>
+				<li>게시판</li>
+				<li>오시는길</li>
+			</ul>
+		</body>
+	</html>
+```
+![image](https://user-images.githubusercontent.com/54658614/227843171-490e2c32-3f9f-4fbe-b833-a74a8bb4f20d.png)
   
-  
-  
-  
-  
-  
-  
+## 후손 선택자
+```
+<!DOCTYPE html>
+	<html>
+		<head>
+			<meta charset="UTF-8">
+			<title>후손선택자</title>
+			<style type="text/css">
+			
+			/*  > : 자식선택자는 직계자식에게만 속성을 적용한다. */
+			#header > h1{ color:red;}
+			#contents > h1{ color:blue;}
+
+			</style>
+		</head>
+		
+		<body>
+			<div id="header">
+				<h1>나는 Header의 자식이오</h1>
+				
+				<div id="nav">
+				<h1>navigation</h1>
+				</div>
+				
+				<div id="nav1">
+				<h1>navigation</h1>
+				</div>
+			</div>
+			
+			<div id="contents">
+				<h1>contents의 자식</h1>
+			</div>
+		</body>
+	</html>
+```
+![image](https://user-images.githubusercontent.com/54658614/227844112-dc5f315d-a4c0-4a68-a353-bb4e24d1a695.png)
+
+
+## 자식선택자
+```
+<!DOCTYPE html>
+	<html>
+		<head>
+			<meta charset="UTF-8">
+			<title>자식선택자</title>
+			<style type="text/css">
+			
+			/*  > : 자식선택자는 직계자식에게만 속성을 적용한다. */
+			#header > h1{ color:red;}
+			#contents > h1{ color:blue;}
+			</style>
+		</head>
+		
+		<body>
+			<div id="header">
+				<h1>Header의 자식</h1>  <!-- header의 직계자식 -->
+				
+				<div id="nav">
+				<h1>navigation</h1>
+				</div>
+				
+				<div id="nav1">
+				<h1>navigation</h1>
+				</div>
+			</div>
+			
+			<div id="contents">
+				<h1>contents의 자식</h1> <!-- contents의 직계자식 -->
+			</div>
+		</body>
+	</html>
+```
+
+![image](https://user-images.githubusercontent.com/54658614/227845091-4a10c682-4c1d-4667-9e37-64c86d78e4b5.png)
+
+## 인라인요소 -\> 블록요소
+```
+<!DOCTYPE html>
+	<html>
+		<head>
+			<meta charset="UTF-8">
+			<title>인라인 요소 -> 블록 요소</title>
+			<style type="text/css">
+				img{ display:block;} /* display: block -> 인라인 요소를 블록요소로 바꿈  display: inline -> 블록요소를 인라인요소로 바꿈*/
+				span{ display:block;
+					  border:1px solid red;}
+				
+			</style>
+		</head>
+		
+		<body>
+			<div> 
+				<img src="image/acid2Test.jpg" alt="스마일"/>
+				<span>이미지1</span>
+				<span>웃어요</span>
+				<a href="#">링크</a>
+			</div>
+		</body>
+	</html>
+```
+![image](https://user-images.githubusercontent.com/54658614/227845635-62384bc3-8850-428e-a67b-0c3c8a0ac963.png)
+
+## block_menu
+```
+<!DOCTYPE html>
+	<html>
+		<head>
+			<meta charset="UTF-8">
+			<title>스타일 시트를 통한 메뉴 만들기</title>
+			
+		</head>
+		
+		<body>
+			<div id="box">
+				<h1>KOREA IT</h1>
+				
+				<ul>
+					<li><a href="#">COMPANY</a></li>
+					<li><a href="#">PRODUCT</a></li>
+					<li><a href="#">SERVICE</a></li>
+					<li><a href="#">COMMUNITY</a></li>
+				</ul>
+			</div>
+		
+		</body>
+	</html>
+```
+![image](https://user-images.githubusercontent.com/54658614/227845802-0ad0bbc3-7ef0-4e5a-9136-4554e8554d36.png)
+
+점도 제거하고 마우스를 올렸을 때 색깔이 바뀌도록 만들어보자<br>
+
+```
+<!DOCTYPE html>
+	<html>
+		<head>
+			<meta charset="UTF-8">
+			<title>스타일 시트를 통한 메뉴 만들기</title>
+			
+ 			<style>
+			 *{ margin:0; padding: 0;}
+			li{ list-style:none;}
+			ul{ width:130px;
+				margin-left: 20px}
+				
+			 a{ 	display:block; /* 글씨의 개수가 다르기 때문에 영역을 통일하기 위해 블록으로 만듦*/
+			 	background:#f30;
+			 	padding:5px;/*인라인 요소에서 padding값을 잘못주면 영역을 침범한다.*/
+				margin:3px 0;
+				text-decoration: none; /* a태그 밑줄제거 */
+				color:#fff; /*글자색 변경*/
+				font-weight:bold;
+			 	}
+			 
+			 /*특정한 상황을 구별해주는 키워드
+			    : 가 붙어있으면 가상클래스라고 생각하면 좋다.*/
+			 /* a:hover -> a태그에 마우스 오버시 동작 
+			 가상클래스 일종의 이벤트 처리 */
+			 a:hover{ background:#0c0;
+			          color:#f00;
+			          text-decoration: underline;}
+			 		  
+			 		  
+			</style>
+		</head>
+		
+		<body>
+			<div id="box">
+				<h1>KOREA IT</h1>
+				
+				<ul>
+					<li><a href="#">COMPANY</a></li>
+					<li><a href="#">PRODUCT</a></li>
+					<li><a href="#">SERVICE</a></li>
+					<li><a href="#">COMMUNITY</a></li>
+				</ul>
+			</div>
+		
+		</body>
+	</html>
+```
+![image](https://user-images.githubusercontent.com/54658614/227846065-491da9d9-ac52-45c9-8031-f06ec987df30.png)
+
+## overflow
+```
+<!DOCTYPE html>
+	<html>
+		<head>
+			<meta charset="UTF-8">
+			<title>overflow(영역관리)</title>
+		<style>
+			p{ border: 1px solid black;
+			   width: 150px;
+			   height:70px;
+			   padding:5px;}
+			   
+			   /* 지정된 영역 안에서만 내용을 표시 */
+			.a1{ overflow:hidden;}
+			
+			   /* 내용의 넘침에 관계없이 무조건 스크롤을 보여준다 */
+			.a2{ overflow:scroll;}
+			   
+			   /* 내용dl 넘칠때만 스크롤을 보여준다 */
+			.a3{ overflow:auto;}
+			
+			/* 기본값 - 내용을 모두 표시 */
+			.a4{ overflow:visible ;}
+		</style>
+		
+		</head>
+		
+		<body>
+			<p class="a1">Michaelmas term lately over, and the Lord Chancellor sitting in Lincoln's Inn Hall. Implacable November weather. As much mud in the streets as if the waters had but newly retired from the face of the earth.</p>
+			<p class="a2">Michaelmas term lately over, and the Lord Chancellor sitting in Lincoln's Inn Hall. Implacable November weather. As much mud in the streets as if the waters had but newly retired from the face of the earth.</p>
+			<p class="a3">Michaelmas term lately over, and the Lord Chancellor sitting in Lincoln's Inn Hall. Implacable November weather. As much mud in the streets as if the waters had but newly retired from the face of the earth.</p>
+			<p class="a4">Michaelmas term lately over, and the Lord Chancellor sitting in Lincoln's Inn Hall. Implacable November weather. As much mud in the streets as if the waters had but newly retired from the face of the earth.</p>
+		</body>
+	</html>
+```
+![image](https://user-images.githubusercontent.com/54658614/227847299-22dccf38-0b7b-4d15-ae1b-451a06c91f43.png)
+
+## 가상클래스
+- 제일 위쪽이나 제일 아래쪽에 대해서는 CSS를 적용할 수는 있으나 중간의 요소에는 적용시킬 수 없다는 단점이 있다.
+```
+<!DOCTYPE html>
+	<html>
+		<head>
+			<meta charset="UTF-8">
+			<title>가상클래스 : first-child</title>
+			<style>
+				li{list-style:none;}
+				li:first-child{ color:red;}/* first-child -> 특정 태그를 골라내는 것 */
+				li:last-child{ color:blue;}
+			</style>
+			
+		</head>
+		
+		<body>
+			<ul>
+				<li>A</li>
+				<li>B</li>
+				<li>C</li>
+				<li>D</li>
+			</ul>
+			
+			<ul>
+				<li>A</li>
+				<li>B</li>
+				<li>C</li>
+				<li>D</li>
+			</ul>
+		</body>
+	</html>
+```
+![image](https://user-images.githubusercontent.com/54658614/227848081-8e9c2f19-b621-49f3-8a37-8a2e6b010b78.png)
+
+## pseudo(슈도)클래스
+```
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>pseudo(슈도클래스)</title>
+		<style>
+		li{list-style:none;
+			display:inline;}
+		
+		li:nth-child(odd){ color:red;}/* 홀수번째 태그만 변경 */
+		li:nth-child(even){ color:green;}/* 짝수번째 태그만 변경 */
+		li:nth-child(4n){ color:blue;}/* 4의배수 태그만 변경 */
+		li:nth-child(6){ color:skyblue;
+				 background:yellow;}/* 내가 원하는 번호 태그만 변경 */
+		</style>
+	</head>
+	
+	<body>
+		<ul>
+			<li>1</li>
+			<li>2</li>
+			<li>3</li>
+			<li>4</li>
+			<li>5</li>
+			<li>6</li>
+			<li>7</li>
+			<li>8</li>
+			<li>9</li>
+			<li>10</li>
+		</ul>
+	</body>
+</html>
+```
+
+![image](https://user-images.githubusercontent.com/54658614/227848660-0dd50dc8-ea3f-44fc-b85a-12bd1552e698.png)
+
+## link 가상클래스
+```
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>a태그의 가상클래스</title>
+		<style>
+			li{list-style:none;
+			   margin:5px 0;}
+			 a{ text-decoration: none;
+			 	color:gray; }
+			 	
+			 a:hover {color:orange;
+			 		  text-decoration: line-through} /* 마우스를 올렸을때 */
+			 
+			 /* hover -> active 순서로 작성해야 정상적으로 작동한다. */
+			 a:active {color:red;}					 /* 클릭을 했을 때  */
+		</style>
+	</head>
+	
+	<body>
+		<ul>
+			<li><a href="#">홈</a></li>
+			<li><a href="#">회원가입</a></li>
+			<li><a href="#">사이트맵</a></li>
+			<li><a href="#">오시는길</a></li>
+		</ul>
+	</body>
+</html>
+```
+- 마우스를 올리면 오렌지색으로 바뀜
+- 클릭하면 빨간색으로 바뀜
+
+![image](https://user-images.githubusercontent.com/54658614/227849252-ea370975-0670-4850-9b64-11ec34e0e1b5.png)
+
+
+
