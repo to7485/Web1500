@@ -875,5 +875,266 @@ p{border : 1px solid black;
 
 ![image](https://user-images.githubusercontent.com/54658614/227849252-ea370975-0670-4850-9b64-11ec34e0e1b5.png)
 
+## float
+- float는 원래 '뜨다'라는 의미이다. 웹페이지에서 이미지를 어떻게 띄워서 텍스트와 함께 배치할 것인가에 대한 속성
+- inherit : 부모 요소에서 상속
+- left : 외쪽에 부유하는 블록 박스를 생성
+- right : 오른쪽에 부유하는 블록 박스를 생성
+- none : 요소를 부유시키지 않음
+```
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>float(왼쪽, 오른쪽 정렬)</title>
+		
+		<style type="text/css">
+			*{margin:0;padding:0;}
+			
+			#container{ margin:10px auto; /*좌우를 auto로 결정하면 가운데로 알아서 정렬이 된다  */
+						width:500px;
+						border:5px solid #caa;
+						padding:10px; /* 너비를 유지하면서 padding이 적용되기 때문에 실제 크기는 500px보다 클 수 있다. */
+						background: #fdd;
+						overflow:hidden;}/* 자식태그가 float속성을 가지고 있다면 그 부모는 대부분 overflow:hidden을 가지고 있어야한다. */
+						
+			h1 {text-align: center;}
+			
+			/* float : 블록요소의 객체를 왼쪽이나 오른쪽으로 나란히 정렬하기 위한 속성
+			float은 '부유하다'의 의미를 가지고 있으므로, 부모영역에 영향을 받지 않고 공중에 떠오른 형태가 된다. */
+			
+			.div1 { width:200px;
+				   height:100px;
+				   padding:15px;
+				   background:#dda;
+				   float:left;}
+				   
+			.div2 { width:200px;
+				   height:100px;
+				   padding:15px;
+				   background:#ba7;
+				   float:right;}
+		</style>
+	</head>
+	
+	<body>
+		<div id="container">
+			<h1>float연습</h1>
+			
+			<div class="div1"><p>float을 통한 정렬 예제</p></div>
+			<div class="div2"><p>float을 통한 정렬 예제</p></div>
+		</div>
+	</body>
+</html>
+```
+![image](https://user-images.githubusercontent.com/54658614/228128504-69c6961d-eb32-4135-b992-2252e2ec08cf.png)
 
+## 외부 스타일 시트
+- 웹사이트에 공통적으로 적용해야 하는 스타일이 있다면 하나의 파일을 만들어 한번만 정의해놓고 사용하는 방식입니다.
+- 외부에 작성된 이러한 스타일 시트는 .CSS확장자를 사용하여 저장됩니다.
+- 스타일을 적용할 웹 페이지의 \<head\>태그에 \<link\>태그를 사용하여 외부 스타일 시트를 포함해야만 스타일이 적용됩니다
+
+```
+<!DOCTYPE html>
+	<html>
+		<head>
+			<meta charset="UTF-8">
+			<title>외부스타일시트 참조하기</title>
+		</head>
+		
+		<body>
+			<h1>외부 스타일시트 연습중</h1>
+			<p>안녕하세요</p>
+			
+			<ul>
+				<li>메뉴1</li>
+				<li>메뉴2</li>
+				<li>메뉴3</li>
+			</ul>
+			<a href="#">a링크</a>
+			
+			<table border="1">
+				<tr>
+					<td>테이블1</td>
+					<td>테이블2</td>
+				</tr>
+				<tr>
+					<td>테이블3</td>
+					<td>테이블4</td>
+				</tr>
+			</table>
+		</body>	
+	</html>
+```
+
+WebContent 폴더 아래에 css폴더를 하나 만들자
+
+![image](https://user-images.githubusercontent.com/54658614/228129585-39062a4f-50bc-4d6d-8202-f27d2a1dc1c6.png)
+ 
+폴더에서 우클릭하여 CSS파일을 만들어야 한다 없으면 other로 들어가서 만들자.
+
+![image](https://user-images.githubusercontent.com/54658614/228129728-1c8493e7-e2de-428f-876b-f1387aa524e2.png)
+
+![image](https://user-images.githubusercontent.com/54658614/228129826-35a72044-ca7b-4169-8da9-d146875b5300.png)
+
+```
+@charset "UTF-8";
+
+*{padding:0; margin:0;}
+a{text-decoration:none;}
+li{list-style:none;}
+table{border-collapse:collapse;}/*테이블 테두리를 한겹으로*/
+```
+외부 스타일 시트 적용하기
+```
+<!DOCTYPE html>
+	<html>
+		<head>
+			<meta charset="UTF-8">
+			<title>외부스타일시트 참조하기</title>
+			
+			<link rel="stylesheet" href="css/reset.css">
+		</head>
+		
+		<body>
+			<h1>외부 스타일시트 연습중</h1>
+			<p>안녕하세요</p>
+			
+			<ul>
+				<li>메뉴1</li>
+				<li>메뉴2</li>
+				<li>메뉴3</li>
+			</ul>
+			<a href="#">a링크</a>
+			
+			<table border="1">
+				<tr>
+					<td>테이블1</td>
+					<td>테이블2</td>
+				</tr>
+				<tr>
+					<td>테이블3</td>
+					<td>테이블4</td>
+				</tr>
+			</table>
+		</body>	
+	</html>
+```
+
+![image](https://user-images.githubusercontent.com/54658614/228130457-65872c6d-6272-4452-b7e3-5b1be5461c5c.png)
+
+## position
+```
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>absolute를 통한 스타일시트 적용</title>
+		<link rel="stylesheet" href="css/reset.css">
+		<style>
+			#header{ width:1000px; height:80px; 
+					 margin:10px auto;
+					 border:1px solid blue;
+					 position:relative;}
+					 
+			/* 자식이 position 속성을 absolute으로 가지고 있으면
+			부모가 position 속성을 relative로 가지고 있어야 한다. */
+	 
+			.aa{position:absolute; /* float처럼 요소가 공중에 붕 뜬다. 내 부모가 body라고 생각을 해버리게 된다. */
+			    left: 0; top: 7px;}
+			
+			ul{overflow:hidden;}
+			li{ float:left; }
+			
+			p:last-child{ position:absolute;
+						  right:10px; top:5px;}
+						  
+			.a1{position:absolute;
+				left:350px; top:10px;}
+			.a2{position: absolute;
+				left:225px; top:40px;}
+		</style>
+	</head>
+	
+	<body>
+		<div id="header">
+			<p class="aa">
+				<img alt="이미지" src="image/acid2Test.jpg"
+					width="70"; height="60";>
+			</p>
+			
+			<ul class="a1">
+				<li><img src="image/menu_13.jpg"/></li>
+				<li><img src="image/menu_14.jpg"/></li>
+				<li><img src="image/menu_15.jpg"/></li>
+				<li><img src="image/menu_16.jpg"/></li>
+				<li><img src="image/menu_17.jpg"/></li>
+				<li><img src="image/menu_18.jpg"/></li>
+				<li><img src="image/menu_19.jpg"/></li>
+				<li><img src="image/menu_20.jpg"/></li>
+				<li><img src="image/menu_21.jpg"/></li>
+				
+				</ul>
+				
+				<ul class="a2">
+					<li><img src="image/menu01_12.jpg"/></li>
+					<li><img src="image/menu01_13.jpg"/></li>
+					<li><img src="image/menu01_14.jpg"/></li>
+					<li><img src="image/menu01_15.jpg"/></li>
+					<li><img src="image/menu01_16.jpg"/></li>
+					<li><img src="image/menu01_17.jpg"/></li>
+					<li><img src="image/menu01_18.jpg"/></li>
+					<li><img src="image/menu01_19.jpg"/></li>
+				</ul>
+			<p><img src="image/img_standards.gif"/></p>
+		</div>
+	</body>
+</html>
+```
+![image](https://user-images.githubusercontent.com/54658614/228131928-b87cbc3f-4962-4a1b-8e6b-57f18f4fd342.png)
+
+## layout
+```
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>레이아웃 만들기</title>
+		<link rel="stylesheet" href="css/reset.css"/>
+		<style type="text/css">
+		
+			#a1{margin-left:10px;}
+			
+			ul{ overflow : hidden;}
+			li{ float : left}
+			
+			li{ border-right : 1px solid gray;
+			    border-top : 1px solid gray;
+			    border-bottom: 1px solid gray;}
+			    
+			  a{display : block;
+			    padding : 2px 10px;}
+			  
+			  li:nth-child(1){border-left:1px solid gray;}
+			
+
+		</style>
+	</head>
+	
+	<body>
+			<div id="a1">
+				<ul>
+					<li><a href="#">HTML</a></li>
+					<li><a href="#">CSS</a></li>
+					<li><a href="#">JavaScript</a></li>
+					<li><a href="#">JQuery</a></li>
+					<li><a href="#">Jsp</a></li>
+				</ul>
+			</div>
+
+	
+	</body>
+</html>
+```
+![image](https://user-images.githubusercontent.com/54658614/228135131-3d805920-7c10-4a63-aaa2-4d787b05daa5.png)
 
