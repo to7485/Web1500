@@ -621,7 +621,26 @@ p{border : 1px solid black;
 
 ![image](https://user-images.githubusercontent.com/54658614/227845091-4a10c682-4c1d-4667-9e37-64c86d78e4b5.png)
 
-## 인라인요소 -\> 블록요소
+## display
+		
+- block : 한 영역을 차지 하는 박스형태를 가지는 성질이다. 그렇기 때문에 기본적으로 block은 width값이 100%이다.
+	- block은 height와 width값을 지정할 수 있다.
+	- block은 margin과 padding을 지정할 수 있다.
+		
+- inline : 주로 텍스트를 주입할 때 사용되는 형태이다. 기본적으로 block처럼 width값이 100%가 아닌 컨텐츠 영역만큼 자동으로 잡히게 된다.<br>높이 또한 폰트의 크기만큼 잡힌다.
+	- width와 height를 명시할 수 없다.
+	- margin은 위아래엔 적용되지 않는다.
+	- padding은 좌우 공간과 시각적인 부분이 모두 적용되지만 위아래는 시각적으로는 추가되지만 공간을 차지하지는 않는다.
+		
+- inline-block : inline-block은 말 그대로 inline의 특징과 block의 특징을 모두 가진 요소이다.
+	- 줄바꿈이 이루어지지 않는다.
+	- block처럼 width와 height를 지정할 수 있다.
+	- 만약 width와 height를 지정하지 않을 경우, inline과 같이 컴텐츠만큼 영역이 잡힌다.
+- 블록요소를 인라인 요소로 바꾸고 싶다면 display 속성을 inline으로 주면 된다.
+- 인라인요소를 블록 요소로 바꾸고 싶다면 display 속성을 block으로 주면 된다.
+
+
+		
 ```
 <!DOCTYPE html>
 	<html>
@@ -875,6 +894,45 @@ p{border : 1px solid black;
 
 ![image](https://user-images.githubusercontent.com/54658614/227849252-ea370975-0670-4850-9b64-11ec34e0e1b5.png)
 
+## z-index
+```
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>z인덱스</title>
+		<style type="text/css">
+			*{margin:0; padding:0;}
+			
+			p{ border:1px solid black;
+			   width:80px;
+			   height:80px;
+			   padding:10px;
+			   position:absolute;} /* 겹쳐서 표시 하는데 마지막에 만든게 가장 위로 올라온다. */
+			
+			.box1{ background:yellow;
+				   left:100px; top:100px;
+				   z-index: 3; } /* 화면에 표시되는 순서를 바꿔준다. z인덱스 값이 클수록 화면 위쪽에 보여진다. */
+			.box2{ background:orange;
+				   left:120px; top:120px;
+				   z-index: 2; }
+				   
+			.box3{ background:teal;
+				   left:140px; top:140px; 
+				   z-index: 1;}
+			
+		</style>
+	</head>
+	
+		<body>
+			<p class="box1">박스1</p>
+			<p class="box2">박스2</p>
+			<p class="box3">박스3</p>
+		</body>
+</html>
+```
+![image](https://user-images.githubusercontent.com/54658614/228431870-9c5776d2-c42c-4937-a9a1-422750decb7f.png)
+
 ## float
 - float는 원래 '뜨다'라는 의미이다. 웹페이지에서 이미지를 어떻게 띄워서 텍스트와 함께 배치할 것인가에 대한 속성
 - inherit : 부모 요소에서 상속
@@ -1024,6 +1082,21 @@ table{border-collapse:collapse;}/*테이블 테두리를 한겹으로*/
 ![image](https://user-images.githubusercontent.com/54658614/228130457-65872c6d-6272-4452-b7e3-5b1be5461c5c.png)
 
 ## position
+- static : 기본적인 위치 지정 방식, 문서의 기본적인 흐름을 따른다.
+	- 모든 태그들은 처음에 position : static 상태이다.
+	- left, top, right, bottom값이 적용되지 않는다.
+	- 찰계대로 왼쪽에서 오른쪽, 위에서 아래로 쌓인다.
+
+- relative : static과 유사하나 원래 위치에서 주어진 값만큼 이동한다.
+	- top,right,bottom,left 속성을 사용해 위치 조절이 가능하다.
+	- Relative 속성에서 top:5px을 주면 아래로 5px을 이동한다.
+
+- absolute : 기본 흐름을 따르지 않고 부모 요소의 상대적위치로 지정된다.
+	- 부모 요소의 포지션이 relative, absolute, fixed인 태그가 있다면 부모 요소의 기준으로 움직인다.
+	- 부모 요소의 포지션이 static이라면 body태그를 기준으로 배치된다.
+	- 부모요소가 없다면 포지션 문서의 body를 기준으로 배치된다.
+
+- fixed : fixed 포지션은 화면의 스크롤이나 움직임에 관계 없이 화면의 특정 부분에 고정되는 포지션이다.
 ```
 <!DOCTYPE html>
 <html>
