@@ -554,11 +554,10 @@ p{border : 1px solid black;
 			<meta charset="UTF-8">
 			<title>후손선택자</title>
 			<style type="text/css">
-			
-			/*  > : 자식선택자는 직계자식에게만 속성을 적용한다. */
-			#header > h1{ color:red;}
-			#contents > h1{ color:blue;}
-
+			/* 공백 기호는 후손선택자로서 해당 아이디를 가지는
+			하위 요소들이 모두 영향을 받는다. */
+			#header h1{ color:red;}
+			#contents h1{ color:blue;}
 			</style>
 		</head>
 		
