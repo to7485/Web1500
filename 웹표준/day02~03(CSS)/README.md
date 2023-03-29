@@ -1093,17 +1093,17 @@ table{border-collapse:collapse;}/*테이블 테두리를 한겹으로*/
 ```
 ![image](https://user-images.githubusercontent.com/54658614/228131928-b87cbc3f-4962-4a1b-8e6b-57f18f4fd342.png)
 
-## layout
+## CSS응용 드롭다운 메뉴 만들어보기
 ```
 <!DOCTYPE html>
 <html>
 	<head>
 		<meta charset="UTF-8">
-		<title>레이아웃 만들기</title>
-		<link rel="stylesheet" href="css/reset.css"/>
-		<style type="text/css">
-		
-			#a1{margin-left:10px;}
+		<title>Insert title here</title>
+		<link rel="stylesheet" href="css/reset.css">
+		<style>
+			#a1{margin-left:10px;
+				margin-top:10px;}
 			
 			ul{ overflow : hidden;}
 			li{ float : left}
@@ -1112,19 +1112,38 @@ table{border-collapse:collapse;}/*테이블 테두리를 한겹으로*/
 			    border-top : 1px solid gray;
 			    border-bottom: 1px solid gray;}
 			    
-			  a{display : block;
-			    padding : 2px 10px;}
+			li:nth-child(1){border-left:1px solid gray;}
+			    
+			a{display : block; padding : 2px 10px;}
 			  
-			  li:nth-child(1){border-left:1px solid gray;}
-			
+			a:hover{background:#999;
+			        color:#fff;}
+			        
+			.depth_1{margin-left:10px;}
+			        
+			#menu > li:hover .depth_1 { display : block;}
+			          
+			#menu .depth_1{display:none;
+			             position:absolute;
+			             left:0;
+			             right:0;
+			             text-align:center;}
+			 #menu .depth_1 a{display:block; padding:5px;}
+			          
+			 
 
 		</style>
 	</head>
-	
 	<body>
 			<div id="a1">
-				<ul>
-					<li><a href="#">HTML</a></li>
+				<ul id="menu">
+					<li><a href="#">HTML</a>
+						<ul class="depth_1">
+							<li><a href="#">메뉴1</a></li>
+							<li><a href="#">메뉴2</a></li>
+							<li><a href="#">메뉴3</a></li>
+						</ul>
+					</li>
 					<li><a href="#">CSS</a></li>
 					<li><a href="#">JavaScript</a></li>
 					<li><a href="#">JQuery</a></li>
@@ -1132,9 +1151,8 @@ table{border-collapse:collapse;}/*테이블 테두리를 한겹으로*/
 				</ul>
 			</div>
 
-	
 	</body>
 </html>
 ```
-![image](https://user-images.githubusercontent.com/54658614/228135131-3d805920-7c10-4a63-aaa2-4d787b05daa5.png)
+![image](https://user-images.githubusercontent.com/54658614/228431464-4da6d184-8e6b-4caf-ba37-7438759c237f.png)
 
