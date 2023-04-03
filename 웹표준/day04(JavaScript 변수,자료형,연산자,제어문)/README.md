@@ -95,19 +95,19 @@
 - const : 변수의 재선언과 재대입이 모두 불가능하다.
 
 ### 변수에 저장할 수 있는 자료형
-	- <b>문자형(String)</b> : var 변수 = "사용할 문자나 숫자"; 
-	- <b>숫자형(Number)</b> : var 변수 = 숫자; 또는 Number(”문자와 숫자”);
-	- <b>논리형(Boolean)</b>
-		- var 변수 = true 또는 false; Boolean(데이터);
-		- false - false, 0, null, '', undefined
-	- <b>null</b> : 변수의 값이 비어 있다는 것을 표시할 경우 
-	- <b>undefined</b> : 
-		- 변수가 선언되었을때 값이 지정되지 않았을 경우
-		- 변수를 선언하면 기본값은 undefined 입니다.
+- <b>문자형(String)</b> : var 변수 = "사용할 문자나 숫자"; 
+- <b>숫자형(Number)</b> : var 변수 = 숫자; 또는 Number(”문자와 숫자”);
+- <b>논리형(Boolean)</b>
+	- var 변수 = true 또는 false; Boolean(데이터);
+	- false - false, 0, null, '', undefined
+- <b>null</b> : 변수의 값이 비어 있다는 것을 표시할 경우 
+- <b>undefined</b> : 
+	- 변수가 선언되었을때 값이 지정되지 않았을 경우
+	- 변수를 선언하면 기본값은 undefined 입니다.
 
-	- <b>자료형 체크</b> : typeof 변수 또는 데이터
-	- <b>객체(Object)</b>
-	- **원시값** : 객체 이외의 값(숫자, 문자, 논리값, null, undefined, ""(빈값)
+- <b>자료형 체크</b> : typeof 변수 또는 데이터
+- <b>객체(Object)</b>
+- **원시값** : 객체 이외의 값(숫자, 문자, 논리값, null, undefined, ""(빈값)
 
 ## Operator(연산자)
 - 산술연산자 
