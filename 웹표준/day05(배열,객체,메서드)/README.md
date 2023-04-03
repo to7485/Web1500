@@ -132,10 +132,136 @@
 </html>
   
 ```
+ ## 함수
+- 일련의 처리를 하나로 모아 언제든 호출할 수 있도록 만들어 놓은것
+- 수학 함수와 비슷
+- 함수의 입력 값을 인수, 함수의 출력 값을 반환값
+```javascript 
+function 함수명 (인수) {   
+	처리 로직 
+ 
+   return 출력 반환값
+}
+```
+### 함수 선언문으로 함수 정의하기
+- 함수는 function 키워드를 사용해서 정의
+```javascript
+function square(x) {    
+	var result = x * x; 
+	
+	return result; 
+}  
+``` 
+- square - 함수 이름
+- x - 인수
+- var result = x \* x - 처리 로직 
+- return result - 처리 후 반환값 
+- 참조) 함수명 캐멀 표기법
+
+### 함수 호출
+함수를 호출하려면 함수 이름 뒤에 소괄호 인수를 묶어 입력
+```javascript
+square(3); // 9
+```
+### 인수
+
+함수는 인수를 여러 개 받을 수 있음
+- 인수가 여러 개라면 인수와 인수를 쉼표(,)로 구분
+```javascript
+function add(a, b) {   
+	var c = a + b;
+	return c;
+}
+```
+- 인수를 받지 않는 함수도 정의할 수 있음
+```javascript
+function bark() {    
+	alert("멍멍"); 
+};
+bark(); // 멍멍 
+alert(bark()); // undefined - 반환값이 없으므로
+```
+
+### 함수의 실행흐름
+- 호출된 코드에 있는 인수가 함수 정의문에 대입된다. 
+- 함수 정의문의 중괄호 안에 작성된 플그램이 순차적으로 실행된다.
+- return 문이 실행되면 호출된 코드로 돌아간다. return 문의 값은 함수의 반환값이 된다.
+- return 문이 실행되지 않은 상태로 마지막 문장이 실행되면, 호출한 코드로 돌아간 후에 
+- undefined가 함수의 반환값이 된다.
+
+### 함수 선언문의 끌어올림
+- 자바스크립트 엔진은 변수 선언문과 마찬가지로 함수 선언문을 프로그램의 첫머리로 끌어올림
+- 따라서 함수 선언문은 프로그램 어떤 위치에서도 작성할 수 있다.
+
+```javascript
+alert(square(5)); // 25 
+function square(x) {  return x * x; }
+``` 
+#### 이제 body영역에서 작성한 내용을 Script영역까지 가져와보자.
+- a 태그는 클릭해서 이동하는것은 가능하지만 내용을 가져오는데는 한계가 있다.
+- 자바스크립트와 밀접한 관련이 있는 input 태그는 사용자가 데이터를 입력할 수 있는 입력필드를 정의할 때 사용합니다.
+- input태그의 type속성을 달리함으로써 여러 가지 모양을 나타낼 수 있습니다.
   
-  
-  
-  
-  
+|속성명|속성값|설명|
+|------|---|---|
+|type|button<br>chcekbox<br>color<br>date<br>datetime-local<br>email<br>file<br>hidden<br>image<br>month<br>number<br>password<br>radio<br>range<br>reset<br>search<br>submit<br>tel<br>text<br>time<br>url<br>week<br>|input 요소가 나타낼 타입을 명시함.|
+
+```
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>자바스크립트의 메서드(함수)</title>
+		<script type="text/javascript">
+			function fun01(){
+				alert("메서드 정상 호출됨");
+			}
+			
+			function fun02(n) {//파라미터에 자료형을 적어줄 필요가 없다.
+				//script영역에서 body로 접근하여 특정 객체를 검색
+				var res = document.getElementById("result");
+				
+				res.value = n; //입력상자의 값이 홍길동으로 바뀐다.
+			}
+			
+			function fun03() {
+				//name이라는 아이디를 가진 태그를 찾아서
+				//해당 태그에 쓰여있는 value를 alert()으로 출력하기
+				var res = document.getElementById("name");
+				var value = res.value;
+				alert(value);	
+				
+			}
+			
+			function fun04(){
+				var res = document.getElementById("res").value;
+				var m_div = document.getElementById("m_div");
+				m_div.innerHTML = res;
+				//document.write();를 쓰게 되면 페이지가 아예 새로써진다.
+			}
+		</script>
+	</head>
+	
+	<body>
+		<input type="button" value="버튼1" onclick="fun01();"><!-- onclick : 마우스로 클릭했을 때 실행-->
+		<input type="button" value="파라미터 버튼" onclick="fun02('홍길동');"><br><!-- 문자로 보내고 싶을 때는 홑따옴표라도 묶어서 보내야 한다. -->
+		
+		<hr>
+		<input type="text" value="연습" id="name">
+		<input type="button" value="버튼3" onclick="fun03();"> <!-- 버튼을 눌렀을 때 입력상자에 쓰여있는 값을 호출해보고싶다.  -->
+		
+		<hr>
+		<input id="res">
+		<input type="button" value="버튼3" onclick="fun04();">
+		<div id="m_div">
+		
+		</div>
+		
+		<hr>
+		<input type="password" id="pwd"><br>
+		
+	</body>
+</html>
+```
   
   
