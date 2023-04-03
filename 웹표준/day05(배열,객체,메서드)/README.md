@@ -103,27 +103,27 @@
       //객체 안에 객체가 들어갈 수 있다.
       var circle = {
           center : {x : 1.0, y: 2.0},
-					radius : 2.5
+	radius : 2.5
 			}
-			document.write("<hr>");
+      document.write("<hr>");
 
       document.write('circle.center.x : ',circle.center.x,' circle.center.y : ',circle.center.y+"<br>");
       document.write('circle.radius : ',circle.radius+"<br>");
       document.write("<hr>");
 		
 		
-			//객체 안에 함수가 들어갈 수 있다.
-			var person = {
-					name : "홍길동",
-					age : 30,
-					getInfo : function(){
-						document.write('이름 : ',this.name,"<br>",'나이 : ',this.age,"<br>");
-					}
-			};
+	//객체 안에 함수가 들어갈 수 있다.
+	var person = {
+			name : "홍길동",
+			age : 30,
+			getInfo : function(){
+				document.write('이름 : ',this.name,"<br>",'나이 : ',this.age,"<br>");
+			}
+	};
 			
 			
-			//함수의 호출
-			person.getInfo();
+	//함수의 호출
+	person.getInfo();
 		</script>
 	</head>
 	<body>
