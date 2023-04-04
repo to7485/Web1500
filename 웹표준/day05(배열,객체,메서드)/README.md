@@ -560,11 +560,10 @@ document.getElementsByClassName(class의 이름);
 			//POST: 파라미터가 URL에 노출되지 않는다. 속도가 빠르지 않지만 보안성이 높고 바이너리 타입의 데이터를 전달하는것이 가능하다
 			f.method="get";
 			
-			//검색된 form태그 안에 있는 name을 파라미터로 서버로 전달
+			//입력된 데이터를 전송
+			//f가 가진 name속성이 action으로 지정해둔 페이지에 파라미터로 전달(주소창을 보면 login.jsp?m_id=aaa&m_pwd=1234로 ? 뒤에 파라미터로 전달이 된다.)
 			f.submit();
-			
-			
-			
+
 		}
 		</script>
 	</head>
