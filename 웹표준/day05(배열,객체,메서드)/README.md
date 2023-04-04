@@ -206,6 +206,37 @@ function square(x) {  return x * x; }
 |------|---|---|
 |type|button<br>chcekbox<br>color<br>date<br>datetime-local<br>email<br>file<br>hidden<br>image<br>month<br>number<br>password<br>radio<br>range<br>reset<br>search<br>submit<br>tel<br>text<br>time<br>url<br>week<br>|input 요소가 나타낼 타입을 명시함.|
 
+자바스크립트로 HTML 요소를 제어하려면 그 전에 제어하고자 하는 요소 객체를 먼저 가져와야 합니다.<br>
+물론 Document 객체의 DOM 트리를 타고 올라가 요소 객체를 가져오는 방법도 있지만 Document 객체는 이보다 편리하게 요소 객체를 가져올 수 있는 메서드가 마련되어 있습니다.<br>
+
+### id 속성으로 노드 가져오기
+- HTML 문서의 요소에는 id 속성을 지정할 수 있습니다.
+- id 속성 값은 문서에서 유일한 값이어야 합니다. 따라서 id 속성 값으로 요소 하나를 가리킬 수 있습니다.
+
+```javascript
+document.getElementById(id 값);
+```
+
+### 요소 이름으로 노드 가져오기
+- 인수로 넘긴 문자열과 같은 이름을 가진 태그 목록을 가져올 수 있습니다. 인수로는 태그 이름을 넘깁니다.
+- 태그 이름은 대소문자를 구별하지 않습니다.
+- getElementsByTagName 메서드는 반환값이 복수개의 요소 입니다. 이것은 일반적인 HTML 문서에는 이름이 같은 태그가 많이 사용되기 때문입니다. 
+- getElementsByTagName 메서드는 NodeList 객체를 반환합니다. NodeList 객체는 유사 배열 객체이며 읽기 전용입니다. 
+- 요소 이름 대신 와일드카드(\*)를 지정할 수도 있습니다. 이 경우에는 NodeList에 HTML 문서 안의 모든 요소를 담아서 반환합니다.
+
+```javascript
+document.getElementsByTagName(요소의 태그 이름);
+```
+
+### class 속성 값으로 노드 가져오기
+- class 속성 값은 0개 이상의 식별자(클래스 이름)를 CSS에서 사용하는 공백 문자(공백, 탭 등)로 연결한 문자열로 표기합니다. 이 class 속성으로 class 속성 값을 갖는 요소의 집합이 정의됩니다. 즉, 똑같은 식별라 class 속성 값으로 포함된 요소들이 모인 집합 하나가 정의됩니다.
+- getElementsByClassName 메서드를 사용하면 특정 class  속성 값을 class 속성 값으로 가지는 요소 객체 목록(NodeList)을 가져올 수 있습니다.
+
+```javascript
+document.getElementsByClassName(class의 이름);
+```
+
+#### js_function.html 생성하기
 ```
 <!DOCTYPE html>
 <html>
@@ -263,5 +294,307 @@ function square(x) {  return x * x; }
 	</body>
 </html>
 ```
-  
-  
+![image](https://user-images.githubusercontent.com/54658614/229685111-1c71bc5c-c716-4de4-ad0e-c35beafb3da6.png)
+
+## 구구단 만들기
+```
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Insert title here</title>
+		
+		<style type="text/css">
+			#disp{width:300px; height:300px; background: black; color:white; }
+		</style>
+		
+		<script type="text/javascript">
+		
+		function gugu() {
+			var m_dan = document.getElementById("dan").value;
+			
+			//유효성체크
+			if( m_dan.trim() == '' ){
+				alert("값을 입력해야 합니다.")
+				return; //더이상 진행하지 않고 끝내라
+			}
+			
+			if( m_dan<2 || m_dan>9 ){
+				alert("2~9 만 입력해 주세요")
+				return; //더이상 진행하지 않고 끝내라
+			}
+			
+			//구구단 생성
+			var str = "";
+			
+			for(var i = 1; i<10; i++) {
+				str = str + m_dan + 'X' + i + '=' + (m_dan * i) + "<br>";
+			}
+			var gugudan = document.getElementById("disp");
+			gugudan.innerHTML = str;
+			 
+		}//gugu()
+		var b_show = true;
+		function show() {
+			
+			b_show = !b_show;
+			document.getElementById("bt_show").value = b_show ? "숨기기":"보이기";
+			document.getElementById("disp").style.display = b_show ? 'block' : 'none';
+		}
+		</script>
+	</head>
+	
+	<body>
+		<p>
+			단:
+			<input id="dan">
+			<input type="button" value="계산시작" onclick="gugu();">
+			<input type="button" id="bt_show"  value="숨기기" onclick="show();">
+		</p>
+		
+		<hr>
+		
+		<div id="disp">
+			여기에 구구단
+		</div>
+	</body>
+</html>
+```
+![image](https://user-images.githubusercontent.com/54658614/229685861-d2e09053-76fc-44e9-94a6-28ed1ac7dbbc.png)
+
+## 계산기 만들기
+```
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Insert title here</title>
+		<style type="text/css">
+		li{list-style: none;
+			float:left;
+			margin-left:10px;}
+		ul{overflow:hidden;}
+		input{border-style:none;}
+		</style>
+		<script type="text/javascript">
+		function cal(n) {
+			var num1 = Number(document.getElementById("su1").value);
+			var num2 = Number(document.getElementById("su2").value);
+			var num3 = document.getElementById("result");
+			if(n == '+') {
+				num3.value = num1+num2;
+			}
+			else if(n == '-') {
+				num3.value = num1-num2;
+			}
+			else if(n == '*') {
+				num3.value = num1*num2;
+			}
+			else if(n == '/') {
+				num3.value = num1/num2;
+			}
+			
+		}
+		
+		
+		</script>
+	</head>
+	
+	<body>
+		<table border = "1">
+			<tr>
+				<th class="su">수1</th>
+				<td><input id="su1" placeholder="정수만 입력하세요"></td>
+			</tr>
+			
+			<tr>
+				<th class="su">수2</th>
+				<td><input id="su2" placeholder="정수만 입력하세요"></td>
+			</tr>
+			
+			<tr>
+				<td colspan="2">
+					<ul>
+						<li>
+							<input type="button" value="+" onclick="cal('+');">
+						</li>
+						<li>
+							<input type="button" value="-" onclick="cal('-');">
+						</li>
+						<li>
+							<input type="button" value="*" onclick="cal('*');">
+						</li>
+						<li>
+							<input type="button" value="/" onclick="cal('/');">
+						</li>
+					</ul>
+				</td>
+			</tr>
+					<tr>
+						<th>결과</th>
+						<td><input id="result"></td>
+					</tr>
+		</table>
+	</body>
+</html>
+```
+
+![image](https://user-images.githubusercontent.com/54658614/229686187-0676b0aa-53ac-4486-90ca-7e4015f3756f.png)
+
+
+## 갤러리 만들어보기
+```
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>이미지 슬라이드</title>
+		<style type="text/css">
+			a{text-decoration:none;}
+		</style>
+		
+		<script type="text/javascript">
+			var num = 1;
+			var path="image/img";
+			
+			
+			function prev() {
+				num--;
+				
+				if(num<1) {
+					num = 7;
+				}
+				//gallery라는 아이디를 가진 태그를 검색
+				var my_a = document.getElementById("gallery"); //my_a가 image1.jpg를 갖고 있는 a태그가 된다.
+				my_a.src= path + num + ".jpg";
+				
+			}//prev
+			
+			function next() {
+				num++;
+				
+				if(num>7) {
+					num = 1;
+				}
+				var my_b = document.getElementById("gallery");
+				my_b.src = path + num + ".jpg";
+			}
+			
+			setInterval("next()",1000); // 1초 간격으로 자동으로 next() 메서드를 호출
+		</script>
+	</head>
+	
+	<body>
+	
+		<div id="galleryWrap">
+		
+			<p>
+				<a href="#" onclick="prev();">
+					<img alt="이전" src="image/left_btn.png">
+				</a>
+				
+				<img alt="갤려리" id="gallery" src="image/img1.jpg" width="300" height="200">
+				
+				<a href="#" onclick="next();">
+					<img alt="다음" src="image/right_btn.png">
+				</a>
+			</p>
+		
+		</div>
+		
+	</body>
+</html>
+```
+![image](https://user-images.githubusercontent.com/54658614/229685278-97f71f02-dad3-4958-b43a-e4f2bdcab247.png)
+
+## form태그를 통한 값 전달
+
+### HTML 폼
+- 폼에 입력한 데이터를 웹 서버로 보내고 웹 서버는 그 데이터를 처리한다. 그 결과를 사용자에게 반환하거나 데이터베이스에 저장한다.
+- 클라이언트 측 자바스크립트로 웹 애플리케이션을 만들 때 사용자 입력을 받는 사용자 인터페이스로 사용한다. 이때 데이터 처리는 클라이언트 측 자바스크립트 프로그램이 담당한다.
+
+### 폼 요소와 폼 컨트롤 요소
+- 웹 서버에 데이터를 보낼 때는 다음과 같은 과정을 거칩니다. 우선 form 요소를 작성하고 method와 action 속성을 지정합니다.
+	- <b>method 속성</b> : 데이터 전송 방법("POST" 또는 "GET")
+	- <b>action 속성</b> : 데이터를 처리하는 CGI 프로그램의 URL
+- 그 다음 form 요소 안에 사용자로부터 입력을 받는 input 요소 등의 폼 컨트롤 요소를 배치합니다.
+- 마지막으로 form 요소 안에 데이터를 전송하기 위한 submit 버튼과 데이터 입력을 취소하는 reset 버튼을 배치합니다. 
+
+```
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>form 태그를 통한 데이터 전달1</title>
+		<script type="text/javascript">
+		function check(){
+			var f = document.forms[0] //body에서 form태그가 여러개 존재할 경우 0,1,2,등의 인덱스로 form태그를 구별한다.
+			
+			//form태그에서 id라는  name속성을 가지고 있는 입력상자
+			var myId = f.id.value;
+			if(myId == '') {
+				alert("아이디는 필수 사항입니다.");
+				return;
+			}
+			
+			var myPwd = f.pwd.value;
+			if(myPwd == ''){
+				alert("비밀번호는 필수 사항입니다.");
+				return;
+			}
+			
+			var myAge = f.age.value;
+			if(myAge == ''){
+				alert("나이는 필수 사항입니다.");
+				return;
+			}
+			
+			//파라미터를 전달할 페이지
+			f.action = "login.jsp";
+			
+			//전송방식(GET,POST)
+			//GET: 파라미터가 URL에 노출, 속도가 빠르지만 보안성이 취약
+			//POST: 파라미터가 URL에 노출되지 않는다. 속도가 빠르지 않지만 보안성이 높고 바이너리 타입의 데이터를 전달하는것이 가능하다
+			f.method="get";
+			
+			//검색된 form태그 안에 있는 name을 파라미터로 서버로 전달
+			f.submit();
+			
+			
+			
+		}
+		</script>
+	</head>
+	
+	<body>
+		서버로 전달하고 싶은 모든 데이터는 form 태그 안에 있어야 한다.
+		그렇지 않으면 다른 jsp,java클래스로 전달할수 없다. 매우 중요!
+		
+		<form>
+			<table border = "1"> 
+				<tr>
+					<th>ID : </th>
+					<td><input name="id"></td> <!-- login.jsp에게 name으로 설정되 있는 id와 pwd를 파라미터로 써 날아간다. -->
+				</tr>
+				
+				<tr>
+					<th>AGE : </th>
+					<td><input name="age"></td>
+				</tr>
+				
+				<tr>
+					<th>PWD : </th>
+					<td><input type="password" name="pwd"></td>
+				</tr>
+				
+				<tr >
+					<td colspan="2" align="center">
+						<input type="button" value="전송" onclick="check();">
+						<!--type="submit"으로 보내면 무조건 서버로 날리기 때문에 유효성 체크가 안되므로 일반적으로 쓰이지 않는다. -->
+					</td>
+				</tr>
+			</table>
+		</form>
+	</body>
+</html>
+```
