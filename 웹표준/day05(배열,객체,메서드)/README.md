@@ -528,9 +528,12 @@ document.getElementsByClassName(class의 이름);
 		<title>form 태그를 통한 데이터 전달1</title>
 		<script type="text/javascript">
 		function check(){
-			var f = document.forms[0] //body에서 form태그가 여러개 존재할 경우 0,1,2,등의 인덱스로 form태그를 구별한다.
+			//forms : 현재 html문서내의 form들을 순차적으로 배열로 정의해둔 형태
+			//body에서 form태그가 여러개 존재할 경우 foms배열에 0,1,2,등의 인덱스로 form태그를 구별한다.
+			var f = document.forms[0]; 
 			
 			//form태그에서 id라는  name속성을 가지고 있는 입력상자
+			//document객체가 필요하지 않다 정말 편하다.
 			var myId = f.id.value;
 			if(myId == '') {
 				alert("아이디는 필수 사항입니다.");
@@ -574,7 +577,13 @@ document.getElementsByClassName(class의 이름);
 			<table border = "1"> 
 				<tr>
 					<th>ID : </th>
-					<td><input name="id"></td> <!-- login.jsp에게 name으로 설정되 있는 id와 pwd를 파라미터로 써 날아간다. -->
+					<!--name 속성은 form안에서 특정 input을 찾아낼 수 있도록 해주는 식별자
+					id와 역할은 비슷하지만 id로 지정을 해놓으면 다른 페이지로 값을 전달할 수 없다.-->
+					
+					<!---->
+					
+					<td><input name="id" placeholder="아이디를 입력해주세요"></td> 
+					<!-- login.jsp에게 name으로 설정되 있는 id와 pwd를 파라미터로 써 날아간다. -->
 				</tr>
 				
 				<tr>
@@ -598,3 +607,6 @@ document.getElementsByClassName(class의 이름);
 	</body>
 </html>
 ```
+
+![image](https://user-images.githubusercontent.com/54658614/229689463-0f9ad6de-7430-41b7-b729-4620a403f99c.png)
+
