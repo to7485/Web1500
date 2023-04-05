@@ -532,33 +532,40 @@ document.getElementsByClassName(class의 이름);
 			//body에서 form태그가 여러개 존재할 경우 foms배열에 0,1,2,등의 인덱스로 form태그를 구별한다.
 			var f = document.forms[0]; 
 			
-			//form태그에서 id라는  name속성을 가지고 있는 입력상자
+			//form태그에서 m_id라는  name속성을 가지고 있는 입력상자
 			//document객체가 필요하지 않다 정말 편하다.
-			var myId = f.id.value;
+			var myId = f.m_id.value;
+			
+			//아이디를 입력하지 않았을 때 경고를 띄워주는 유효성 검사
+			//클라이언트 단에서 해주는것이 좋다.
 			if(myId == '') {
 				alert("아이디는 필수 사항입니다.");
 				return;
 			}
 			
-			var myPwd = f.pwd.value;
+			var myPwd = f.m_pwd.value;
 			if(myPwd == ''){
 				alert("비밀번호는 필수 사항입니다.");
 				return;
 			}
 			
-			var myAge = f.age.value;
+			var myAge = f.m_age.value;
 			if(myAge == ''){
 				alert("나이는 필수 사항입니다.");
 				return;
 			}
 			
-			//파라미터를 전달할 페이지
-			f.action = "login.jsp";
+			//form태그에서 서버로 값을 전달하고자 한다면 알아야 하는 것
 			
 			//전송방식(GET,POST)
 			//GET: 파라미터가 URL에 노출, 속도가 빠르지만 보안성이 취약
 			//POST: 파라미터가 URL에 노출되지 않는다. 속도가 빠르지 않지만 보안성이 높고 바이너리 타입의 데이터를 전달하는것이 가능하다
 			f.method="get";
+			
+			//파라미터를 전달할 페이지(처리객체 지정)
+			f.action = "login.jsp";
+			
+
 			
 			//입력된 데이터를 전송
 			//f가 가진 name속성이 action으로 지정해둔 페이지에 파라미터로 전달(주소창을 보면 login.jsp?m_id=aaa&m_pwd=1234로 ? 뒤에 파라미터로 전달이 된다.)
@@ -571,28 +578,31 @@ document.getElementsByClassName(class의 이름);
 	<body>
 		서버로 전달하고 싶은 모든 데이터는 form 태그 안에 있어야 한다.
 		그렇지 않으면 다른 jsp,java클래스로 전달할수 없다. 매우 중요!
-		
+		<!--<form></form>-->
 		<form>
+			<!--<form>태그의 공식적인 자식태그의 형태는 거의 <input> 태그형태로 이루어져 있다고 생각하면된다.
+			<TextArea>는 name 속성을 붙힐 수 있다. 그 외 태그들 <div><a>이런 태그들에는 name을 붙혀도 파라미터로 넘어오지 않는다.-->
+			
 			<table border = "1"> 
 				<tr>
 					<th>ID : </th>
 					<!--name 속성은 form안에서 특정 input을 찾아낼 수 있도록 해주는 식별자
 					id와 역할은 비슷하지만 id로 지정을 해놓으면 다른 페이지로 값을 전달할 수 없다.-->
 					
-					<!---->
+					<!--placeholder : 입력창에 가이드라인을 준다.-->
 					
-					<td><input name="id" placeholder="아이디를 입력해주세요"></td> 
+					<td><input name="m_id" placeholder="아이디를 입력해주세요"></td> 
 					<!-- login.jsp에게 name으로 설정되 있는 id와 pwd를 파라미터로 써 날아간다. -->
 				</tr>
 				
 				<tr>
 					<th>AGE : </th>
-					<td><input name="age"></td>
+					<td><input name="m_age"></td>
 				</tr>
 				
 				<tr>
 					<th>PWD : </th>
-					<td><input type="password" name="pwd"></td>
+					<td><input type="password" name="m_pwd"></td>
 				</tr>
 				
 				<tr >
@@ -609,3 +619,85 @@ document.getElementsByClassName(class의 이름);
 
 ![image](https://user-images.githubusercontent.com/54658614/229689463-0f9ad6de-7430-41b7-b729-4620a403f99c.png)
 
+### form 태그를 검색하는 방법-2
+```
+!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>form 태그를 통한 데이터 전달1</title>
+		<script type="text/javascript">
+		function check(){
+			//form태그에 준 이름을 가지고 바로 검색할 수 있다.
+			var f = document.ff;
+			
+			var myId = f.m_id.value; //유효성 체크를 하기 위해 id의 값을 가져오는것이지 하지 않을거라면 안써도 무방하다
+			
+	
+			//f.method="get";
+			
+			//f.action = "login.jsp";
+			
+			f.submit();
+
+		}
+		</script>
+	</head>
+	
+	<body>
+	<!-- form 태그에 이름을 준다!-->
+		<form name="ff" action="login.jsp" method="GET">
+
+			<table border = "1"> 
+				<tr>
+					<th>ID : </th>
+					<td><input name="m_id" placeholder="아이디를 입력해주세요"></td> 
+
+				</tr>
+				
+				<tr>
+					<th>AGE : </th>
+					<td><input name="m_age"></td>
+				</tr>
+				
+				<tr>
+					<th>PWD : </th>
+					<td><input type="password" name="m_pwd"></td>
+				</tr>
+				
+				<tr >
+					<td colspan="2" align="center">
+						<input type="button" value="전송" onclick="check();">
+					</td>
+				</tr>
+			</table>
+		</form>
+	</body>
+</html>
+```
+
+### form 태그를 검색하는 방법-3
+```
+		<script type="text/javascript">
+		function check(f){
+			
+			f.submit();
+
+		}
+		</script>
+	</head>
+	
+	<body>
+		<form action="login.jsp" method="GET">
+			<table border = "1">
+				<tr >
+				<!--this는 form에만 사용할 수 있다. this.form은 버튼을 포장하고 있는 현재 form 태그를 의미한다.-->
+					<td colspan="2" align="center">
+						<input type="button" value="전송" onclick="check(this.form);">
+					</td>
+				</tr>
+			</table>
+		</form>
+	</body>
+</html>
+```
