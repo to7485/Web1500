@@ -127,6 +127,11 @@ util 폴더에 압축을 풀고 사용하면 된다.
 - 일반계정 : 관리자 계정에게 권한을 부여받은 테이블만 관리할 수 있는 계정
 	- 교육용으로 실습계정이 몇개 들어있다. op,hr,scott...
 	
+### 스키마
+정리가 잘 되어있는 표들의 묶음, 상태 
+RDBMS relationship 관계를 서로 맺고 있다는 것
+관계형 데이터베이스 시스템 : 테이블끼리 서로 관계를 맺는다.
+	
 ### hr 계정 잠금 풀기
 
 win + r 키를 눌러 실행을 켜고 cmd를 입력하여 프롬포트를 연다. 
@@ -160,6 +165,8 @@ ok를 누르면 오라클과 DBeaver의 연결이 완료된다.
 
 ![image](https://user-images.githubusercontent.com/54658614/230540303-417e24ee-0ef6-4d32-bdca-57061b2bf603.png)
 
+Select Data Source 창이 뜸 오라클 선택 F2 눌러서 이름 day00로 수업 날짜에 맞춰 변경<br>
+글자가 잘안보인다면 windows > Preferences > font 검색 > Colors and Fonts > Basic > Text Font 더블클릭 > 글꼴과 크기 변경 가능
 
 ## 테이블
 - 관계형 데이터베이스를 구성하는 기본 데이터 구조로서 행과 열의 구조를 가지며 이 테이블을 이용하여 데이터를 입력, 수정, 삭제, 추출 등을 하게된다.
@@ -174,12 +181,105 @@ ok를 누르면 오라클과 DBeaver의 연결이 완료된다.
 - SQL문장의 끝은 세미콜론(;)으로 맺어야 한다. 
 
 ## SQL문장의 종류
-1. DML(Data Manipulation Language) : 데이터 조작어 사실상 가장 많이 사용하는 쿼리문이 될것! 
-    - select, insert, update, delete를 가지는 문장
-2. DDL(Data Definition Language) : 데이터 정의어
+1. DDL(Data Definition Language) : 데이터 정의어
     - create, alter, drop등의 키워드를 가지는 문장
+2. DML(Data Manipulation Language) : 데이터 조작어 사실상 가장 많이 사용하는 쿼리문이 될것! 
+    - select, insert, update, delete를 가지는 문장
 3. DCL(Data Controll Language) : 데이터 제어어
     - grant, revoke등의 키워드를 가지는 문장
+    
+## DDL(Data Definition Language) : 데이터 정의어
+![image](https://user-images.githubusercontent.com/54658614/215701311-552dc21b-4015-4706-a001-70e59c8b043f.png)
+
+![image](https://user-images.githubusercontent.com/54658614/215701465-b9de4d27-42e2-424b-b1e7-1ef201d29ffb.png)
+
+```
+CREATE TABLE TBL_MEMBER(
+	NAME VARCHAR2(500),
+	AGE NUMBER
+);
+```
+### TBL_MEMBER 삭제
+```
+DROP TABLE TBL_MEMBER;
+```
+
+### 자동차 테이블 생성
+제약 조건 : 테이블을 생성할 때 특정 컬럼에 조건을 부여하여 들어오는 데이터를 검사
+```
+CREATE TABLE TBL_CAR(
+	ID NUMBER,
+	BRAND VARCHAR2(100),
+	COLOR VARCHAR2(100),
+	PRICE NUMBER,
+	CONSTRAINT CAR_PK PRIMARY KEY(ID)
+);
+```
+
+### 테이블 삭제
+```
+DROP TABLE TBL_CAR;
+```
+### 제약 조건 삭제
+```
+ALTER TABLE TBL_CAR DROP CONSTRAINT CAR_PK;
+```
+### 제약 조건 추가
+```
+ALTER TABLE TBL_CAR ADD CONSTRAINT CAR_PK PRIMARY KEY(ID);
+SELECT * FROM TBL_CAR;	
+```
+
+### 동물테이블 생성
+
+```
+CREATE TABLE TBL_ANIMAL(
+	ID NUMBER PRIMARY KEY, 
+--제약조건을 만들어서 PK를 설정하는 법이 있고 이와 같이 간단하게 만드는법도 있다.
+"TYPE" VARCHAR2(100), 
+--오라클에서는 TYPE은 명령어 이기 때문에 명령어를 컬럼으로 사용하고 싶다면 쌍따옴표 안에 넣어야 한다.
+	AGE NUMBER(3),
+	FEED VARCHAR2(100)
+);
+--기존 제약조건 삭제(PK)
+properties > constrains 탭으로 들어가면 제약조건에 이름이 정해져 있다.
+ALTER TABLE TBL_ANIMAL DROP CONSTRAINT Name
+--제약조건 추가(PK)
+ALTER TABLE TBL_ANIMAL ADD CONSTRAINT ANIMAL_PK PRIMARY KEY(ID);
+DROP TABLE TBL_ANIMAL;
+만들었으면 확인을 하고 싶은데요 DML이라는걸 쓰는데 아직 안배웠지만 한번 써보도록 할게요.
+SELECT * FROM TBL_ANIMAL;
+```
+### 제약조건 DEFAULT와 체크
+
+#### 학생 테이블 생성
+
+```
+CREATE TABLE TBL_STUDENT(
+	ID NUMBER,
+	NAME VARCHAR2(100),
+	MAJOR VARCHAR2(100),
+GENDER CHAR(1) DEFAULT 'W' NOT NULL CONSTRAINT BAN_CHAR CHECK(GENDER = 'M' OR GENDER ='W'),
+	BIRTH DATE CONSTRAINT BAN_DATE CHECK(BIRTH >= TO_DATE('1980-01-01','YYYY-MM-DD')),
+	CONSTRAINT STD_PK PRIMARY KEY(ID)
+);
+```
+
+### 테이블을 만들 때 조심해야 하는 부분
+
+무결성 : 데이터의 정확성, 일관성, 유효성이 유지되는 것<br>
+	- 정확성 : 데이터는 애매하지 않아야 한다. EX)노르스름하다 하면 안된다.<br>
+	- 일관성 : 각 사용자가 일관된 데이터를 볼 수 있도록 해야한다.<br>
+	- 유효성 : 데이터가 실제 존재하는 데이터여야 한다.<br>
+			모르겠으면 NULL 이라도 써라 ' ' 따옴표 안을 비워두지 말것<br>
+
+1. 개체 무결성 : 모든 테이블이 PK로 선택된 컬럼을 가져야 한다.<br>
+PK로 선택된 컬럼은 고유한 값을 가져야 하며, 빈 값, NULL값은 허용하지 않는다.<br>
+
+2. 참조 무결성 : 두 테이블의 데이터가 항상 일관된 값을 가지도록 유지하는 것<br>
+
+3. 도메인 무결성 : 컬럼의 타입, NULL값의 허용 등에 대한 사항을 정의하고 올바른 데이터가 입력되었는 지를 확인하는 것 (제약조건을 잘 설정했는가~)<br>
+
 
 데이터베이스에서는 4대 쿼리라고 불릴 정도로 중요한 개념 뭐가 dml 이고 뭐가 ddl 이고 세세하게 외울 필요는 없고 각각의<br>
 키워드를 만났을 때 어떻게 사용하는지만 알면 된다.<br>
