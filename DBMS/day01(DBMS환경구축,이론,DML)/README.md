@@ -79,6 +79,92 @@ https://www.oracle.com/index.html
 
 ![image](https://user-images.githubusercontent.com/54658614/230276265-885421ae-af8b-4092-ab5d-d793754b2657.png)
 
+## DBeaver IDE 설치하기
+- IDE : 통합 개발 환경(IDE)이란 프로그래머가 소프트웨어 코드를 효율적으로 개발하도록 돕는 소프트웨어 애플리케이션입니다.<br> 이는 소프트웨어 편집, 빌드, 테스트, 패키징과 같은 기능을 사용하기 쉬운 하나의 애플리케이션에 통합하여 개발자 생산성을 높입니다.
+
+※ DBeaver는 JDK 가 설치되어있지 않으면 작동을 하지 않는다.
+
+DBeaver 홈페이지 : https://dbeaver.io/
+
+![image](https://user-images.githubusercontent.com/54658614/230538837-c45cd02a-6a1c-40f6-aea6-8a4963a98544.png)
+
+최신버전은 어떤 기능이 바뀌었는지 파악하기 힘들기 때문에 수업을 할 때는 구버전인 5.2.5 버전을 사용할 것이다.<br>
+
+스크롤을 아래로 내려서 이전버전을 받을 수 있는 아카이브로 들어가기
+
+![image](https://user-images.githubusercontent.com/54658614/230538904-603b27c8-c8ba-45f7-b5c6-67375a0f96de.png)
+
+다운로드 받고싶은 버전을 찾아서 들어간다.
+
+![image](https://user-images.githubusercontent.com/54658614/230538950-2bc68b34-8342-4dc5-b197-14cef9b19079.png)
+
+본인의 운영체제에 맞게 다운로드를 해준다.
+
+![image](https://user-images.githubusercontent.com/54658614/230539001-37599182-a5e1-483a-8f0e-b366df1c94d0.png)
+
+util 폴더에 압축을 풀고 사용하면 된다.
+
+![image](https://user-images.githubusercontent.com/54658614/230539081-19ddf391-5326-49f7-9cb9-79ef62a6b9c3.png)
+
+처음 DBeaver를 켜면 다음과 같은 창이 뜬다.
+
+![image](https://user-images.githubusercontent.com/54658614/230539138-9f00132d-1b55-4ece-a541-5a06cbd79309.png)
+
+- 뜨지 않는다면 왼쪽 위에 플러그 모양 버튼을 눌러주자
+
+![image](https://user-images.githubusercontent.com/54658614/230539187-6d7a4044-4694-4153-a7d6-a0e90affa78c.png)
+
+빈칸을 다음과 같이 채워넣어주면 된다.
+
+![image](https://user-images.githubusercontent.com/54658614/230539317-eb33e20e-c975-4591-b1c8-9e2c092d87e3.png)
+
+아마 처음 Oracle을 설치했다면 hr 계정이 잠겨있을 것이다.
+
+
+## 계정
+- sys : 데이터베이스에서 발생하는 모든 문제들을 처리할 수 있는 권한을 가진 super계정
+- system : 데이터베이스를 유지보수 관리 할 때 사용하는 사용자 계정
+- 일반계정 : 관리자 계정에게 권한을 부여받은 테이블만 관리할 수 있는 계정
+	- 교육용으로 실습계정이 몇개 들어있다. op,hr,scott...
+	
+### hr 계정 잠금 풀기
+
+win + r 키를 눌러 실행을 켜고 cmd를 입력하여 프롬포트를 연다. 
+
+![image](https://user-images.githubusercontent.com/54658614/230539594-b6527235-5bf4-4639-b569-c856d5eb2ece.png)
+
+- sqlplus : db접속하기
+	- system 계정으로 로그인을 하자
+	
+![image](https://user-images.githubusercontent.com/54658614/230539678-2fd407ff-d9cc-4062-8d11-86f2a838d1d9.png)
+
+- 계정 잠금 풀기 : Alter user 계정명 account unlock;
+- 계정 비밀번호 설정하기 : alter user 계정명 identified by 비밀번호;
+
+![image](https://user-images.githubusercontent.com/54658614/230539865-a33af57e-0cd6-4419-8e1b-e195be2d5d54.png)
+
+디비버로 돌아와서 TestConnetion을 누르면 드라이버를 요구한다.<br>
+오라클 설치된 곳 안에 라이브러리가 있기 때문에 경로만 잡아주자.
+
+![image](https://user-images.githubusercontent.com/54658614/230539995-5daa712a-9c47-415a-8c71-69f1af30fa0b.png)
+
+![image](https://user-images.githubusercontent.com/54658614/230540093-c5bf48ed-4662-4a82-8164-4f261564c4bc.png)
+
+ok를 누르면 오라클과 DBeaver의 연결이 완료된다.
+
+연결된 오라클을 펼쳐보면 여러가지 샘플 테이블들을 볼 수 있다.
+
+![image](https://user-images.githubusercontent.com/54658614/230540232-2a4e0e59-3486-4d1f-a91b-aa27ac508ea2.png)
+
+스크립트를 생성하여 여러가지 쿼리문들을 작성할 수 있다.
+
+![image](https://user-images.githubusercontent.com/54658614/230540303-417e24ee-0ef6-4d32-bdca-57061b2bf603.png)
+
+
+## 테이블
+- 관계형 데이터베이스를 구성하는 기본 데이터 구조로서 행과 열의 구조를 가지며 이 테이블을 이용하여 데이터를 입력, 수정, 삭제, 추출 등을 하게된다.
+
+![image](https://user-images.githubusercontent.com/54658614/230540594-e2065530-0123-4a00-8b96-c3cc29efc3ce.png)
 
 
 ## SQL문
