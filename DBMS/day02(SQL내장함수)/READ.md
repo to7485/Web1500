@@ -188,6 +188,95 @@ SELECT to_char(sysdate,'yyyy-mm-dd HH:MI:SS') FROM dual;
 |MI|분|
 |SS|초|
 
+<hr>
+
+## 그룹함수
+- 여러 행들에 대한 연산의 결과를 하나의 행으로 반환한다.
+
+|함수|기능|
+|---|------|
+|COUNT|행들의 개수를 반환|
+|MIN|행들의 최소값을 반환|
+|MAX|행들의 최대값을 반환|
+|SUM|행들의 합계를 반환|
+|AVG|행들의 평균을 반환한다.|
+|STDDEV|행들의 표준편차를 반환한다.|
+|VARIANCE|행들의 분산을 반환한다.|
+
+```
+**일반적으로 그룹함수와 일반컬럼을 함께 쓸 수 없다.
+select count(*), first_name from employees;
+
+예) 사원테이블의 전체 사원수를 출력
+select COUNT(*) FROM EMPLOYEES;
+
+예) 사원테이블에서 보너스를 받는 사원의 수를 출력
+select count(commIssion_pct) from employees;
+
+문제) 사원테이블에서 직종이 SA_REP인 사원들의 평균급여, 급여최고액, 급여최저액, 급여의 총 합계를 출력하시오.
+select AVG(salary) AVG,MAX(salary) MAX,MIN(salary) MIN,SUM(salary) SUM
+from employees
+WHERE JOB_ID = 'SA_REP';
+
+예) 부서의 갯수를 출력
+select count(DISTINCT department_id)from employees;
+
+DISTINCT : 중복된 값은 세지 않는다.
+
+문) 부서번호가 80번인 부서의 사원들의 급여의 평균을 출력
+
+SELECT ROUND(AVG(SALARY), 1) AVG FROM EMPLOYEES WHERE DEPARTMENT_ID = 80;
+
+예) 관리자의 수를 출력
+distinct : 중복된 값을 제외
+select count(distinct manager_id) from employees;
+
+
+문제) 사원 테이블에 등록되어있는 모든 사원의 수, 보너스를 받는 인원수, 전체사원 급여의 평균, 등록되어있는 부서의 갯수를 화면에 출력
+select count(employee_id),count(
+				select count(employee_id),count(commission_pct),avg(salary),count(distinct department_id) 
+				from employees; commission_pct),avg(salary),count(distinct department_id) 
+				from employees;
+
+문제) 사원테이블에서 80번 부서에 속하는 사원들의 연봉의 평균을 소수점 두자리까지 반올림하여 출력하시오
+select round(AVG(salary), 2) from employees where department_id = 80;
+
+문제) 사원테이블에서 50번에 속하는 사원들의 급여의 최대값과 최소값을 출력하세요
+select Max(salary),MIN(SALARY), FROM EMPLOYEES WHERE DEAPRTMENT_ID = 50;
+```
+## GROUP BY(그룹화)
+- 특정테이블에서 소그룹을 만들어 결과를 분산시켜 얻고자 할 때
+- GROUP BY : ~별 (예 : 부서별 인원수)
+```
+예) 각 부서별 급여의 평균과 총 합을 출력
+
+SELECT DEPARTMENT_ID, COUNT(*), AVG(SALARY), SUM(SALARY) FROM EMPLOYEES GROUP BY DEPARTMENT_ID;
+
+GROUP BY로 소그룹을 지정하고 싶은 컬럼이 있는데 이걸 SELECT에서도 사용하고 싶으면 GROUP BY에 작성해놓은 컬럼명만 SELECT에 추가할 수 있다.
+
+예) 부서별, 직종별로 그룹을 나눠서 인원수를 출력 단, 부서번호가 낮은순으로 정렬하시오.
+
+SELECT DEPARTMENT_ID, JOB_ID, COUNT(*) FROM EMPLOYEES GROUP BY DEPARTMENT_ID, JOB_ID ORDER BY DEPARTMENT_ID;
+
+부서가 같아도 직종이 다른 경우가 있기 때문에 좀더 세부적인 결과물을 가져올수 있는게 GROUP BY다.
+
+문) 각 직종별 인원수를 출력
+
+SELECT JOB_ID, COUNT(*) FROM EMPLOYEES GROUP BY JOB_ID;
+
+문) 각 직종별 급여의 합을 출력
+
+SELECT JOB_ID, SUM(SALARY) FROM EMPLOYEES GROUP BY JOB_ID;
+괄호안에 어떤걸 넣어야 하는지 알면 난이도가 많이 내려간다.
+
+문) 부서별로 가장 높은 급여를 조회
+
+SELECT DEPARTMENT_ID, MAX(SALARY) FROM EMPLOYEES GROUP BY DEPARTMENT_ID;
+
+문) 부서별 급여의 합계를 내림차순으로 조회
+
+SELECT DEPARTMENT_ID, SUM(SALARY) FROM EMPLOYEES GROUP BY DEPARTMENT_ID ORDER BY SUM(SALARY) DESC;
+```
 
 
 
