@@ -17,6 +17,8 @@
    DELETE FROM 테이블명	행 1개가 통째로 날아감<br>
    WHERE 조건식<br>
 
+## SELECT
+
 ```
 예) employees(사원)테이블의 모든 정보를 조회하시오
 
@@ -190,32 +192,7 @@ select employee_id ,first_name from employees where first_name like'H_ _ _ _ _%'
 select employee_id, first_name from employees where first_name not like'%s%';
 
 ```
-### ORDER BY (정렬)
-- 질의 결과에 반환되는 행들을 특정 기준으로 정렬하고자 할 때 사용
-- ORDER BY절은 SELECT절의 가장 마지막에 기술
-- ASC : 오름차순(생략가능)
-- DESC: 내림차순(생략불가)
-
-```
-예) 사원테이블에서 급여를 많이받는 사원순으로 사번, 이름, 급여, 입사일을 출력하시오 단, 급여가 같을 경우
-     입사일이 빠른순으로 정렬
-SELECT EMPLOYEE_ID,FIRST_NAME,SALARY,HIRE_DATE FROM EMPLOYEES ORDER BY SALAY DESC, hire_date ASC;
-오름차순은 안써도 defalut로 적용 조건(WHERE)절이 없다면 그냥 FROM 뒤에 ORDER BY를 적는다.
-
-정렬을 하고 봤더니 똑같은 급여를 받는 사람이 생각보다 많다. 이런 경우에 먼저 입사한 사람을 먼저 보여주면 좋겠는데 내가 정렬
-하고자 하는 기준이 똑같을 때 다른 정렬 기준을 두번째 세번째 추가적으로 정렬기준을 정할 수 있다.
-
-문제)사원테이블에서 부서번호가 빠른순, 부서번호가 같다면 직종이 빠른순, 직종까지 같다면 급여를 많이 받는순으로
-	사번,이름, 부서번호, 직종,급여순으로 출력
-
-select employee_id, first_name, department_id, job_id, salary
-from employees 
-order by department_id, job_id, salary DESC;
-
-문) 급여가 15000이상인 사원들의 사번, 이름, 급여, 입사일을 입사일이 빠른 순으로 조회
-
-SELECT EMPLOYEE_ID, FIRST_NAME, SALARY, HIRE_DATE FROM EMPLOYEES WHERE SALARY >=15000 ORDER BY HIRE_DATE ASC;
-```
+## INSERT
 ```
 SELECT * FROM FLOWER; *는 컬럼명부터 검색을 하기 때문에 실제로 컬럼을 쳐주는게 속도가 훨씬 빠르다. 지금은 데이터가 별로 없어서 차이가 안나지만 나중에 백만, 천만개 있으면 속도 차이가 분명히 난다.
 
@@ -257,11 +234,47 @@ VALUES('20210505003','RED','사각형','할미꽃');
 INSERT INTO POT
 (POTID, POTCOLOR, POTSHAPE, NAME)
 VALUES('20210505004','RED','타원형','할미꽃');
-
+```
+## DELETE
+```
 --삭제 : 부모와 자식중 자식테이블에서 참조하는 값들을 먼저 삭제해야 한다.
 
 DELETE FROM POT WHERE NAME = '장미';
 DELETE FROM FLOWER WHERE FLOWERNAME = '장미';
+```
+
+## UPDATE
+```
+UPDATE POT
+SET POTCOLOR = 'WHITE'
+WHERE NAME = '할미꽃' AND POTSHAPE = '타원형';
+```
+
+### ORDER BY (정렬)
+- 질의 결과에 반환되는 행들을 특정 기준으로 정렬하고자 할 때 사용
+- ORDER BY절은 SELECT절의 가장 마지막에 기술
+- ASC : 오름차순(생략가능)
+- DESC: 내림차순(생략불가)
+
+```
+예) 사원테이블에서 급여를 많이받는 사원순으로 사번, 이름, 급여, 입사일을 출력하시오 단, 급여가 같을 경우
+     입사일이 빠른순으로 정렬
+SELECT EMPLOYEE_ID,FIRST_NAME,SALARY,HIRE_DATE FROM EMPLOYEES ORDER BY SALAY DESC, hire_date ASC;
+오름차순은 안써도 defalut로 적용 조건(WHERE)절이 없다면 그냥 FROM 뒤에 ORDER BY를 적는다.
+
+정렬을 하고 봤더니 똑같은 급여를 받는 사람이 생각보다 많다. 이런 경우에 먼저 입사한 사람을 먼저 보여주면 좋겠는데 내가 정렬
+하고자 하는 기준이 똑같을 때 다른 정렬 기준을 두번째 세번째 추가적으로 정렬기준을 정할 수 있다.
+
+문제)사원테이블에서 부서번호가 빠른순, 부서번호가 같다면 직종이 빠른순, 직종까지 같다면 급여를 많이 받는순으로
+	사번,이름, 부서번호, 직종,급여순으로 출력
+
+select employee_id, first_name, department_id, job_id, salary
+from employees 
+order by department_id, job_id, salary DESC;
+
+문) 급여가 15000이상인 사원들의 사번, 이름, 급여, 입사일을 입사일이 빠른 순으로 조회
+
+SELECT EMPLOYEE_ID, FIRST_NAME, SALARY, HIRE_DATE FROM EMPLOYEES WHERE SALARY >=15000 ORDER BY HIRE_DATE ASC;
 ```
 
 
