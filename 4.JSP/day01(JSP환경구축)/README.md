@@ -117,6 +117,90 @@ File > New > Dynamic Web Project
 ![image](https://user-images.githubusercontent.com/54658614/226806619-cd77fd30-19cf-4371-807e-3981021559f0.png)
 
 #### 구조
-- 당분간 src는 사용할 일이 없을것이다.
+- WebContent에서 HTML파일이 아닌 JSP파일을 만든다.
 
-![image](https://user-images.githubusercontent.com/54658614/226806767-e6c537e0-c70a-4e47-9036-b8cb89b6a14f.png)
+![image](https://user-images.githubusercontent.com/54658614/230703065-42ef6943-1e5a-4176-9a52-c54664c3706a.png)
+
+HTML과는 별로 차이점이 없어보인다.
+
+```
+기본적으로 갖고 있어야 하는 정보들이 기입이 되어있다. 
+<%@page import="java.util.Random"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    
+<!-- JSP(Java Server Page) : 연산능력을 가지고 있는 html
+자바코드도 사용할 수 있고 자바스크립트를 사용하는데도 제약이 없다.-->
+
+<%
+	//스크립트릿(Scriptlet) : jsp에서 자바코드를 사용하기 위해 지정하는 영역
+	//request(요청처리객체),response(응답처리객체) 등의 객체는
+	//jsp가 web페이지로 전환되는 과정에서 만나는 Servlet클래스가 가진 객체이므로
+	//jsp에서는 Servlet클래스가 허용하는 범위안에서 객체를 마음대로 가져다 사용할 수 있다.
+	String ip = request.getRemoteAddr();
+	
+	//난수만들기
+	Random rnd = new Random();//헤더파일에 Random클래스에 import 필수
+	int num = rnd.nextInt(5) + 1;
+%>
+    
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<p>&lt;%@내용%&gt; : jsp헤더- 실행시 인코딩, import등을 위해 반드시 지정해야 하는 영역</p>
+	<p>&lt;% 자바코드 %&gt; : 스크립트릿 - jsp에서 자바코드를 작성하기 위해 생성하는 영역</p>
+	<p>&lt;%= 변수명 %&gt; : 스크립트릿의 출력코드</p>
+	<%= ip %> <!-- 주의 변수뒤에 ;콜론 붙히면 안됨  -->
+	<br>
+	난수 : <%= num %>
+</body>
+</html>
+```
+JSP에도 BODY부분이 있기 때문에 웹으로 출력이 될텐데 바로 출력이 될 수는 없다.
+중간에 SERVLET이라는 클래스를 거친다.
+
+![image](https://user-images.githubusercontent.com/54658614/230704173-f9cdfc41-4e32-463f-bf1a-d835d011de45.png)
+
+JSP는 SERVLET이 가지고 있는 객체를 가져다가 사용할 수 있다.
+
+#### test2.jsp 만들기
+- jsp는 어떻게 사용을 해야할까?
+- 만약 DB에서 정보가 넘어왔다면 어떻게 처리해야할까??
+```
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    
+<%
+	//DB에서 다섯개의 과일목록을 가지고 왔다고 가정
+	String[] fruit = {"사과","배","참외","토마토","복숭아"};
+%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<ul>
+		<li><%= fruit[0] %></li>
+		<li><%= fruit[1] %></li>
+		<li><%= fruit[2] %></li>
+		<li><%= fruit[3] %></li>
+		<li><%= fruit[4] %></li> 이렇게 작성을 하면 나중에 6개의 과일이 넘어오면 처리하기가 힘들다.
+    
+    <%for(int i = 0; i<fruit.length;i++){ %>
+		<li><%= fruit[i] %></li>
+		<%} %>
+    
+	</ul>
+
+</body>
+</html>
+```
+
+
+
