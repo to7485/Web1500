@@ -193,6 +193,10 @@ Select Data Source 창이 뜸 오라클 선택 F2 눌러서 이름 day00로 수�
 
 ![image](https://user-images.githubusercontent.com/54658614/215701465-b9de4d27-42e2-424b-b1e7-1ef201d29ffb.png)
 
+### kEY
+
+![image](https://user-images.githubusercontent.com/54658614/230701666-581c4ce7-8cc5-46cf-8d1e-2574b468db81.png)
+
 ```
 CREATE TABLE TBL_MEMBER(
 	NAME VARCHAR2(500),
@@ -203,6 +207,9 @@ CREATE TABLE TBL_MEMBER(
 ```
 DROP TABLE TBL_MEMBER;
 ```
+
+
+
 
 ### 자동차 테이블 생성
 제약 조건 : 테이블을 생성할 때 특정 컬럼에 조건을 부여하여 들어오는 데이터를 검사
