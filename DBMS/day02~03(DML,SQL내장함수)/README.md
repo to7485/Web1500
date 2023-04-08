@@ -194,46 +194,36 @@ select employee_id, first_name from employees where first_name not like'%s%';
 ```
 ## INSERT
 ```
-SELECT * FROM FLOWER; *는 컬럼명부터 검색을 하기 때문에 실제로 컬럼을 쳐주는게 속도가 훨씬 빠르다. 지금은 데이터가 별로 없어서 차이가 안나지만 나중에 백만, 천만개 있으면 속도 차이가 분명히 난다.
+INSERT INTO TBL_STUDENT
+(ID, NAME, MAJOR, GENDER, BIRTH)
+VALUES(0,'한동석','컴퓨터공학과','A',to_date('1980-01-02','YYYY-MM-DD'));
 
-SELECT FLOWERNAME,FLOWERCOLOR, FLOWERPRICE FROM FLOWER;
+ban_char 위반 오류 뜸
 
-INSERT INTO FLOWER
-(FLOWERNAME, FLOWERCOLOR, FLOWERPRICE)
-VALUES('장미','RED',3000);
+INSERT INTO TBL_STUDENT
+(ID, NAME, MAJOR, GENDER, BIRTH)
+VALUES(0,'한동석','컴퓨터공학과','M',to_date('1979-01-02','YYYY-MM-DD'));
 
-INSERT INTO FLOWER -> 영역 드래그 하고 CTRL+ALT + ↓ 누르면 복사됨
-(FLOWERNAME, FLOWERCOLOR, FLOWERPRICE)
-VALUES('장미','RED',3000); -> 똑같은 값을 넣으면 오류남
+ban_date 위반 오류 뜸
 
-INSERT INTO FLOWER
-(FLOWERNAME, FLOWERCOLOR, FLOWERPRICE)
-VALUES('해바라기','YELLOW',5000);
+INSERT INTO TBL_STUDENT
+(ID, NAME, MAJOR, GENDER, BIRTH)
+VALUES(0, '한동석', '컴퓨터공학과', 'M' , to_date('2000-05-05','YYYY-MM-DD'));
 
-실제로 고객이 값을 넣고 컨트롤 엔터를 치지않는다. 버튼을 클릭하거나 바코드를 대거나 등록하기 버튼을 누른다거나...이런것들을 필요로 하면은 사실 데이터베이스 하나만으로는 뭔갈 만들기가 힘들다. 데이터베이스는 하나의 도구일 뿐이고 입력받거나 하는건 어플리케이션 ,모바일,웹 이런걸 필요로 한다.
+SELECT * FROM TBL_STUDENT;
 
-INSERT INTO FLOWER
-(FLOWERNAME, FLOWERCOLOR, FLOWERPRICE)
-VALUES('할미꽃','WHITE',9000);
+INSERT INTO TBL_STUDENT
+(ID,NAME,MAJOR,BIRTH) --GENDER 생략해보기
+VALUES(0,'홍길동','컴퓨터공학과',TO_DATE('2000-09-05','YYYY-MM-DD'));
 
--- 추가 : 부모와 자식 중 부모테이블의 값을 먼저 추가해야 한다.
-부모에 값이 없는데 어떻게 외래키로 가져다 쓸꺼냐
+STD_PK 위반 오류 학번이 같을수는 없다!
 
-INSERT INTO POT
-(POTID, POTCOLOR, POTSHAPE, NAME)
-VALUES('20210505001','WHITE','물레방아','장미');
+INSERT INTO TBL_STUDENT
+(ID,NAME,MAJOR,BIRTH) --GENDER 생략해보기
+VALUES(1,'홍길동','컴퓨터공학과',TO_DATE('2000-09-05','YYYY-MM-DD'));
 
-INSERT INTO POT
-(POTID, POTCOLOR, POTSHAPE, NAME)
-VALUES('20210505002','BLACK','타원형','해바라기');
+GENDER를 넣지 않았지만 오류가 나지 않는다 DEFAULT 값으로 여자로 넣었기 때문에
 
-INSERT INTO POT
-(POTID, POTCOLOR, POTSHAPE, NAME)
-VALUES('20210505003','RED','사각형','할미꽃');
-
-INSERT INTO POT
-(POTID, POTCOLOR, POTSHAPE, NAME)
-VALUES('20210505004','RED','타원형','할미꽃');
 ```
 ## DELETE
 ```
