@@ -116,6 +116,26 @@ File > New > Dynamic Web Project
 
 ![image](https://user-images.githubusercontent.com/54658614/226806619-cd77fd30-19cf-4371-807e-3981021559f0.png)
 
+## Servlet (Server + let)
+- 클라이언트의 요청을 처리하고, 그 결과를 다시 반환해주는 Servlet클래스의 구현 규칙을 지킨 자바 웹 프로그래밍 기술
+
+예를 들어, 어떠한 사용자가 로그인을 하려고 할 때. 사용자는 아이디와 비밀번호를 입력하고, 로그인 버튼을 누를것이다.<br>
+그때 서버는 클라이언트의 아이디와 비밀번호를 확인하고, 다음 페이지를 띄워주어야 하는데, 이러한 역할을 수행하는<br>
+것이 바로 서블릿(Servlet)이다. 그래서 서블릿은 자바로 구현 된 *CGI라고 흔히 말합니다.<br>
+
+### Servlet의 특징
+- 클라이언트의 요청에 대해 동적으로 작동하는 웹 어플리케이션 컴포넌트
+- html을 사용하여 요청에 응답한다.
+- Java Thread를 이용하여 동작한다.
+- MVC 패턴에서 Controller로 이용된다.
+- HTTP 프로토콜 서비스를 지원하는 javax.servlet.http.HttpServlet 클래스를 상속받는다.
+- UDP보다 처리 속도가 느리다.
+- HTML 변경 시 Servlet을 재컴파일해야 하는 단점이 있다.
+
+![image](https://user-images.githubusercontent.com/54658614/231054942-f29baabf-1500-48cb-96f4-7898dc4814b6.png)
+
+출처 : Servlet Architecture (출처 : https://www.geeksforgeeks.org/servlet-architecture/ )
+
 #### 구조
 - WebContent에서 HTML파일이 아닌 JSP파일을 만든다.
 
@@ -123,7 +143,7 @@ File > New > Dynamic Web Project
 
 HTML과는 별로 차이점이 없어보인다.
 
-```
+```jsp
 기본적으로 갖고 있어야 하는 정보들이 기입이 되어있다. 
 <%@page import="java.util.Random"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
