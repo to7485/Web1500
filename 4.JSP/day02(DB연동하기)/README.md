@@ -20,7 +20,7 @@
 
 ![image](https://user-images.githubusercontent.com/54658614/231063002-1c32db00-19f9-4395-b233-e03dda8a5d43.png)
 
-```
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 
 리소스를 미리 준비해두고 DB에 연결해야 하는 상황에
@@ -45,3 +45,280 @@
           
 </Context>
 ```
+현재 계정에 접속해도 테이블이 존재하지 않는다.
+
+### 테이블 만들기
+1. Start Database접속하기
+
+![image](https://user-images.githubusercontent.com/54658614/231349811-0c1f24e8-a129-432e-a06e-a3dbe4427378.png)
+
+2. TEST_PM 로그인하기
+
+![image](https://user-images.githubusercontent.com/54658614/231349937-d7b2ce2d-94b0-44c4-bb31-370cdf8d0c66.png)
+
+3. 부서테이블 텍스트만들고 테이블만들기
+
+![image](https://user-images.githubusercontent.com/54658614/231350378-b01e0240-f2b1-49ef-98c8-15bde0eecc3e.png)
+
+4. 복사 붙혀넣기 (오타 확인하기! 테이블이 이미 존재하면 DROP TABLE로 테이블 삭제한 후 만들기)
+
+![image](https://user-images.githubusercontent.com/54658614/231350540-bdd25ced-fb9d-41ed-94f9-1ea32d957ca4.png)
+
+5. 데이터 추가해보기
+
+![image](https://user-images.githubusercontent.com/54658614/231351074-c5a229e0-104d-451a-9cc2-f3464e96ce1d.png)
+
+6. 고객 테이블과 사원테이블 만들기
+#### 고객 테이블
+```
+CREATE TABLE GOGEK(
+	GOBUN NUMBER(3) PRIMARY KEY, --고객번호
+	GONAME VARCHAR2(50), --고객 이름
+	GOADDR VARCHAR2(50), --고객 주소
+	GOJUMIN VARCHAR2(20), -- 주민번호
+	GODAM NUMBER(3) -- 담당자 번호
+);
+
+insert into gogek values(1, '류민', '서울 강남구', '660215-1234567', 3);
+insert into gogek values(2, '강청', '대정 유성구', '760815-1234567', 4);
+insert into gogek values(3, '영희', '부산 강서구', '791015-2345678', 10);
+insert into gogek values(4, '순이', '인천 계양구', '911105-2234567', 10);
+insert into gogek values(5, '마징가', '서울 동작구', '860212-1111111', 1);
+insert into gogek values(6, '짱가', '서울 강북구', '801215-1223345', 10);
+insert into gogek values(7, '아톰', '경기 안양시', '770225-1234567', 9);
+insert into gogek values(8, '스머프', '서울 강남구', '850205-1234567', 8);
+insert into gogek values(9, '투덜이', '서울 강서구', '880215-1567899', 7);
+insert into gogek values(10, '슛돌이', '서울 강북구', '911115-2234567', 6);
+COMMIT;
+```
+#### 사원테이블
+```
+CREATE TABLE SAWON(
+	SABUN NUMBER(3) PRIMARY KEY,
+	SANAME VARCHAR2(50),
+	SAGEN VARCHAR2(10), -- 성별
+	DEPTNO NUMBER(3), --부서번호
+	SAJOB VARCHAR2(10), --직책
+	SAHIRE DATE, --입사일
+	SAMGR NUMBER(3), --상사번호
+	SAPAY NUMBER(10) --연봉
+);
+
+insert into sawon values(1, '장동건', '남자', 40, '부장', '1993-07-25', null, 4000);
+insert into sawon values(2, '안재욱', '남자', 20, '부장', '1988-02-25', null, 4000);
+insert into sawon values(3, '이미자', '여자', 20, '대리', '1998-03-25', 2, 3500);
+insert into sawon values(4, '김민종', '남자', 20, '사원', '2001-03-15', 3, 2400);
+insert into sawon values(5, '최불암', '남자', 10, '부장', '1984-07-25', null, 4000);
+insert into sawon values(6, '최민수', '남자', 10, '사원', '2001-04-30', 4, 2000);
+insert into sawon values(7, '김혜수', '여자', 30, '과장', '2004-05-25', 10, 3900);
+insert into sawon values(8, '김용만', '남자', 40, '과장', '1993-08-15', 1, 3000);
+insert into sawon values(9, '배슬기', '여자', 20, '대리', '1997-11-25', 8, 3200);
+insert into sawon values(10, '감우성', '남자', 10, '대리', '1998-05-25', 4, 3300);
+
+COMMIT;
+```
+이제 데이터베이스에 테이블은 준비가 됐고 이클립스를 통해 브라우저에 조회를 해보자.
+
+### wx01_jdbc_dept jsp파일 생성하기
+
+- db에 연동을 하는 코드들이 자바코드 (java.sql 패키지)이기 때문에 스크립트릿을 안쓸 수 없다.
+```jsp
+<%@page import="java.sql.Connection"%>
+<%@page import="javax.sql.DataSource"%>
+<%@page import="javax.naming.Context"%>
+<%@page import="javax.naming.InitialContext"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<% 
+	//톰캣이 JNDI를 검색하기 위해 필요한 클래스(JNDI 기법:java naming directory interface )
+	InitialContext ic = new InitialContext();
+	//자바에 존재하는 클래스 JAVAX -> 라이브러리에서 왔다고 생각하면 됨
+	//내가 만든적은 없는데 DB연동하려면 필요는 하고, 직접 만들자니 시간도 오래걸린다.
+		
+	//Resource위치 검색 -> CONTEXT.XML에 있는 RESOURCE만을 의미하는건 아니다. 	
+	프로그램을 구현하기 위한 모든 참조파일을 다 리소스라고 할 수 있다.
+
+	
+	
+	Context ctx = (Context)ic.lookup("java:comp/env");
+	//javax.naming.Context 인터페이스 import	
+	//lookup -> 조회 jsp에서 db에 대한 리소스가 저장되어 있는 위치는 지정되어 있다.
+	//java:comp/env <- 자바에 내장되어 있는 리소스 자원을 검색하는 상수(고정)
+
+	//java.sql 인터페이스 improt	
+	//검색된 Resource를 통해 필요한 JNDI의 자원을 검색
+	//context.xml파일의 Resource영역에 참조되어 있는 name속성값
+	DataSource dataSource=(DataSource)ctx.lookup("jdbc/oracle_test");
+	
+	
+	//java.sql.Connection import
+	//위에서 준비해둔 경로로 로그인 시도(접속)
+	Connection conn = dataSource.getConnection();
+	
+	System.out.println("---get connection!!---");
+	
+	//context.xml의 maxActive=10이라면 11번째 사용자는 connection이 없어 연결할 수 없다.
+	//그러므로 컨넥션을 연결하여 사용한 후에는 (연결객체를)반드시 제자리에 돌려놓아야 한다.
+	//연결 후 사용한 DB는 종료코드를 통해 마무미를 지어줘야 한다.
+	conn.close();//DBCP에 다시 돌려놓는 개념. 주석달고도 확인해보자.
+%>
+
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>DB연동을 통한 부서 테이블 조회</title>
+</head>
+
+<body>
+	
+</body>
+
+</html>
+```
+콘솔에 뜬다면 db와의 연결이 성공한 것이다.
+
+![image](https://user-images.githubusercontent.com/54658614/231358544-efba9a78-0f15-4420-bfe1-8b1104436394.png)
+
+이제 DEPT테이블의 내용을 읽어와서 테이블 형식으로 조회해보자.
+
+DEPT의 세가지 컬럼을 변수로 만들어서 저장을 할 것이다. 변수는 자바 클래스이기 때문에 src영역에 만든다.
+
+![image](https://user-images.githubusercontent.com/54658614/231358915-4a3c5456-25c4-46a5-a27e-ee0de04e8f45.png)
+
+```java
+package vo;
+
+public class DeptVO {
+
+	//테이블의 컬럼이름과 되도록이면 같은 이름으로 만들자.
+	private int deptno;
+	private String dname;
+	private String loc;
+	
+	public int getDeptno() {
+		return deptno;
+	}
+	public void setDeptno(int deptno) {
+		this.deptno = deptno;
+	}
+	public String getDname() {
+		return dname;
+	}
+	public void setDname(String dname) {
+		this.dname = dname;
+	}
+	public String getLoc() {
+		return loc;
+	}
+	public void setLoc(String loc) {
+		this.loc = loc;
+	}
+}
+
+```
+
+### ex01_jdbc_dept에 코드 추가하기
+
+![image](https://user-images.githubusercontent.com/54658614/231361772-5c6e984b-f293-4fb8-9c5c-b578719be408.png)
+
+
+```
+<%@page import="vo.DeptVO"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="java.sql.ResultSet"%>
+<%@page import="java.sql.PreparedStatement"%>
+<%@page import="java.sql.Connection"%>
+<%@page import="javax.sql.DataSource"%>
+<%@page import="javax.naming.Context"%>
+<%@page import="javax.naming.InitialContext"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<% 
+	...............
+	
+	// Connection(연결객체) 얻어오기
+	//java.sql.Connection
+	Connection conn = dataSource.getConnection();
+	
+	System.out.println("---get connection!!---");
+	
+	
+	//명령처리객체 얻어오기
+	String sql = "select * from dept"; -> sql문을 인식하는 객체
+	
+	//java.sql.PreparedStatement -> 문자열을 쿼리문으로 알아먹을수 있게 변경해줌
+	Connection conn = ds.getConnection(); 어느 db로 연결했는지 정보를 알고있는 객체
+	PreparedStatement pstmt = conn.prepareStatement(sql);
+	보이지 않는 커서가 테이블로 접근한다.
+	
+	
+	
+	한칸씩 내려가게 해주는 객체가 따로 있다.
+	//실행된 sql문장을 통해 얻어진 결과를 실제로 VO객체에 담아준다.
+	ResultSet rs = pstmt.executeQuery();
+	
+	
+	//부서목록을 저장할 ArrayList
+	List.java.util
+	List<DeptVO> dept_list = new ArrayList<DeptVO>();
+	while( rs.next() ){//데이터가 있다면
+		DeptVO vo = new DeptVO();
+	
+		//현제 레코드의 필드값을 vo에 담는다.
+		vo.setDeptNo( rs.getInt("deptno") );
+		vo.setdName(rs.getString("dname"));
+		vo.setLoc(rs.getString("loc"));
+		
+		dept_list.add(vo); 잊어버리지 말라고 arrayList에 추가해주기
+	}
+	
+	//연결 후 사용한 DB는 종료코드를 통해 마무리를 지어줘야 한다.
+	//DB접속과 관련된 모든 객체는 생성된 역순으로 반드시 닫아주자!!
+	rs.close();
+	pstmt.close();
+	conn.close();
+%>
+
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+
+</head>
+
+<body>
+	<!-- 문제 : 위의 dept_list가 가지고 있는 결과값을 테이블로 출력하시오. -->
+	<table border="1">
+		<caption>부서목록</caption>
+		
+		<tr>
+			<th>부서번호</th>
+			<th>부서명</th>
+			<th>부서위치</th>
+		</tr>
+		
+		<% for( int i = 0; i < dept_list.size(); i++ ){
+			DeptVO dv = dept_list.get(i);%>
+			
+		<tr>
+			<td> <%= dv.getDeptNo() %> </td>
+			<td> <%= dv.getdName() %> </td>
+			<td> <%= dv.getLoc() %> </td>
+		</tr>
+		
+		<%} %>
+		
+	</table>
+	
+</body>
+
+</html>
+```
+이런 형태를 모델1 이라고 한다.<br>
+모델1은 데이터를 처리하는 로직과 화면을 출력하는 로직을 한 페이지에서 처리하고 해결한다.<br>
