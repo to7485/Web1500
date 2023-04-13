@@ -150,12 +150,12 @@ COMMIT;
 	//java.sql 인터페이스 improt	
 	//검색된 Resource를 통해 필요한 JNDI의 자원을 검색
 	//context.xml파일의 Resource영역에 참조되어 있는 name속성값
-	DataSource dataSource=(DataSource)ctx.lookup("jdbc/oracle_test");
+	DataSource ds=(DataSource)ctx.lookup("jdbc/oracle_test");
 	
 	
 	//java.sql.Connection import
 	//위에서 준비해둔 경로로 로그인 시도(접속)
-	Connection conn = dataSource.getConnection();
+	Connection conn = ds.getConnection();
 	
 	System.out.println("---get connection!!---");
 	
@@ -240,14 +240,7 @@ public class DeptVO {
 
 <% 
 	...............
-	
-	// Connection(연결객체) 얻어오기
-	//java.sql.Connection
-	Connection conn = dataSource.getConnection();
-	
-	System.out.println("---get connection!!---");
-	
-	
+		
 	//명령처리객체 얻어오기
 	String sql = "select * from dept"; -> sql문을 인식하는 객체
 	
@@ -255,8 +248,6 @@ public class DeptVO {
 	Connection conn = ds.getConnection(); 어느 db로 연결했는지 정보를 알고있는 객체
 	PreparedStatement pstmt = conn.prepareStatement(sql);
 	보이지 않는 커서가 테이블로 접근한다.
-	
-	
 	
 	한칸씩 내려가게 해주는 객체가 따로 있다.
 	//실행된 sql문장을 통해 얻어진 결과를 실제로 VO객체에 담아준다.
@@ -270,8 +261,8 @@ public class DeptVO {
 		DeptVO vo = new DeptVO();
 	
 		//현제 레코드의 필드값을 vo에 담는다.
-		vo.setDeptNo( rs.getInt("deptno") );
-		vo.setdName(rs.getString("dname"));
+		vo.setDeptno( rs.getInt("deptno") );
+		vo.setDname(rs.getString("dname"));
 		vo.setLoc(rs.getString("loc"));
 		
 		dept_list.add(vo); 잊어버리지 말라고 arrayList에 추가해주기
@@ -322,3 +313,76 @@ public class DeptVO {
 ```
 이런 형태를 모델1 이라고 한다.<br>
 모델1은 데이터를 처리하는 로직과 화면을 출력하는 로직을 한 페이지에서 처리하고 해결한다.<br>
+
+각 부서명을 클릭했을 때 부서에 속하는 사원들의 내용을 출력하기
+
+![image](https://user-images.githubusercontent.com/54658614/231652565-24183e0e-365b-4c90-83b0-fc3b27b97eae.png)
+
+
+```jsp
+<%
+	.................
+%>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+
+	<script type="text/javascript">
+		
+		function send(data){
+			
+			var f = document.getElementById("m_form"); this.form으로 전달을 못했으니 아이디로 검색
+			var hid = f.deptno;
+			hid.value = data; input태그에 데이터 넣고 확인하기
+			
+			f.action = "sawon_list.jsp";
+			f.submit(); submit을 해도 값을 전달할 수 있는 input 태그가 없어서 난감해진다.
+			
+		}//send()    
+	
+	</script>
+	
+</head>
+
+<body>
+	<form id="m_form" action="sawon_list.jsp">
+		<table border="1">
+			<caption>부서목록</caption>
+
+			<tr>
+				<th>부서번호</th>
+				<th>부서명</th>
+				<th>부서위치</th>
+			</tr>
+
+			<%
+				for (int i = 0; i < dept_list.size(); i++) {
+					DeptVO dv = dept_list.get(i);
+			%>
+
+			<tr>
+				<td><%=dv.getDeptNo()%></td>
+				
+				<td> <!-- a태그에 메서드 연결하기(잘안씀) 그냥 메서드를 호출하면 잘 안되기 때문에 앞에 javascript:를 써줘야 한다. -->
+				<a href="javascript:send('<%=dv.getDeptNo()%>');"> 
+					<%=dv.getdName()%>
+					</a>
+				</td>
+				<td><%=dv.getLoc()%></td>
+			</tr>
+
+			<%
+				}
+			%>
+
+		</table>
+		
+		<input type="hidden" value="" id="hid" name="deptno">
+	</form>
+	
+</body>
+
+</html>
+```
