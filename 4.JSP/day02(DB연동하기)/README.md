@@ -379,11 +379,274 @@ public class DeptVO {
 
 		</table>
 		
-		
+		굳이 보여줄 필요가 없기 때문에 type을 hidden으로 해주자.
 		<input type="hidden" name="deptno">
+				
 	</form>
 	
 </body>
 
 </html>
+```
+
+#### SawonVO.java 생성하기
+```java
+package vo;
+
+public class SawonVO {
+	private int sabun; //사원번호
+	private String saname;//사원이름
+	private int deptno;//부서번호
+	private int sapay;//연봉
+	
+	public int getSabun() {
+		return sabun;
+	}
+	public void setSabun(int sabun) {
+		this.sabun = sabun;
+	}
+	public String getSaname() {
+		return saname;
+	}
+	public void setSaname(String saname) {
+		this.saname = saname;
+	}
+	public int getDeptno() {
+		return deptno;
+	}
+	public void setDeptno(int deptno) {
+		this.deptno = deptno;
+	}
+	public int getSapay() {
+		return sapay;
+	}
+	public void setSapay(int sapay) {
+		this.sapay = sapay;
+	}
+	
+	
+	
+	
+}
+
+```
+
+#### sawon_list.jsp 생성하기
+```
+<%@page import="java.sql.ResultSet"%>
+<%@page import="java.sql.PreparedStatement"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="java.util.List"%>
+<%@page import="vo.SawonVO"%>
+<%@page import="javax.naming.Context"%>
+<%@page import="java.sql.Connection"%>
+<%@page import="javax.sql.DataSource"%>
+<%@page import="javax.naming.InitialContext"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    
+    
+<%
+	//sawon_list.jsp?deptno=20
+	//deptno라는 이름의 파라미터 값을 수신
+	int no = Integer.parseInt(request.getParameter("deptno"));
+
+//톰캣이 JNDI를 검색하기 위해 필요한 클래스(JNDI 기법:java naming directory interface )
+	InitialContext ic = new InitialContext();
+	//자바에 존재하는 클래스 JAVAX -> 라이브러리에서 왔다고 생각하면 됨
+	//내가 만든적은 없는데 DB연동하려면 필요는 하고, 직접 만들자니 시간도 오래걸린다.
+		
+	//Resource위치 검색 -> CONTEXT.XML에 있는 RESOURCE만을 의미하는건 아니다. 	
+	//프로그램을 구현하기 위한 모든 참조파일을 다 리소스라고 할 수 있다.
+
+	
+	//java:comp/env <- 자바에 내장되어 있는 리소스 자원을 검색하는 상수(고정)
+	Context ctx = (Context)ic.lookup("java:comp/env");
+	//javax.naming.Context	
+	//lookup -> 조회 jsp에서 db에 대한 리소스가 저장되어 있는 위치는 지정되어 있다.
+	
+
+	//java.sql 인터페이스 improt	
+	//검색된 Resource를 통해 필요한 JNDI의 자원을 검색
+	//context.xml파일의 Resource영역에 참조되어 있는 name속성값
+	DataSource ds =(DataSource)ctx.lookup("jdbc/oracle_test");
+	
+	//java.sql.PreparedStatement -> 문자열을 쿼리문으로 알아먹을수 있게 변경해줌
+	Connection conn = ds.getConnection(); //어느 db로 연결했는지 정보를 알고있는 객체
+	
+	
+	//명령처리객체 얻어오기
+	String sql = "select * from sawon where deptno = "+no; //-> sql문을 인식하는 객체
+	
+	PreparedStatement pstmt = conn.prepareStatement(sql);
+	//보이지 않는 커서가 테이블로 접근한다.
+	
+	//한칸씩 내려가게 해주는 객체가 따로 있다.
+	//실행된 sql문장을 통해 얻어진 결과를 실제로 VO객체에 담아준다.
+	ResultSet rs = pstmt.executeQuery();
+	
+	//부서목록을 저장할 ArrayList
+	//List.java.util
+	List<SawonVO> sawon_list = new ArrayList<SawonVO>();
+	while( rs.next() ){//데이터가 있다면
+		SawonVO vo = new SawonVO();
+		vo.setDeptno(rs.getInt("deptno"));
+		vo.setSabun(rs.getInt("sabun"));
+		vo.setSaname(rs.getString("saname"));
+		vo.setSapay(rs.getInt("sapay"));
+		
+		sawon_list.add(vo);
+	}
+	
+	//연결 후 사용한 DB는 종료코드를 통해 마무리를 지어줘야 한다.
+	//DB접속과 관련된 모든 객체는 생성된 역순으로 반드시 닫아주자!!
+	rs.close();
+	pstmt.close();
+	conn.close();
+%>   
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="EUC-KR">
+		<title>Insert title here</title>
+	</head>
+	<body>
+		<table border="1">
+			<tr>
+				<th>사번</th>
+				<th>이름</th>
+				<th>급여</th>
+				<th>부서번호</th>
+			</tr>
+			<%for(int i = 0; i<sawon_list.size(); i++){
+				SawonVO vo = sawon_list.get(i); %>
+			<tr>
+				<td><%= vo.getSabun()  %></td>
+				<td><%= vo.getSaname()  %></td>
+				<td><%= vo.getSapay()  %></td>
+				<td><%= vo.getDeptno()  %></td>
+			</tr>
+			<%} %>
+		</table>
+	</body>
+</html>
+```
+
+### 고객테이블 조회해보기
+
+![image](https://user-images.githubusercontent.com/54658614/231663415-11971d1f-ac19-4bc1-b095-6e83c56d93f2.png)
+
+
+#### Gogek.java 클래스 만들기
+```
+package vo;
+
+public class GogekVO {
+	private int gobun;
+	private String goname;
+	private String goaddr;
+	private String gojumin;
+	
+	public int getGobun() {
+		return gobun;
+	}
+	public void setGobun(int gobun) {
+		this.gobun = gobun;
+	}
+	public String getGoname() {
+		return goname;
+	}
+	public void setGoname(String goname) {
+		this.goname = goname;
+	}
+	public String getGoaddr() {
+		return goaddr;
+	}
+	public void setGoaddr(String goaddr) {
+		this.goaddr = goaddr;
+	}
+	public String getGojumin() {
+		return gojumin;
+	}
+	public void setGojumin(String gojumin) {
+		this.gojumin = gojumin;
+	}
+}
+
+```
+
+#### 고객 테이블 출력해보기 gogek.jsp
+```
+<%@page import="java.sql.ResultSet"%>
+<%@page import="java.sql.PreparedStatement"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="java.util.List"%>
+<%@page import="vo.GogekVO"%>
+<%@page import="javax.naming.Context"%>
+<%@page import="java.sql.Connection"%>
+<%@page import="javax.sql.DataSource"%>
+<%@page import="javax.naming.InitialContext"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    
+<%
+	InitialContext ic = new InitialContext();
+	Context ctx = (Context)ic.lookup("java:comp/env");
+	DataSource ds = (DataSource)ctx.lookup("jdbc/oracle_test");
+	Connection conn = ds.getConnection();//db에 접속
+	
+	//고객 테이블 조회
+	String sql = "select * from gogek";
+	PreparedStatement pstmt = conn.prepareStatement(sql);
+	
+	//위에서 수행한 쿼리문을 기반으로 결과를 한줄씩 가져오기
+	ResultSet rs = pstmt.executeQuery();
+	
+	//고객목록을 저장할 ArrayList
+	List<GogekVO> gogek_list = new ArrayList<GogekVO>();
+	
+	while(rs.next()){
+		GogekVO vo = new GogekVO();
+		vo.setGobun(rs.getInt("gobun"));
+		vo.setGoname(rs.getString("goname"));
+		vo.setGoaddr(rs.getString("goaddr"));
+		vo.setGojumin(rs.getString("gojumin"));
+		gogek_list.add(vo);
+	}
+	
+	//DB연결에 사용된 객체는 모두 닫아줘야 한다.
+	rs.close();
+	pstmt.close();
+	conn.close();
+
+
+%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<table border="1">
+		<tr>
+			<th>번호</th>
+			<th>이름</th>
+			<th>주소</th>
+			<th>주민번호</th>
+		</tr>
+		<%for(int i =0; i<gogek_list.size(); i++){ 
+				GogekVO vo = gogek_list.get(i);%>
+			<tr>
+				<td><%= vo.getGobun() %></td>
+				<td><%= vo.getGoname() %></td>
+				<td><%= vo.getGoaddr() %></td>
+				<td><%= vo.getGojumin() %></td>
+			</tr>			
+		<%} %>		
+	
+	</table>
+</body>
+</html>
+
 ```
