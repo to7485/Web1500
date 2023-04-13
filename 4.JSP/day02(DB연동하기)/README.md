@@ -333,7 +333,7 @@ public class DeptVO {
 		
 		function send(data){
 			
-			var f = document.getElementById("m_form"); this.form으로 전달을 못했으니 아이디로 검색
+			var f = document.m_form; this.form으로 전달을 못했으니 이름으로 검색하기
 			var hid = f.deptno;
 			hid.value = data; input태그에 데이터 넣고 확인하기
 			
@@ -347,7 +347,7 @@ public class DeptVO {
 </head>
 
 <body>
-	<form id="m_form" action="sawon_list.jsp">
+	<form name="m_form">
 		<table border="1">
 			<caption>부서목록</caption>
 
@@ -379,7 +379,8 @@ public class DeptVO {
 
 		</table>
 		
-		<input type="hidden" value="" id="hid" name="deptno">
+		
+		<input type="hidden" name="deptno">
 	</form>
 	
 </body>
