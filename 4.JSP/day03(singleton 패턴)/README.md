@@ -9,7 +9,7 @@
 ### jdbc_templ.xml 등록하기
 
 1. windows -> Preferences
-2. 
+
 ![image](https://user-images.githubusercontent.com/54658614/231664981-f3da563c-173f-45f9-adc8-4584b230f24a.png)
 
 2. java -> Editor -> Templates
