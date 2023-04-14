@@ -144,7 +144,7 @@ COMMIT;
 	
 	Context ctx = (Context)ic.lookup("java:comp/env");
 	//javax.naming.Context 인터페이스 import	
-	//lookup -> 조회 jsp에서 db에 대한 리소스가 저장되어 있는 위치는 지정되어 있다.
+	//lookup -> 조회, jsp에서 db에 대한 리소스가 저장되어 있는 위치는 지정되어 있다.
 	//java:comp/env <- 자바에 내장되어 있는 리소스 자원을 검색하는 상수(고정)
 
 	//java.sql 인터페이스 improt	
@@ -250,7 +250,7 @@ public class DeptVO {
 	보이지 않는 커서가 테이블로 접근한다.
 	
 	한칸씩 내려가게 해주는 객체가 따로 있다.
-	//실행된 sql문장을 통해 얻어진 결과를 실제로 VO객체에 담아준다.
+	//데이터베이스에서 데이터를 가져와서 결과집합을 반환한다.
 	ResultSet rs = pstmt.executeQuery();
 	
 	
@@ -451,15 +451,13 @@ public class SawonVO {
 	//deptno라는 이름의 파라미터 값을 수신
 	int no = Integer.parseInt(request.getParameter("deptno"));
 
-//톰캣이 JNDI를 검색하기 위해 필요한 클래스(JNDI 기법:java naming directory interface )
+	//톰캣이 JNDI를 검색하기 위해 필요한 클래스(JNDI 기법:java naming directory interface )
 	InitialContext ic = new InitialContext();
 	//자바에 존재하는 클래스 JAVAX -> 라이브러리에서 왔다고 생각하면 됨
 	//내가 만든적은 없는데 DB연동하려면 필요는 하고, 직접 만들자니 시간도 오래걸린다.
 		
 	//Resource위치 검색 -> CONTEXT.XML에 있는 RESOURCE만을 의미하는건 아니다. 	
 	//프로그램을 구현하기 위한 모든 참조파일을 다 리소스라고 할 수 있다.
-
-	
 	//java:comp/env <- 자바에 내장되어 있는 리소스 자원을 검색하는 상수(고정)
 	Context ctx = (Context)ic.lookup("java:comp/env");
 	//javax.naming.Context	
@@ -481,13 +479,14 @@ public class SawonVO {
 	PreparedStatement pstmt = conn.prepareStatement(sql);
 	//보이지 않는 커서가 테이블로 접근한다.
 	
-	//한칸씩 내려가게 해주는 객체가 따로 있다.
-	//실행된 sql문장을 통해 얻어진 결과를 실제로 VO객체에 담아준다.
-	ResultSet rs = pstmt.executeQuery();
+	
+	//데이터베이스에서 데이터를 가져와서 결과집합을 반환한다.
+	ResultSet rs = pstmt.executeQuery(); //조회문(select,show)을 실행할 목적으로 서용한다.
 	
 	//부서목록을 저장할 ArrayList
 	//List.java.util
 	List<SawonVO> sawon_list = new ArrayList<SawonVO>();
+	//한칸씩 내려가게 해주는 객체가 따로 있다.
 	while( rs.next() ){//데이터가 있다면
 		SawonVO vo = new SawonVO();
 		vo.setDeptno(rs.getInt("deptno"));
