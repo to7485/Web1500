@@ -143,6 +143,96 @@ File > New > Dynamic Web Project
 
 HTML과는 별로 차이점이 없어보인다.
 
+### 스크립트 태그의 종류
+
+|스크립트 태그|형식|설명|
+|----|---|----------|
+|선언문(declaration)|<%! ... %>|자바 변수나 메서드를 정의하는 데 사용합니다.|
+|스크립틀릿(scriptlet)|<% .... %>|자바 로직 코드를 작성하는데 사용합니다.|
+|표현문(expression)|<%= ... %>|변수, 계산식, 메서드 호출 결과를 문자열 형태로 출력하는 데 사용합니다.|
+
+### 선언문(declaration)
+
+- 선언문(declaration)태그는 변수나 메서드 등을 선언하는 태그
+- 선언문 태그에 선언된 변수와 메서드는 서블릿 프로그램으로 번역될 때 _jspService() 메서드 외부에 배치되므로 JSP 페이지의 임의의 위치에서 선언할 수 있습니다.
+- 스크립틀릿 태그보다 나중에 선언해도 스크립틀릿 태그에서 사용할 수 있습니다.
+- 선언문 태그로 선언된 변수는 서블릿 프로그램으로 번역될 때 클래스 수준의 멤버 변수가 되므로 전역 변수로 사용됩니다.
+- 선언문 태그로 선언된 메서드는 전역변수처럼 전역 메서드로 사용됩니다.
+
+```jsp
+<body>
+	<%!int data = 50;%>
+	<%
+		out.println("Value of the variable is:" + data);
+	%>
+</body>
+```
+
+### 디렉티브 태그의 종류
+|디렉티브 태그| 형식|설명|
+|----|----|---------|
+|page|<%@ page ...%>|JSP 페이지에 대한 정보를 설정합니다.|
+|include|<%@ include ... %>|JSP 페이지의 특정 영역에 다른 문서를 포함합니다.|
+|taglib|<%@ taglib ... %>|JSP 페이지에서 사용할 태그 라이브러리를 설정합니다.|
+
+### page 디렉티브 태그의 기능과 사용법
+- JSP 페이지에 대한 정보를 설정하는 태그
+- JSP 페이지가 생성할 콘텐츠 유형의 문서, 사용할 자바 클래스, 오류 페이지 설정, 세션 사용 여부, 출력 버퍼의 존재 유무 등과 같이 JSP 컨테이너가 JSP 페이지를 실행하는 데 필요한 정보를 설정할 수 있습니다.
+- JSP 페이지의 어디에서든 선언할 수 있지만 일반적으로 JSP 페이지의 최상단에 선언하는 것을 권장
+- 하나의 page 디렉티브 태그에 하나 또는 여러 개의 속성을 설정할 수 있습니다. 또는 여러 개의 속성마다 개별적으로 page 디렉티브 태그를 선언할 수 있습니다.
+- import 속성을 제외한 속성은 JSP 페이지에 한 번씩만 설정할 수 있습니다.
+
+#### page 디렉티브 태그의 속성
+|속성|설명|기본값|
+|----|-------|----|
+|language|현재 JSP 페이지가 사용할 프로그래밍 언어를 설정합니다.<br><%@ page language=“java” %>|java|
+|contentType|현재 JSP 페이지가 생성할 문서의 콘텐츠 유형을 설정합니다.<br>(text/html, text/xml , text/plain)<br><%@ page contentType=“text/html%><br>constentType은 문자열 세트를 설정 할 수 있음<br><%@ page contentType=“text/html; charset=utf-8” %>|text/html|
+|pageEncoding|현재 JSP 페이지의 문자 인코딩을 설정합니다.<br><%@ page pageEncoding=“ISO-8859-1” %><br>contentType 속성의 문자열 세트로도 설정 할 수 있음<br><%@ page contentType=“text/html; charset=ISO-8859-1” %>|ISO-8859-1|
+|import|현재 JSP 페이지가 사용할 자바 클래스를 설정합니다.<br><%@ page import=“java.io.*” %><br><%@ page import=“java.io.*, java.lang.*” %><br><%@ page import=“java.io.*” %><br><%@ page import=“java.lang.*” %>||
+|session|현재 JSP 페이지의 세션 사용여부를 설정합니다.<br><%@ page session=“true” %>|true|
+|buffer|현재 JSP 페이지의 출력 버퍼의 크기를 설정합니다.<br>속성값을 none으로 설정하면 출력 버퍼를 채우지 않고 웹 브라우저로 직접 전송<br> <%@ page buffer=“none” %><br>출력 버퍼 크기를 32KB로 설정 : <% page buffer=“32KB” %>|8KB|
+|autoFlush|자동으로 출력 버퍼를 비우는 것을 제어<br><%@ page autoFlush=“true” %>|true|
+|isThreadSafe|현재 JSP 페이지의 멀티스레드 허용 여부를 설정합니다.<br>true – JSP 페이지에 대해 수신된 여러 요청이 동시에 처리<br>false – JSP 페이지에 대한 요청이 순차적으로 처리<br><%@ page isThreadSafe=“true” %>|true|
+|info|현재 JSP 페이지에 대한 설명을 설정합니다.(서블릿 인터페이스 getServletInfo() 메서드 사용)<br><%@ page info=“Home Page JSP” %>||
+|errorPage|현재 JSP 페이지에 오류가 발생했을 때 보여줄 오류페이지를 설정합니다.<br><%@ page errorPage=“MyErrorPage.jsp” %>||
+|isErrorPage|현재 JSP 페이지가 오류 페이지인지 여부를 설정합니다.<br>true로 설정하면 내장 객체인 exception 변수를 사용할 수 있습니다.<br><%@ page isErrorPage=“true” %>|false|
+|isELIgnored|현재 JSP 페이지의 표현언어(EL) 지원 여부를 설정합니다.<br><%@ isELIgnored=“true” %>|false|
+|isScriptingEnabled|현재 JSP 페이지의 스크립트 태그(선언문, 스크립틀릿, 표현문) 사용 여부를 설정합니다.<br><%@ page isScriptingEnabled=“false” %>||
+
+### include 디렉티브 태그의 기능과 사용법
+- JSP 페이지의 특정 영역에 외부 파일의 내용을 포함하는 태그
+- 포함할 수 있는 외부 파일은 HTML, JSP, 텍스트 파일 등이 있습니다.
+- include 디렉티브 태그는 JSP 페이지 어디에서든 선언할 수 있습니다.
+- include 디렉티브 태그는 서블릿 프로그램으로 번역될 때 현재 JSP 페이지와 설정된 다른 외부 파일의 내용이 병합되어 번역됩니다.
+
+```
+<% include file=“파일명” %>
+```
+
+#### include 디렉티브 태그 사용 예
+```
+<html>
+<body>
+<%@ include file=“header.jsp” %>
+Today is : <%= java.util.Calendar.getInstance().getTime() %>
+<%@ include file=“footer.jsp” %>
+</body>
+</html>
+```
+
+### taglib 디렉티브 태그의 기능과 사용법
+taglib 디렉티브 태그는 현재 JSP 페이지에 표현언어, JSTL, 사용자 정의 태그(custom tag)등 태그 라이브러리를 설정하는 태그입니다.
+```
+<% taglib prefix=“태그 식별자” uri=“경로” %>
+```
+- uri 속성은 사용자가 정의한 태그의 설정 정보를 가진 경로 주소
+- prefix 속성은 uri에 설정한, 사용자가 정의한 태그를 식별하기 위한 고유 이름입니다. 해당 JSP 페이지 내에서 uri 속성값을 그대로 사용하면 복잡하므로 prefix 속성 값이 대신 식별할 수 있게 해주는 것 
+- uri 속성 값은 JSP 컨테이너에 사용자가 정의한 태그 라이브러리의 위치를 알려줍니다.
+
+JSTL 태그<br>일반적으로 웹 애플리케이션에서 쉽게 접할 수 있는 것은 JSTL 태그 라이브러리입니다. 유용한 JSP 태그의 모음인 JSTL은 자주 사용되는 핵심 기능을 제공합니다. 반복문, 조건문과 같은 논리적 구조 작업. XML 문서 조작, 국제화 태그 조작, SQL 조작 수행을 위한 태그 등을 지원합니다.<br><br>STL을 사용하려면 WebContent/WEB-INF/lib/ 태그 디렉터리의 위치에 jstl.jar 라이브러리 파일이 있어야 합니다. 이 파일은 Apache Standard Taglib 페이지에서 다운로드할 수 있습니다.
+
+#### first.jsp
+
 ```jsp
 기본적으로 갖고 있어야 하는 정보들이 기입이 되어있다. 
 <%@page import="java.util.Random"%>
