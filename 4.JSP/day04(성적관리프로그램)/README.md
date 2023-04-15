@@ -840,7 +840,21 @@ public class SjDAO {
 
 #### student.jsp 코드 추가하기
 
-```
+```jsp
+	<script type="text/javascript">
+		//삭제버튼 클릭에 대한 이벤트처리
+		function del(no){			
+			if(confirm("정말 삭제하시겠습니까?") == false){
+				return; //아니오 버튼 클릭시
+			}
+			
+			//예 버튼 클릭시(no를 GET방식으로 파라미터를 전달)
+			location.href = 'sung_del.jsp?no=' + no;
+		}
+
+	</script>
+
+...
 <%
 		for (int i = 0; i < sj_list.size(); i++) {
 			SjVO vo = sj_list.get(i);
@@ -858,7 +872,7 @@ public class SjDAO {
 
 		<td><input type=button value="삭제" 
 		onclick="del('<%= vo.getNo() %>')"/></td>
-		
+		삭제 버튼 클릭시 학생의 번호를 파라미터로 전달해준다.
 		
 	</tr>
 
@@ -866,12 +880,91 @@ public class SjDAO {
 
 ```
 
+삭제버튼 클릭시 목적지로 파라미터를 갖고 간다.
+
+![image](https://user-images.githubusercontent.com/54658614/232223257-01e1e94f-25d2-4be4-b152-fdf093db73ae.png)
 
 
+#### sung_del.jsp 작성하기
 
+```jsp
+<%@page import="dao.SjDAO"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%
+	//수신시 인코딩(GET일경우에는 상관없지만 POST일때는 한글이 깨진다.
+	//그러나 GET일때도 습관처럼 써주는 것이 좋다.) 처리
+	request.setCharacterEncoding("utf-8");
+	
+	//sung_del.jsp?no=1
+	int no = Integer.parseInt(request.getParameter("no"));
+	
+	//db에서 값 제거
+	//res가 0이면 실패했다는 뜻.
+	int res = SjDAO.getInstance().delete(no); //<-- delete메서드를 만들지 않았으므로 오류
+	
+	//갱신된 데이터를 다시 로드한다. student.jsp
+	if(res >=1) { //ex) 김씨를 홍씨로 바꾸는데 10명이 바뀐다면 10이 넘어옴
+	response.sendRedirect("student.jsp");
+	}
+%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
 
+</body>
+</html>
 
+```
 
+#### SjDAO.java에 delete 메서드 추가하기
+
+```java
+//삭제하기
+	public int delete(int no) {
+		// TODO Auto-generated method stub
+		int res = 0;
+
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+
+		String sql = "delete from sungtb where=?";
+
+		try {
+			//1.Connection획득
+			conn = DBService.getInstance().getConnection();
+			//2.명령처리객체 획득
+			pstmt = conn.prepareStatement(sql);
+
+			//3.pstmt parameter 채우기
+			pstmt.setInt(1, no);
+			//4.DB로 전송(res:처리된행수)
+			res = pstmt.executeUpdate();
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		} finally {
+
+			try {
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return res;
+	}
+
+```
+student.jsp에서 실행하여 삭제가 잘되는지 확인하기
 
 
 
