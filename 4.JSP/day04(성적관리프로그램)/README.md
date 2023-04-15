@@ -833,8 +833,38 @@ public class SjDAO {
     %>
 ```
 
+## 데이터 삭제하기
+- 비고란에 만들어놨던 삭제버튼을 누르면 테이블에서 특정 학생에 대한 정보만 삭제가 되게 기능을 만들어보자.
+- 삭제는 DELETE문을 쓴다.(의도한 데이터가 아닌 다른 데이터를 지우지 않도록 주의하자)
+	- DELETE FROM 테이블명 WHERE 컬럼명 = 데이터;
 
+#### student.jsp 코드 추가하기
 
+```
+<%
+		for (int i = 0; i < sj_list.size(); i++) {
+			SjVO vo = sj_list.get(i);
+	%>
+
+	<tr>
+		<td><%= vo.getName() %></td>
+		<td><%= vo.getKor()%></td>
+		<td><%= vo.getEng()%></td>
+		<td><%= vo.getMat()%></td>
+
+		<td><%= vo.getTotal() %></td>
+		<td><%= vo.getAvg() %></td>
+		<td><%= vo.getRank() %></td>
+
+		<td><input type=button value="삭제" 
+		onclick="del('<%= vo.getNo() %>')"/></td>
+		
+		
+	</tr>
+
+	<%}%>
+
+```
 
 
 
