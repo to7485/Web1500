@@ -966,7 +966,216 @@ public class SjDAO {
 ```
 student.jsp에서 실행하여 삭제가 잘되는지 확인하기
 
+## 수정하기
+- 만약 하나의 점수만 수정하고 싶은데 모든 내용을 다시 입력해야 하면 매우 불편할 것이다.
 
+![image](https://user-images.githubusercontent.com/54658614/232227516-cf1129ad-6e0c-4548-a8b1-c35e3983e342.png)
 
+- 수정을 할 때는 정보를 미리 넣어두고 수정하고 싶은 부분만 바꿔서 UPDATE가 될 수 있도록 하자.
 
+#### student.jsp에 수정버튼 추가하기
+
+```jsp
+<%@page import="vo.SjVO"%>
+<%@page import="java.util.List"%>
+<%@page import="dao.SjDAO"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<% 
+	..............
+%>
+
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>Insert title here</title>
+	
+	
+	<script type="text/javascript">
+		function del(no){			
+			...........................
+		}
+		
+		//수정버튼시 입력을 위한 팝업창을 보인다
+		function modify(no, name, kor, eng, mat){
+			location.href=
+				'sung_update.jsp?no='+no+"&name="+name+"&kor="+kor+"&eng="+"&mat="+mat;
+			
+			}//update()	
+	</script>
+</head>
+
+<body>
+	<table border="1">
+		....................
+
+		<td><input type=button value="수정" 
+ 			   onclick="modify('<%= vo.getNo() %>', 
+				            '<%= vo.getName() %>',
+				            '<%= vo.getKor()%>', 
+				            '<%= vo.getEng() %>', 
+				            '<%= vo.getMat() %>')"/></td>
+					    
+		파라미터를 5개나 던저야 한다 오타가 나지 않게 주의하자.
+		<td><input type=button value="삭제" 
+                       onclick="del('<%= vo.getNo() %>')"/></td>
+				
+	</table>					
+</body>
+
+</html>
+```
+
+#### sung_update.jsp 생성하기
+
+```jsp
+<%@page import="dao.SjDAO"%>
+<%@page import="vo.SjVO"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<%
+	//수신시 인코딩(GET일경우에는 상관없지만 POST일때는 한글이 깨진다.
+	//그러나 GET일때도 습관처럼 써주는 것이 좋다.) 처리
+	request.setCharacterEncoding("utf-8");
+
+//sung_update.jsp?no=+no+&name=+name+&kor=+kor+&eng=+&mat=+mat;
+
+	//전송 버튼 클릭시 넘어온 파라미터를 받는다.
+	String name = request.getParameter("name");
+	int no = Integer.parseInt(request.getParameter("no"));
+	int kor = Integer.parseInt(request.getParameter("kor"));
+	int eng = Integer.parseInt(request.getParameter("eng"));
+	int mat = Integer.parseInt(request.getParameter("mat"));
+
+%>
+<script>
+	function update(f){
+		//var no = f.no.value
+		//유효성체크 했다쳐
+		f.action="sung_modi.jsp";
+		f.submit();
+		
+	}
+
+</script>
+
+<body>
+	<form>
+		<input type="hidden" name="no" value="<%=no%>">
+	
+	<table border="1">
+		<caption>학생정보 수정</caption>
+		<tr>
+			<th>이름</th>
+			<td><input name="name" value="<%= name %>"></td>
+		</tr>
+		<tr>
+			<th>국어</th>
+			<td><input name="kor" value="<%= kor %>"></td>
+		</tr>
+		<tr>
+			<th>영어</th>
+			<td><input name="eng" value="<%= eng %>"></td>
+		</tr>
+		<tr>
+			<th>수학</th>
+			<td><input name="mat" value="<%= mat %>"></td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<input type="button" value="수정"
+						onclick="update(this.form);">
+				<input type="button" value="취소" 											onclick="location.href='student.jsp'">
+			</td>
+		</tr>
+	</table>		
+	</form>		
+</body>
+
+```
+
+#### 변경한 내용을 받아서 update 해줄 sung_modi.jsp 만들기
+
+```jsp
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    
+    <%
+    	request.setCharacterEncoding("utf-8");
+    
+    	String name= request.getParameter("name");
+	int no = Integer.parseInt(request.getParameter("no"));
+	int kor = Integer.parseInt(request.getParameter("kor"));
+	int eng = Integer.parseInt(request.getParameter("eng"));
+	int mat = Integer.parseInt(request.getParameter("mat"));
+
+	SjVO vo = new SjVO();
+    		vo.setNo(no);
+    		vo.setName(name);
+    		vo.setKor(kor);
+    		vo.setEng(eng);
+    		vo.setMat(mat);
+    	
+    	//DB에 값 추가하기.
+	int res = SjDAO.getInstance().update(vo); <-- 업데이트 메서드 없으므로 생성하자
+	System.out.println(res);
+
+	//갱신된 데이터를 다시 로드한다. student.jsp
+	if(res >= 1) {
+	  response.sendRedirect(“student.jsp”);
+	}
+    %>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+</body>
+</html>
+
+```
+#### SjDAO.java에 update메서드 추가하기
+```java
+//성적수정 메서드
+	//_insert_update_delete 템플릿
+	public int update(SjVO vo) {
+		
+		int res = 0;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+
+		String sql = "update sungtb set name=?, kor=?, eng=?, mat=? where no=?";
+
+		try {
+			//1.Connection획득
+			conn = DBService.getInstance().getConnection();
+			//2.명령처리객체 획득
+			pstmt = conn.prepareStatement(sql);
+
+			//3.pstmt parameter 채우기
+			pstmt.setString(1, vo.getName());
+			pstmt.setInt(2, vo.getKor());
+			pstmt.setInt(3, vo.getEng());
+			pstmt.setInt(4, vo.getMat());
+			pstmt.setInt(5, vo.getNo());
+
+			//4.DB로 전송(res:처리된행수)
+			res = pstmt.executeUpdate();
+
+		} catch (Exception e) {
+			..............
+		} finally {
+			..............
+		}
+		return res;
+	}
+
+```
 
