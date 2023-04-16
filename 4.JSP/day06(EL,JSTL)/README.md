@@ -382,3 +382,341 @@ public class PersonVO {
 
 </html>
 ```
+## JSTL
+
+### 코어(core) 라이브러리
+- JSTL의 코어 라이브러리는 글자 그대로 가장 핵심적인 기능을 제공하는 라이브러리 입니다.
+- 이 라이브러리에서 제공하는 커스텀 액션을 이용하면 일반 프로그래밍 언어에서 제공하는 변수 선언, 조건 분기, 반복 수행 등의 로직을 구사할 수 있고, 다른 JSP 페이지를 호출할 수도 있습니다.
+
+![image](https://user-images.githubusercontent.com/54658614/232315276-472aff2f-5b97-4e15-9020-f3f179fceb07.png)
+
+우리가 그동안 DB와 연결하기 위해 사용했던 4개의 라이브러리를 톰캣의 lib에 넣고 사용해도 되지만 한번 넣어놓으면 무조건 까먹으니<br>
+이클립스의 lib 폴더에 넣어놨던것.
+
+![image](https://user-images.githubusercontent.com/54658614/232315343-22202a0d-9671-4f00-bc0e-110badb52a97.png)
+
+### <c:set> 커스텀 액션
+- \<c:set\>은 변수를 선언하고 나서 그 변수에 초기값을 대입하는 기능의 커스텀 액션입니다.
+- \<c:set var="num" value="100" /\>
+	- num : 변수의 이름
+	- 100 : 초기값
+
+- 이렇게 선언한 변수는 익스프레션 언어의 EL 식 안에서 사용할 수 있습니다. 하지만 JSP 스트립팅 요소 안에서 사용할 수는 없습니다.
+- \<c:set\> 커스텀 액션을 이용해서 선언한 변수는 자바 변수가 되는 것이 아니라 page 데이터 영역의 애트리뷰트가 되기 때문입니다.
+
+```
+<c:set var="num" value="100" />
+...
+${num}
+```
+
+### <c:if> 커스텀 액션 사용 방법
+- \<c:if\> 커스텀 액션은 자바 프로그램의 if문과 비슷한 역할을 하는 커스텀 액션입니다.
+- 자바와는 달리 조건식을 괄호 안에 쓰는 것이 아니라 test라는 이름의 애트리뷰트 값으로 지정해야 합니다.
+
+```
+<c:if test="${num1 > num2}">
+	num1이 더 큽니다.
+</c:if>
+```
+#### <c:choose> 커스텀 액션 사용 방법
+- 자바 프로그램에 switch 문이 있다면, JSTL 코어 라이브러리에는 <c:choose> 커스텀 액션이 있습니다.
+- \<c:when\>, \<c:otherwise\>라는 커스텀 액션과 함께 사용되는데, 이 두 액션은 각각 switch 문의 case, default 절과 비슷한 역할을 합니다.
+
+#### Greeting.jsp
+```
+<%@page contentType="text/html; charset=utf-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<html>
+	<body>
+		<c:choose>
+			<c:when test="${param.NUM == 0}">
+				처음 뵙겠습니다. <br>
+			</c:when>
+			<c:when test="${param.NUM == 1}">
+				반갑습니다. <br>
+			</c:when>
+			<c:otherwise>
+				안녕하세요. <br>
+			</c:otherwise>
+		</c:choose>
+	</body>
+</html>
+```
+
+#### <c:forEach> 커스텀 액션 사용방법
+- \<c:forEach\> 커스텀 액션은 자바 프로그램의 for 문에 해당하는 기능을 제공하는 커스텀 액션입니다.
+- 즉, 이 액션을 이용하면 특정 HTML 코드를 일정 횟수만큼 반복해서 출력할 수 있습니다.
+
+```
+<c:forEach begin="1" end="10">
+	야호<br>   <!-- 반복 출력할 명령문 -->
+</c:forEach>
+```
+- begin : 시작 값
+- end : 끝 값
+
+```
+<c:forEach var="cnt" begin="1" end="10">
+	${cnt} <br>
+</c:forEach>
+```
+- cnt : 카운터 변수
+
+```
+<c:forEach var="cnt" begin="1" end="10" step="2">
+	${cnt} <br>
+</c:forEach>
+```
+- step : 증가치
+
+```
+<c:forEach var="str" items="${arr}">
+	${str} <br>
+</c:forEach>
+```
+- str : 배열의 각 항목을 저장할 변수
+- arr : 배열 이름 
+
+#### \<c:forEach\>액션의 items 애트리뷰트를 이용해서 처리할 수 있는 데이터 
+- 배열
+- java.util.Collection 객체
+- java.util.Iterator 객체
+- java.util.Enumeration 객체
+- java.util.Map 객체
+- 콤마(,)로 구분된 항목들을 포함한 문자열
+
+#### <c:redirect> 커스텀 액션 사용 방법
+- JSP 페이지를 호출하는 \<jsp:forward\> 표준 액션에 대해서 배웠습니다. 이 표준 액션은 RequestDispatcher 인터페이스의 forward 메서드와 동일한 방법으로 JSP 페이지를 호출합니다.
+- \<c:redirect\> 커스텀 액션도 이와 비슷한 일을 합니다. 하지만 이 메서드는 forward 메서드가 아니라 sendRedirect 메서드와 동일한 방법으로 작동합니다. 
+- 그렇기 때문에 이 액션을 이용하면 JSP 페이지가 아닌 웹 자원과 다른 웹 서버에 있는 웹 자원도 호출할 수 있습니다.
+
+```
+<c:redirect url="http://www.yonggyo.com:3001" />
+```
+
+- 때로는 다른 웹 자원을 호출하면서 데이터를 넘겨주어야 할 경우도 있습니다. 자바 코드에서는 이런 일을 하기 위해 해당 데이터를 쿼리 스트링 형태로 만들어서 URL 뒤에 덧붙여야 하지만 <c:redirect> 커스텀 액션을 이용하면 훨씬 더 간편하고 구조적인 방법으로 이런 일을 할 수 있습니다. 
+- 다음과 같이 <c:redirect>의 시작 태그와 끝 태그 사이에 <c:param>이라는 커스텀 액션을 쓰고 name과 value라는 애트리뷰트를 이용해서 데이터 이름과 데이터 값을 각각 지정하면 됩니다.
+
+```
+<c:redirect url="Buy.jsp">
+	<c:param name="code" value="75458" />
+	<c:param name="num" value="2" />
+</c:redirect>
+```
+- 위 코드가 실행되면 Buy.jsp?code=75458&num=2
+
+#### Redirect.jsp
+```
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:redirect url="Multiply.jsp">
+	<c:param name="NUM1" value="5" />
+	<c:param name="NUM2" value="25" />
+</c:redirect>
+```
+
+#### <c:import> 커스텀 액션 사용 방법
+- \<c:import\> 커스텀 액션은 8장에서 배웠던 \<jsp:include\> 표준 액션과 비슷한 일을 합니다. 다시 말해서 현재의 JSP 페이지에 다른 페이지의 결과를 포함시키는 일을 합니다.
+- 하지만 다른 점은 이 액션을 이용하면 다른 웹 서버에 있는 JSP 페이지도 불러올 수 있고, JSP 페이지가 이닌 다른 종류의 웹 자원도 불러올 수 있다는 점입니다.
+
+```
+<c:import url="Add.jsp" />
+```
+- url : 호출할 웹 자원의 URL 
+
+- 이 액션을 이용해서 호출하는 웹 자원에 데이터를 넘겨주어야 할 경우 시작 태그와 끝 태그 사이에 다음과 같이 \<c:param\> 커스텀 액션을 쓰면 됩니다. 
+```
+<c:import url="adScrap.jsp">
+	<c:param name="product" value="TV" />
+	<c:param name="ad_index" value="007" />
+</c:import>
+```
+
+#### <c:url> 커스텀 액션 사용 방법
+- \<c:url\> 커스텀 액션은 앞에서 배웠던 \<c:set\> 커스텀 액션과 마찬가지로 변수의 선언에 사용되는 액션이지만, URL을 저장하기 위한 변수의 선언에 사용됩니다.
+- 그래서 이 액션에서는 URL을 쉽게 다룰 수 있는 방법도 제공하고 있습니다.
+
+```
+<c:url var="myUrl" value="Add.jsp" />
+```
+
+- URL 뒤에 때로는 스트링 형태로 데이터를 덧붙여야 할 필요가 있습니다. 그럴 때는 이 액션의 시작 태그와 끝 태그 사이에 \<c:param\> 커스텀 액션을 쓰고, name과 value 애트리뷰트 값으로 각각 데이터 이름과 데이터 값을 지정하면 됩니다.
+
+```
+<c:url var="myUrl" value="Add.jsp">
+	<c:param name="NUM1" value="999" />
+	<c:param name="NUM2" value="1" />
+</c:url>
+```
+- Add.jsp?NUM1=999&NUM2=1
+
+- \<c:url\> 커스텀 액션은 바로 앞에서 배운 \<c:redirect\>, \<c:import\> 커스텀 액션과 함께 유용하게 사용될 수도 있습니다.
+#### NewRedirect.jsp
+```
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:url var="next" value="Divide.jsp">
+	<c:param name="NUM1" value="100" />
+	<c:param name="NUM2" value="25" />
+</c:url>
+<c:redirect url="${next}" />
+```
+
+
+### ex01_jstl.jsp
+
+JSTL을 사용하려면 헤더영역에 반드시 등록이 되어 있어야 한다.<br>
+uri는 jstl라이브러리에서 지원되는 기능을 태그별로 구분해주는 구분자이다. <br>
+- 문서 : https://docs.oracle.com/javaee/5/jstl/1.1/docs/tlddocs/c/tld-summary.html
+
+```jsp
+<%@page import="java.util.Date"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<!-- JSTL(JSP Standard Tag Library) 사용하려면... -->
+<!-- c(Core) : if, choose, forEach와 같은 제어문을 사용할 수 있도록 해주는 라이브러리 -->
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
+<!-- fmt(format) : 출력형식(날짜, 숫자) -->
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+<% 	int num = 10;
+	request.setAttribute("n",num);
+	
+	DB에서 값이 넘어왔다고 가정하자
+	List<String> array = new ArrayList<>();
+	array.add("서울");
+	array.add("대전");
+	array.add("대구");
+	
+	request.setAttribute("array",array);
+%>
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+prefix에 c라고 접근했기 때문에 c라고 적는 것/ html안에서 사용가능한 조건식 모양
+	<c:if test="${ n eq 10 }"> 
+		<c:out value="참"/> -> 출력문인데 이거 잘 안씀
+		참 -> 그냥 이렇게 쓰면됨
+	</c:if> -> if – else 문이 없다.
+
+	<hr>
+	<!-- choose 영역 내부에는 주석을 달지 말 것 오류남!!! -->
+	<c:choose> 여러 가지 조건을 비교할 때는 choose가 더 효율적
+		<c:when test="${ param.msg eq 10 }">나는 10이야.</c:when>
+		<c:when test="${ param.msg eq 11 }">나는 11이야.</c:when>
+		<c:otherwise>모두 아니야</c:otherwise>
+	</c:choose>
+	<hr>
+
+<!-- var : 값을 담을 변수
+     begin : 시작값
+     end : 끝값
+     step : 증가값 -->
+		 
+	<c:forEach var="i" begin="1" end="5" step="1"> 
+	var 정보는 scope영역에 등록을 안해도 el표기법으로 출력할 수 있다.
+	
+		<c:if test="${i mod 2 eq 1 }"><!-- i % 2 == 1 -->
+		
+			<font color="red" >안녕 (${ i })</font><br>
+		</c:if>
+	</c:forEach>
+
+	이제 우리는 list에 담겨있는 값들을 for each를 통해서 결과를 출력해야 하는 상황이 됐다.
+	db에서 정보를 가져왔다고 가정하면 db의 정보는 전부 list에 들어가 있을 테니 그 정보를 가지고
+	스크립트릿 출력코드 없이 for each를 통해서 화면에 출력을 해봐야겠죠?
+
+	<hr>
+	
+	원하는만큼 반복하는거하고, 전체를 알아서 돌리는거하고 코드가 다르다.
+	
+	<!-- for(String s : array) -->
+	<!-- cnt.count : 순번
+	     cnt.index : 0번부터 시작하는 index번호 -->
+	<c:forEach var="s" items="${array}" varStatus="cnt">
+		${cnt.count} / ${s} ------${cnt.index} / ${s} <br>
+		 순번 출력됨 1,2,3		add된 방 번호 0,1,2 if문으로 제어하는게 가능
+	</c:forEach>
+</body>
+</html>
+```
+
+#### UserVO.java 클래스 만들기
+
+```java
+public class UserVO {
+	private int idx;
+	private String name;
+	
+	public int getIdx() {
+		return idx;
+	}
+	public void setIdx(int idx) {
+		this.idx = idx;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	
+}
+```
+
+#### ex01_jstl.jsp 코드 추가하기
+
+```
+...
+	UserVO.jsp파일에서 작성 후 객체 생성
+	UserVO u1 = new UserVO();
+	u1.setIdx(1);
+	u1.setName("홍길동");
+	
+	UserVO u2 = new UserVO();
+	u2.setIdx(2);
+	u2.setName("박길동");
+	
+	List<UserVO> uList = new ArrayList<>();
+
+	request.setAttribute("list",uList);
+%>
+
+
+<%
+	//fmt라이브러리 관련
+	int money = 120000000;
+	Date today = new Date();
+	
+	request.setAttribute("money", money);
+	request.setAttribute("today",today);
+
+%>
+
+ ....
+ 
+	<c:forEach var="u" items="${list}">
+		${u.idx} / ${u.name} <br>
+	</c:forEach>
+	
+	<hr>
+	fmt라이브러리 관련<br>
+	<fmt:formatNumber>여기다 값 넣으면 오류남</fmt:formatNumber>
+	&#8361;<fmt:formatNumber value="${ money }"/>원 숫자를 세글자 단위로 쉼표를 찍어줌
+	<fmt:formatDate value="${ today }"/><br>
+	<fmt:formatDate value="${ today }" pattern="yyyy년MM월dd일"/><br>
+	dd : 1월 1일부터 오늘까지 경과된 일 수
+	DD: 오늘 일
+
+```
+
+
