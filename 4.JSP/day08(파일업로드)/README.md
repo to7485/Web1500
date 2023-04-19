@@ -191,11 +191,11 @@ public class FileUploadAction extends HttpServlet {
 		
 		//파일을 포함한 파라미터를 수신하기 위한 객체
 		MultipartRequest mr = new MultipartRequest(request, //request정보를 위임
-													path, //업로드 경로
-													max_size,//최대 업로드 용량
-													"utf-8", //수신시 인코딩 타입
-													new DefaultFileRenamePolicy()// 중복된 파일명을 알아서 변경 같은 이름의 다른 사진을 올리게 되면 갱신되버린다.
-													);
+							   path, //업로드 경로
+							   max_size,//최대 업로드 용량
+							   "utf-8", //수신시 인코딩 타입
+							   new DefaultFileRenamePolicy()// 중복된 파일명을 알아서 변경 같은 이름의 다른 사진을 올리게 되면 갱신되버린다.
+							   );
 		
 		
 		String filename = "no_file";
