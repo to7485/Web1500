@@ -366,6 +366,14 @@ public class FileUploadAction extends HttpServlet {
 
 프로젝트를 다시 실행해보면 사진이 잘 나오는걸 확인할 수 있다.
 
+### 개발방법론
+- MODEL1 : 하나의 jsp에서 자바코드,CSS,html까지 모든 작업을 다 수행하는 형태
+- MODEL2 : 기능에 따라 클래스와 jsp를 분리시켜 사용하는 방법
+	- 모델2는 MVC패턴이라고 부른다.
+	- M : Model(VO)
+	- V : View(jsp)
+	- C : Controller(Servlet)
+
 
 
 
