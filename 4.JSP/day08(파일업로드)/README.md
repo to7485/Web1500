@@ -215,6 +215,7 @@ public class FileUploadAction extends HttpServlet {
 		request.setAttribute("filename", filename);
 		
 		//바인딩해놓은 정보를 어떤 페이지에서 가져다가 사용할 것인지를 지정(포워딩)
+		아무 jsp가서 ${title}로 쓸 수 없다. 꼭 포워딩 된곳에서만 사용할 수 있다.		
 		RequestDispatcher disp = request.getRequestDispatcher("result.jsp");
 		disp.forward(request,response);
 	}
@@ -222,7 +223,9 @@ public class FileUploadAction extends HttpServlet {
 }
 ```
 
+#### result.jsp 생성하기
 
+```
 
 
 
