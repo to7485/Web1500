@@ -564,7 +564,7 @@ public class PhotoInsertAction extends HttpServlet {
 			var json = eval(data);
 
 			if(json[0].param == 'yes') {
-				alert("삭제성공");	
+				alert("삭제성공");	//Ajax를 사용하지 않으면 삭제 되고 나서 경고창을 띄울수 없다.
 			}else {
 				alert("삭제실패");
 			}
@@ -597,9 +597,110 @@ public class PhotoInsertAction extends HttpServlet {
 	</c:forEach>
 ```
 
+### PhotoDelAction 서블릿 만들기
+```
+package action;
 
+import java.io.File;
+import java.io.IOException;
 
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import dao.PhotoDAO;
+
+/**
+ * Servlet implementation class PhotoDelAction
+ */
+@WebServlet("/photo_del.do")
+public class PhotoDelAction extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * @see HttpServlet#service(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		
+		//photo_del.do?idx=3&filename=aaaaa
+		request.setCharacterEncoding("utf-8");
+		
+		int idx = Integer.parseInt(request.getParameter("idx"));
+		String filename = request.getParameter("filename");
+		
+		String web_path = "/upload/";
+		ServletContext app = request.getServletContext();
+		String path = app.getRealPath(web_path);
+		
+		//idx에 해당되는 글 삭제
+		int res = PhotoDAO.getInstance().delete(idx);
+		
+		if(res > 0) {
+			File f = new File(path, filename); //파일클래스가 경로로 접근해서 파일이름을 찾는다.
+			if(f.exists()) {
+				f.delete(); //path경로의 파일 제거
+			}
+		}
+		
+		String param = "no";
+		if(res > 0) {
+			param = "yes";
+		}
+		
+		//결과값인 param을 json 구조로 포장
+		String resultStr = String.format("[{'param':'%s'}]", param);
+		
+		//콜백메서드로 복귀
+		response.getWriter().print(resultStr);
+	}
+
+}
+```
+
+### PhotoDAO에 삭제 메서드 추가하기
+```
+public int delete(int idx) {
+		// TODO Auto-generated method stub
+		int res = 0;
+
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+
+		String sql = "delete from photo where idx=?";
+
+		try {
+			//1.Connection획득
+			conn = DBService.getInstance().getConnection();
+			//2.명령처리객체 획득
+			pstmt = conn.prepareStatement(sql);
+
+			//3.pstmt parameter 채우기
+			pstmt.setInt(1, idx);
+			//4.DB로 전송(res:처리된행수)
+			res = pstmt.executeUpdate();
+			System.out.println("res: " + res);
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		} finally {
+
+			try {
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return res;
+	}
+```
 
 
 
