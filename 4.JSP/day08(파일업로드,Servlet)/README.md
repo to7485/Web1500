@@ -226,19 +226,145 @@ public class FileUploadAction extends HttpServlet {
 #### result.jsp 생성하기
 
 ```
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script>
+	
+</script>
+</head>
+<body>
+	제목: ${ title }<br>
+	<img src="${ filename }" width="200">
+</body>
+</html>
+```
+사진이 깨져서 나온다.
+
+![image](https://user-images.githubusercontent.com/54658614/233123149-3f18cc8e-6777-408e-9d0c-f390dfc4903e.png)
+
+하지만 jsp는 프로젝트의 외부경로까지 접근을 할 수가 없다.
+
+프로젝트 내부에서 upload폴더를 하나 만들자.
+
+![image](https://user-images.githubusercontent.com/54658614/233123488-0f84c629-7155-4711-bbbf-5aa2123dda97.png)
+
+#### result.jsp 코드 수정하기
+
+```
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script>
+	
+</script>
+</head>
+<body>
+	제목: ${ title }<br>
+	<img src="upload/${ filename }" width="200">
+</body>
+</html>
+```
+
+하지만 사진은 여전히 c드라이브에 있고 불러올수 없다
+
+그렇기 때문에 애초에 프로젝트의 upload폴더에 사진을 넣어야 한다.
+
+- 상대경로 : 프로젝트 내의 눈에 보이는 폴더가 있는 경로(보통 웹을 디자인 하기 위한 이미지를 넣는다.)
+- 절대경로 : 컴퓨터 내의 특정 경로에 상대경로와 연결이 되어 있는 폴더
+
+상대경로에 넣은 데이터는 절대경로에 들어가지만, 절대경로에 직접 넣으면 상대경로에서는 보이지 않는다.
+
+#### FileUploadAction 코드 수정하기
+- 프로젝트의 upload 폴더와 연결되어 있는 절대경로를 찾아내보자!
 
 
+```java
+package action;
 
+import java.io.File;
+import java.io.IOException;
 
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import com.oreilly.servlet.MultipartRequest;
+import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
 
+/**
+ * Servlet implementation class FileUploadAction
+ */
+@WebServlet("/upload.do")
+public class FileUploadAction extends HttpServlet {
+	private static final long serialVersionUID = 1L;
 
+	/**
+	 * @see HttpServlet#service(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		
+		String web_path = "/upload/";
+		//현재 프로젝트에 대한 정보를 관리하는 클래스
+		ServletContext application = request.getServletContext();
+		
+		//web상의 상대경로 -> 절대경로로 변환
+		//더이상 c드라이브로 접근하지 말고 절대경로로 접근해봐
+		String path = application.getRealPath(web_path);
+		System.out.println(path);
+		
+		//최대 업로드 용량은 버퍼영역을 사용하여 업로드 시에만 공간을 확보하기 때문에
+		//크게 잡아도 메모리 낭비는 없다.
+		int max_size = 1024 * 1024 * 100; //최대 업로드 용량이 100mb
+		
+		//file타입을 포함한 파라미터를 받기위한 객체
+		MultipartRequest mr = new MultipartRequest(request,
+							   path,	//업로드 경로
+		 					   max_size,	//최대 용량
+							   "utf-8",	//수신 인코딩 타입
+							   new DefaultFileRenamePolicy()); //파일명 중복시 넘버링 처리
+		
+		//업로드된 파일정보 얻어오기
+		String filename = "";
+		File f= mr.getFile("photo"); //c:/upload/파일명.jpg
+		
+		if( f != null) { //정상적으로 파일이 업로드 되었다면
+			filename = f.getName(); //업로드 된 파일명
+			System.out.println(filename);
+		}
+		
+		//파일클래스 이외의 일반적인 파라미터 수신
+		String title = mr.getParameter("title");
+		
+		//파일정보 바인딩
+		request.setAttribute("title", title);
+		request.setAttribute("filename", filename);
+		RequestDispatcher disp = request.getRequestDispatcher("result.jsp");
+		disp.forward(request,response);
+	}
 
+}
 
+```
 
+![image](https://user-images.githubusercontent.com/54658614/233126838-fc6d50e0-0f78-4ff9-a9cd-360a45a19201.png)
 
+콘솔의 절대경로를 복사해서 파일 탐색기로 가보면 사진이 저장되어 있는걸 확인할 수 있다.
 
-
+프로젝트를 다시 실행해보면 사진이 잘 나오는걸 확인할 수 있다.
 
 
 
