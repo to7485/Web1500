@@ -57,20 +57,22 @@ function sendRequest(url, param, callBack, method){
 	if(httpMethod == 'GET' && httpParam != null)
 		httpURL = httpURL+"?"+httpParam;
 	
-  //xhr.open( 요청방식, 접근url, 비동기(true면 비동기) ); 
+  	//xhr.open( 요청방식, 목적지, 비동기(true면 비동기));
+	//동기로 진행할 경우 onreadystatechange 함수 필요없이 응답을 기다렸다가
+	//send함수 뒤에 나오는 script코드를 응답이 오면 동작하게 된다.
 	xhr.open(httpMethod, httpURL, true);
 
 	//만약 "POST" type을 보내려 한다면, 요청(request)에 MINE type을 설정 해야 한다.
-  //예를 들자면 send()를 호출 하기 전에 아래와 같은 형태로 send()로 보낼 쿼리를 이용해야 한다.
-	xhr.setRequestHeader("Content-Type",
-	  "application/x-www-form-urlencoded");
-    
-//application/x-www-form-urlencoded는 html의 form의 기본 Content-Type이다.
-//application/x-www-form-urlencoded는 key=value&key=value의 형태로 전달된다는 점입니다.
+  	//예를 들자면 send()를 호출 하기 전에 아래와 같은 형태로 send()로 보낼 쿼리를 이용해야 한다.
+	//application/x-www-form-urlencoded는 html의 form의 기본 Content-Type이다.
+	//application/x-www-form-urlencoded는 key=value&key=value의 형태로 전달된다는 점입니다.
+	xhr.setRequestHeader("Content-Type","application/x-www-form-urlencoded");   
+
 
 	//작업이 완료된 후 호출될 콜백메서드 지정
 	xhr.onreadystatechange = callBack;
 	
+	//send() : 데이터 교환을 요청하는 함수
 	xhr.send(httpMethod == 'POST'?httpParam:null);
 }
 ```
