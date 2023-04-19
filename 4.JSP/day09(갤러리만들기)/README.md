@@ -529,72 +529,72 @@ public class PhotoInsertAction extends HttpServlet {
 
 ```
 <script>
-		function del(f){
-			var idx = f.idx.value;
-			var pwd = f.pwd.value; //원본비밀번호
-			var pwd2 = f.pwd2.value; //입력한 비밀번호
-			
-			alert(f.idx.value);
-			
-			if(pwd != pwd2) {
-				alert("비밀번호가 일치하지 않습니다");
-				return;
-			}
-			
-			if(!confirm("삭제?")){
-				return;
-			}
-			//삭제를 원하는 idx를 서버로 전송
-			var url = "photo_del.do";
-      //encodeURIComponent : 전달할 파라미터에 특수문자가 섞여있다면 오류를 방지하기 위해 사용해주는 인코딩 메서드
-			var param = "idx="+encodeURIComponent(idx)+"&filename="+f.filename.value;
-			
-			sendRequest(url, param, finRes,"POST");
+	function del(f){
+		var idx = f.idx.value;
+		var pwd = f.pwd.value; //원본비밀번호
+		var pwd2 = f.pwd2.value; //입력한 비밀번호
+
+		alert(f.idx.value);
+
+		if(pwd != pwd2) {
+			alert("비밀번호가 일치하지 않습니다");
+			return;
 		}
-		
-		function finRes(){
-			if(xhr.readyState == 4 && xhr.status ==200){
-				
-				//서블릿으로부터 도착한 데이터 읽어오기
-				var data = xhr.responseText;
-				
-				//넘겨받은 data는 ""로 묶여진 문자열 구조로 인식하기 때문에
-				//JSON형식으로 변경을 해줘야 한다.
-				//data ---> "[{'param':'no'}]"
-				var json = eval(data);
-				
-				if(json[0].param == 'yes') {
-					alert("삭제성공");	
-				}else {
-					alert("삭제실패");
-				}
-				
-				location.href="list.do";
-			}
+
+		if(!confirm("삭제?")){
+			return;
 		}
-	</script>
+		//삭제를 원하는 idx를 서버로 전송
+		var url = "photo_del.do";
+//encodeURIComponent : 전달할 파라미터에 특수문자가 섞여있다면 오류를 방지하기 위해 사용해주는 인코딩 메서드
+		var param = "idx="+encodeURIComponent(idx)+"&filename="+f.filename.value;
+
+		sendRequest(url, param, finRes,"POST");
+	}
+
+	function finRes(){
+		if(xhr.readyState == 4 && xhr.status ==200){
+
+			//서블릿으로부터 도착한 데이터 읽어오기
+			var data = xhr.responseText;
+
+			//넘겨받은 data는 ""로 묶여진 문자열 구조로 인식하기 때문에
+			//JSON형식으로 변경을 해줘야 한다.
+			//data ---> "[{'param':'no'}]"
+			var json = eval(data);
+
+			if(json[0].param == 'yes') {
+				alert("삭제성공");	
+			}else {
+				alert("삭제실패");
+			}
+
+			location.href="list.do";
+		}
+	}
+</script>
 
 
 ......
 
 <c:forEach var="vo" items="${list}"> ${vo.idx}
-				<div class="photo_type">
-					<img src="upload/${vo.filename}">
-				
-					<div class="title">${vo.title}</div>
-					
-				<form>
-					<input type="hidden" name="idx" value="${vo.idx}"> 지우기 위해 index번호를 보내주자.
-					<input type="hidden" name="pwd" value="${vo.pwd}"> 원본비밀번호(내가 입력한 비밀번호와 일치하면 삭제 하게 해주자)
-					<input type="hidden" name="filename" value="${vo.filename}">
-				
-					<div align="center">
-						<input type="password" name="pwd2" size="5">
-						<input type="button" value="삭제" onclick="del(this.form)">
-					</div>
-				</form>
-				</div>
-			</c:forEach>
+	<div class="photo_type">
+		<img src="upload/${vo.filename}">
+
+		<div class="title">${vo.title}</div>
+
+	<form>
+		<input type="hidden" name="idx" value="${vo.idx}"> 지우기 위해 index번호를 보내주자.
+		<input type="hidden" name="pwd" value="${vo.pwd}"> 원본비밀번호(내가 입력한 비밀번호와 일치하면 삭제 하게 해주자)
+		<input type="hidden" name="filename" value="${vo.filename}">
+
+		<div align="center">
+			<input type="password" name="pwd2" size="5">
+			<input type="button" value="삭제" onclick="del(this.form)">
+		</div>
+	</form>
+	</div>
+	</c:forEach>
 ```
 
 
