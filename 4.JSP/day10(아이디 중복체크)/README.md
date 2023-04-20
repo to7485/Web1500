@@ -24,5 +24,221 @@ DB와 연결을 하기 위해 context.xml과 service패키지, 라이브러리�
 
 ## vo패키지에 UserVO 클래스 생성하기
 ```java
+package vo;
 
+public class UserVO {
+	//회원관리객체
+	int idx;//일련번호
+	String name;//이름
+	String id;//아이디
+	String pwd;//패스워드
+	
+	
+	public int getIdx() {
+		return idx;
+	}
+	public void setIdx(int idx) {
+		this.idx = idx;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
+	public String getPwd() {
+		return pwd;
+	}
+	public void setPwd(String pwd) {
+		this.pwd = pwd;
+	}
+	
+}
+```
+
+## dao패키지에 UserDAO클래스 생성하기
+
+![image](https://user-images.githubusercontent.com/54658614/233263328-0e563340-1e5f-4398-8693-99c7d70cf5d3.png)
+
+
+```java
+public class UserDAO {
+	// single-ton pattern: 
+	// 객체1개만생성해서 지속적으로 서비스하자
+
+	//_singleton 템플릿
+	static MemberDAO single = null;
+
+	public static MemberDAO getInstance() {
+		//생성되지 않았으면 생성
+		if (single == null)
+			single = new MemberDAO();
+		//생성된 객체정보를 반환
+		return single;
+	}
+우리의 목적은 서블릿에서 전체 목록을 조회해서 바인딩을 해서 jsp로 포워딩해서 보여주는것!
+	
+		//회원정보 조회
+		//_select_list 템플릿
+		public List< MemberVO > selectList() {
+
+			List< MemberVO > list = new ArrayList<MemberVO>();
+			Connection conn = null;
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+			
+			//idx내림차순으로 검색
+			String sql = "select * from myshop order by idx order by desc";
+
+			try {
+				//1.Connection얻어온다
+				conn = DBService.getInstance().getConnection();
+				//2.명령처리객체정보를 얻어오기
+				pstmt = conn.prepareStatement(sql);
+
+				//3.결과행 처리객체 얻어오기
+				rs = pstmt.executeQuery();
+
+				while (rs.next()) {
+
+					MemberVO vo = new MemberVO();
+					
+					//현재레코드값=>Vo저장
+					vo.setIdx(rs.getInt("idx"));
+					vo.setName(rs.getString("name"));
+					vo.setId(rs.getString("id"));
+					vo.setPwd(rs.getString("pwd"));
+				
+					//ArrayList추가
+					list.add(vo);
+
+				}
+
+			} catch (Exception e) {
+				// TODO: handle exception
+				e.printStackTrace();
+			} finally {
+					..................
+			}
+
+			return list;
+		}//selectList()
+		
+		//_insert템플릿
+		public int insert(MemberVO vo) {
+			
+			int res = 0;
+
+			Connection conn = null;
+			PreparedStatement pstmt = null;
+
+			String sql = 
+			   "insert into myshop values(seq_myshop_idx.nextVal,?, ?, ?)";
+
+			try {
+				//1.Connection획득
+				conn = DBService.getInstance().getConnection();
+				//2.명령처리객체 획득
+				pstmt = conn.prepareStatement(sql);
+
+				//3.pstmt parameter 채우기
+				pstmt.setString(1, vo.getName());
+				pstmt.setString(2, vo.getId());
+				pstmt.setString(3, vo.getPwd());
+
+				//4.DB로 전송(res:처리된행수)
+				res = pstmt.executeUpdate();
+
+			} catch (Exception e) {
+				// TODO: handle exception
+				e.printStackTrace();
+			} finally {
+				..............
+			}
+			return res;
+		}//insert()
+}
+
+```
+
+## action패키지에 MemberListAction서블릿 만들기
+
+```java
+@WebServlet("/member_list.do") //url맵핑 변경!!!!!!!
+
+public class MemberListAction extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+		//회원목록 얻어오기
+		List<UserVO> list = MemberDAO.getInstance().selectList();
+
+		//리퀘스트 영역에 list바인딩
+		request.setAttribute("list", list);
+
+		//member_list.jsp에서 el기법을 사용할수 있도록 하기 위해
+		//위에서 바인딩해준 list정보를 넘겨준다.
+		RequestDispatcher disp = 
+				request.getRequestDispatcher("member_list.jsp");
+
+		disp.forward(request, response);
+	}
+}
+```
+
+## member_list.jsp 생성하기
+```
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="js/httpRequest.js"></script>
+<style>
+	table{border-collapse:collapse;} --> 테이블 테두리 한겹으로 바꿈
+	th{ width:200px;
+		height:60px;}
+</style>
+</head>
+<body>
+	<table border="1">
+		<tr>
+			<td colspan="5" align="center">
+				<input type="button" value="회원가입" onclick="location.href='member_insert_form.jsp'">
+			</td>
+		</tr>
+		
+		<tr>
+			<th>회원번호</th>
+			<th>이름</th>
+			<th>아이디</th>
+			<th>비밀번호</th>
+			<th>비고</th>
+		</tr>
+		
+		<c:forEach var="vo" items="${list}">
+			<td>${vo.idx}</td>
+			<td>${vo.name}</td>
+			<td>${vo.id}</td>
+			<td>${vo.pwd}</td>
+			
+			<td>
+				<input type="button" value="삭제" onclick="del('${vo.idx}');">
+			</td>
+		</c:forEach>
+	</table>
+
+</body>
+</html>
 ```
