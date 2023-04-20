@@ -295,7 +295,7 @@ public class MemberListAction extends HttpServlet {
 			<tr>
 				<th>아이디</th>
 				<td>
-				<input name="id">
+				<input name="id" id="id">
 				<input type="button" value="중복체크" onclick="check_id()";>
 				</td>
 			</tr>
@@ -371,4 +371,227 @@ public class MemberInsertAction extends HttpServlet {
 	}
 }
 ```
+이제 회원가입을 클릭했을 때 아이디가 중복되면 가입할 수 없도록 처리해보자
+
+## member_list_form.jsp에 코드 추가하기
+
+```
+<script type="text/javascript">
+		
+		//아이디 중복여부 체크
+		var b_idCheck = false;
+	
+		function send(f){
+			//입력내용 체크
+			var id = f.id.value.trim();
+			var pwd = f.pwd.value.trim();
+				.............
+			중복체크 버튼을 눌렀을 때 내가 입력한 id를 DB까지 전달해서 데이터가 없다면 b_idCheck를 true로 바꾸자.			
+			if( !b_idCheck ){
+				alert("아이디 중복체크를 하세요");	
+				return;
+			}
+				
+			f.action = "insert.do";
+			f.submit();
+			
+		}//send()			
+		
+		
+		//아이디 중복체크를 위한 메서드
+		function check_id(){
+
+			//아이디 중복체크
+			var id = document.getElementById("id").value.trim();
+		
+			if(id == ''){
+				alert("아이디를 입력하세요");
+				return;
+			}
+			완전히 새로고침을 하면 텍스트필드에 적혀있는 것도 다 날아간다. 무한으로 중복체크만 하게 될 것이다.
+			
+			//id를 Ajax를 통해서 서버로 전송
+			var url = "check_id.do";//MemberCheckIdAction.java 서블릿
+			
+			//id에 @와 같은 특수문자가 들어가 있는 경우를 대비하여 인코딩하여 보낸다.
+			var param = "id=" + encodeURIComponent(id);
+
+			sendRequest( url, param, resultFn, "POST" );
+			
+		}//check_id()
+		
+		function resultFn(){
+			
+		}//resultFn()
+		
+		
+	</script>
+```
+
+## action패키지에 MemberCheckAction서블릿 생성
+
+![image](https://user-images.githubusercontent.com/54658614/233267529-c63377a8-9a6f-4f95-8f13-debf6c11e30f.png)
+
+
+```
+/**
+ * Servlet implementation class MemberIdCheckAction
+ */
+@WebServlet("/check_id.do")
+public class MemberIdCheckAction extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * @see HttpServlet#service(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// /check_id.do?id=aaaa
+		String id = request.getParameter("id");
+		UserVO vo = UserDAO.getInstance().selectOne(id); //DB에 접근
+		
+		String res = "no";
+		if(vo == null) {//중복조회를 해서 회원가입이 가능한 경우
+			res = "yes";
+		}
+		
+		String result = String.format("[{'res':'%s'}]",res);
+		//result를 가지고 콜백메서드 복귀
+		response.getWriter().print(result);
+		
+	}
+
+}
+```
+
+## UserDAO에 selectOne메서드 추가하기
+- 입력받은 아이디를 DB까지 가지고 가서 있는지 검증을 해서 결과를 돌려주자
+
+```
+//아이디 중복체크
+	public UserVO selectOne(String id) {
+
+		UserVO vo = null;
+
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = "select * from myuser where id=?";
+
+		try {
+			//1.Connection얻어온다
+			conn = DBService.getInstance().getConnection();
+			//2.명령처리객체정보를 얻어오기
+			pstmt = conn.prepareStatement(sql);
+
+			//3.pstmt parameter 설정
+			pstmt.setString(1,id);
+			//4.결과행 처리객체 얻어오기
+			rs = pstmt.executeQuery();
+
+			//해당 if문은 조회가 한건이라도 되었을 때만 수행
+			if (rs.next()) {
+				vo = new UserVO();
+				//현재레코드값=>Vo저장
+				//이미 가입된 사람의 정보를 얻을 수 있음
+				//vo.setIdx(rs.getInt("idx"));
+			}
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		} finally {
+
+			try {
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		//vo -> null : 회원가입이 가능한 상태
+		//vo -> null이 아님 : 회원가입이 불가능한 상태
+		return vo;
+	}
+```
+check_id.do에서 아이디 중복여부를 json타입으로 전달하였기 때문에<br>
+member_insert_form.jsp에서 resultFn() 콜백메서드를 통해 값을 처리해줘야 한다.<br>
+
+## member_insert_form.jsp의 콜백메서드 작성해주기
+```
+<script type="text/javascript">
+		
+	//아이디 중복여부 체크
+	var b_idCheck = false;
+
+	function send(f){
+		.........
+	}//send()			
+
+
+	//아이디 중복체크를 위한 메서드
+	function check_id(){
+			...............
+		sendRequest( url, param, resultFn, "POST" );
+
+	}//check_id()
+
+	function resultFn(){
+		if(xhr.readyState == 4 && xhr.status == 200){
+			//"[{'res':'no'}]"
+			var data = xhr.responseText;
+			//문자열 구조인 data를 실제 JSON형태로 변환
+			var json = eval(data);
+
+			if(json[0].res == 'no'){
+				alert("이미 사용중인 아이디 입니다.");
+				return;
+			} else {
+				//회원가입이 가능한 경우
+				alert("사용 가능한 아이디 입니다");
+				b_idCheck = true;
+			}
+		}
+	}
+
+</script>
+```
+여기에 커다란 오류가 한가지 있다.<br>
+처음에 중복되지 않은 아이디로 중복체크를 하게 되면 b_idCheck 의 값이 true로 바뀌게 되는데<br>
+문제는 그 다음 다시 중복되는 아이디로 적은다음 가입을 누르면 가입이 된다는 점이다.<br>
+
+b_idCheck가 true로 바뀌게 되면서 이미 가입했던 아이디로 가입이 되버린다.<br>
+하지만 테이블에서 만들 때 유니크로 만들었기 때문에 오류가 난다. 오류가 아닌 경고를 띄워주자.<br>
+
+## member_insert_form.jsp에 코드 추가하기
+```
+<script>
+//아이디를 입력받는 입력상자의 값이 변환되면 호출되는 메서드
+function che(){
+	b_idCheck = false;
+}
+
+</script>
+
+
+ <tr>
+	<th>아이디</th>
+	<td>
+	<input name="id" id="id" onchange="che()">
+	<input type="button" value="중복체크" onclick="check_id()";>
+	</td>
+</tr>
+```
+
+
+
+
+
+
+
+
 
