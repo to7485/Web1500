@@ -86,9 +86,9 @@ public class UserDAO {
 	
 		//회원정보 조회
 		//_select_list 템플릿
-		public List< MemberVO > selectList() {
+		public List< UserVO > selectList() {
 
-			List< MemberVO > list = new ArrayList<MemberVO>();
+			List< UserVO > list = new ArrayList<MemberVO>();
 			Connection conn = null;
 			PreparedStatement pstmt = null;
 			ResultSet rs = null;
@@ -107,7 +107,7 @@ public class UserDAO {
 
 				while (rs.next()) {
 
-					MemberVO vo = new MemberVO();
+					UserVO vo = new UserVO();
 					
 					//현재레코드값=>Vo저장
 					vo.setIdx(rs.getInt("idx"));
@@ -131,7 +131,7 @@ public class UserDAO {
 		}//selectList()
 		
 		//_insert템플릿
-		public int insert(MemberVO vo) {
+		public int insert(UserVO vo) {
 			
 			int res = 0;
 
@@ -139,7 +139,7 @@ public class UserDAO {
 			PreparedStatement pstmt = null;
 
 			String sql = 
-			   "insert into myshop values(seq_myshop_idx.nextVal,?, ?, ?)";
+			   "insert into myshop values(seq_myUser_idx.nextVal,?, ?, ?)";
 
 			try {
 				//1.Connection획득
@@ -178,7 +178,7 @@ public class MemberListAction extends HttpServlet {
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		//회원목록 얻어오기
-		List<UserVO> list = MemberDAO.getInstance().selectList();
+		List<UserVO> list = UserDAO.getInstance().selectList();
 
 		//리퀘스트 영역에 list바인딩
 		request.setAttribute("list", list);
@@ -242,3 +242,133 @@ public class MemberListAction extends HttpServlet {
 </body>
 </html>
 ```
+
+![image](https://user-images.githubusercontent.com/54658614/233264349-a5fc4853-0d8a-4ec2-b1bf-9276ac737dbe.png)
+
+## 회원가입을 위한 member_insert_form.jsp 생성하기
+
+![image](https://user-images.githubusercontent.com/54658614/233264878-074b3f58-c00f-43ae-b93a-109ea3e85131.png)
+
+
+```
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+
+	<script src="js/httpRequest.js"></script>
+	
+	<script>
+		var b_idCheck = false;
+		
+		function send(f){
+			
+			var id = f.id.value.trim();
+			var pwd = f.pwd.value.trim();
+			var name = f.name.value.trim();
+			
+			//유효성체크
+			if(id=='') {
+				alert("아이디를 입려하세요"); 
+			//db에서 notnull로 만들었어도 비워버리면 그냥 500에러가 나버림
+				return;
+			}
+			
+			//했다쳐
+			
+			f.method = "POST";
+			f.action = "insert.do";
+			f.submit();
+		}
+	
+	</script>
+	
+</head>
+<body>
+	<form>
+		<table border="1">
+			<caption>:::회원가입:::</caption>
+			
+			<tr>
+				<th>아이디</th>
+				<td>
+				<input name="id">
+				<input type="button" value="중복체크" onclick="check_id()";>
+				</td>
+			</tr>
+			<tr>
+				<th>이름</th>
+				<td>
+				<input name="name">
+				</td>
+			</tr>
+			<tr>
+				<th>비밀번호</th>
+
+				<td>
+				<input name="pwd" type="password">
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2" align="center">
+					<input type="button" value="가입" onclick="send(this.form);">
+					<input type="button" value="취소" onclick="location.href='member_list.do'">
+				</td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>
+
+```
+## action패키지에 MemberInsertAction서블릿 생성
+```
+package action;
+
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import dao.UserDAO;
+import vo.UserVO;
+
+/**
+ * Servlet implementation class MemberInsertAction
+ */
+@WebServlet("/insert.do")
+public class MemberInsertAction extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * @see HttpServlet#service(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void service(HttpServletRequest request, HttpServletResponse response) 
+						throws ServletException, IOException {
+		// insert.do?id=aaa&pwd=1111&name=홍길동
+		request.setCharacterEncoding("utf-8");
+		
+		String id = request.getParameter("id");
+		String pwd = request.getParameter("pwd");
+		String name = request.getParameter("name");
+		
+		UserVO vo = new UserVO();
+		vo.setId(id);
+		vo.setPwd(pwd);
+		vo.setName(name);
+		
+		int res = UserDAO.getInstance().insert(vo);
+		
+		if(res >=1 ) {
+			response.sendRedirect("member_list.do");
+		}
+	}
+}
+```
+
