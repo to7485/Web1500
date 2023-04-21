@@ -581,17 +581,145 @@ function che(){
  <tr>
 	<th>아이디</th>
 	<td>
+	oninput : input 태그 안의 값들이 변경될때마다 이벤트가 발생한다.
+	onchange : input태그의 포커스를 벗어났을때(즉, 입력이 끝났을 때) 발생하는 이벤트
 	<input name="id" id="id" onchange="che()">
 	<input type="button" value="중복체크" onclick="check_id()";>
 	</td>
 </tr>
 ```
 
+## 삭제하기
 
+### member_list.jsp에 내용 추가하기
+```
+<script type="text/javascript">
 
+	//삭제 메서드
+	function del(idx){			
+		if(confirm("정말 삭제하시겠습니까?") == false){
+			//아니오 버튼 클릭시
+			return;
+		}
+		//삭제를 원하는 사용자의 idx를 Ajax를 통해서 서버로 전송
+		var url = "member_del.do";
 
+	//id에 @와 같은 특수문자가 들어가 있는 경우를 대비해서 인코딩하여 보낸다.
+		var param = "idx=" + encodeURIComponent(idx);
 
+		sendRequest( url, param, resultFn, "GET" );
+	}
 
+	function resultFn(){
+
+	}
+
+</script>
+```
+
+## MemberDelAction.java 서블릿 생성
+
+```
+@WebServlet("member_del.do") //반드시 변경!!!
+
+public class MemberDelAction extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+		request.setCharacterEncoding("utf-8");
+
+		int idx = Integer.parseInt(request.getParameter("idx"));	
+	
+		//db에서 값 제거
+		int res = UserDAO.getInstance().delete(idx); <-- 없으므로 만들어 주자!!
+		//System.out.println("res : " + res);		
+		
+		String param = "no";
+		if( res > 0 ){//삭제성공시
+			param = "yes";
+		}
+		
+		//JSON배열로 결과값을 보낸다.
+		// {:}<-이렇게가 아니라 [{ : }]<-이렇게 배열로 보내야 안전성이 올라간다.
+		// {:}는 가끔 안가는 경우가 있더라
+		String resultStr = String.format("[{'param':'%s'}]", param);
+		
+		//전송(응답)하기
+		response.getWriter().println(resultStr);	
+	}
+	
+}
+```
+
+## UserDAO.java에 delete()메서드 추가하기
+```
+public class UserDAO {
+
+	//_delete 템플릿
+	public int delete( int idx ) {
+
+		int res = 0;
+
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+
+		String sql = "delete from myshop where idx=?";
+
+		try {
+			//1.Connection획득
+			conn = DBService.getInstance().getConnection();
+			//2.명령처리객체 획득
+			pstmt = conn.prepareStatement(sql);
+
+			//3.pstmt parameter 채우기
+			pstmt.setInt(1, idx);
+
+			//4.DB로 전송(res:처리된행수)
+			res = pstmt.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			................
+		}
+		return res;
+	}//delete()
+}
+```
+
+## 콜백함수로 내용 돌려받기
+
+```
+	//삭제 메서드
+	function del(idx){			
+		...........
+		sendRequest( url, param, resultFn, "GET" );
+	}
+
+	function resultFn(){
+
+		if(xhr.readyState==4 && xhr.status==200)
+		{
+			//도착된 데이터를 읽어오기
+			var data = xhr.responseText;
+
+			//데이터를 JSON표기법으로 파싱
+			//json = [{'param':'yes'}]
+			var json = eval( data );
+
+			if(json[0].param == 'yes'){
+				alert("삭제를 완료하였습니다.");
+			}else{
+				alert("삭제에 실패하였습니다.");
+			}		
+
+			location.href = "member_list.do";
+		}	
+	}
+
+</script>
+```
 
 
 
