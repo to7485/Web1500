@@ -1,6 +1,6 @@
 # 쿠키
-
-- 세션과 마찬가지로 클라이언트와 웹 서버 간의 상태를 지속적으로 유지하는 방법입니다.
+- 기본적으로 HTTP 프로토콜 환경은 한번 요청을 한 후 한번 응답을 하고 연결이 종료됩니다.
+- 그래서 서버는 클라이언트가 누구인지 매번 확인을 해야 하는데 이를 보완하기 위해 쿠키와 세션을 사용합니다.
 - 세션과 달리 상태 정보를 웹서버가 아닌 클라이언트에 저장합니다.
 - 쿠키는 클라이언트의 정보를 웹 브라우저에 저장하므로 이후에 웹 서버로 전송되는 요청에는 쿠키가 가지고 있는 정보가 포함됩니다.
 - 웹 브라우저가 접속했던 웹 사이트에 관한 정보와 개인 정보가 기록되기 때문에 보안에 문제가 있습니다.
@@ -12,6 +12,16 @@
 - **쿠키 전송단계** : 웹브라우저는 한 번 저장된 쿠키를 요청이 있을 때마다 웹 서버에 전송합니다. 웹 서버는 웹 브라우저가 전송한 쿠키를 사용하여 필요한 작업을 수행할 수 있습니다.
 
 > 일단 웹 브라우저에 쿠키가 저장되면 웹 브라우저는 쿠키가 삭제되기 전까지 웹 서버에 쿠키를 전송합니다
+
+![image](https://user-images.githubusercontent.com/54658614/233833480-66799c56-efb5-4535-9aa8-6bb85aa5f836.png)
+
+### 쿠키의 구성요소
+- 이름 : 각각의 쿠키를 구별하는 데 사용되는 이름
+- 값 : 쿠키의 이름과 관련된 값
+- 유효시간 : 쿠키의 유지시간
+- 도메인 : 쿠키를 전송할 도메인
+- 경로 : 쿠키를 전송할 요청 경로
+
 
 #### Cookie 클래스의 메서드 종류
 
@@ -28,7 +38,7 @@
 |setComment(String)|void|쿠키에 대한 설명을 설정합니다.|
 |setDomain(String)|void|쿠키에 유효한 도메인을 설정합니다.|
 |setMaxAge(int)|void|쿠키의 유효기간을 설정합니다.|
-|setPath(String)|void|쿠키의 유효기간을 설정합니다.|
+|setPath(String)|void|쿠키가 적용되는 경로를 지정합니다.|
 |setSecure(boolean)|void|쿠키의 보안을 설정합니다.|
 |setValue(String)|void|쿠키의 값을 설정합니다.|
 |setVersion(int)|void|쿠키의 버전을 설정합니다.|
@@ -54,18 +64,48 @@
 Cookie Cookie(String name, String value)
 ```
 
+
+
 ## Ex_날짜_Cookie_Session 프로젝트 생성하기
 
-### ex01_Cookie.jsp 생성하기
+## SetCookieAction 서블릿 생성하기
+```
+package action;
 
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ * Servlet implementation class SetCookieAction
+ */
+@WebServlet("/cookie.do")
+public class SetCookieAction extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * @see HttpServlet#service(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		Cookie cookie = new Cookie("param1", "asdf");
+		response.addCookie(cookie);
+		
+		response.sendRedirect("ex01_Cookie.jsp");
+	}
+}
+
+```
+
+### ex01_Cookie.jsp 생성하기
 ```jsp
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-    
-    서버 쿠키 생성, 응답 -> 개인의 브라우저에 쿠키 저장 -> 브라우저가 요청시 요청 헤더에 담아서 서버에 전송
-    
-    <% Cookie cookie = new Cookie("param1","abcdefg");
-    response.addCookie(cookie);%>
+       
 <!DOCTYPE html>
 <html>
 <head>
@@ -73,10 +113,16 @@ Cookie Cookie(String name, String value)
 <title>Insert title here</title>
 </head>
 <body>
-
+	쿠키저장완료<br>
+	쿠키이름 : ${cookie.param1.name}<br>
+	쿠키내용 : ${cookie.param1.value}<br>
 </body>
 </html>
 ```
+![image](https://user-images.githubusercontent.com/54658614/233833376-6ae14eb3-c78a-40b5-bacc-299c84df3fa6.png)
+
+
+
 ![image](https://user-images.githubusercontent.com/54658614/233546625-a0a67b82-7b25-4f61-9ff8-b8667a7f8a08.png)
 
 응답헤더에 쿠키가 잘 저장이 되어있는걸 볼 수 있다.
@@ -119,28 +165,41 @@ String getName() - 쿠키 이름
 String getValue() - 쿠키 값 
 ```
 
-### ex02_Cookie.jsp 생성하기
-
-```html
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-    
-<% Cookie[] cookies = request.getCookies(); 
-	for(Cookie cookie : cookies){
-		out.println(cookie.getName() + " : " + cookie.getValue()+"<br>");
-	}
-%>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
-
-</body>
-</html>
+## 쿠키 기한 정하기 SetCookieAction서블릿 코드 추가하기
 ```
+package action;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ * Servlet implementation class SetCookieAction
+ */
+@WebServlet("/cookie.do")
+public class SetCookieAction extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * @see HttpServlet#service(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		Cookie cookie = new Cookie("param1", "asdf");
+		cookie.setMaxAge(60*60*24*7);//일주일
+		response.addCookie(cookie);
+		
+
+		response.sendRedirect("ex01_Cookie.jsp");
+	}
+}
+```
+
+![image](https://user-images.githubusercontent.com/54658614/233834027-ebc7a46e-bdd3-4271-8fd9-d80a3c0f8149.png)
 
 
 ## 쿠키 삭제
@@ -154,31 +213,13 @@ void setMaxAge(int age)
 
 #### setMaxAge() 메서드 사용 예
 ```java
-Cookie cookie = new Cookie(“memberId”, “admin”);
+Cookie cookie = new Cookie("memberId", "admin");
 cookie.setMaxAge(0);
 response.addCookie(cookie);
 ```
 
-#### source/cookie03.jsp
-```html
-<%@ page contentType="text/html; charset=utf-8"%>
-<html>
-<head>
-<title>Cookie</title>
-</head>
-<body>
-	<%
-	Cookie[] cookies = request.getCookies();
+# 세션
 
-	for (int i = 0; i < cookies.length; i++) {
-		cookies[i].setMaxAge(0);
-		response.addCookie(cookies[i]);
-	}
-	response.sendRedirect("cookie02.jsp");
-	%>
-</body>
-</html>
-```
 
 
 
