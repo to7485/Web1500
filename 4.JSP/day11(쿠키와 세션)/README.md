@@ -89,9 +89,27 @@ Cookie Cookie(String name, String value)
 
 쿠키의 이름과 들어있는 내용들을 조회해보자.
 
+### 쿠키 객체 얻기 
+- 클라이언트에 저장된 모든 쿠키 객체를 가져오려면 request 내장 객체의 getCookies() 메서드를 사용합니다.
+- 쿠키 객체가 여러 개 일때는 배열 형태로 가져옵니다.
+```java
+Cookie[] requst.getCookies()
+```
+
+#### getCookies() 메서드 사용 예
+```java
+Cookie[] cookies = request.getCookies();
+```
+
+### 쿠키 객체의 정보 얻기
+```java
+String getName() - 쿠키 이름
+String getValue() - 쿠키 값 
+```
+
 ### ex02_Cookie.jsp 생성하기
 
-```jsp
+```html
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     
@@ -123,7 +141,42 @@ Path : 쿠키의 경로<br>
 Expires : 만료시간을 정할 수 있다.( ex)일주일동안 팝업창 띄우지 않기)<br>
 HttpOnly : 원래 쿠키는 JS와 같은 프론트단에서도 접근할 수 있다. 그러면 해커의 공격에 더 취약해지기 때문에<br> &nbsp;&nbsp;&nbsp;&nbsp; HttpOnly를 체크하면 Servlet과 같은 소스에서만 접근할 수 있도록 해준다.
 
+## 쿠키 삭제
+- Cookie 클래스는 쿠키를 삭제하는 기능을 별도로 제공하지 않는다.
+- 쿠키를 더 유지할 필요가 없으면 쿠키의 유효기간을 만료하면 됩니다.
+- setMaxAge() 메서드에 유효 기간을 0으로 설정하여 쿠키를 삭제할 수 있습니다.
 
+```java
+void setMaxAge(int age)
+```
+
+#### setMaxAge() 메서드 사용 예
+```java
+Cookie cookie = new Cookie(“memberId”, “admin”);
+cookie.setMaxAge(0);
+response.addCookie(cookie);
+```
+
+#### source/cookie03.jsp
+```html
+<%@ page contentType="text/html; charset=utf-8"%>
+<html>
+<head>
+<title>Cookie</title>
+</head>
+<body>
+	<%
+	Cookie[] cookies = request.getCookies();
+
+	for (int i = 0; i < cookies.length; i++) {
+		cookies[i].setMaxAge(0);
+		response.addCookie(cookies[i]);
+	}
+	response.sendRedirect("cookie02.jsp");
+	%>
+</body>
+</html>
+```
 
 
 
