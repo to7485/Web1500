@@ -219,7 +219,112 @@ response.addCookie(cookie);
 ```
 
 # 세션
+- 세션은 클라이언트와 웹 서버 간의 상태를 지속적으로 유지하는 방법2) 세션은 웹서버에서만 접근이 가능하므로 보안유지에 유리하며 데이터를 저장하는 데 한계가 적습니다.
+- 세션은 오직 웹 서버에 존재하는 객체로 웹 브라우저마다 하나씩 존재하므로 웹 서버의 서비스를 제공받는 사용자를 구분하는 단위가 됩니다.
+- 세션을 사용하면 클라이언트가 웹 서버의 세션에 의해 가상으로 연결된 상태가 되며, 웹브라우저를 닫기 전까지 웹 페이지를 이동하더라도 사용자의 정보가 웹 서버에 보관되어 있어 사용자 정보를 잃지 않습니다.
+- JSP 페이지는 세션 기능을 사용할 수 있도록 session 내장 객체를 제공합니다.
 
+## 개인의 정보를 어떻게 저장하는가?
+- 쿠키값:JSESSIONID
+- 브라우저별로 구별할 수 있는 유일한 값
+
+#### session 내장객체 메서드 종류
+- javax.servlet.http.HttpSession
+
+|메서드|반환유형|설명|
+|------|----|----------|
+|getAttribute(String name)|Object|세션 속성 이름이 name인 속성 값을 Object형으로 반환합니다. 해당되는 속성 이름이 없을 때는 null을 반환합니다. 반환값이 Object 형이므로 반드시 형 변환을 하여 사용해야 합니다.|
+|getAttributeNames()|Enumeration|세션 속성 이름을 Enumeration 객체 타입으로 반환|
+|getCreationTime()|long|세션이 생성된 시간을 반환합니다. 1970년 1월 1일 0시 0초부터 현재 세션이 생성된 시간까지 경과한 시간을 1/1000초 값으로 반환|
+|getId()|String|세션에 할당된 고유아이디를 String형으로 반환|
+|getLastAccessedTime()|long|해당 세션에 클라이언트가 마지막으로 request를 보낸 시간을 반환합니다.|
+|getMaxInactiveInterval(int interval)|int|해당 세션을 유지하기 위해 세션 유지 시간을 반환합니다. 기본 값은 1,800초(30분)입니다.|
+|isNew()|boolean|해당 세션의 생성여부를 반환합니다. 처음 생성된 세션이면 true를 반환하고 이전에 생성된 세션이면 false를 반환합니다.|
+|removeAttribute(String name)|void|세션 속성 이름이 name인 속성을 제거합니다.|
+|setAttribute(String name, Object value)|void|세션 속성 이름이 name인 속성에 value를 할당합니다.|
+|setMaxInactiveInterval(int interval)|void|해당 세션을 유지하기 위한 세션 유지 시간을 초 단위로 설정|
+|invalidate()|void|현재 세션에 저장된 모든 세션 속성을 제거합니다.|
+
+## 세션 생성
+- 세션 속성값은 Object 객체 타입만 가능하기 때문에 int, double, char 등의 기본 타입은 사용할 수 없습니다.
+- 만약 동일한 세션의 속성이름으로 세션을 설정하면 마지막에 설장한 것이 세션 속성 값이 됩니다.
+```java
+void setAttribute(String name, Object value)
+```
+
+## ex01_session.jsp 생성하기
+```
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    <%
+    	session.setAttribute("param1", "asdf");
+    	session.setAttribute("param2", "qwer");
+    	session.setAttribute("param3", "zxcv");
+    	
+    	session.removeAttribute("param1");
+    %>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+</body>
+</html>
+```
+
+## ex02_session.jsp 생성하기
+```
+<%@page import="java.util.Enumeration"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    
+    <%
+    	Enumeration<String> names = session.getAttributeNames();
+    
+    
+    	while(names.hasMoreElements()){
+    		String key = names.nextElement();
+    		String value = (String)session.getAttribute(key);
+    		out.println(key + " = " + value + "<br>");
+    	}
+    %>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+</body>
+</html>
+```
+
+## ex03_session.jsp 생성
+```
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    
+    <%
+    	session.setMaxInactiveInterval(60*60*2);
+    	//세션의 기본 지속시간은 30분이다.(1800초)
+    	int second = session.getMaxInactiveInterval();
+    	out.println(second);
+    %>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+</body>
+</html>
+```
 
 
 
