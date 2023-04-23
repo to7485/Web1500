@@ -394,3 +394,366 @@ check_login.jsp를 거쳐서 나오게 해보자
 </body>
 </html>
 ```
+
+### include 액션 태그의 기능과 사용법
+- include 액션 태그는 include 디렉티브 태그처럼 JSP 페이지의 특정 영역에 외부 파일의 내용을 포함하는 태그
+- JSP 페이지에 포함할 수 있는 외부파일은 HTML, JSP, 서블릿 페이지 등입니다.
+```
+<jsp:include page=“파일명” flush=“false” />
+```
+- flush 속성 값은 설정한 외부 파일로 제어가 이동할 때 현재 JSP 페이지가 지금까지 출력 버퍼에 저장한 결과를 처리합니다. 기본 값은 false이고, true로 설정하면 외부 파일로 제어가 이동할 때 현재 JSP 페이지가 지금까지 출력 버퍼에 저장된 내용을 웹 브라우저에 출력하고 출력 버퍼를 비웁니다.
+- include 액션 태그는 forward 액션 태그처럼 외부 파일을 포함한다는 점이 비슷하지만 포함된 외부 파일이 실행된 후 현재 JSP 페이지로 제어를 반환한다는 것이 가장 큰 차이점
+- JSP 컨테이너는 현재 JSP 페이지에서 include 액션 태그를 만나면 include 액션 태그에 설정된 외부 파일의 실행 내용을 현재 JSP 페이지의 출력 버퍼에 추가 저장되어 출력
+
+>flush 속성 값<br>일반적으로 flush 속성은 false로 지정하는 것이 좋습니다. true로 지정하면 일단 출력 버퍼를 웹 브라우저에 전송하는데 이때 헤더 정보도 같이 전송됩니다. 헤더 정보가 웹 브라우저에 전송되고 나면 헤더 정보를 추가해도 결과가 반영되지 않습니다.
+
+#### include 액션 태그와 include 디렉티브 태그의 차이
+|구분|include 액션 태그|include 디렉티브 태그|
+|----|-------|-------|
+|처리시간|요청 시 자원을 포함합니다.|번역 시 자원을 포함합니다.|
+|기능|별도의 파일로 요청 처리 흐름을 이동합니다.|현재 페이지에 삽입합니다.|
+|데이터 전달방법|request 기본 내장 객체나 param 액션 태그를 이용하여 파라미터를 전달합니다.|페이지 내의 변수를 선언한 후 변수에 값을 저장합니다.|
+|용도|화면 레이아웃의 일부분을 모듈화할 때 주로 사용합니다.|다수의 JSP 웹 페이지에서 공통으로 사용되는 코드나 저작권과 같은 문장을 포함하는 경우에 사용합니다.|
+|기타|동적 페이지에 사용합니다.|정적 페이지에 사용합니다.|
+
+
+## login_form.jsp 생성하기
+- 아이디가 틀렸으면 아이디가 없다고, 비밀번호가 틀렸으면 비밀번호가 틀렸다고 유효성체크 나눠서 해주기
+```
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+ajax사용하기 위해 등록해주기
+로그인시도할 때 아이디가 없으면 아이디가 없다고 경고, 비밀번호가 틀리면 비밀번호가 틀렸다고 경고를 따로 띄워주자.
+'아이디나 비밀번호가 틀렸습니다' 라고 나오면 개발자가 귀찮아서 코드를 추가하지 않은것
+	<script src="js/httpRequest.js"></script>
+	<script>
+		function send(f){
+			var id = f.id.value.trim();
+			var pwd = f.pwd.value.trim();
+			
+			//유효성체크
+			if(id==''){
+				alert("아이디를 입력해주세요");
+				return;
+			}
+			
+			if(pwd==''){
+				alert("비밀번호를 입력하세요");
+				return;
+			}
+			
+			var url = "login.do";
+			var param = 													"id="+encodeURIComponent(id)+"&pwd="+encodeURIComponent(pwd);
+			
+			sendRequest(url,param,myChek,"POST");
+		}
+		
+		//콜백메서드
+		function myCheck(){
+			if(xhr.readyState == 4 && xhr.status == 200){
+				
+			}
+		}
+	</script>
+</head>
+<body>
+	<form>
+		<table border="1" align="center">
+			<caption>:::로그인:::</caption>
+			<tr>
+				<th>아이디</th>
+				<td><input name="id"></td>
+			</tr>
+			<tr>
+				<th>비밀번호</th>
+				<td><input name="pwd" type="password"></td>
+			</tr>
+			<tr>
+			
+				<td colspan="2" align="center">
+					<input  type="button" value="로그인" onclick="send(this.form)">
+				</td>
+			</tr>
+			
+		</table>
+	</form>
+
+</body>
+</html>
+```
+
+## MemberVO 클래스 생성
+```java
+package vo;
+
+public class MemberVO {
+	private String name,id,pwd;
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getPwd() {
+		return pwd;
+	}
+
+	public void setPwd(String pwd) {
+		this.pwd = pwd;
+	}	
+}
+```
+
+## LoginAction 생성
+```
+package action;
+
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import dao.MemberDAO;
+import vo.MemberVO;
+
+/**
+ * Servlet implementation class LoginAction
+ */
+@WebServlet("/login.do")
+public class LoginAction extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * @see HttpServlet#service(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// login.do?id=aaaa&pwd=1111
+		
+		String id = request.getParameter("id");
+		String pwd = request.getParameter("pwd");
+		
+		MemberVO vo = MemberDAO.getInstance().selectOne(id); 
+	}
+
+}
+```
+## MemberDAO 클래스 생성
+```
+package dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import service.DBService;
+import vo.MemberVO;
+
+public class MemberDAO {
+	// single-ton pattern: 
+	// 객체1개만생성해서 지속적으로 서비스하자
+	static MemberDAO single = null;
+
+	public static MemberDAO getInstance() {
+		//생성되지 않았으면 생성
+		if (single == null)
+			single = new MemberDAO();
+		//생성된 객체정보를 반환
+		return single;
+	}
+	
+	//로그인 체크
+실수를 많이 하는부분 id랑 pwd를 둘다 받았다고 가정해보자 쿼리문이
+select * from member where id=? and pwd=? 이렇게 만드는 순간
+id가 없어도 null이 들어오고 비밀번호가 틀려도 null이 들어온다.
+아이디나 비밀번호가 잘못되었습니다 라고 나옴;;
+	public MemberVO selectOne(String id) {
+
+		MemberVO vo = null;
+
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = "select * from member where id=?";
+
+		try {
+			//1.Connection얻어온다
+			conn = DBService.getInstance().getConnection();
+			//2.명령처리객체정보를 얻어오기
+			pstmt = conn.prepareStatement(sql);
+
+			//3.pstmt parameter 설정
+			pstmt.setString(1, id);
+			//4.결과행 처리객체 얻어오기
+			rs = pstmt.executeQuery();
+
+			if (rs.next()) {
+				vo = new MemberVO();
+				//현재레코드값=>Vo저장
+				vo.setPwd(rs.getString("pwd"));
+				vo.setName(rs.getString("name"));
+			}
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		} finally {
+
+			try {
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		return vo;
+	}
+}
+```
+## LoginAction 에 코드 추가하기
+
+```
+.....
+MemberVO vo = MemberDAO.getInstance().selectOne(id); 
+
+String param = " ";		
+String resultStr=" ";
+
+//vo가 null인경우 id자체가 DB에 존재하지 않는다는 의미
+if(vo==null) {
+	param = "no_id";
+	resultStr = String.format("[{'param':'%s'}]", param);
+	response.getWriter().print(resultStr);
+	return;
+} 
+
+if(!vo.getPwd().equals(pwd)) {
+	//비밀번호가 일치하지 않을 때
+	param = "no_pwd";
+	resultStr = String.format("[{'param':'%s'}]", param);
+	response.getWriter().print(resultStr);
+	return;
+}
+
+//아이디와 비빌번호 체크에 문제가 없다면 세션에 바인딩 한다.
+//세션은 서버의 메모리(램)를 사용하기 때문에 세션을 많이 사용할수록 브라우저가 느려지기 때문에
+//필요한 곳에서만 세션을 쓰도록 하자
+
+//세션유지시간(기본값 30분)
+		HttpSession session = request.getSession();
+		//session.setMaxInactiveInterval(3600); //세션이 1시간 유지 초단위로 써줘야함;;
+		session.setAttribute("vo", vo); 
+
+//포워딩을 할 필요가 없고 어느 jsp에서든 el표기법으로 vo.name,vo.pwd를 사용할 수 있다.
+
+로그인 성공한 경우
+param="clear";
+resultStr = String.format("[{'param':'%s'}]", param);
+response.getWriter().print(resultStr);
+
+
+여기서 할 일을 마쳤으니 콜백메서드로 돌아가자
+```
+## login_form.jsp 콜백메서드에 코드 작성하기
+```
+function myCheck(){
+			if(xhr.readyState == 4 && xhr.status == 200){
+				var data = xhr.responseText;
+				var json = eval(data);
+				
+				if(json[0].param == 'no_id'){
+					alert("아이디가 존재하지 않습니다.");
+				}else if(json[0].param == 'no_pwd'){
+					alert("비밀번호가 맞지 않습니다.");
+				}else {
+					alert("로그인 성공");
+					location.href="main_content.jsp";
+로그인에 성공하면 메인 화면으로 이동할건데 로그인 하지 않아도 위의 주소를 치면 이동이 가능하다는 치명적인 단점이 있다. 이걸 잡아줘야 한다.
+				}
+			}
+		}
+```
+
+## check_login.jsp 수정하기
+```
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:if test="${empty vo }"> <!-- vo가 비어있다는 것은 세션에 저장을 못했다는것! -->
+	<script>
+		alert("로그인 후 이용해주세요");
+		location.href="login_form.jsp";
+	</script>
+</c:if>
+```
+## 로그아웃 기능 만들기
+```
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<jsp:include page="check_login.jsp"/>
+	 <!-- main_content페이지에 접근하려고 해도 check_login에 먼저 접근해야 한다. -->
+	메인페이지<br>
+	${vo.name}님 로그인을 환영합니다.
+	<input type="button" onclick="logout.do">
+</body>
+</html>
+```
+## LogoutAction 생성하기
+```
+package action;
+
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+/**
+ * Servlet implementation class LogoutAction
+ */
+@WebServlet("/logout.do")
+public class LogoutAction extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		HttpSession session = request.getSession(); 
+		세션객체는 static이라서 주소를 다 공유한다. 어차피 객체를 여러개 만들어도 하나만 생성되어 있다.
+		session.removeAttribute("vo");
+		
+		response.sendRedirect("login_form.jsp");
+	}
+}
+```
