@@ -328,8 +328,69 @@ void setAttribute(String name, Object value)
 
 # DB에서 아이디 비밀번호 가져와서 로그인하기
 
+Ex_날짜_login 프로젝트 생성하기
+
 ## 테이블 생성하기
+이미 있는 사람은 추가하지 않아도 된다.
+```
+--일련번호 관리객체
+create sequence seq_member_idx;
+
+--회원테이블
+create table member(
+	idx int primary key,               --일련번호
+	name varchar2(100) not null,       --이름
+	id varchar2(100) not null unique,  --아이디(중복방지 unique)
+	pwd varchar2(100) not null,        --패스워드
+	email varchar2(100) unique,        --이메일
+);
+
+--샘플 데이터 추가
+insert into member values( seq_member_idx.nextVal,
+				 '홍길동', 
+				 'one',
+				 '1234',
+				 'one@korea.com'
+				 );
+
+--커밋
+commit;
 ```
 
+## check_login.jsp 생성하기
+-로그인이 되어있는 상태인지를 검증하기 위한 jsp
+```html
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	나는 로그인을 확인하지!
+</body>
+</html>
 ```
+## main_content.jsp 생성하기
+- 로그인이 됐을때만 접근 가능한 페이지
+```html
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+url에 main_content.jsp를 그냥 쓰면 로그인을 안해도 접근이 가능하다.
+check_login.jsp를 거쳐서 나오게 해보자
+외부에 있는걸 붙힌다. 
 
+로그인이 필요한 페이지에서는 아래의 코드를 가지고 있으면 된다.
+	<jsp:include page="check_login.jsp"/>
+	 <!-- main_content페이지에 접근하려고 해도 check_login에 먼저 접근해야 한다. -->
+	메인페이지
+</body>
+</html>
+```
