@@ -821,6 +821,8 @@ public class FileDownload extends HttpServlet {
 
 	if(file.isFile())
 		{
+			//FileInputStream의 경우 자신이 객체를 생성하여 입력을 시도할 수 있다.
+			//하지만 BufferedStream 객체는 미리 만들어진 Stream의 생성자에 인자로 받아서 객체를 생성한다.
 			BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
 			BufferedOutputStream bos = new BufferedOutputStream(response.getOutputStream());
 			int i=0;
