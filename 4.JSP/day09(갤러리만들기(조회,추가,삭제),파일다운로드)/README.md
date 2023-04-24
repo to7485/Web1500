@@ -20,7 +20,7 @@ create sequence seq_photo_idx;
 create table photo(
 	idx NUMBER(3) PRIMARY KEY,
 	title VARCHAR2(100),
-	filename VACHAR2(100), --DB에는 실제로 이미지,음악,사진이 저장되지 않는다.
+	filename VARCHAR2(100), --DB에는 실제로 이미지,음악,사진이 저장되지 않는다.
                            이름을 가지고 절대경로에서 가져오는것
 	pwd VARCHAR2(50),
 	ip VARCHAR2(20),
@@ -120,7 +120,7 @@ public class PhotoDAO {
 
 ### photo_list.jsp 생성하기
 
-```
+```jsp
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     
@@ -205,7 +205,7 @@ css로 갤러리를 꾸며보자.
 이제 조회했을 때 데이터가 있는곳만 보이고 없으면 안보이게 바꿔주자
 
 ### PhotoDAO에 selectList메서드 추가하기
-```
+```java
 .....
 
 //이미지 갤러리 전체 조회
@@ -265,7 +265,7 @@ css로 갤러리를 꾸며보자.
 
 ### action패키지 만들고 PhotoListAction 생성하기
 - jsp로 실행을 하게 되면 리스트가 비어있기 때문에 앞으로는 PhotoListAction에서 실행을 한다.
-```
+```java
 package action;
 
 import java.io.IOException;
@@ -309,7 +309,7 @@ public class PhotoListAction extends HttpServlet {
 ```
 
 ### photo_list.jsp의 forEach문 수정하기
-```
+```jsp
 <c:forEach var="vo" items="${list}"> 리스트에 아무것도 없기 때문에 실행해도 아무것도 뜨지 않는게 정상이다.
 				<div class="photo_type">
 					  <img src="">
@@ -324,7 +324,7 @@ public class PhotoListAction extends HttpServlet {
 ## 사진등록하기
 
 ### photo_list.jsp에 코드 수정하기
-```
+```jsp
 <h1>:::PhotoGallery:::</h1>
 		
 		<div align = "center" style="margin:10px;">
@@ -334,7 +334,7 @@ public class PhotoListAction extends HttpServlet {
 ```
 
 ### insert_form.jsp 생성하고 코드 작성하기
-```
+```jsp
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -394,7 +394,7 @@ public class PhotoListAction extends HttpServlet {
 
 ### PhotoInsertAction 서블릿 만들기
 
-```
+```java
 package action;
 
 import java.io.File;
@@ -462,7 +462,7 @@ public class PhotoInsertAction extends HttpServlet {
 ```
 
 ### PhotoDAO에 insert메서드 추가하기
-```
+```java
 ...
 
 //사진등록
@@ -527,7 +527,7 @@ public class PhotoInsertAction extends HttpServlet {
 
 삭제를 하기 위해 비밀번호를 입력할 공간을 만들어주자
 
-```
+```jsp
 <script>
 	function del(f){
 		var idx = f.idx.value;
@@ -598,7 +598,7 @@ public class PhotoInsertAction extends HttpServlet {
 ```
 
 ### PhotoDelAction 서블릿 만들기
-```
+```java
 package action;
 
 import java.io.File;
@@ -662,7 +662,7 @@ public class PhotoDelAction extends HttpServlet {
 ```
 
 ### PhotoDAO에 삭제 메서드 추가하기
-```
+```java
 public int delete(int idx) {
 		// TODO Auto-generated method stub
 		int res = 0;
@@ -702,6 +702,231 @@ public int delete(int idx) {
 	}
 ```
 
+# 이미지 다운로드 받기
 
+## util패키지를 만든후 FileDownload.java 서블릿파일 만들기
 
+```java
+package util;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.net.URLEncoder;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ * IE 8.0인경우 화일다운로드 요청을 2회실시
+ * (이유는 정확이 모르겠지만 화일다운로드 다이아로그가 띄어지면서 다시 호출하는것 같음.)
+ * 첫번째 요청인경우 한글인코딩이 제대로 이뤄지는데
+ * 두번째는 한글이 깨진다
+ * 그래서 첫번째값만 저장해놓고 그값을 사용한다.
+ */
+
+@WebServlet("/FileDownload.do")
+public class FileDownload extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * @see HttpServlet#service(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		//request.setCharacterEncoding("utf-8");
+		String dir = request.getParameter("dir"); //파라미터로 받아온 경로
+		String fullpath = getServletContext().getRealPath(dir); //그 경로의 절대경로
+		String filename = "";
+		filename = request.getParameter("filename"); //파라미터로 넘긴 실제 파일 이름
+		String fullpathname = String.format("%s/%s", fullpath,filename); //경로/파일이름
+		//System.out.println(fullpathname);
+		File file = new File(fullpathname); //파일클래스의 생성자에 넣기
+		byte [] b = new byte[1024*1024*4];
+		
+	// 사용자 브라우저 타입 얻어오기
+        String strAgent = request.getHeader("User-Agent");
+        String userCharset = request.getCharacterEncoding();
+        if(userCharset==null)userCharset="utf-8";
+        
+        //System.out.println("filename:"+filename+"\nagent:"+strAgent+"\ncharset:"+userCharset);
+        //System.out.println("----------------------------------------------------------------");
+        String value = "";
+        // IE 일 경우
+        if (strAgent.indexOf("MSIE") > -1) 
+        {
+             // IE 5.5 일 경우
+            if (strAgent.indexOf("MSIE 5.5") > -1) 
+            {
+                value = "filename=" + filename ;
+            }
+             // 그밖에
+            else if (strAgent.indexOf("MSIE 7.0") > -1) 
+            {
+                if ( userCharset.equalsIgnoreCase("UTF-8") ) 
+                {
+                	filename = URLEncoder.encode(filename,userCharset);
+                	filename = filename.replaceAll("\\+", " ");
+                    value = "attachment; filename=\"" + filename + "\"";
+
+                }    
+                else 
+                {
+                    value = "attachment; filename=" + new String(filename.getBytes(userCharset), "ISO-8859-1");
+                   
+                }
+            }
+            else{
+            	//IE 8.0이상에서는 2회 호출됨..
+            	if ( userCharset.equalsIgnoreCase("UTF-8") ) 
+                {
+                	filename = URLEncoder.encode(filename,"utf-8");
+                	filename = filename.replaceAll("\\+", " ");
+                    value = "attachment; filename=\"" + filename + "\"";
+            		
+                }    
+                else 
+                {
+                    value = "attachment; filename=" + new String(filename.getBytes(userCharset), "ISO-8859-1");
+                   
+                }
+            }
+            
+            
+        }else if(strAgent.indexOf("Firefox") > -1){
+        	//Firefox : 공백문자이후은 인식안됨...
+        	value = "attachment; filename=" + new String(filename.getBytes(), "ISO-8859-1");
+        }
+       else {
+            // IE 를 제외한 브라우저
+            value = "attachment; filename=" + new String(filename.getBytes(), "ISO-8859-1");
+        }
+        
+   
+        response.setContentType("Pragma: no-cache"); 
+
+	//전송 데이터가 stream 처리되도록 : 웹상전송 문자셋은 : 8859_1
+	response.setContentType("application/octet-stream;charset=8859_1;");
+
+	//데이터 형식 성향설정 (attachment : 첨부파일)
+	//Content-Disposition : attachment
+	 response.setHeader("Content-Disposition", value);
+
+	//내용물 인코딩방식 결정 - 전송타입은 binary(이진파일)
+	response.setHeader("Content-Transfer-Encoding", "binary;");
+
+	if(file.isFile())
+		{
+			BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
+			BufferedOutputStream bos = new BufferedOutputStream(response.getOutputStream());
+			int i=0;
+			try
+			{
+				while((i=bis.read(b))!=-1)
+				{
+					bos.write(b,0,i);
+				}
+			}catch(Exception e){
+				//e.printStackTrace();
+			}finally {
+				if(bos!=null)bos.close();
+				if(bis!=null)bis.close();
+
+			}
+		}
+	}
+	
+}
+
+```
+
+## photo_list.jsp 코드 추가하기
+```html
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+	
+	......................
+	
+<script type="text/javascript">
+
+		function del(f){
+			...........	
+		}
+		
+		function resultFn(){
+			...........
+		}//resultFn()
+		
+		var click = false;
+		
+		function imgclick(idx){
+			...........
+		}//imgclick()
+		
+		function download( filename ){
+			
+	//파일다운로드 서블릿 호출( upload폴더에 저장되어 있는 filename을 서블릿으로 전달 )
+			location.href="../download.do?dir=/upload/&filename="+
+					encodeURIComponent(filename);
+				
+		}//download()
+		
+	</script>
+
+</head>
+
+<body>
+
+	<div id="main_box">
+
+		<h1>:::PhotoGallery:::</h1>
+
+		<div align="center" style="margin: 10px">
+			<input type="button" value="사진올리기"
+				onclick="location.href='insert_form.do'">
+		</div>
+
+		<div id="photo_box">
+
+			...............
+
+			<c:forEach var="vo" items="${list}">
+				<div class="photo_type">
+				
+					<img ............>
+					<div class="title">${vo.title}</div>
+
+					<form>
+					    <input type="hidden" name="idx" value="${vo.idx}">
+					    <input type="hidden" name="pwd" value="${vo.pwd}">
+						
+						<div align="center">
+						                                         //수정
+						   <input type="password" name="pwd2" size="5">
+
+						   <input type="button" value="삭제" 
+									     onclick="del(this.form);">
+							
+						   //추가
+						   <input type="button" value="down" 
+							      onclick="download('${vo.filename}');">
+						</div>			
+					</form>	
+				</div>
+			</c:forEach>
+		</div>
+	</div>
+	
+	<div id="showdiv" style="display:none">
+		<img src="" id="showImg" onclick="imgclick(this.src);">
+	</div>
+	
+</body>
+
+</html>
+```
