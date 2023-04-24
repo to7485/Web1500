@@ -751,9 +751,108 @@ public class LogoutAction extends HttpServlet {
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession(); 
 		세션객체는 static이라서 주소를 다 공유한다. 어차피 객체를 여러개 만들어도 하나만 생성되어 있다.
-		session.removeAttribute("vo");
+		//session.removeAttribute("vo");
+		//세션에 들어있는 모든 속성을 제거한다.
+		session.invalidate();
 		
 		response.sendRedirect("login_form.jsp");
 	}
 }
 ```
+## <jsp:include> 액션태그 응용하기
+- 학원 홈페이지만 둘러봐도 상단과 하단은 계속 같은 내용을 보여주는것을 알 수 있다.
+- 로그인 기능을 구현하면서 <jsp:include>를 사용했다.<br> 코드는 항상위에서 아래로 실행이 되면서 <jsp:include>의 page속성에 정의된 페이지가 먼저 실행되는 모습을 보았다.
+- 이를 이용하여 페이지를 모듈화하여 상단과 하단의 코드를 jsp파일을 따로 만들어 한번만 작성하여 코드를 효과적으로 줄일 수 있다.
+
+![image](https://user-images.githubusercontent.com/54658614/233902036-fe75e585-e1b1-4a05-ae08-08600586081a.png)
+
+\<jsp:include\> 액션태그와 <%@ include %> 처리과정 차이
+
+![image](https://user-images.githubusercontent.com/54658614/233902229-9e748287-c116-4ce7-8334-20b33952d363.png)
+
+
+
+
+### layout.jsp 생성하기
+```
+<%@ page language="java" contentType="text/html; charset=EUC-KR"
+    pageEncoding="EUC-KR"%>
+<html>
+<head>
+    <title>layout</title>
+</head>
+<body>
+    
+    <table width="400" border="1" cellpadding="0" cellspacing="0">
+        <tr>
+            <td>
+                <jsp:include page="top.jsp" flush="false"/>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <jsp:include page="content.jsp" flush="false"/>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <jsp:include page="bottom.jsp" flush="false"/>
+            </td>
+        </tr>
+    </table>
+    
+</body>
+</html>
+```
+
+### top.jsp 생성하기
+```
+<%@ page language="java" contentType="text/html; charset=EUC-KR"
+    pageEncoding="EUC-KR"%>
+<html>
+<head>
+    <title>top</title>
+</head>
+<body>
+    상단메뉴 : 
+    <a href="#">HOME</a> 
+    <a href="#">INFO</a>
+</body>
+</html>
+```
+
+### bottom.jsp 생성하기
+```
+<%@ page language="java" contentType="text/html; charset=EUC-KR"
+    pageEncoding="EUC-KR"%>
+<html>
+<head>
+    <title>bottom</title>
+</head>
+<body>
+    하단메뉴 : 
+    <a href="#">도움말</a> 
+    <a href="#">약관</a>
+    <a href="#">사이트맵</a>
+</body>
+</html>
+```
+
+### content.jsp
+```
+<%@ page language="java" contentType="text/html; charset=EUC-KR"
+    pageEncoding="EUC-KR"%>
+<html>
+<head>
+    <title>content</title>
+</head>
+<body>
+    <br><br>
+    내용 페이지
+    <br><br>
+</body>
+</html>
+```
+
+
+
