@@ -342,7 +342,7 @@ create table member(
 	name varchar2(100) not null,       --이름
 	id varchar2(100) not null unique,  --아이디(중복방지 unique)
 	pwd varchar2(100) not null,        --패스워드
-	email varchar2(100) unique,        --이메일
+	email varchar2(100) unique        --이메일
 );
 
 --샘플 데이터 추가
