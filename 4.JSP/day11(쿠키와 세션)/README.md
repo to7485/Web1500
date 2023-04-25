@@ -448,9 +448,9 @@ ajax사용하기 위해 등록해주기
 			}
 			
 			var url = "login.do";
-			var param = 													"id="+encodeURIComponent(id)+"&pwd="+encodeURIComponent(pwd);
+			var param ="id="+encodeURIComponent(id)+"&pwd="+encodeURIComponent(pwd);
 			
-			sendRequest(url,param,myChek,"POST");
+			sendRequest(url,param,myCheck,"POST");
 		}
 		
 		//콜백메서드
@@ -682,21 +682,22 @@ response.getWriter().print(resultStr);
 ## login_form.jsp 콜백메서드에 코드 작성하기
 ```
 function myCheck(){
-			if(xhr.readyState == 4 && xhr.status == 200){
-				var data = xhr.responseText;
-				var json = eval(data);
-				
-				if(json[0].param == 'no_id'){
-					alert("아이디가 존재하지 않습니다.");
-				}else if(json[0].param == 'no_pwd'){
-					alert("비밀번호가 맞지 않습니다.");
-				}else {
-					alert("로그인 성공");
-					location.href="main_content.jsp";
-로그인에 성공하면 메인 화면으로 이동할건데 로그인 하지 않아도 위의 주소를 치면 이동이 가능하다는 치명적인 단점이 있다. 이걸 잡아줘야 한다.
-				}
-			}
+	if(xhr.readyState == 4 && xhr.status == 200){
+		var data = xhr.responseText;
+		var json = eval(data);
+
+		if(json[0].param == 'no_id'){
+			alert("아이디가 존재하지 않습니다.");
+		}else if(json[0].param == 'no_pwd'){
+			alert("비밀번호가 맞지 않습니다.");
+		}else {
+			alert("로그인 성공");
+			location.href="main_content.jsp";
+	로그인에 성공하면 메인 화면으로 이동할건데 로그인 하지 않아도 위의 주소를 치면 이동이 가능하다는 치명적인 단점이 있다.
+	이걸 잡아줘야 한다.
 		}
+	}
+}
 ```
 
 ## check_login.jsp 수정하기
