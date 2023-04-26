@@ -730,7 +730,7 @@ import javax.servlet.http.HttpServletResponse;
  * 그래서 첫번째값만 저장해놓고 그값을 사용한다.
  */
 
-@WebServlet("/FileDownload.do")
+@WebServlet("/download.do")
 public class FileDownload extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
