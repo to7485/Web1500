@@ -313,4 +313,376 @@ public class DeptListAction extends HttpServlet {
 </body>
 </html>
 ```
+## 사원 테이블도 Mybatis를 이용하여 조회해보자.
+
+### SawonVO 생성하기
+```java
+package vo;
+
+public class SawonVO {
+	private int sabun, sapay;
+	private String saname, sajob, sahire;
+	
+	public int getSabun() {
+		return sabun;
+	}
+	public void setSabun(int sabun) {
+		this.sabun = sabun;
+	}
+	public int getSapay() {
+		return sapay;
+	}
+	public void setSapay(int sapay) {
+		this.sapay = sapay;
+	}
+	public String getSaname() {
+		return saname;
+	}
+	public void setSaname(String saname) {
+		this.saname = saname;
+	}
+	public String getSajob() {
+		return sajob;
+	}
+	public void setSajob(String sajob) {
+		this.sajob = sajob;
+	}
+	public String getSahire() {
+		return sahire;
+	}
+	public void setSahire(String sahire) {
+		this.sahire = sahire;
+	}
+}
+```
+
+### SawonDAO 만들기
+
+```java
+package dao;
+
+import java.util.List;
+
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+
+import service.MyBatisConnector;
+import vo.SawonVO;
+
+public class SawonDAO {
+	SqlSessionFactory factory;
+
+	public SawonDAO() {
+		factory = MyBatisConnector.getInstance().getFactory();
+	}
+
+	// single-ton pattern: 
+	// 객체1개만생성해서 지속적으로 서비스하자
+	static SawonDAO single = null;
+
+	public static SawonDAO getInstance() {
+		//생성되지 않았으면 생성
+		if (single == null)
+			single = new SawonDAO();
+		//생성된 객체정보를 반환
+		return single;
+	}
+	
+	//사원목록 조회
+	public List<SawonVO> select(){
+		//SQL을 요청할 SqlSession객체 생성
+		SqlSession sqlSession = factory.openSession();
+		
+		List<SawonVO> list = sqlSession.selectList("sawon.sawon_list");
+		
+		//conn, pstmt, rs를 close()하는 내용이 포함되어 있다.
+		//그러므로 사용후에는 반드시 마지막에 닫아줘야 한다.
+		sqlSession.close();
+		
+		return list;
+		
+	}
+}
+```
+
+### mapper sawon.xml파일 만들기
+
+```
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="sawon">
+
+<!-- select tag 에는 reultType을 무조건 설정해줘야 한다. -->
+<select id="sawon_list" resultType="vo.SawonVO">
+	select * from sawon
+</select>
+</mapper>
+```
+### sqlMapConfig.xml에 매퍼 추가하기
+```
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<environments default="">
+		<environment id="">
+			<transactionManager type="JDBC" />
+			<dataSource type="JNDI">
+				<property name="data_source" 
+				value="java:comp/env/jdbc/oracle_test" />
+			</dataSource>
+		</environment>
+	</environments>
+	<mappers>
+		<mapper resource="config/mybatis/mapper/dept.xml" />
+		<mapper resource="config/mybatis/mapper/sawon.xml" />
+	</mappers>
+</configuration>
+```
+
+### SawonListAction 만들기
+
+```java
+
+import dao.SawonDAO;
+import vo.SawonVO;
+
+/**
+ * Servlet implementation class SawonLIstAction
+ */
+@WebServlet("/sawon.do")
+public class SawonLIstAction extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+		//사원 목록 조회
+		List<SawonVO> list = SawonDAO.getInstance().select();
+
+		//바인딩		
+		request.setAttribute("list", list);
+		
+		//포워딩
+		RequestDispatcher disp = request.getRequestDispatcher("sawon_list.jsp");
+		disp.forward(request, response);
+	}
+
+}
+```
+
+### sawon_list.jsp 작성
+
+```
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<table border="1">
+		<catption>:::사원목록</catption>
+		<tr>
+			<th>사번</th>
+			<th>이름</th>
+			<th>직책</th>
+			<th>급여</th>
+			<th>입사일</th>
+		</tr>
+		<c:forEach var="vo" items="${list}">
+			<tr>
+				<td>${vo.sabun }</td>
+				<td>${vo.saname }</td>
+				<td>${vo.sajob }</td>
+				<td>${vo.sapay }</td>
+				<td>${vo.sahire }</td>
+				<c:set var="sahire" value="${vo.sahire }"/>
+				<td>${fn:split(sahire,' ')[0]}</td>
+			</tr>
+		</c:forEach>
+	</table>
+
+</body>
+</html>
+```
+
+## 문제 : 고객 테이블을 출력해보기
+
+![image](https://user-images.githubusercontent.com/54658614/234480154-00f7f0bc-492e-4ee0-914d-b0a728d20d8f.png)
+
+
+### GogekVO 클래스 생성하기
+```java
+public class GogekVo {
+	
+	int gobun;//고객번호
+	int godam;//담당자번호
+	String goname;//고객이름
+	String goaddr;//고객주소
+	String gojumin;//고객 주민번호	
+	
+	public int getGobun() {
+		return gobun;
+	}
+	public void setGobun(int gobun) {
+		this.gobun = gobun;
+	}
+	public int getGodam() {
+		return godam;
+	}
+	public void setGodam(int godam) {
+		this.godam = godam;
+	}
+	public String getGoname() {
+		return goname;
+	}
+	public void setGoname(String goname) {
+		this.goname = goname;
+	}
+	public String getGoaddr() {
+		return goaddr;
+	}
+	public void setGoaddr(String goaddr) {
+		this.goaddr = goaddr;
+	}
+	public String getGojumin() {
+		return gojumin;
+	}
+	public void setGojumin(String gojumin) {
+		this.gojumin = gojumin;
+	}
+		
+}
+```
+
+### GogekDAO 클래스 생성
+
+```java
+public class GogekDao {
+
+	// single-ton템플릿: 
+	static GogekDao single = null;
+
+	public static GogekDao getInstance() {
+		//생성되지 않았으면 생성
+		if (single == null)
+			single = new GogekDao();
+		//생성된 객체정보를 반환
+		return single;
+	}
+
+	//SessionFactory생성하는 객체
+	SqlSessionFactory factory;
+
+	public GogekDao() {
+		super();
+		//MyBatisConnector.java에서 설정해준 factory(어떤DB를 쓸것인가, mapper로 누구를 쓸것인가 등)를 DAO로 가져온다.
+		factory = MyBatisConnector.getInstance().getSqlSessionFactory();
+	}
+
+	//고객목록 가져오기
+	public List<GogekVo> select(){
+
+		List<GogekVo> list = null;
+
+		//sql을 요청할 SqlSession객체 생성
+		//1.처리객체 얻어오기
+		SqlSession sqlSession = factory.openSession();
+
+		//2.처리객체를 사용하여 작업을 수행
+		//mapper에 있는 해당 id의 sql명령을 실행 후 결과를 list로 반환
+		list = sqlSession.selectList("gogek.gogek_list");
+
+		//3.사용 후에는 반환(connection, pstmt, resultMap등을 반환하는 작업이 내장되어 있음)
+		sqlSession.close();
+
+		return list;
+	}//selectList()
+}
+```
+
+### GogekListAction 서블릿 생성하기
+```
+@WebServlet("/gogek/gogeklist.do")  <-- 반드시 변경!!!
+
+public class GogekListAction extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+	
+	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		//목록 가져오기
+		List<GogekVo> list = GogekDao.getInstance().select();
+		
+		//System.out.println(list.size());	
+		
+		//requestScope영역에 list 바인딩
+		request.setAttribute("list", list);
+		
+		//member_list.jsp에서 el기법을 사용할수 있도록 하기 위해
+		//위에서 바인딩해준 list정보를 넘겨준다.
+		RequestDispatcher disp = 
+				request.getRequestDispatcher("gogek_list.jsp");
+
+		disp.forward(request, response);
+	}
+
+}
+```
+
+### gogek_list.jsp 생성하기
+
+```
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+</head>
+
+
+<body>
+	
+	<table border="1" align="center">
+		<caption>고객목록</caption>
+		<tr>
+			<th>고객번호</th>
+			<th>담당자</th>
+			<th>이름</th>
+			<th>주소</th>
+			<th>주민번호</th>
+		</tr>
+	
+	<!-- 검색결과가 있다면 내용 출력 -->
+	<c:if test="${!empty requestScope.list}" >
+	
+		<c:forEach var="vo" items="${list}">
+			<tr>
+				<td>${vo.gobun}</td>
+				<td>${vo.godam}</td>
+				<td>${vo.goname}</td>
+				<td>${vo.goaddr}</td>
+				<td>${vo.gojumin}</td>
+			</tr>
+		</c:forEach>
+	
+	</c:if>
+	
+	</table>
+</body>
+</html>
+```
+
+
+
+
+
+
 
