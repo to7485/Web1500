@@ -679,10 +679,189 @@ public class GogekListAction extends HttpServlet {
 </body>
 </html>
 ```
+# Mybatis 파라미터 처리하기
 
+## 전체 사원 목록을 조회하던 페이지에서 원하는 부서의 사람만 볼수 있도록 해보기
 
+![image](https://user-images.githubusercontent.com/54658614/234757788-6460e8ed-da52-4d55-951f-d7b5818f107c.png)
 
+### sawon_list.jsp에 태그 추가하기
+```
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
+<html>
 
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
 
+<script>
+	function find(){
+		//select태그의 value값(총무부가 선택됐다면 value=10)을 가져온다.
+		//where절이 있는 쿼리문을 작성해야 한다!
+		//선택된 값을 가져와서 sawonlist.do로 넘긴다. 0 ~ 50
+		var deptno = document.getElementById("deptno").value;	
+		
+		//form태그를 사용하고 있지 않기 때문에 location.href를 통해서 보낸다.
+		location.href = "sawonlist.do?deptno=" + deptno;
+		
+	}//find()
+	
+</script>
+</head>
+<body>
+	
+	자바에서 gui 할 때 배웠던 초이스 박스와 비슷한 모양
+	<div align="center">
+		부서 번호:
+		<select id="deptno"> 검색해서현재 셀렉트에서 선택된 값을 전달하기위해 id를 설정한다.
+			<option value="0">:::부서를 선택하세요:::</option>
+			<option value="10">총무부</option>
+			<option value="20">영업부</option>
+			<option value="30">전산실</option>
+			<option value="40">관리부</option>
+			<option value="50">경리부</option>			
+		</select>
+		select가 form 태그에 들어갈 수 있는 정식적인 자식요소가 아니여서 사용하지 않았음
+		<input type="button" value="검색" onclick="find();">
+	</div>
+	
+	<hr>
+	
+	<table border="1" align="center">
+		<caption>사원목록</caption>
+		..............
+	</table>
+	
+</body>
 
+</html>
+```
+
+### SawonListAction 코드 추가하기
+
+```java
+@WebServlet("/sawon.do")
+
+public class SawonListAction extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	
+		//sawonlist.do?deptno=10
+		int deptno = 0;
+		String str_deptno = request.getParameter( "deptno" );
+
+		//콘솔에 null이 찍힘
+		System.out.println(str_deptno); 
+		
+		//파라미터를 String으로 받은 이유
+		//int deptno = Integer.parseInt(request.getParameter("deptno"); 에서 null은 정수로 바꿀수 없기 때문에  오류가 난다.
+		
+		//sawon.do? <--- null 
+		//sawon.do?deptno= <-- empty
+		if( str_deptno != null && !str_deptno.isEmpty() ){
+			
+			//파라미터가 없거나 비어있는 상태가 아닌 정상적으로 값이 전달되었다면
+			//실제 정수로 바꿔준다.
+			deptno = Integer.parseInt(str_deptno);
+			
+		}
+		
+		//목록 가져오기
+		List<SawonVo> list = null;
+			
+		
+		if(deptno == 0){//전체조회
+			list = SawonDao.getInstance().select();
+		}else{
+			//파라미터에 해당하는 부서별 조회
+			list = SawonDao.getInstance().select(deptno); <-- 없다. 만들자!! 메서드 오버로드
+		}
+		
+		//System.out.println(list.size());
+		
+		request.setAttribute("list", list);
+		
+		//member_list.jsp에서 el기법을 사용할수 있도록 하기 위해
+		//위에서 바인딩해준 list정보를 넘겨준다.
+		RequestDispatcher disp = 
+				request.getRequestDispatcher("sawon_list.jsp");
+
+		disp.forward(request, response);
+	}
+
+}
+```
+### SawonDAO에 메서드 오버로딩하기
+
+```
+public class SawonDao {
+
+	static SawonDao single = null;
+	SqlSessionFactory factory;
+
+	public SawonDao() {
+		super();
+		............
+	}
+
+	public static SawonDao getInstance() {
+		...........
+		return single;
+	}
+
+	//사원목록 가져오기
+	public List<SawonVo> select(){
+		.............
+		return list;
+	}//select()
+	
+	//부서별 사원 목록
+	public List<SawonVo> select( int deptno ) {
+
+		//mybatis framwork이 처리해준다.
+		//1.처리객체 얻어오기
+		SqlSession sqlSession = factory.openSession();
+
+		//2.처리객체를 사용하여 작업을 수행
+		//mapper에 있는 해당 id의 sql명령을 실행 후 결과를 list로 반환
+		//sqlSession이 관리하는 CRUD관련 메서드는 파라미터를 추가할 수 있다.
+		//파라미터는 단 한 개만 추가할 수 있다.
+		List<SawonVo> list = sqlSession.selectList("sawon.sawon_list_no", deptno); 
+		//같은 쿼리문을 사용할것이 아니기 때문에 id값을 다르게 쓴다.
+
+		//3.사용 후에는 반환(connection, pstmt, resultMap등을 반환하는 작업이 내장되어 있음)
+		sqlSession.close();
+
+		return list;
+
+	} //select()
+
+}
+```
+
+### sawon.xml에 쿼리문 추가하기
+
+```
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="sawon">
+
+	<select id="sawon_list" resultType="vo.SawonVo">
+		select * from sawon
+	</select>
+	
+	<select id="sawon_list_deptno" resultType="vo.SawonVo" parameterType="int">
+	<!-- parameterType이 (Map이나 List가 아니라) int나 String등 단일자료형일때는 deptno=#{ aaa }처럼 아무 이름이나 넣어줘도 된다.-->
+	pstmt처럼 채워주는게 없어서 ?를 쓸 수없다. 왠만하면 컬럼명이랑 이름 맞춰주자
+		select * from sawon where deptno=#{ deptno }
+	</select>
+
+	<delete id="sawon_delete" parameterType="int">
+		delete from sawon where sabun=#{ sabun } 
+	</delete>
+</mapper>
+```
