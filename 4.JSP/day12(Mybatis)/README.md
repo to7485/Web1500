@@ -453,7 +453,7 @@ import vo.SawonVO;
 /**
  * Servlet implementation class SawonLIstAction
  */
-@WebServlet("/sawon.do")
+@WebServlet("/sawon_list.do")
 public class SawonLIstAction extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -699,11 +699,11 @@ public class GogekListAction extends HttpServlet {
 	function find(){
 		//select태그의 value값(총무부가 선택됐다면 value=10)을 가져온다.
 		//where절이 있는 쿼리문을 작성해야 한다!
-		//선택된 값을 가져와서 sawonlist.do로 넘긴다. 0 ~ 50
+		//선택된 값을 가져와서 sawon_list.do로 넘긴다. 0 ~ 50
 		var deptno = document.getElementById("deptno").value;	
 		
 		//form태그를 사용하고 있지 않기 때문에 location.href를 통해서 보낸다.
-		location.href = "sawonlist.do?deptno=" + deptno;
+		location.href = "sawon_list.do?deptno=" + deptno;
 		
 	}//find()
 	
@@ -741,14 +741,14 @@ public class GogekListAction extends HttpServlet {
 ### SawonListAction 코드 추가하기
 
 ```java
-@WebServlet("/sawon.do")
+@WebServlet("/sawon_list.do")
 
 public class SawonListAction extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	
-		//sawonlist.do?deptno=10
+		//sawon_list.do?deptno=10
 		int deptno = 0;
 		String str_deptno = request.getParameter( "deptno" );
 
@@ -769,14 +769,14 @@ public class SawonListAction extends HttpServlet {
 		}
 		
 		//목록 가져오기
-		List<SawonVo> list = null;
+		List<SawonVO> list = null;
 			
 		
 		if(deptno == 0){//전체조회
-			list = SawonDao.getInstance().select();
+			list = SawonDAO.getInstance().select();
 		}else{
 			//파라미터에 해당하는 부서별 조회
-			list = SawonDao.getInstance().select(deptno); <-- 없다. 만들자!! 메서드 오버로드
+			list = SawonDAO.getInstance().select(deptno); <-- 없다. 만들자!! 메서드 오버로드
 		}
 		
 		//System.out.println(list.size());
@@ -793,6 +793,7 @@ public class SawonListAction extends HttpServlet {
 
 }
 ```
+									  
 ### SawonDAO에 메서드 오버로딩하기
 
 ```
@@ -818,7 +819,7 @@ public class SawonDao {
 	}//select()
 	
 	//부서별 사원 목록
-	public List<SawonVo> select( int deptno ) {
+	public List<SawonVO> select( int deptno ) {
 
 		//mybatis framwork이 처리해준다.
 		//1.처리객체 얻어오기
@@ -828,7 +829,7 @@ public class SawonDao {
 		//mapper에 있는 해당 id의 sql명령을 실행 후 결과를 list로 반환
 		//sqlSession이 관리하는 CRUD관련 메서드는 파라미터를 추가할 수 있다.
 		//파라미터는 단 한 개만 추가할 수 있다.
-		List<SawonVo> list = sqlSession.selectList("sawon.sawon_list_no", deptno); 
+		List<SawonVO> list = sqlSession.selectList("sawon.sawon_list_no", deptno); 
 		//같은 쿼리문을 사용할것이 아니기 때문에 id값을 다르게 쓴다.
 
 		//3.사용 후에는 반환(connection, pstmt, resultMap등을 반환하는 작업이 내장되어 있음)
