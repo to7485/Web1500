@@ -680,11 +680,13 @@ public class GogekListAction extends HttpServlet {
 ### gogek_list.jsp 생성하기
 
 ```
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
 
@@ -965,5 +967,191 @@ window.onload=function(){
 
 ![image](https://user-images.githubusercontent.com/54658614/235053581-b3053fd5-cd61-435d-9bb9-69a11a2f632c.png)
 
+### gogek_list.jsp에 입력할수 있는 공간 만들기
+
+```jsp
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+
+<script>
+	
+	function search(){
+
+		var search = document.getElementById("search").value.trim();
+		location.href="gogeklist.do?search="+search;
+	};
+	
+</script>
+
+</head>
+
+<body>
+	
+	<div align="center">
+		지역:
+		<input id="search" placeholder=“검색어를 입력하세요”>
+		<input type="button" value="검색" onclick="search();"> 
+	</div>
+	
+	<hr>
+	
+	<table border="1" align="center">
+		<caption>고객목록</caption>
+		................
+	</table>
+	
+</body>
+
+</html>
+```
+
+### gogek_list.do를 url매핑으로 갖는 GogekListAction 서블릿에 코드 추가하기
+
+```java
+package action;
+
+import java.io.IOException;
+import java.util.List;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import dao.GogekDAO;
+import vo.GogekVO;
+
+
+/**
+ * Servlet implementation class GogekListAction
+ */
+@WebServlet("/gogek_list.do")
+
+public class GogekListAction extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+	
+	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		
+		//gogek.do <--- null 메모리 할당도 안됐음
+		//gogek.do?search= <-- empty 메모리 할당은 됐는데 내용이 없음
+		//gogek.do?search=서울
+
+		//한글이 파라미터로 넘어오기 때문에 인코딩!!
+		request.setCharacterEncoding("utf-8");
+
+		String search = "all";
+		String str_search = request.getParameter( "search" );
+
+		//정상적으로 값이 들어온 경우
+		if( str_search != null && !str_search.isEmpty() ){
+			search = str_search;
+		}
+
+		//목록 가져오기
+		List<GogekVO> list = null;
+
+		if(search.equalsIgnoreCase("all")){
+			//전체목록보기
+			list = GogekDAO.getInstance().select();
+		}else{
+			//지역검색보기
+			list = GogekDAO.getInstance().select( search );
+		}
+		
+		//System.out.println(list.size());	
+		
+		//requestScope영역에 list 바인딩
+		request.setAttribute("list", list);
+		
+		//member_list.jsp에서 el기법을 사용할수 있도록 하기 위해
+		//위에서 바인딩해준 list정보를 넘겨준다.
+		RequestDispatcher disp = 
+				request.getRequestDispatcher("gogek_list.jsp");
+
+		disp.forward(request, response);
+	}
+
+}
+
+```
+
+### GogekDAO에 메서드 추가하기
+	
+```java
+public List<GogekVO> select(String search) {
+
+	List<GogekVO> list = null;
+
+	//mybatis framwork이 처리해준다.
+	//1.처리객체 얻어오기
+	SqlSession sqlSession = factory.openSession();
+
+	//2.처리객체를 사용하여 작업을 수행
+	//mapper에 있는 해당 id의 sql명령을 실행 후 결과를 list로 반환
+
+	//아까 mapper에 받아준 ...like '%'|| #{ my_param } ||'%' 자리에 search가 자동으로 들어간다.
+	//두개이상의 파라미터를 받으려면 map형태로 묶어서 작업해야 하므로 지금은 할 수 없으니 넘어가자.
+	list = sqlSession.selectList("gogek.gogek_select", search);
+
+	//3.사용 후에는 반환(connection, pstmt, resultMap등을 반환하는 작업이 내장되어 있음)
+	sqlSession.close();
+
+	return list;
+}
+```
+	
+### gogek.xml에 코드 추가하기
+
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="gogek">
+
+<select id="gogek_list" resultType="vo.GogekVO">
+	SELECT * FROM gogek
+</select>
+
+	<!-- 지역별 조회 -->
+	<!-- parameterType은 String, 기본자료형을 제외한 나머지 모든 클래스 타입에 대해서는 반드시 패키지명을 함께 입력해줘야 한다. -->
+	<!-- 유일하게 String만 패키지를 안써줘도 됨 -->
+	
+	//'%'|| #{ my_param } ||'%’
+	//'%' + #{ 파라미터로 받을 임의의 이름 } + '%’
+	//쿼리문은 +대신 ||을 사용하여 문자열을 결합한다.
+	<select id="gogek_select" resultType="vo.GogekVO" 
+						parameterType="java.lang.String">
+
+		select * from gogek where goaddr like '%'|| #{ my_param } ||'%'
+	</select>
+
+</mapper>
+
+```
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 
