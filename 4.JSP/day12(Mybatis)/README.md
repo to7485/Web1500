@@ -796,7 +796,7 @@ public class SawonListAction extends HttpServlet {
 									  
 ### SawonDAO에 메서드 오버로딩하기
 
-```
+```java
 public class SawonDao {
 
 	static SawonDao single = null;
@@ -866,6 +866,63 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</delete>
 </mapper>
 ```
+### sawon_list.jsp 코드 추가하기
+- 부서를 선택하면 :::부서를 선택하세요:::로 돌아간다.
+```jsp
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+
+<script>
+
+function find(){
+	......................
+}//find()
+
+//window.onload : html이 모두 로드 된 후에 작동하는 콜백함수
+window.onload=function(){
+	//초기화 영역
+	var deptno = document.getElementById("deptno");
+
+	var dept_array = [0, 10, 20, 30, 40];
+
+	for( var i = 0; i < dept_array.length; i++ ){
+
+		//sawonlist.do?deptno=20
+		if( '${param.deptno}' == dept_array[i]){
+			//다음과 같이 특정 option을 강제선택할 수 있다.
+			deptno[ i ].selected = true;
+			break;
+		}	
+	}
+
+};
+
+</script>
+
+</head>
+
+<body>
+	..............
+</body>
+
+</html>
+```
 	
+![image](https://user-images.githubusercontent.com/54658614/235053587-972f7fca-b621-4703-a675-6b5f351dc093.png)
+
+	
+## 특정 지역을 검색하여 해당 지역에 사는 고객만 검색하기
+
+![image](https://user-images.githubusercontent.com/54658614/235053581-b3053fd5-cd61-435d-9bb9-69a11a2f632c.png)
+
 	
 
