@@ -84,4 +84,302 @@ select * from board order by ref desc, step asc;
 ![image](https://user-images.githubusercontent.com/54658614/235058401-67223fa7-7343-4f0f-95d5-da4c155466ae.png)
 
 
+## vo패키지에 BoardVO클래스 작성하기
+```java
+package vo;
 
+public class BoardVO {
+	private int idx; //게시글 번호
+	private int readhit;//조회수
+	private int ref;//참조글번호
+	private int step;//댓글순서
+	private int depth;//댓글깊이
+	
+	private String name;//작성자
+	private String subject;//제목
+	private String content;//내용
+	private String pwd;//비밀번호
+	private String ip;//ip
+	private String regdate;//등록날짜
+	
+	public int getIdx() {
+		return idx;
+	}
+	public void setIdx(int idx) {
+		this.idx = idx;
+	}
+	public int getReadhit() {
+		return readhit;
+	}
+	public void setReadhit(int readhit) {
+		this.readhit = readhit;
+	}
+	public int getRef() {
+		return ref;
+	}
+	public void setRef(int ref) {
+		this.ref = ref;
+	}
+	public int getStep() {
+		return step;
+	}
+	public void setStep(int step) {
+		this.step = step;
+	}
+	public int getDepth() {
+		return depth;
+	}
+	public void setDepth(int depth) {
+		this.depth = depth;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getSubject() {
+		return subject;
+	}
+	public void setSubject(String subject) {
+		this.subject = subject;
+	}
+	public String getContent() {
+		return content;
+	}
+	public void setContent(String content) {
+		this.content = content;
+	}
+	public String getPwd() {
+		return pwd;
+	}
+	public void setPwd(String pwd) {
+		this.pwd = pwd;
+	}
+	public String getIp() {
+		return ip;
+	}
+	public void setIp(String ip) {
+		this.ip = ip;
+	}
+	public String getRegdate() {
+		return regdate;
+	}
+	public void setRegdate(String regdate) {
+		this.regdate = regdate;
+	}	
+}
+```
+## dao패키지에 BoardDAO클래스 생성하기
+```java
+package dao;
+
+import java.util.List;
+
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+
+import service.MyBatisConnector;
+import vo.BoardVO;
+
+public class BoardDAO {
+
+//마이바티스 서비스를 사용하기 위한 SqlSessionFactory얻어오기
+	SqlSessionFactory factory;
+
+	// single-ton pattern: 
+	// 객체1개만생성해서 지속적으로 서비스하자
+	static BoardDAO single = null;
+
+	public static BoardDAO getInstance() {
+		//생성되지 않았으면 생성
+		if (single == null)
+			single = new BoardDAO();
+		//생성된 객체정보를 반환
+		return single;
+	}
+
+	//생성자
+	public BoardDAO() {
+		super();
+		//MyBatisConnector.java에서 설정해준 factory(어떤DB를 쓸것인가, mapper로 누구를 쓸것인가 등)를 DAO로 가져온다.
+		factory = MyBatisConnector.getInstance().getFactory();
+	}
+
+	//전체 게시물 조회
+	public List<BoardVO> selectList(){
+
+		List<BoardVO> list = null;	
+
+		SqlSession sqlSession = factory.openSession();
+
+		list = sqlSession.selectList( "b.board_list" );
+
+		sqlSession.close();
+
+		return list;
+
+	}//selectList()
+}
+```
+
+## board.xml에 select문 추가하기
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="b">
+	<select id="board_list" resultType="board">
+		select * from board order by ref desc, step asc
+	</select>
+</mapper>
+```
+
+## sqlMapConfig.xml에 매퍼 추가하기
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+	별칭을 주면 매퍼에서 패키지 이름과 같이 쓰지 않고 별칭으로 쓸수 있다.
+	
+	<typeAliases>
+		<typeAlias type="vo.BoardVO" alias="board"/>
+	</typeAliases>
+
+	<environments default="">
+		<environment id="">
+			<transactionManager type="JDBC" />
+			<dataSource type="JNDI">
+				<property name="data_source" 
+				value="java:comp/env/jdbc/oracle_test" />
+			</dataSource>
+		</environment>
+	</environments>
+	<mappers>
+		<mapper resource="config/mybatis/mapper/board.xml" />
+
+	</mappers>
+</configuration>
+```
+
+## action패키지에 BoardListAction서블릿 생성하기
+
+```java
+package action;
+
+import java.io.IOException;
+import java.util.List;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import dao.BoardDAO;
+import vo.BoardVO;
+
+/**
+ * Servlet implementation class BoardListAction
+ */
+@WebServlet("/board_list.do")
+public class BoardListAction extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * @see HttpServlet#service(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.setCharacterEncoding("utf-8");
+		
+		//전체목록 가져오기
+		List<BoardVO> list = BoardDAO.getInstance().selectList();
+		
+		//바인딩
+		request.setAttribute("list", list);
+		
+		RequestDispatcher disp = request.getRequestDispatcher("board_list.jsp");
+		disp.forward(request, response);
+			
+	}
+
+}
+```
+
+## board_list.jsp 파일 만들기
+```jsp
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>목록보기</title>
+
+
+<meta http-equiv="Content-Type" content="text/html;">
+<style>
+	a{text-decoration:none;}
+	table{border-collapse:collapse;}
+</style>
+
+</head>
+<body>
+	<table border="1" width="700">
+		<tr>
+			<td colspan="5"><img src="img/title_04.gif"></td>
+		</tr>
+		<tr>
+			<th>번호</th>
+			<th width="350">제목</th>
+			<th width="120">작성자</th>
+			<th width="100">작성일</th>
+			<th width="50">조회수</th>
+			<!-- 게시물들을 보여줄 for each -->
+			<c:forEach var="vo" items="${list}">
+			<tr>
+				<td align="center">${vo.idx }</td>
+
+				<!-- 댓글일 경우에는 들여쓰기 -->
+				<td>
+					<c:forEach begin="1" end="${vo.depth}">&nbsp;</c:forEach>
+					<!-- 댓글기호 --> 심심하니까 ㄴ 하나 넣어주자
+					<c:if test="${vo.depth ne 0 }">ㄴ</c:if>
+
+					<a href="view.do?idx=${vo.idx}">
+					<font color="black">${vo.subject }</font>
+					</a>
+				</td>
+
+				<td>${vo.name }</td>
+				<td>${ fn:split(vo.regdate, ' ')[0] }</td> 시간을 생략해주는 코드
+				<td>${vo.readhit }</td>
+			</tr>
+			</c:forEach>
+			<tr>
+				<td colspan="5" align="center">
+			나중에 페이징 처리 해줄껀데 미리 자리를 잡아놓기 위해 넣어주자
+					◀ 1 2 3▶
+				</td>
+			</tr>
+
+			<tr>
+				<td colspan="5" align="right">
+					<img src="img/btn_reg.gif"
+					 onclick="location.href='insert_form.do'"
+					 style="cursor:pointer;"> 
+					이미지 위에 마우스를 올리면 손모양으로 바뀜
+				</td>
+			</tr>
+	</table>
+
+</body>
+</html>
+```
