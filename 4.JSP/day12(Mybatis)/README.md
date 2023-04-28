@@ -844,7 +844,7 @@ public class SawonDao {
 
 ### sawon.xml에 쿼리문 추가하기
 
-```
+```xml
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
