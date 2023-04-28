@@ -607,6 +607,47 @@ public class GogekDAO {
 	}//selectList()
 }
 ```
+	
+### gogek.xml 작성하기
+	
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="gogek">
+
+<select id="gogek_list" resultType="vo.GogekVO">
+	SELECT * FROM gogek
+</select>
+
+</mapper>
+```
+	
+### sqlMapConfig.xml에 매퍼 등록하기
+	
+```
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<environments default="">
+		<environment id="">
+			<transactionManager type="JDBC" />
+			<dataSource type="JNDI">
+				<property name="data_source" 
+				value="java:comp/env/jdbc/oracle_test" />
+			</dataSource>
+		</environment>
+	</environments>
+	<mappers>
+		<mapper resource="config/mybatis/mapper/dept.xml" />
+		<mapper resource="config/mybatis/mapper/sawon.xml" />
+		<mapper resource="config/mybatis/mapper/gogek.xml" />
+	</mappers>
+</configuration>
+```
 
 ### GogekListAction 서블릿 생성하기
 ```
