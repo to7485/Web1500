@@ -8,22 +8,19 @@ create sequence seq_board_idx;
 
 --게시판 DB
 CREATE TABLE board(
-	idx int,                          --게시판 일련번호
+	idx number(3) primary key,      --게시판 일련번호
 	name varchar2(100) not null,    --작성자
 	subject varchar2(255) not null,  --게시판제목   
 	content CLOB,                   --내용(씨롭.CharLargeObject)
 	pwd varchar2(100),              --비번
 	ip varchar2(100),                --ip
 	regdate date,                    --작성일자
-	readhit int default 0,            --조회수
+	readhit number(3) default 0,     --조회수
 	--계층형 게시판을 운영하기 위한 추가정보들
 	ref int,  --기준글번호(댓글을 달기위한 메인글)
 	step int, --댓글순서(수직적)
 	depth int --댓글의깊이(댓글의 댓글 개념)
 );
-
---idx를 고유키로 설정
-alter table board add constraint pk_board_idx primary key(idx); 
 
 --샘플데이터 추가(메인글1 -> 댓글1)
 --새글쓰기
