@@ -520,7 +520,7 @@ public class SawonLIstAction extends HttpServlet {
 
 ### GogekVO 클래스 생성하기
 ```java
-public class GogekVo {
+public class GogekVO {
 	
 	int gobun;//고객번호
 	int godam;//담당자번호
@@ -565,15 +565,15 @@ public class GogekVo {
 ### GogekDAO 클래스 생성
 
 ```java
-public class GogekDao {
+public class GogekDAO {
 
 	// single-ton템플릿: 
-	static GogekDao single = null;
+	static GogekDAO single = null;
 
-	public static GogekDao getInstance() {
+	public static GogekDAO getInstance() {
 		//생성되지 않았으면 생성
 		if (single == null)
-			single = new GogekDao();
+			single = new GogekDAO();
 		//생성된 객체정보를 반환
 		return single;
 	}
@@ -581,16 +581,16 @@ public class GogekDao {
 	//SessionFactory생성하는 객체
 	SqlSessionFactory factory;
 
-	public GogekDao() {
+	public GogekDAO() {
 		super();
 		//MyBatisConnector.java에서 설정해준 factory(어떤DB를 쓸것인가, mapper로 누구를 쓸것인가 등)를 DAO로 가져온다.
 		factory = MyBatisConnector.getInstance().getSqlSessionFactory();
 	}
 
 	//고객목록 가져오기
-	public List<GogekVo> select(){
+	public List<GogekVO> select(){
 
-		List<GogekVo> list = null;
+		List<GogekVO> list = null;
 
 		//sql을 요청할 SqlSession객체 생성
 		//1.처리객체 얻어오기
@@ -610,7 +610,7 @@ public class GogekDao {
 
 ### GogekListAction 서블릿 생성하기
 ```
-@WebServlet("/gogek/gogeklist.do")  <-- 반드시 변경!!!
+@WebServlet("/gogek_list.do")  <-- 반드시 변경!!!
 
 public class GogekListAction extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -618,7 +618,7 @@ public class GogekListAction extends HttpServlet {
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		//목록 가져오기
-		List<GogekVo> list = GogekDao.getInstance().select();
+		List<GogekVO> list = GogekDAO.getInstance().select();
 		
 		//System.out.println(list.size());	
 		
