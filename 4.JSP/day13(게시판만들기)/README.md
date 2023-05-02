@@ -459,8 +459,8 @@ public class BoardListAction extends HttpServlet {
 </head>
 <body>
 	<form name="f"
-		method="post"
-		action="insert.do"
+	      method="post"
+	      action="insert.do"
 		<table border="1">
 			<caption>:::새 글 쓰기:::</caption>
 			
@@ -478,7 +478,8 @@ public class BoardListAction extends HttpServlet {
 				cols : 가로로 몇글자정도 입력할 공간
 				<!-- 가로로 50글자 세로로 엔터 10번정도 칠수 있는 크기 -->
 				<td>
-					<textarea name="content" rows="10"cols="50"style="resize:none;"></textarea>
+					<textarea name="content" rows="10"cols="50"style="resize:none;"> </textarea>
+					textarea한정 content쪽에 쓰여진 부분을 value로 가져온다.
 				</td>
 			</tr>
 			<tr>
@@ -498,4 +499,96 @@ public class BoardListAction extends HttpServlet {
 </body>
 </html>
 ```
+
+## BoardInsertAction 서블릿 만들기
+```
+package action;
+
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import dao.BoardDAO;
+import vo.BoardVO;
+
+/**
+ * Servlet implementation class BoardInsertAction
+ */
+@WebServlet("/insert.do")
+public class BoardInsertAction extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * @see HttpServlet#service(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		//insert.do?subject=aaa&name=홍길동...
+		
+		request.setCharacterEncoding("utf-8");
+		
+		String name = request.getParameter("name");
+		String subject = request.getParameter("subject");
+		String content = request.getParameter("content");
+		String pwd = request.getParameter("pwd");
+		String ip = request.getRemoteAddr();//ip
+		
+		BoardVO vo = new BoardVO();
+		vo.setName(name);
+		vo.setSubject(subject);
+		vo.setContent(content);
+		vo.setPwd(pwd);
+		vo.setIp(ip);
+		
+		int res = BoardDAO.getInstance().insert(vo);
+		
+		if(res > 0) {
+			//등록완료후 게시판의 첫 페이지로 복귀
+			response.sendRedirect("board_list.do");
+		}
+	}
+
+}
+
+```
+
+## BoardDAO에 insert메서드 추가하기
+```
+		//게시글 추가
+		public int insert(BoardVO vo) {
+			SqlSession sqlSession = factory.openSession(true);
+			int res = sqlSession.insert("b.board_insert",vo);
+			
+			//sqlSession.commit(); insert,update,delete를 하고나면
+			커밋을 반드시 해야 한다. 하지만 openSession(true)를 해주게 되면 오토커밋으로 된다.
+			
+			sqlSession.close();
+			
+			return res;
+		}
+```
+
+## board.xml에 쿼리문 추가하기
+```xml
+<!-- 새글쓰기(댓글 아님) -->
+<!-- insert, update, delete에서는 resultType을 기술할 수 없다(자동으로 정수형태로 지정) -->
+<insert id="board_insert" parameterType="board">
+	insert into board values(seq_board_idx.nextval,파라미터로 넣을때는 앞에 vo는 생략을 해도 되고 똑같은 이름을 써야 getter를 호출한다.
+							 #{name},
+							 #{subject},
+							 #{content},
+							 #{pwd},
+							 #{ip},
+							 sysdate,
+							 0,
+							 seq_board_idx.currval,
+							 0,
+							 0
+							 )
+</insert>
+```
+- 새글이 잘 추가가 되는지 확인하기
+- 강사 ip로 접근해서 새글을 작성할 수 있다.
 
