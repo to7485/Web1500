@@ -310,8 +310,35 @@ public class BoardListAction extends HttpServlet {
 
 }
 ```
+## board_list.jsp 생성하기
+```
+<body>
+	<table border="1" width="700">
+		<tr>
+			<td colspan="5"><img src="img/title_04.gif"></td>
+		</tr>
+		<tr>
+			<th>번호</th>
+			<th width="350">제목</th>
+			<th width="120">작성자</th>
+			<th width="100">작성일</th>
+			<th width="50">조회수</th>
+			<!-- 게시물들을 보여줄 for each -->
+			<c:forEach var="vo" items="${list}">
+			<tr>
+				<td align="center">${vo.idx }</td>
+				<td><font color="black">${vo.subject }</td>
+				<td>${vo.name }</td>
+				<td>${vo.regdate}</td> 시간을 생략해주는 코드
+				<td>${vo.readhit }</td>
+			</tr>
+	</table>
+</body>
+```
 
-## board_list.jsp 파일 만들기
+## board_list.jsp 파일 보기좋게 수정하기
+- depth가 있는경우 댓글로 인식을 할 수 있다.
+- 댓글인 경우 들여쓰기를 적용해서 보여주자
 ```jsp
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
@@ -366,14 +393,14 @@ public class BoardListAction extends HttpServlet {
 			<tr>
 				<td colspan="5" align="center">
 			나중에 페이징 처리 해줄껀데 미리 자리를 잡아놓기 위해 넣어주자
-					◀ 1 2 3▶
+					◀ 1 2 3 ▶
 				</td>
 			</tr>
 
 			<tr>
 				<td colspan="5" align="right">
 					<img src="img/btn_reg.gif"
-					 onclick="location.href='insert_form.do'"
+					 onclick="location.href='insert_form.jsp'"
 					 style="cursor:pointer;"> 
 					이미지 위에 마우스를 올리면 손모양으로 바뀜
 				</td>
@@ -383,3 +410,92 @@ public class BoardListAction extends HttpServlet {
 </body>
 </html>
 ```
+
+## 게시글 추가를 위해 insert_form.jsp 만들기
+```jsp
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script>
+	function send_check(){
+		var f = document.f; //f라는 name을 가진 form태그를 가져옴
+
+		if (f.subject.value == '')
+		{
+			alert('제목을 입력하세요');
+			f.subject.focus();
+			return false;
+		}
+		
+		if (f.name.value == '')
+		{
+			alert('작성자를 입력하세요');
+			f.name.focus();
+			return false;
+		}
+		
+		if (f.content.value.trim() == '')
+		{
+			alert('한글자 이상 입력하세요');
+			f.content.focus();
+			return false;
+		}
+		
+		if (f.pwd.value == '')
+		{
+			alert('비밀번호를 입력하세요');
+			f.pwd.focus();
+			return false;
+		}
+		
+		f.submit();
+	}
+		
+</script>
+</head>
+<body>
+	<form name="f"
+		method="post"
+		action="insert.do"
+		<table border="1">
+			<caption>:::새 글 쓰기:::</caption>
+			
+			<tr>
+				<th>제목</th>
+				<td><input name="subject" style="width:370px;"></td>
+			</tr>
+			<tr>
+				<th>작성자</th>
+				<td><input name="name" style="width:370px;"></td>
+			</tr>
+			<tr>
+				<th>내용</th>
+				rows : 엔터 몇번친 공간
+				cols : 가로로 몇글자정도 입력할 공간
+				<!-- 가로로 50글자 세로로 엔터 10번정도 칠수 있는 크기 -->
+				<td>
+					<textarea name="content" rows="10"cols="50"style="resize:none;"></textarea>
+				</td>
+			</tr>
+			<tr>
+				<th>비밀번호</th>
+				<td><input name="pwd" type="password"></td>
+			</tr>
+			<tr>
+				<td colspan="2">
+		이미지 태그는 폼태그의 공식적인 자식이 아니라서 this.form을 넣어도 의미가 없다.
+				<img src="img/btn_reg.gif" onclick="send_check();">
+				<img src="img/btn_back.gif" onclick="location.href='list.do'">
+				</td>
+			</tr>
+		</table>
+	</form>
+
+</body>
+</html>
+```
+
