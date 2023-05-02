@@ -592,3 +592,131 @@ public class BoardInsertAction extends HttpServlet {
 - 새글이 잘 추가가 되는지 확인하기
 - 강사 ip로 접근해서 새글을 작성할 수 있다.
 
+# 게시글을 하나 눌렀을 때 내용을 조회해볼수 있도록 하자.
+
+## BoardViewAction
+```
+package action;
+
+/**
+ * Servlet implementation class BoardViewAction
+ */
+@WebServlet("/view.do")
+public class BoardViewAction extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.setCharacterEncoding("utf-8");
+		
+		//view.do?idx=5
+		int idx = Integer.parseInt(request.getParameter("idx"));
+		
+		//상세보기,조회수 증가를 위해 DB에 두번접근하려고 DAO를 미리 생성해놓는다.
+		BoardDAO dao = BoardDAO.getInstance();
+		
+		//idx에 해당하는 게시글 한 건 조회하기 여러개가 아니기 때문에 굳이 리스트에 담을 필요가 없다.
+		BoardVO vo = dao.selectOne(idx);  ->DAO에 selectOne(idx)메서드 만들러 가자
+
+		//조회수 증가
+		int res = dao.update_readhit(idx);
+
+
+
+		//상세보기 페이지로 전환하기 위해 바인딩 및 포워딩
+		request.setAttribute("vo", vo);
+		
+		RequestDispatcher disp = request.getRequestDispatcher("board_view.jsp");
+		disp.forward(request, response);
+	}
+
+}
+```
+## BoardDAO에 selectOne메서드 만들기
+```
+//idx에 해당하는 상세 내용 한건 조회
+public BoardVO selectOne(int idx) {
+	SqlSession sqlSession = factory.openSession();
+	BoardVO vo = sqlSession.selectOne("b.board_one",idx);
+	sqlSession.close();
+	return vo;
+}
+
+//조회수 증가
+public int update(int idx) {
+	SqlSession sqlSession = factory.openSession(true);
+	int res = sqlSession.update("b.update_readhit",idx);
+	sqlSession.close();
+	return res;
+}
+
+```
+## board.xml에 쿼리문 추가하기
+```xml
+<!-- idx에 해당하는 게시글 한 건 조회 -->
+<select id="board_one" resultType="board" parameterType="int">
+	select * from board where idx = #{idx}
+</select>
+<!-- 조회수 증가 -->
+<update id="board_readhit" parameterType="int">
+ update board set readhit = readhit + 1 
+ where idx=#{idx}
+</update>
+```
+
+## 게시글 하나를 조회하는 board_view.jsp 생성하기
+```
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+	<table border="1">
+		<caption>:::게시글 상세보기:::</caption>
+		<tr>
+			<th>제목</th>
+			<td>${vo.subject }</td>
+		</tr>
+		<tr>
+			<th>작성자</th>
+			<td>${vo.name }</td>
+		</tr>
+		<tr>
+			<th>작성일</th>
+			<td>${vo.regdate }</td>
+		</tr>
+		<tr>
+			<th>ip</th>
+			<td>${vo.ip }</td>
+		</tr>
+		<tr>
+			<th>내용</th>
+			<!-- DB에서는 \N을 통해 줄을 바꾸는데 HTML에서는 안먹히기 때문에 pre태그를 사용한다.-->
+			<td width="500px" height="200px"><pre>${vo.content}</pre></pre></td>
+		</tr>
+		<tr>
+			<th>비밀번호</th>
+			<td><input type=“passowrd” id=“c_pwd”></td>
+		</tr>
+		<tr>
+			<td colspan="2">
+			<!-- 목록보기 -->
+				<img src="img/btn_list.gif" onclick="location.href='board_list.do'">
+				
+			<!-- 답변 -->
+				<img src="img/btn_reply.gif" onclick="reply();">
+				
+			<!-- 글삭제 -->
+				<img src="img/btn_delete.gif" onclick="del();">
+			</td>
+			글을 삭제하면 댓글이 달린 것 까지 ref가 망가지기 때문에 삭제기능은 
+			강사와 같이 진행하자
+		</tr>	
+	</table> 
+</body>	
+</html>
+```
