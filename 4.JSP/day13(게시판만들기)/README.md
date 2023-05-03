@@ -642,9 +642,9 @@ public BoardVO selectOne(int idx) {
 }
 
 //조회수 증가
-public int update(int idx) {
+public int update_readhit(int idx) {
 	SqlSession sqlSession = factory.openSession(true);
-	int res = sqlSession.update("b.update_readhit",idx);
+	int res = sqlSession.update("b.board_readhit",idx);
 	sqlSession.close();
 	return res;
 }
@@ -720,3 +720,240 @@ public int update(int idx) {
 </body>	
 </html>
 ```
+
+![image](https://user-images.githubusercontent.com/54658614/235836647-9b9f0e81-fb11-41ec-81c6-eab141ef64f9.png)
+
+
+**새로고침 할 때마다 조회수가 증가하는 조회수작을 막아보자.<br>
+아이디 저장하는거 이후에 세션을 사용하는 몇 안되는 코드가 조회수를 저장할 때!**
+
+## BoardViewAction으로 이동하여 코드를 수정해 조회수 조작을 막자.
+```java
+	//조회수 증가
+	HttpSession session = request.getSession();
+	우리는 세션에 set을 해준적이 없기 때문에 초기값은 null이 들어온다.
+	바인딩 할 때 어떻게 반환될지 몰라서 object로 저장이 되기 때문에 getAttribute의 반환형도 Object형태이다.
+	그렇기 때문에 String으로 형변환을 해준다.
+	
+	//세션에 show라는 이름으로 저장된 저장된 값을 줘봐라 처음에는 null일것
+	String show = (String)session.getAttribute("show");
+
+	if(show == null) {
+		int res = dao.update_readhit(idx);
+		세션에 뭘 저장했는지는 중요하지 않다 무언가를 갖고 있기만 하면 된다.
+		session.setAttribute("show", "0"); //0이아닌 다른것을 넣어도 상관 없다.
+	}
+	이렇게 하면 다른 게시물에 들어가도 0을 갖고 있기 때문에 조회수 증가가 안됨 그래서 메인 화면으로 오면 session을 해제 해줘야 한다.
+
+	//상세보기 페이지로 전환하기 위해 바인딩 및 포워딩
+	request.setAttribute("vo", vo);
+
+	RequestDispatcher disp = request.getRequestDispatcher("board_view.jsp");
+	disp.forward(request, response);
+```
+
+문제는 목록으로 돌아가서 다른 게시물로 들어가도 session은 점유가 되고 있는 상태이기 때문에 조회수가 오르지 않는다.<br>
+메인화면으로 오면 session을 해제 해줘야 한다.<br>
+
+## BoardListAction으로 들어왔을 때 세션을 풀어주기
+```
+	//전체 게시글 조회
+	List<BoardVO> list = BoardDAO.getInstance().selectList();
+
+	//조회수를 위해 저장해뒀던 show라는 정보를 세션에서 제거 코드 추가하기
+	request.getSession().removeAttribute("show");
+
+	//바인딩
+	request.setAttribute("list", list);
+```
+
+# 댓글(답글)을 달아보는 작업을 해보자
+
+![image](https://user-images.githubusercontent.com/54658614/235838024-4ccc39d5-ec34-4ebb-9b35-a50b477a84b4.png)
+
+4번 댓글이 달리면서 step에 1을 먼저 넣어버리면 출력할 때 2번 댓글과 출력이 되는게 random으로 출력된다.<br>
+그렇기 때문에 먼저 달린 댓글의 step을 2,3으로 바꾸고 4번 댓글에 step을 1로 설정을 해줘야 한다.<br>
+
+## board_view에 reply()함수 만들기
+```
+몇번 게시물에 답글 달고 싶은데?
+<script>
+	function reply(){
+		location.href="reply_form.jsp?idx=${vo.idx}";
+	}
+</script>
+```
+
+## reply_from.jsp 생성하기
+```
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script>
+	function send_check(){
+		var f = document.f; //f라는 name을 가진 form태그를 가져옴
+		
+		f.submit();
+	}
+</script>
+</head>			reply.do?subject=aaaa&name=홍길동&content=bbbbbbb&pwd=1111
+<body>
+	<form name="f"
+	      method="post"
+	      action="reply.do"> 
+	boardView.jsp에서 idx를 보냈기 때문에 받아야 한다. 스크립트릿으로 받아야 할까?
+	replyform.jsp?idx=000 으로 넘어온다. 저것도 reply.do로 같이 보내야 한다.
+	el표기법 초반에 했던 파라미터 받는법
+	<input type="hidden" name="idx" value="${param.idx}"> 
+		<table border="1">	
+			<caption>:::답 글 쓰기:::</caption>
+			
+			<tr>
+				<th>제목</th>
+				<td><input name="subject" style="width:370px;"></td>
+			</tr>
+			<tr>
+				<th>작성자</th>
+				<td><input name="name" style="width:370px;"></td>
+			</tr>
+			<tr>
+				<th>내용</th><!-- 가로로 50글자 세로로 엔터 10번정도 칠수 있는 크기 -->
+				<td>
+				    <textarea name="content" rows="10" cols="50" style="resize:none;"></textarea>
+				</td>
+			</tr>
+			<tr>
+				<th>비밀번호</th>
+				<td><input name="pwd" type="password"></td>
+			</tr>
+			<tr>
+				<td colspan="2">
+				<img src="img/btn_reg.gif" onclick="send_check();">
+				<img src="img/btn_back.gif" onclick="location.href='board_list.do'">
+				</td>
+			</tr>
+		</table>
+	</form>
+
+</body>
+</html>
+```
+
+## BoardReplyAction만들기
+```java
+/**
+ * Servlet implementation class BoardReplyAction
+ */
+@WebServlet("/reply.do")
+public class BoardReplyAction extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		int idx = Integer.parseInt(request.getParameter("idx"));
+		String name = request.getParameter("name");
+		String subject = request.getParameter("subject");
+		String content = request.getParameter("content");
+		String pwd = request.getParameter("pwd");
+		String ip = request.getRemoteAddr();
+
+		BoardDAO dao = BoardDAO.getInstance();
+
+		같은 레퍼런스를 가지고 있는 데이터들 중에서 지금 내가 추가하려고 하는
+		step값 이상인 애들을 +1을 해놔야 하기 때문에 insert를 먼저하지 않는다.
+		
+		//기준글의 idx를 이용해서 댓글을 달고싶은 게시글의 정보를 가져온다.
+		BoardVO base_vo = dao.selectOne(idx);
+		
+		//기준글에 step이상 값은 step = step + 1 처리
+		int res = dao.update_step(base_vo); -> dao에 만들러 가기
+		
+	}
+
+}
+```
+
+## BoardDAO에 step+1을 위한 메서드 만들기
+```java
+//댓글추가를 위한 step+1
+public int update_step(BoardVO vo) {
+	SqlSession sqlSession = factory.openSession(true);
+	int res = sqlSession.update("b.board_update_step", vo);
+	sqlSession.close();
+	return res;
+}
+```
+
+## Mapper에 추가하기
+```xml
+<!-- 댓글작성을 위한 STEP 증가 -->
+<update id="board_update_step" parameterType="board">
+	update board set step = step + 1
+	where ref=#{ref} and step > #{step}
+</update>
+```
+
+## BoardReplyAction에 코드추가하기
+```java
+//기준글에 step이상 값은 step = step + 1 처리
+	int res = dao.update_step(base_vo);
+
+	//댓글 vo
+	BoardVO vo = new BoardVO();
+	vo.setName(name);
+	vo.setSubject(subject);
+	vo.setContent(content);
+	vo.setPwd(pwd);
+	vo.setIp(ip);
+
+	//댓글이 들어갈 위치를 선정
+	vo.setRef(base_vo.getRef());
+	vo.setStep(base_vo.getStep()+1);
+	vo.setDepth(base_vo.getDepth()+1);
+
+	//댓글등록
+	res = dao.reply(vo); -->dao에 메서드 만들러 가기
+
+	if(res > 0) {
+		response.sendRedirect("board_list.do");
+	}
+
+```
+
+## BoardDAO에 답글 추가 메서드 작성하기
+```java
+	//댓글추가
+	public int reply(BoardVO vo) {
+		SqlSession sqlSession = factory.openSession(true);
+		int res = sqlSession.insert("b.board_reply",vo);
+		sqlSession.close();
+		return res;
+	}
+```
+## Mapper 작성하기
+```xml
+<!-- 댓글달기 -->
+ <insert id="board_reply" parameterType="board">
+ 	insert into board values(
+ 		seq_board_idx.nextVal,
+ 		#{name},
+ 		#{subject},
+ 		#{content},
+ 		#{pwd},
+ 		#{ip},
+ 		sysdate,
+ 		0,
+ 		#{ref},
+ 		#{step},
+ 		#{depth}
+ 	)
+ </insert>
+```
+
+
+
+
