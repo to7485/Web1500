@@ -954,6 +954,216 @@ public int update_step(BoardVO vo) {
  </insert>
 ```
 
+##  board_view.jsp 수정하여 다답글 못달게 하기
+- 원본글에서는 답변버튼이 살아있어야 하지만 답글을 눌렀을 때는<br>답변버튼이 아예없으면 된다.
+- depth가 0인지 아닌지를 통해 알 수 있다.
+```
+<c:if test="${ vo.depth lt 1 }">
+	<!-- 답변 -->
+	<img src="img/btn_reply.gif" onclick="reply();">
+</c:if>
+```
+
+# 삭제하기
+- 실제로 지워지는것이 아닌 지워진것 처럼 보이게 할 것이다.
+- DB에서 완전히 삭제를 하는게 아닌 컬럼을 하나 추가해서<br>안지워진 글이면 0 지워진것처럼 보이게 하려면 -1
+
+## del_info컬럼 추가하기
+```SQL
+alter table board add(del_info NUMBER(2));
+```
+
+![image](https://user-images.githubusercontent.com/54658614/236111447-8299f19b-31ad-4d27-ab9a-8d4ee7a26991.png)
+
+DEL_INFO 컬럼이 추가된걸 볼 수 있다.
+
+![image](https://user-images.githubusercontent.com/54658614/236111513-275a5e7c-9a68-4347-b981-0dccb9f10630.png)
+
+이미 만들어진 게시글에 대해서는 어쩔 수 없지만 앞으로 만들어진 글에 대해서는 DEL_INFO에 대한 정보도 넣어야 한다.
+
+## VO에 DEL_INFO 추가하기
+```
+private int del_info; //삭제여부
+
+public int getDel_info() {
+		return del_info;
+	}
+public void setDel_info(int del_info) {
+	this.del_info = del_info;
+}
+```
+
+## board_view.jsp에 del()메서드 구현하기
+```html
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+
+<!-- Ajax사용을 위한 js참조  -->
+<script src="js/httpRequest.js"></script>
+
+<script>
+	function reply(){
+		location.href="reply_form.jsp?idx=${vo.idx}";
+	}
+	
+	function del(){
+		if( !confirm("삭제하시겠습니까?") ) {
+			return;
+		}
+		
+		var pwd = ${vo.pwd}; //원본 비밀번호
+		var c_pwd = document.getElementById("c_pwd").value;
+		
+		if(pwd != c_pwd){
+			alert("비밀번호 불일치");
+			return;
+		} 
+		
+		var url = "del.do";
+		var param = "idx=${vo.idx}";
+		
+		sendRequest(url,param,delCheck,"post");
+	}
+	
+	//삭제여부를 판단하는 콜백메서드
+	function delCheck(){
+		if(xhr.readyState == 4 && xhr.status == 200){
+			
+		}
+	}
+</script>
+</head>
+```
+
+## BoardDeleteAction 생성하기
+```java
+package action;
+
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import dao.BoardDAO;
+import vo.BoardVO;
+
+/**
+ * Servlet implementation class BoardDeleteAction
+ */
+@WebServlet("/del.do")
+public class BoardDeleteAction extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * @see HttpServlet#service(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// del.do?idx=00
+		int idx = Integer.parseInt(request.getParameter("idx"));
+		
+		BoardDAO dao = BoardDAO.getInstance();
+		
+		//삭제하고자하는 원본 게시물
+		//삭제하고자하는 원본 게시물의 정보를 얻어온다.
+		BoardVO baseVO = dao.selectOne(idx);
+		
+		baseVO.setSubject("삭제된 글입니다");
+		baseVO.setName("unknown");
+		
+		int res = dao.del_update(baseVO); -> dao에 del_update메서드 작성하기
+		
+		if(res == 0) {
+			response.getWriter().print("[{'param':'yes'}]");
+		} else {
+			response.getWriter().print("[{'param':'no'}]");
+		}
+	}
+
+}
+
+```
+
+## boardDAO에 메서드 작성하기
+```java
+//게시글삭제(된것처럼 업데이트)
+public int del_update(BoardVO vo) {
+	SqlSession sqlSession = factory.openSession(true);
+	int res = sqlSession.update("b.del_update",vo);
+	sqlSession.close();
+	return res;
+}
+```
+
+## del_info컬럼이 추가되었으니 쿼리문을 다 수정해주자.
+```xml
+<!-- 새글쓰기(댓글 아님) -->
+<!-- insert, update, delete에서는 resultType을 기술할 수 없다(자동으로 정수형태로 지정) -->
+<insert id="board_insert" parameterType="board">
+	insert into board values(
+		seq_board_idx.nextval,
+		#{name},
+		 #{subject},
+		 #{content},
+		 #{pwd},
+		 #{ip},
+		 sysdate,
+		 0,
+		 seq_board_idx.currval,
+		 0,
+		 0,
+		 0
+		 )
+</insert>
+<!-- 댓글달기 -->
+ <insert id="board_reply" parameterType="board">
+ 	insert into board values(
+ 		seq_board_idx.nextVal,
+ 		#{name},
+ 		#{subject},
+ 		#{content},
+ 		#{pwd},
+ 		#{ip},
+ 		sysdate,
+ 		0,
+ 		#{ref},
+ 		#{step},
+ 		#{depth},
+ 		0
+ 	)
+ </insert>
+
+ <!-- 게시글 삭제(된 것 처럼 업데이트) -->
+  <update id="del_update" parameterType="board">
+  	update board set
+  	subject=#{subject},
+  	name=#{name},
+  	del_info= -1
+  	where idx=#{idx}
+  </update>
+```
+
+## board_view.jsp로 와서 콜백메서드 마저 작성하기
+```
+function delCheck(){
+	if(xhr.readyState == 4 && xhr.status == 200){
+		var data = xhr.responseText;
+		//"[{'param':'yes'}]"
+		var json = eval(data);
+
+		if(json[0].param == 'yes'){
+			alert("삭제 성공");
+			location.href="board_list.do";
+		} else {
+			alert("삭제 실패");
+		}
+	}
+}
+```
+
+
 
 
 
