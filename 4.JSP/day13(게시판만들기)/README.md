@@ -1184,7 +1184,93 @@ function delCheck(){
 	<td>unknown</td>
 </c:if>
 ```
+# 페이징 처리하기
+- 한 페이지에 10개 정도의 글만 보이게 설정할 것이다.
+- 밑에는 숫자 세 개가 보이고 4페이지를 보고 싶으면 화살표를 눌러서 보이게 하자.
+
+## 페이징 처리를 위한 쿼리문
+
+```sql
+-- 페이징 처리를 위한 쿼리문
+select * from (select rank() over(order by ref desc,step) no, b.* from board b)
+where no between 1 and 10;
+
+오라클 홈페이지나 디비버를 켜고 숫자를 바꿔서 10개씩 조회되는걸 보자.
+```
+## util 패키지에 Common 클래스 생성
+- 여러 가지 기능들을 편리하게 관리하기 위해서 설정용 클래스를 따로 만들어서 관리를 해주자
 
 
+```java
+package util;
+
+	 public class Common{
+
+	//일반게시판용
+	public static class Board{ --> 내부 클래스
+	
+	밖에 있는 클래스는 내부클래스를 멤버변수처럼 사용할 수 있다. 사용하려면 new로 인스턴스를 만들어야한다.
+	내부클래스는 자신의 밖에 있는 클래스의 자원을 직접 사용할 수 있다.
+	
+	내부클래스는 밖에 있는 클래스의 자원을 마음대로 사용할 수 있지만, 중첩클래스는 static 키워드가 안붙었다면 사용할 수 없다.
+	
+	Outer 클래스의 객체가 없어도 Inner 클래스의 객체 생성이 가능하다. (하단에 객체생성법 참고)
+	
+		//한페이지에 보여줄 게시물 개수
+		public final static int BLOCKLIST = 10;
+
+	//BLOCKLIST를 사용하려면 -> Common.Board.BLOCKLIST를 호출하면 사용할 수 있다.
+
+		//페이지 메뉴 수
+		// <- 1 2 3 ->
+		public final static int BLOCKPAGE = 3;
+		
+	}
+
+	//공지사항 게시판용
+	public static class Notice{
+		//한 페이지에서 보여줄 게시물 수
+		public final static int BLOCKLIST = 20;
+		public final static int BLOCKPAGE = 5;
+	}
+}
+```
+## BoardListAction 수정하기
+- 한 페이지에 10개만 보여주게 코드 수정하기
+
+```java
+int nowPage = 1;
+
+나중에 board_list.do가 다시 호출되면 page값을 가져오게 할 것.
+하지만 처음에는 값이 없기 때문에 null
+String page = request.getParameter("page");
+
+//board_list.do <-- null
+//board_list.do?page= <--empty
+
+if(page != null && !page.isEmpty()) {
+	nowPage = Integer.parseInt(page);
+}
+
+//한 페이지에 표시될 게시물의 시작과 끝번호 계산
+//page가 1이면 1~10까지 계산되야함
+//page가 2이면 11~20까지 계산되야함
+int start = (nowPage-1) * Common.Board.BLOCKLIST + 1;
+int end = start + Common.Board.BLOCKLIST - 1;
+
+한 페이지에 10개씩만 select가 되게 할 것이다.
+이제 아래의 쿼리문에 1과 10부분에 start와 end를 넣어주면 되는데 직접 mapper로 넣을 수 있는 방법이 없다.
+HashMap을 이용하자.
+
+HashMap을 import 할 때 패키지 경로를 잘 보자 쓸 데가 있다!
+
+HashMap<String, Integer> map = new HashMap<String, Integer>();
+map.put("start",start);
+map.put("end",end);
+
+//전체 게시글 조회 -> 페이지 번호에 따른 게시글 조회
+이제 앞으로는 모~든 목록을 조회하는 쿼리문을 필요가 없다 수정을 해주자.
+List<BoardVO> list = BoardDAO.getInstance().selectList(map);
+```
 
 
