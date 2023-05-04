@@ -1364,3 +1364,18 @@ public List<BoardVO> selectList(HashMap<String, Integer> map){
 </select>
 
 ```
+## BoardListAction에서 실행하기
+- board_list.do?page= 번호 -> 수동으로 이동해주기
+- 총 게시물의 수를 알아야 밑에 보여지는 페이지 숫자의 개수를 조절할 수 있다.
+
+## board.xml 에 전체 게시물 count해주는 쿼리문 추가하기
+```
+<!-- 전체 게시물 개수 조회 -->
+ <select id="board_count" resultType="int">
+ 	select count(*) from board
+ </select>
+
+```
+
+
+
