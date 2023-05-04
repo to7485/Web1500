@@ -1075,7 +1075,7 @@ public class BoardDeleteAction extends HttpServlet {
 		
 		int res = dao.del_update(baseVO); -> dao에 del_update메서드 작성하기
 		
-		if(res == 0) {
+		if(res > 0) {
 			response.getWriter().print("[{'param':'yes'}]");
 		} else {
 			response.getWriter().print("[{'param':'no'}]");
@@ -1162,7 +1162,28 @@ function delCheck(){
 	}
 }
 ```
+## 삭제된 글은 더이상 클릭할 수 없도록 처리하기
+```html
+<c:if test="${vo.del_info ne -1 }">
+	<a href="view.do?idx=${vo.idx}">
+		<font color="black">${vo.subject }</font>
+	</a>
+</c:if>
+<!-- 삭제된 게시물은 클릭할 수 없도록 처리 -->
+<c:if test="${vo.del_info eq -1 }">
+	<font color="gray">${vo.subject}</font>
+</c:if>
 
+<!-- 삭제가 되지 않은 게시물은 정상적으로 표시 -->
+<c:if test="${vo.del_info ne -1 }">
+	<td>${ fn:split(vo.regdate, ' ')[0] }</td>
+</c:if>
+				
+<!-- 삭제가 된 게시물은 unknown으로 표시 -->
+<c:if test="${vo.del_info eq -1 }">
+	<td>unknown</td>
+</c:if>
+```
 
 
 
