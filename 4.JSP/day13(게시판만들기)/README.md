@@ -1164,25 +1164,95 @@ function delCheck(){
 ```
 ## 삭제된 글은 더이상 클릭할 수 없도록 처리하기
 ```html
-<c:if test="${vo.del_info ne -1 }">
-	<a href="view.do?idx=${vo.idx}">
-		<font color="black">${vo.subject }</font>
-	</a>
-</c:if>
-<!-- 삭제된 게시물은 클릭할 수 없도록 처리 -->
-<c:if test="${vo.del_info eq -1 }">
-	<font color="gray">${vo.subject}</font>
-</c:if>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<!DOCTYPE html>
+<html>
 
-<!-- 삭제가 되지 않은 게시물은 정상적으로 표시 -->
-<c:if test="${vo.del_info ne -1 }">
-	<td>${ fn:split(vo.regdate, ' ')[0] }</td>
-</c:if>
+<head>
+<title>목록보기</title>
+
+
+<meta http-equiv="Content-Type" content="text/html;">
+<style>
+	a{text-decoration:none;}
+	table{border-collapse:collapse;}
+</style>
+
+</head>
+
+
+
+<body>
+	<table border="1" width="700">
+		<tr>
+			<td colspan="5"><img src="img/title_04.gif"></td>
+		</tr>
+		<tr>
+			<th>번호</th>
+			<th width="350">제목</th>
+			<th width="120">작성자</th>
+			<th width="100">작성일</th>
+			<th width="50">조회수</th>
+			<!-- 게시물들을 보여줄 for each -->
+			<c:forEach var="vo" items="${list}">
+			<tr>
+				<td align="center">${vo.idx }</td>
 				
-<!-- 삭제가 된 게시물은 unknown으로 표시 -->
-<c:if test="${vo.del_info eq -1 }">
-	<td>unknown</td>
-</c:if>
+				<!-- 댓글일 경우에는 들여쓰기 -->
+				<td>
+					<c:forEach begin="1" end="${vo.depth}">&nbsp;</c:forEach>
+					<!-- 댓글기호 --> 
+					<c:if test="${vo.depth ne 0 }">ㄴ</c:if>
+					
+					<!-- 삭제되지 않은 글일 경우 클릭이 가능 -->
+					<c:if test="${vo.del_info ne -1 }">
+						<a href="view.do?idx=${vo.idx}">
+						<font color="black">${vo.subject }</font>
+						</a>
+					</c:if>
+					
+					<!-- 삭제된 게시글을 클릭할 수 없도록 처리 -->
+					<c:if test="${vo.del_info eq -1 }">
+						<font color="gray">${vo.subject }</font>
+					</c:if>
+				</td>
+				
+				<td>${vo.name }</td>
+				
+				<!-- 삭제가 되지 않은 게시물은 정상적으로 표시 -->
+				<c:if test="${vo.del_info ne -1 }">
+					<td>${ fn:split(vo.regdate, ' ')[0] }</td>
+				</c:if>
+								
+				<!-- 삭제가 된 게시물은 unknown으로 표시 -->
+				<c:if test="${vo.del_info eq -1 }">
+					<td>unknown</td>
+				</c:if>
+				
+				<td>${vo.readhit }</td>
+			</tr>
+			</c:forEach>
+			<tr>
+				<td colspan="5" align="center">
+
+					◀ 1 2 3▶
+				</td>
+			</tr>
+			
+			<tr>
+				<td colspan="5" align="right">
+					<img src="img/btn_reg.gif"
+					 onclick="location.href='insert_form.jsp'"/>
+					
+				</td>
+			</tr>
+	</table>
+
+</body>
+</html>
 ```
 # 페이징 처리하기
 - 한 페이지에 10개 정도의 글만 보이게 설정할 것이다.
@@ -1273,4 +1343,24 @@ map.put("end",end);
 List<BoardVO> list = BoardDAO.getInstance().selectList(map);
 ```
 
+## BoardDAO이동하고 메서드 수정하기
+```java
+//페이지별로 게시글 조회라고 수정해주기
+public List<BoardVO> selectList(HashMap<String, Integer> map){
+	SqlSession sqlSession = factory.openSession();
+	List<BoardVO> list = sqlSession.selectList("b.board_list", map);
+	sqlSession.close();
+	return list;
+}
+```
 
+## Board.xml 수정하기
+```xml
+<!-- 페이지별 게시글 조회 -->
+<select id="board_list" resultType="board" parameterType="java.util.HashMap">
+	select * 
+	from (select rank() over(order by ref desc,step) no, b.*from board b)
+	where no between #{start} and #{end}
+</select>
+
+```
