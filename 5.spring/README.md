@@ -355,7 +355,26 @@ Spring은 아래 그림과 같이 기본 틀을 제공하고 필요한 기능들
 
 ![image](https://user-images.githubusercontent.com/54658614/236693108-a743437a-051b-4ae8-901c-beb28dc0741c.png)
 
+- 톰캣의 jstl 관련 라이브러리 옮겨주기
 
+- run > run as run on server로 실행하기
+
+![image](https://user-images.githubusercontent.com/54658614/236693929-f5fee8d0-2986-4a58-8b22-af49df523c13.png)
+
+## Lombok 라이브러리
+- Lombok(롬복)을 이용하면 JAVA개발 시 setter/getter, 생성자 등을 @Data등의 어노테이션을 통해 자동으로 생성해준다.
+
+![image](https://user-images.githubusercontent.com/54658614/236693997-449b3281-e657-4f54-b5be-b0259d19a565.png)
+
+![image](https://user-images.githubusercontent.com/54658614/236694089-00091f61-7b01-49b0-9e09-e58b5270d275.png)
+
+- 더블클릭하여 실행이 안된다면 cmd를 켜고 롬복파일이 있는 경로까지 이동하여 java -jar lombok.jar 명령어 입력하여 실행하기
+
+![image](https://user-images.githubusercontent.com/54658614/236694094-e976f935-36c0-4803-8d44-6389b5d11ffd.png)
+
+- ide의 경로 잡아주기
+
+![image](https://user-images.githubusercontent.com/54658614/236694237-09a7f41d-2b58-4068-a9ea-ecc3dc642f13.png)
 
 
 
