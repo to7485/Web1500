@@ -1529,5 +1529,112 @@ request.setAttribute("pageMenu", pageMenu);
 </tr>
 ```
 
+## 페이지에 실제 이미지로 넣기
+```
+//-----그룹페이지처리 이전 		
+		if(isPrevPage){
+			sb.append("<a href ='"+pageURL+"?page=");
+			//sb.append(nowPage - blockPage);
+			sb.append( startPage-1 );
+			sb.append("'><img src='img/btn_prev.gif'></a>");
+		}
+		else
+			sb.append("<img src='img/btn_prev.gif'>");
+		
+//------페이지목록출력-------------------------------------------------------------------
+		sb.append(" ");
+		for(int i=startPage; i<= endPage ;i++){
+			if(i>totalPage)break;
+			if(i == nowPage){ //현재 있는 페이지 색깔 바꿔주기↓
+				sb.append("&nbsp;<b><font color='#ff0000'>");
+				sb.append(i);
+				sb.append("</font></b>");
+			}
+			else{//현재 페이지가 아니면
+				sb.append("&nbsp;<a href='"+pageURL+"?page=");
+				sb.append(i);
+				sb.append("'>");
+				sb.append(i);
+				sb.append("</a>");
+			}
+		}// end for
+		
+		sb.append("&nbsp; ");
+		
+//------그룹 페이지 처리 다음-------------------------------------------------------
+		if(isNextPage){
+			sb.append("<a href='"+pageURL+"?page=");
+			
+			sb.append(endPage + 1);
+			/*if(nowPage+blockPage > totalPage)nowPage = totalPage;
+			else
+				nowPage = nowPage+blockPage;
+			sb.append(nowPage);*/
+			sb.append("'><img src='img/btn_next.gif'></a>");
+		}
+		else
+			sb.append("<img src='img/btn_next.gif'>");
+//---------------------------------------------------------------------------------------
+```
 
+만약 100페이지쯤 글을 보고 있었는데 글을 하나 보고 목록보기를 눌렀을 때 처음 페이지로 돌아가면<br> 이어서 보기가 매우 불편할것이다.
 
+## board_list.jsp 에 페이지 같이 넘기기
+```
+<!-- 삭제되지 않은 글이라면 클릭 가능 -->
+	<c:if test="${vo.del_info ne -1 }">
+		<a href="view.do?idx=${vo.idx}&page=${param.page}">
+		<font color="black">${vo.subject }</font>
+		</a>
+	</c:if>
+```
+## board_view.jsp에서도 페이지 번호 같이 넘겨주기
+```
+<!-- 목록보기 -->
+<img src="img/btn_list.gif" onclick="location.href='board_list.do?page=${param.page}'">
+
+삭제하고 나서도 1페이지로 돌아가지 않도록 delCheck() 메서드에서 location.href 수정해주기
+
+//삭제여부를 판단하는 콜백메서드
+function delCheck(){
+	if(xhr.readyState == 4 && xhr.status == 200){
+		var data = xhr.responseText;
+		//"[{'param':'yes'}]"
+		var json = eval(data);
+
+		if(json[0].param == 'yes'){
+			alert("삭제 성공");
+			location.href="board_list.do?page=${param.page}";
+		} else {
+			alert("삭제 실패");
+		}
+	}
+}
+```
+
+## board_view.jsp의 reply()메서드 수정하기
+- 100페이지의 어떤 글에 답글을 달았는데 1페이지로 가버리면 곤란하다.
+```
+function reply(){
+	location.href="reply_form.jsp?idx=${vo.idx}&page=${param.page}";
+	}
+```
+
+## reply_form.jsp 수정하기
+-  등록하기 누르면 1페이지로 돌아가면 안되니 page도 파라미터로 넘기자
+```
+<form name="f"
+	  method="post"
+	  action="reply.do">
+
+	  <input type="hidden" name="idx" value="${param.idx }">
+	  <input tpye="hidden" name="page" value="${param.page }">
+	  <table border="1">
+```
+## reply.do 수정하기
+```
+if(res > 0) {
+	int page = Integer.parseInt(request.getParameter("page"));
+	response.sendRedirect("board_list.do?page="+page);
+}
+```
