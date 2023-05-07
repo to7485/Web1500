@@ -48,6 +48,9 @@ Spring은 아래 그림과 같이 기본 틀을 제공하고 필요한 기능들
 
 ![image](https://user-images.githubusercontent.com/54658614/236691376-8c797953-9b3d-46fe-b828-ea93785fa74b.png)
 
+- 압축을 풀면 우리가 평소에 사용하던 이클립스처럼 실행할 수 있다.
+
+![image](https://user-images.githubusercontent.com/54658614/236691451-6a7ce32a-4e3c-4dab-bd65-54ad9c43a5fa.png)
 
 
 
