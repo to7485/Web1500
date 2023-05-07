@@ -384,6 +384,9 @@ Spring은 아래 그림과 같이 기본 틀을 제공하고 필요한 기능들
 5. src/main/webapp/WEB-INF/views : jsp, html파일경로
 6. pom.xml : 라이브러리 의존성 관리
 7. src/main/webapp/WEB-INF/spring/appServlet/servlet-context.xml : 웹과 관련된 스프링 설정파일
+
+![image](https://user-images.githubusercontent.com/54658614/236695144-f2a40bbd-8960-450a-9dba-11d2c7765984.png)
+
 8. src/main/webapp/WEB-INF/spring/root-context.xml : 스프링 객체 관련 설정 파일
 
 
