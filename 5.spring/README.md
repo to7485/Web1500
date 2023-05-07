@@ -28,6 +28,18 @@ Spring은 아래 그림과 같이 기본 틀을 제공하고 필요한 기능들
 - <b>스프링 배치</b> : 로깅/추적, 작업 통계, 실패 처리 등 배치 처리에 필요한 기본 기능을 제공한다. <br><br>
 이 외에도 스프링 인티그레이션, 스프링 하둡, 스프링 소셜 등 다양한 프로젝트가 존재한다. 각 프로젝트에 대한 내용은 [https://spring.io](https://spring.io) 사이트를 참고하기 바란다.
 * * *
+
+# Maven
+- Maven이란 자바용 프로젝트 관리 도구이이다.
+- Maven은 Apache사에서 만든 빌드툴(build tool)이다
+- pom.xml파일을 통해 정형화된 빌드 시스템으로 프로젝트 관리를 해준다.
+- 프로젝트의 전체적인 라이프 사이클을 관리한다.
+
+## 빌드
+프로젝트를 위해 작성한 Java코드나 여러 자원들(.xml, .jar, .properties)를 JVM이나 톰캣 같은 WAS가 인식할 수 있는 구조로 패키징 하는 과정 및 결과물이다.<br>
+또 단순히 컴파일 해주는 작업 뿐만 아니라, 테스팅, 검사, 배포까지 일련의 작업들을 통틀어 빌드라고 한다.<br>
+
+
 # 개발환경 구축하기
 - JDK 설치 및 JAVA_HOME 환경 변수 설정 : [1.JAVA/day01(환경구축,주석,자료형,변수)](https://github.com/to7485/Web1500/tree/main/1.JAVA/day01(%ED%99%98%EA%B2%BD%EA%B5%AC%EC%B6%95%2C%EC%A3%BC%EC%84%9D%2C%EC%9E%90%EB%A3%8C%ED%98%95%2C%EB%B3%80%EC%88%98))
 
@@ -75,6 +87,39 @@ Spring은 아래 그림과 같이 기본 틀을 제공하고 필요한 기능들
 
 
 ![image](https://user-images.githubusercontent.com/54658614/236691986-082badff-f0b7-4751-aad8-4a833033716e.png)
+
+
+# 스프링 프로젝트 생성하기
+
+## Ex_날짜_Spring
+- File > new > Spring Legacy Project
+![image](https://user-images.githubusercontent.com/54658614/236692202-15d4f991-85d7-40f1-8c27-a70b7a7f885c.png)
+
+- Spring MVC Project로 템플릿을 설정한다.
+
+![image](https://user-images.githubusercontent.com/54658614/236692288-038b1003-f122-46ae-906c-17f8dcd8e4d7.png)
+
+- 스프링 작업을 위한 메인 패키지가 미리 준비가 되어있어야 한다.
+- 패키지는 3단계 이상 되어야 활성화가 된다.
+- 단계는 .으로 구분한다.
+- 패키지는 단순히 저장을 하는 용도만이 아니라 프로젝트끼리 구별하는 식별자로도 활용이된다.
+- 
+
+![image](https://user-images.githubusercontent.com/54658614/236692385-71be89b4-d28e-44b5-85d6-dd8ccc7311ea.png)
+
+
+- 프로젝트가 만들어지면 api나 라이브러리와 같은 정보들이 모두 pom.xml파일에 기록이 되어있다.
+
+![image](https://user-images.githubusercontent.com/54658614/236692694-aa542227-82db-459a-83bc-20951b036df0.png)
+
+## pom.xml 수정하기
+```
+```
+
+
+
+
+
 
 
 
