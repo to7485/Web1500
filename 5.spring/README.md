@@ -56,4 +56,25 @@ Spring은 아래 그림과 같이 기본 틀을 제공하고 필요한 기능들
 
 ![image](https://user-images.githubusercontent.com/54658614/236691478-baac579e-4f8b-4133-a9c9-8c8b26a94383.png)
 
+- 톰캣 9버전을 다운로드 받자
+
+![image](https://user-images.githubusercontent.com/54658614/236691683-38cd0187-e370-4f61-b077-edcd822c399e.png)
+
+- 왼쪽아래 VM어쩌구 되어있는거 클릭하고 delete를 눌러 삭제하자
+- 그리고 다운받은 톰캣을 등록해주자.
+
+![image](https://user-images.githubusercontent.com/54658614/236691710-420c67bf-46a2-4953-ba47-9afe935e0428.png)
+
+- 톰캣 더블클릭하면 포트를 바꿀수 있다.
+
+![image](https://user-images.githubusercontent.com/54658614/236691739-95cddfe4-bc35-4441-8ead-a8ff81093125.png)
+
+- 뭐가 모자란다는 경고가 뜰 수 있다.
+
+![image](https://user-images.githubusercontent.com/54658614/236692005-1d5d4e82-0197-42fa-82d3-7055381eb4bf.png)
+
+
+![image](https://user-images.githubusercontent.com/54658614/236691986-082badff-f0b7-4751-aad8-4a833033716e.png)
+
+
 
