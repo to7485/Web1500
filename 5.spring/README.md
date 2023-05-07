@@ -52,5 +52,8 @@ Spring은 아래 그림과 같이 기본 틀을 제공하고 필요한 기능들
 
 ![image](https://user-images.githubusercontent.com/54658614/236691451-6a7ce32a-4e3c-4dab-bd65-54ad9c43a5fa.png)
 
+- work폴더를 설정하여 실행을 한다.
+
+![image](https://user-images.githubusercontent.com/54658614/236691478-baac579e-4f8b-4133-a9c9-8c8b26a94383.png)
 
 
