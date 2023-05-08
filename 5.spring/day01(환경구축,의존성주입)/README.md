@@ -237,11 +237,6 @@ public class HomeController {
 
 # 스프링 프로젝트의 작동 구조
 
-##  Ex_날짜_SpringArchitecture 프로젝트 생성하기
-
-## vo패키지에 PersonVO클래스 만들기
-
-
 # Lombok 라이브러리
 - Lombok(롬복)을 이용하면 JAVA개발 시 setter/getter, 생성자 등을 @Data등의 어노테이션을 통해 자동으로 생성해준다.
 
@@ -257,7 +252,82 @@ public class HomeController {
 
 ![image](https://user-images.githubusercontent.com/54658614/236694237-09a7f41d-2b58-4068-a9ea-ecc3dc642f13.png)
 
-![image](https://user-images.githubusercontent.com/54658614/236695144-f2a40bbd-8960-450a-9dba-11d2c7765984.png)
+- 혹시 모르니 pom.xml에도 알려주자
+
+```
+<!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
+<dependency>
+    <groupId>org.projectlombok</groupId>
+    <artifactId>lombok</artifactId>
+    <version>1.18.26</version>
+    <scope>provided</scope>
+</dependency>
+```
+
+|어노테이션|설명|
+|---|---|
+|@Getter|getter메서드 생성|
+|@Setter|setter메서드 생성|
+|@NoArgsConstructor|파라미터 없는 기본생성자|
+|@AllArgsConstructor|어노테이션은 모든 필드 값을 파라미터로 받는 생성자를 만들어줍니다.|
+|@RequiredArgsConstructor|final이나 @NonNull인 필드 값만 파라미터로 받는 생성자를 만들어줍니다.|
+|@Data|@Getter, @Setter, @RequiredArgsConstructor, @ToString, @EqualsAndHashCode을 한꺼번에 설정|
+
+
+##  Ex_날짜_SpringArchitecture 프로젝트 생성하기
+
+## vo패키지에 PersonVO클래스 만들기
+```
+package vo;
+
+import org.springframework.stereotype.Component;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class PersonVO {
+	private String name,tel;
+	private int age;
+}
+
+```
+## non_spring.jsp 만들기
+- 더이상 서블릿에서 내용을 가져오는게 아니기 때문에 스크립트릿을 사용해보자.
+```
+<%@page import="vo.PersonVO"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%
+	PersonVO p1 = new PersonVO();
+	p1.setName("일길동");
+	p1.setAge(30);
+	p1.setTel("010-111-2222");
+	
+	PersonVO p2 = new PersonVO("이길동","010-3333-3333",35);
+	
+	request.setAttribute("p1", p1);
+	request.setAttribute("p2", p2);
+
+%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<p>${ p1.name } / ${ p1.age } / ${ p1.tel }</p>
+	<p>${ p2.name } / ${ p2.age } / ${ p2.tel }</p>
+	
+</body>
+</html>
+
+```
+
 
 
 
