@@ -39,6 +39,7 @@ Spring은 아래 그림과 같이 기본 틀을 제공하고 필요한 기능들
 프로젝트를 위해 작성한 Java코드나 여러 자원들(.xml, .jar, .properties)를 JVM이나 톰캣 같은 WAS가 인식할 수 있는 구조로 패키징 하는 과정 및 결과물이다.<br>
 또 단순히 컴파일 해주는 작업 뿐만 아니라, 테스팅, 검사, 배포까지 일련의 작업들을 통틀어 빌드라고 한다.<br>
 
+* * *
 
 # 개발환경 구축하기
 - JDK 설치 및 JAVA_HOME 환경 변수 설정 : [1.JAVA/day01(환경구축,주석,자료형,변수)](https://github.com/to7485/Web1500/tree/main/1.JAVA/day01(%ED%99%98%EA%B2%BD%EA%B5%AC%EC%B6%95%2C%EC%A3%BC%EC%84%9D%2C%EC%9E%90%EB%A3%8C%ED%98%95%2C%EB%B3%80%EC%88%98))
@@ -88,6 +89,12 @@ Spring은 아래 그림과 같이 기본 틀을 제공하고 필요한 기능들
 
 ![image](https://user-images.githubusercontent.com/54658614/236691986-082badff-f0b7-4751-aad8-4a833033716e.png)
 
+***
+# 환경설정하기
+- 우리가 jsp를 하면서 했던 설정들을 다 해주자.
+
+![image](https://user-images.githubusercontent.com/54658614/236733561-361b0055-dd08-4405-84a4-2d85946582c9.png)
+
 
 # 스프링 프로젝트 생성하기
 
@@ -103,265 +110,139 @@ Spring은 아래 그림과 같이 기본 틀을 제공하고 필요한 기능들
 - 패키지는 3단계 이상 되어야 활성화가 된다.
 - 단계는 .으로 구분한다.
 - 패키지는 단순히 저장을 하는 용도만이 아니라 프로젝트끼리 구별하는 식별자로도 활용이된다.
-- 
 
 ![image](https://user-images.githubusercontent.com/54658614/236692385-71be89b4-d28e-44b5-85d6-dd8ccc7311ea.png)
+
+# 프로젝트의 기본 경로
+|경로|설명|
+|---|---|
+|src/main/java|서버단 JAVA파일|
+|src/test/java|단위테스트를 위한 JAVA파일|
+|src/main/resources|관련 설정파일|
+|src/test/resources|src/main/test 관련 설정 파일|
+|src/main/webapp/WEB-INF/views|jsp, html파일경로|
+|pom.xml|라이브러리 의존성 관리|
+|src/main/webapp/WEB-INF/spring/appServlet/servlet-context.xml| 웹과 관련된 스프링 설정파일|
+|src/main/webapp/WEB-INF/spring/root-context.xml| 스프링 객체 관련 설정 파일|
+
+- 프로젝트를 처음 만들게 되면 예제들이 기본적으로 만들어져있다.
+- 실행할 때는 프로젝트에 우클릭을 하여 run as > run on server로 실행하자
+
+![image](https://user-images.githubusercontent.com/54658614/236693929-f5fee8d0-2986-4a58-8b22-af49df523c13.png)
+
 
 
 - 프로젝트가 만들어지면 api나 라이브러리와 같은 정보들이 모두 pom.xml파일에 기록이 되어있다.
 
 ![image](https://user-images.githubusercontent.com/54658614/236692694-aa542227-82db-459a-83bc-20951b036df0.png)
 
-## pom.xml 수정하기
-```
-<?xml version="1.0" encoding="UTF-8"?>
-	<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.hds</groupId>
-	<artifactId>app</artifactId>
-	<name>ex01</name>
-	<packaging>war</packaging>
-	<version>1.0.0-BUILD-SNAPSHOT</version>
-	<properties>
-		<java-version>11</java-version>
-		<org.springframework-version>5.1.20.RELEASE</org.springframework-version>
-		<org.aspectj-version>1.9.0</org.aspectj-version>
-		<org.slf4j-version>1.7.25</org.slf4j-version>
-	</properties>
-	<dependencies>
-		<!-- Spring -->
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context</artifactId>
-			<version>${org.springframework-version}</version>
-			<exclusions>
-				<!-- Exclude Commons Logging in favor of SLF4j -->
-				<exclusion>
-					<groupId>commons-logging</groupId>
-					<artifactId>commons-logging</artifactId>
-				 </exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-webmvc</artifactId>
-			<version>${org.springframework-version}</version>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
-		<dependency>
-		    <groupId>org.projectlombok</groupId>
-		    <artifactId>lombok</artifactId>
-		    <version>1.18.22</version>
-		    <scope>provided</scope>
-		</dependency>
-		<!-- AspectJ -->
-		<dependency>
-			<groupId>org.aspectj</groupId>
-			<artifactId>aspectjrt</artifactId>
-			<version>${org.aspectj-version}</version>
-		</dependency>	
-		<!-- JSON -->
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-databind</artifactId>
-			<version>2.9.6</version>
-		</dependency>
-		
-		<dependency>
-			<groupId>com.fasterxml.jackson.dataformat</groupId>
-			<artifactId>jackson-dataformat-xml</artifactId>
-			<version>2.9.6</version>
-		</dependency>
-		
-		<dependency>
-			<groupId>com.google.code.gson</groupId>
-			<artifactId>gson</artifactId>
-			<version>2.8.2</version>
-		</dependency>
-		<!-- Logging -->
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>${org.slf4j-version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>jcl-over-slf4j</artifactId>
-			<version>${org.slf4j-version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>${org.slf4j-version}</version>
-		</dependency>
-		<!-- Log4j -->
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>1.2.17</version>
-		</dependency>
+- 안된다면 톰캣의 jstl 관련 라이브러리 옮겨주기
 
-		<!-- https://mvnrepository.com/artifact/org.bgee.log4jdbc-log4j2 -->
-		<dependency>
-			<groupId>org.bgee.log4jdbc-log4j2</groupId>
-			<artifactId>log4jdbc-log4j2-jdbc4</artifactId>
-			<version>1.16</version>
-		</dependency>
-		<!-- @Inject -->
-		<dependency>
-			<groupId>javax.inject</groupId>
-			<artifactId>javax.inject</artifactId>
-			<version>1</version>
-		</dependency>
-				
-		<!-- Servlet -->
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
-			<version>3.1.0</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>javax.servlet.jsp</groupId>
-			<artifactId>jsp-api</artifactId>
-			<version>2.1</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>jstl</artifactId>
-			<version>1.2</version>
-		</dependency>
+## home.jsp 수정하기
+- 아마 한글이 깨질것이다 예제파일에는 인코딩 타입이 빠져있다 추가해주자.
+```
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page session="false" %>
+<html>
+<head>
+	<title>Home</title>
+</head>
+<body>
+<h1>
+	Hello world!  
+</h1>
+
+<P>  The time on the server is ${serverTime}. </P>
+</body>
+</html>
+
+```
+- 실행하면 home.jsp가 실행되어 다음과 같은 화면이 뜬다.
+
+![image](https://user-images.githubusercontent.com/54658614/236734497-eac24649-c08d-4924-a053-7aa2a163cdaf.png)
+
+# home.jsp가 어떻게 실행이 되는가
+- ServerTime이라고 하는 부분이 EL표기법으로 묶여 있다 그 말은 어딘가의 영역에 묶여있다는 뜻.
+- src/main/java에 HomeController.java로 가보자
+
+![image](https://user-images.githubusercontent.com/54658614/236735580-1e6a03ec-1464-4f02-8f34-3cd6b62a7ea9.png)
+
+```
+package com.korea.test;
+
+import java.text.DateFormat;
+import java.util.Date;
+import java.util.Locale;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+/**
+ * Handles requests for the application home page.
+ */
+@Controller
+public class HomeController {
 	
-		<!-- Test -->
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-test</artifactId>
-			<version>5.1.20.RELEASE</version>
-		</dependency>
+	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
+	
+	/**
+	 * Simply selects the home view to render by returning its name.
+	 */
+	@RequestMapping(value = "/", method = RequestMethod.GET)
+	public String home(Locale locale, Model model) {
+		logger.info("Welcome home! The client locale is {}.", locale);
 		
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-test</artifactId>
-			<version>5.1.20.RELEASE</version>
-		</dependency>
+		Date date = new Date();
+		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
 		
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.12</version>
-			<scope>test</scope>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/javax.xml/jaxb-api -->
-		<dependency>
-			<groupId>javax.xml</groupId>
-			<artifactId>jaxb-api</artifactId>
-			<version>2.1</version>
-		</dependency>
-		<!-- https://mvnrepository.com.artifact/com.zaxxer/HikariCP -->
-		<dependency>
-			<groupId>com.zaxxer</groupId>
-			<artifactId>HikariCP</artifactId>
-			<version>2.7.4</version>
-		</dependency>
+		String formattedDate = dateFormat.format(date);
 		
-		<!-- mybatis -->
-		<!-- https://mvnrepository.com/artifact/org.mybatis/mybatis -->
-		<dependency>
-			<groupId>org.mybatis</groupId>
-			<artifactId>mybatis</artifactId>
-			<version>3.4.6</version>
-		</dependency>
+		뭔지는 잘 모르겠지만 model이라는 애가 request와 비슷한 역할을 한다.
+		model.addAttribute("serverTime", formattedDate );
+		model.addAttribute("hell","스프링은 처음입니다.");
 		
-		<!-- https://mvnrepository.com/artifact/org.mybatis/mybatis-spring -->
-		<dependency>
-			<groupId>org.mybatis</groupId>
-			<artifactId>mybatis-spring</artifactId>
-			<version>1.3.2</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-tx</artifactId>
-			<version>${org.springframework-version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-jdbc</artifactId>
-			<version>${org.springframework-version}</version>
-		</dependency>
 		
-		<!-- Thumbnailator -->
-		<dependency>
-			<groupId>net.coobird</groupId>
-			<artifactId>thumbnailator</artifactId>
-			<version>0.4.8</version>
-		</dependency>
-		
-		<!-- Quartz -->
-		<dependency>
-			<groupId>org.quartz-scheduler</groupId>
-			<artifactId>quartz</artifactId>
-			<version>2.3.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.quartz-scheduler</groupId>
-			<artifactId>quartz-jobs</artifactId>
-			<version>2.3.0</version>
-		</dependency>
-	</dependencies>
-    <build>
-        <plugins>
-            <plugin>
-                <artifactId>maven-eclipse-plugin</artifactId>
-                <version>2.9</version>
-                <configuration>
-                    <additionalProjectnatures>
-                        <projectnature>org.springframework.ide.eclipse.core.springnature</projectnature>
-                    </additionalProjectnatures>
-                    <additionalBuildcommands>
-                        <buildcommand>org.springframework.ide.eclipse.core.springbuilder</buildcommand>
-                    </additionalBuildcommands>
-                    <downloadSources>true</downloadSources>
-                    <downloadJavadocs>true</downloadJavadocs>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.0</version>
-                <configuration>
-                    <source>11</source>
-                    <target>11</target>
-                    <compilerArgument>-Xlint:all</compilerArgument>
-                    <showWarnings>true</showWarnings>
-                    <showDeprecation>true</showDeprecation>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>1.2.1</version>
-                <configuration>
-                    <mainClass>org.test.int1.Main</mainClass>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
-</project>
+		return "home";
+	}
+	
+}
 
 ```
-![image](https://user-images.githubusercontent.com/54658614/236693092-a17ca0d6-0d77-4562-a31f-a0386ca0a898.png)
 
-![image](https://user-images.githubusercontent.com/54658614/236693108-a743437a-051b-4ae8-901c-beb28dc0741c.png)
+## home.jsp에 코드 추가하고 실행하기
+```
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page session="false" %>
+<html>
+<head>
+	<title>Home</title>
+</head>
+<body>
+<h1>
+	Hello world! / ${hello} 
+</h1>
 
-- 톰캣의 jstl 관련 라이브러리 옮겨주기
+<P>  The time on the server is ${serverTime}. </P>
+</body>
+</html>
 
-- run > run as run on server로 실행하기
+```
 
-![image](https://user-images.githubusercontent.com/54658614/236693929-f5fee8d0-2986-4a58-8b22-af49df523c13.png)
+# 스프링 프로젝트의 작동 구조
 
-## Lombok 라이브러리
+##  Ex_날짜_SpringArchitecture 프로젝트 생성하기
+
+## vo패키지에 PersonVO클래스 만들기
+
+
+# Lombok 라이브러리
 - Lombok(롬복)을 이용하면 JAVA개발 시 setter/getter, 생성자 등을 @Data등의 어노테이션을 통해 자동으로 생성해준다.
 
 ![image](https://user-images.githubusercontent.com/54658614/236693997-449b3281-e657-4f54-b5be-b0259d19a565.png)
@@ -376,17 +257,8 @@ Spring은 아래 그림과 같이 기본 틀을 제공하고 필요한 기능들
 
 ![image](https://user-images.githubusercontent.com/54658614/236694237-09a7f41d-2b58-4068-a9ea-ecc3dc642f13.png)
 
-# 프로젝트의 기본 경로
-1. src/main/java : 서버단 JAVA파일
-2. src/test/java : 단위테스트를 위한 JAVA파일
-3. src/main/resources : src/main/java 관련 설정파일
-4. src/test/resources : src/main/test 관련 설정 파일
-5. src/main/webapp/WEB-INF/views : jsp, html파일경로
-6. pom.xml : 라이브러리 의존성 관리
-7. src/main/webapp/WEB-INF/spring/appServlet/servlet-context.xml : 웹과 관련된 스프링 설정파일
-
 ![image](https://user-images.githubusercontent.com/54658614/236695144-f2a40bbd-8960-450a-9dba-11d2c7765984.png)
 
-8. src/main/webapp/WEB-INF/spring/root-context.xml : 스프링 객체 관련 설정 파일
+
 
 
