@@ -328,7 +328,109 @@ public class PersonVO {
 
 ```
 
+## PersonVO 코드 수정하기
+```
+package vo;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+public class PersonVO {
+
+	private String name,tel;
+	private int age;
+	
+	
+	
+	public PersonVO() {
+		System.out.println("---PersonVO의 기본생성자---");
+	}
+	
+	public PersonVO(String name, String tel, int age) {
+		System.out.println("---파라미터를 받는 PersonVO 생성자 호출 ----");
+		this.name = name;
+		this.tel = tel;
+		this.age = age;
+	}
+
+	
+	public void setName(String name) {
+		System.out.println("name setter호출");
+		this.name = name;
+	}
+
+	
+	public void setTel(String tel) {
+		System.out.println("tel setter호출");
+		this.tel = tel;
+	}
+
+	
+	public void setAge(int age) {
+		System.out.println("age setter호출");
+		this.age = age;
+	}
+	
+	
+}
 
 
+```
+
+## root-context.xml에 코드 추가하기
+
+![image](https://github.com/to7485/Web1500/assets/54658614/4d72c31c-b04d-4f23-b170-f6ec21a038d3)
+
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+	
+	<!-- Root Context: defines shared resources visible to all other web components -->
+	<context:component-scan base-package="vo"/>
+</beans>
+
+```
+
+## SpringConfigTest.java 클래스만들기
+```
+package vo;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class SpringConfigTest {
+
+	@Bean
+	public PersonVO p1() {
+		PersonVO p1 = new PersonVO();
+		p1.setName("홍길동");
+		p1.setTel("010-1111-1111");
+		p1.setAge(30);
+		return p1;
+	}
+
+	@Bean
+	public PersonVO p2() {
+		PersonVO p2 = new PersonVO("이길동","010-2222-2222",40);
+		return p2;
+	}
+}
+
+```
+실행하여 콘솔에서 값 
 
 
