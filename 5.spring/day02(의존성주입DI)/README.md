@@ -196,7 +196,7 @@ import service.BoardServiceImpl;
 
 @Configuration
 @EnableWebMvc
-@ComponentScan("com.korea.test")
+//@ComponentScan("com.korea.test") 자동탐색
 public class ServletContext implements WebMvcConfigurer {
 
 	@Override
@@ -211,6 +211,11 @@ public class ServletContext implements WebMvcConfigurer {
 		resolver.setPrefix("/WEB-INF/views/");
 		resolver.setSuffix(".jsp");
 		return resolver;
+	}
+	
+	@Bean
+	public BoardController boardController() {
+		return new BoardController(new BoardServiceImpl(new BoardDAOImpl()));
 	}
 }
 
