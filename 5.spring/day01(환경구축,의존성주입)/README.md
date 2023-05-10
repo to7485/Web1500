@@ -474,25 +474,8 @@ public class PersonVO {
 	이와 같은 형태를 constructor injection이라고 한다.
 ```
 
+xml에 직접 객체를 만들 수 있지만
 
-## root-context.xml에 코드 추가하기
-
-![image](https://github.com/to7485/Web1500/assets/54658614/4d72c31c-b04d-4f23-b170-f6ec21a038d3)
-
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:context="http://www.springframework.org/schema/context"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
-		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
-	
-	<!-- Root Context: defines shared resources visible to all other web components -->
-	<context:component-scan base-package="vo"/>
-</beans>
-
-```
 
 ## InjectionTest.java 클래스만들기
 ```
@@ -522,6 +505,28 @@ public class InjectionTest {
 }
 
 ```
+
+
+## root-context.xml에 코드 추가하기
+
+![image](https://github.com/to7485/Web1500/assets/54658614/4d72c31c-b04d-4f23-b170-f6ec21a038d3)
+
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+	
+	<!-- Root Context: defines shared resources visible to all other web components -->
+	<context:component-scan base-package="vo"/>
+</beans>
+
+```
+
+
 실행하여 콘솔에서 값 확인하기
 
 ![image](https://github.com/to7485/Web1500/assets/54658614/63bc703e-a577-4e91-8fc8-cf1e7f071fe6)
