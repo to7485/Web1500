@@ -34,10 +34,10 @@
 				contextClass
 			</param-name>
 			<param-value>
-                org.springframework.web.context.support.AnnotationConfigWebApplicationContext
-            </param-value>
+                		org.springframework.web.context.support.AnnotationConfigWebApplicationContext
+            		</param-value>
 		</init-param>
-		 <init-param>
+		<init-param>
             <param-name>contextConfigLocation</param-name>
             <param-value>
             	config.Context
@@ -54,8 +54,6 @@
 	</servlet-mapping>
 
 </web-app>
-
-
 ```
 
 ## dao 패키지에 BoardDAO 인터페이스 만들기
