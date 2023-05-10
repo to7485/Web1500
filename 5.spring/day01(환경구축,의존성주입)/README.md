@@ -29,6 +29,24 @@ Spring은 아래 그림과 같이 기본 틀을 제공하고 필요한 기능들
 이 외에도 스프링 인티그레이션, 스프링 하둡, 스프링 소셜 등 다양한 프로젝트가 존재한다. 각 프로젝트에 대한 내용은 [https://spring.io](https://spring.io) 사이트를 참고하기 바란다.
 * * *
 
+## 스프링 프레임워크의 특징
+1. 경량 컨테이너(크기와 부하의 측면)로서 자바 객체를 직접 관리
+	- 각각의 객체 생성, 소멸과 같은 라이프 사이클을 관리하며 스프링으로부터 필요한 객체를 얻어올 수 있다.
+2. 제어 역행(IoC : Inversion of Control)
+	- 애플리케이션의 느슨한 결합을 도모.(항상 결합은 약하게 유지하는것이 좋다.)
+	- 컨트롤의 제어권이 사용자가 아니라 프레임워크에 있어 필요에 따라 스프링에서 사용자의 코드를 호출한다.
+
+3. 의존성 주입(DI : Dependency Injection)
+	- 각각의 계층이나 서비스들 간에 의존성이 존재할 경우 프레임워크가 서로 연결시켜준다.
+
+4. 관점지향 프로그래밍(AOP : Aspect-Oriented Programming)
+	- 트랜잭션이나 로깅, 보안과 같이 여러 모듈에서 공통적으로 사용하는 기능의 경우 해당 기능을 분리하여 관리할 수 있다.
+
+5. 애플리케이션 객체의 생명 주기와 설정을 포함하고 관리한다는 점에서 컨테이너(Container)라고 할 수 있다.
+	- iBatis, myBatis나 Hibernate등 완성도가 높은 데이터베이스처리 라이브러리와 연결할 수 있는 인터페이스를 제공한다.
+	
+* * *
+
 # Maven
 - Maven이란 자바용 프로젝트 관리 도구이이다.
 - Maven은 Apache사에서 만든 빌드툴(build tool)이다
@@ -234,9 +252,6 @@ public class HomeController {
 </html>
 
 ```
-
-# 스프링 프로젝트의 작동 구조
-
 # Lombok 라이브러리
 - Lombok(롬복)을 이용하면 JAVA개발 시 setter/getter, 생성자 등을 @Data등의 어노테이션을 통해 자동으로 생성해준다.
 
@@ -273,6 +288,15 @@ public class HomeController {
 |@RequiredArgsConstructor|final이나 @NonNull인 필드 값만 파라미터로 받는 생성자를 만들어줍니다.|
 |@Data|@Getter, @Setter, @RequiredArgsConstructor, @ToString, @EqualsAndHashCode을 한꺼번에 설정|
 
+* * *
+
+# 의존성 주입
+- Dependency Injection : 각 객체 간의 의존관계를 스프링 컨테이너가 개발자가 정의한 Bean등록 정보를 바탕으로 자동으로 주입해주는 기능
+
+## 의존성 주입의 종류
+- 필드 주입(Field Injection)
+- 수정자 주입(Setter Injection)
+- 생성자 주입(Constructor Injection)
 
 ##  Ex_날짜_SpringArchitecture 프로젝트 생성하기
 
@@ -325,6 +349,38 @@ public class PersonVO {
 	
 </body>
 </html>
+
+```
+
+![image](https://github.com/to7485/Web1500/assets/54658614/c40e99fb-dc0d-4902-b171-4756adcd2fe7)
+
+jsp까지는 구조가 복잡한 형태는 아니지만 스프링은 구동되는 순서가 다르면 이해하기 힘들다<br>
+
+프로젝트가 실행이 되면...
+1. web.xml이 실행된다.
+2. root-context.xml을 찾는다.
+
+![image](https://github.com/to7485/Web1500/assets/54658614/3c0b91f4-952c-455d-9146-c4539d21bf32)
+
+3. root-context.xml에서 객체를 생성을 해준다.
+	- 스프링에서는 객체를 bean이라고 부른다.
+
+## 
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+	
+	<!-- Root Context: defines shared resources visible to all other web components -->
+	<!-- 스프링에서 객체를 생성해주는 영역 -->
+	<!-- PersonVO p1 = new PersonVO(); -->
+	<bean id="p1" class="vo.PersonVO">
+	
+	</bean>
+</beans>
 
 ```
 
@@ -384,6 +440,41 @@ public class PersonVO {
 
 ```
 
+실행해서 콘솔에서 출력문 뜨는지 확인하기
+
+![image](https://github.com/to7485/Web1500/assets/54658614/f55c43ed-779a-4bd9-a5b4-93caf387d0b8)
+
+## root-context.xml에 코드 추가하기
+```
+	<!-- PersonVO p1 = new PersonVO(); -->
+	<bean id="p1" class="vo.PersonVO">
+		<!-- p1.setName("일길동 입니다.") -->
+		<property name="name" value="일길동 입니다."/>
+		<property name="age" value="20"/>
+		<property name="tel" value="010-1111-1111"/>
+	</bean>
+```
+
+![image](https://github.com/to7485/Web1500/assets/54658614/f7d34492-1131-4887-8356-d304a2ca9596)
+
+스프링 bean은 기본이 싱글톤이기 때문에 메모리에 한번만 올린다.<br>
+이제 dao에 싱글톤 코드를 추가할 필요가 없어진다.<br>
+
+이와 같이 객체를 생성하고 객체에 setter메서드에 값을 추가해주는것을 setter injection이라고 한다.<br>
+
+## root-context.xml에 코드 추가하기
+```
+생성자에 값을 넣으면서 객체를 만들고 싶을 때가 있다.
+오버로드된 생성자에 들어있는 파라미터의 순서대로 넣어줘야 한다.
+	<bean id="p2" class="vo.PersonVO">
+		<constructor-arg value="박길동"/>
+		<constructor-arg value="010-2222-2222"/>
+		<constructor-arg value="33"/>
+	</bean>
+	이와 같은 형태를 constructor injection이라고 한다.
+```
+
+
 ## root-context.xml에 코드 추가하기
 
 ![image](https://github.com/to7485/Web1500/assets/54658614/4d72c31c-b04d-4f23-b170-f6ec21a038d3)
@@ -403,7 +494,7 @@ public class PersonVO {
 
 ```
 
-## SpringConfigTest.java 클래스만들기
+## InjectionTest.java 클래스만들기
 ```
 package vo;
 
@@ -412,7 +503,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class SpringConfigTest {
+public class InjectionTest {
 
 	@Bean
 	public PersonVO p1() {
@@ -431,6 +522,9 @@ public class SpringConfigTest {
 }
 
 ```
-실행하여 콘솔에서 값 
+실행하여 콘솔에서 값 확인하기
+
+![image](https://github.com/to7485/Web1500/assets/54658614/63bc703e-a577-4e91-8fc8-cf1e7f071fe6)
+
 
 
