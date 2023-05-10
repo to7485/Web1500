@@ -113,6 +113,49 @@ Spring은 아래 그림과 같이 기본 틀을 제공하고 필요한 기능들
 
 ![image](https://user-images.githubusercontent.com/54658614/236733561-361b0055-dd08-4405-84a4-2d85946582c9.png)
 
+
+
+
+# 스프링 프로젝트 생성하기
+
+## Ex_날짜_Spring
+- File > new > Spring Legacy Project
+![image](https://user-images.githubusercontent.com/54658614/236692202-15d4f991-85d7-40f1-8c27-a70b7a7f885c.png)
+
+- Spring MVC Project로 템플릿을 설정한다.
+
+![image](https://user-images.githubusercontent.com/54658614/236692288-038b1003-f122-46ae-906c-17f8dcd8e4d7.png)
+
+- 스프링 작업을 위한 메인 패키지가 미리 준비가 되어있어야 한다.
+- 패키지는 3단계 이상 되어야 활성화가 된다.
+- 단계는 .으로 구분한다.
+- 패키지는 단순히 저장을 하는 용도만이 아니라 프로젝트끼리 구별하는 식별자로도 활용이된다.
+
+![image](https://user-images.githubusercontent.com/54658614/236692385-71be89b4-d28e-44b5-85d6-dd8ccc7311ea.png)
+
+# 프로젝트의 기본 경로
+|경로|설명|
+|---|---|
+|src/main/java|서버단 JAVA파일|
+|src/test/java|단위테스트를 위한 JAVA파일|
+|src/main/resources|관련 설정파일|
+|src/test/resources|src/main/test 관련 설정 파일|
+|src/main/webapp/WEB-INF/views|jsp, html파일경로|
+|pom.xml|라이브러리 의존성 관리|
+|src/main/webapp/WEB-INF/spring/appServlet/servlet-context.xml| 웹과 관련된 스프링 설정파일|
+|src/main/webapp/WEB-INF/spring/root-context.xml| 스프링 객체 관련 설정 파일|
+
+- 프로젝트를 처음 만들게 되면 예제들이 기본적으로 만들어져있다.
+- 실행할 때는 프로젝트에 우클릭을 하여 run as > run on server로 실행하자
+
+![image](https://user-images.githubusercontent.com/54658614/236693929-f5fee8d0-2986-4a58-8b22-af49df523c13.png)
+
+
+
+- 프로젝트가 만들어지면 api나 라이브러리와 같은 정보들이 모두 pom.xml파일에 기록이 되어있다.
+
+![image](https://user-images.githubusercontent.com/54658614/236692694-aa542227-82db-459a-83bc-20951b036df0.png)
+
 ## pom.xml 수정하기
 ```
 <?xml version="1.0" encoding="UTF-8"?>
@@ -282,50 +325,7 @@ Spring은 아래 그림과 같이 기본 틀을 제공하고 필요한 기능들
         </plugins>
     </build>
 </project>
-
-
 ```
-
-
-# 스프링 프로젝트 생성하기
-
-## Ex_날짜_Spring
-- File > new > Spring Legacy Project
-![image](https://user-images.githubusercontent.com/54658614/236692202-15d4f991-85d7-40f1-8c27-a70b7a7f885c.png)
-
-- Spring MVC Project로 템플릿을 설정한다.
-
-![image](https://user-images.githubusercontent.com/54658614/236692288-038b1003-f122-46ae-906c-17f8dcd8e4d7.png)
-
-- 스프링 작업을 위한 메인 패키지가 미리 준비가 되어있어야 한다.
-- 패키지는 3단계 이상 되어야 활성화가 된다.
-- 단계는 .으로 구분한다.
-- 패키지는 단순히 저장을 하는 용도만이 아니라 프로젝트끼리 구별하는 식별자로도 활용이된다.
-
-![image](https://user-images.githubusercontent.com/54658614/236692385-71be89b4-d28e-44b5-85d6-dd8ccc7311ea.png)
-
-# 프로젝트의 기본 경로
-|경로|설명|
-|---|---|
-|src/main/java|서버단 JAVA파일|
-|src/test/java|단위테스트를 위한 JAVA파일|
-|src/main/resources|관련 설정파일|
-|src/test/resources|src/main/test 관련 설정 파일|
-|src/main/webapp/WEB-INF/views|jsp, html파일경로|
-|pom.xml|라이브러리 의존성 관리|
-|src/main/webapp/WEB-INF/spring/appServlet/servlet-context.xml| 웹과 관련된 스프링 설정파일|
-|src/main/webapp/WEB-INF/spring/root-context.xml| 스프링 객체 관련 설정 파일|
-
-- 프로젝트를 처음 만들게 되면 예제들이 기본적으로 만들어져있다.
-- 실행할 때는 프로젝트에 우클릭을 하여 run as > run on server로 실행하자
-
-![image](https://user-images.githubusercontent.com/54658614/236693929-f5fee8d0-2986-4a58-8b22-af49df523c13.png)
-
-
-
-- 프로젝트가 만들어지면 api나 라이브러리와 같은 정보들이 모두 pom.xml파일에 기록이 되어있다.
-
-![image](https://user-images.githubusercontent.com/54658614/236692694-aa542227-82db-459a-83bc-20951b036df0.png)
 
 - 안된다면 톰캣의 jstl 관련 라이브러리 옮겨주기
 
@@ -529,33 +529,102 @@ public class PersonVO {
 
 jsp까지는 구조가 복잡한 형태는 아니지만 스프링은 구동되는 순서가 다르면 이해하기 힘들다<br>
 
-프로젝트가 실행이 되면...
-1. web.xml이 실행된다.
-2. root-context.xml을 찾는다.
+## config 패키지 생성하기
+- web.xml, root-context.xml, servlet-context.xml 삭제하기
 
-![image](https://github.com/to7485/Web1500/assets/54658614/3c0b91f4-952c-455d-9146-c4539d21bf32)
+![image](https://github.com/to7485/Web1500/assets/54658614/98b949ea-8049-4420-8ed6-0333f1084f64)
 
-3. root-context.xml에서 객체를 생성을 해준다.
-	- 스프링에서는 객체를 bean이라고 부른다.
-
-## 
+## web.xml 역할을 하는 WebInitializer.java 생성하기
 ```
-<?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:context="http://www.springframework.org/schema/context"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
-		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+package config;
+
+
+
+import javax.servlet.Filter;
+
+import org.springframework.web.filter.CharacterEncodingFilter;
+import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
+
+public class WebInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
+
+	// Root WebApplicationContext
+	@Override
+	protected Class<?>[] getRootConfigClasses() {
+		return new Class[] { RootContext.class };
+	}
+
+	// Servlet WebApplicationContext
+	@Override
+	protected Class<?>[] getServletConfigClasses() {
+		return new Class[] { ServletContext.class };
+	}
 	
-	<!-- Root Context: defines shared resources visible to all other web components -->
-	<!-- 스프링에서 객체를 생성해주는 영역 -->
-	<!-- PersonVO p1 = new PersonVO(); -->
-	<bean id="p1" class="vo.PersonVO">
-	
-	</bean>
-</beans>
+    // DispatcherServlet Mapping
+	@Override
+	protected String[] getServletMappings() {
+		return new String[] { "/" };
+	}
+
+	// filter
+	@Override
+    protected Filter[] getServletFilters() {
+        CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter();
+        characterEncodingFilter.setEncoding("UTF-8");
+        characterEncodingFilter.setForceEncoding(true);
+
+        return new Filter[] { characterEncodingFilter };
+    }
+}
 
 ```
+## root-context.xml역할을 하는 RootContext.java 생성하기
+```
+package config;
+
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class RootContext {
+
+}
+
+```
+
+## servlet-context.xml역할을 하는 ServletContext.java만들기
+```
+package config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.view.InternalResourceViewResolver;
+import org.springframework.web.servlet.view.JstlView;
+
+@Configuration
+@EnableWebMvc
+@ComponentScan("컨트롤러 있는 패키지")
+public class ServletContext implements WebMvcConfigurer {
+
+	@Override
+	public void addResourceHandlers(ResourceHandlerRegistry registry) {
+		registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
+	}
+
+	@Bean
+	public InternalResourceViewResolver resolver() {
+		InternalResourceViewResolver resolver = new InternalResourceViewResolver();
+		resolver.setViewClass(JstlView.class);
+		resolver.setPrefix("/WEB-INF/views/");
+		resolver.setSuffix(".jsp");
+		return resolver;
+	}
+}
+
+```
+
 
 ## PersonVO 코드 수정하기
 ```
@@ -613,44 +682,7 @@ public class PersonVO {
 
 ```
 
-실행해서 콘솔에서 출력문 뜨는지 확인하기
-
-![image](https://github.com/to7485/Web1500/assets/54658614/f55c43ed-779a-4bd9-a5b4-93caf387d0b8)
-
-## root-context.xml에 코드 추가하기
-```
-	<!-- PersonVO p1 = new PersonVO(); -->
-	<bean id="p1" class="vo.PersonVO">
-		<!-- p1.setName("일길동 입니다.") -->
-		<property name="name" value="일길동 입니다."/>
-		<property name="age" value="20"/>
-		<property name="tel" value="010-1111-1111"/>
-	</bean>
-```
-
-![image](https://github.com/to7485/Web1500/assets/54658614/f7d34492-1131-4887-8356-d304a2ca9596)
-
-스프링 bean은 기본이 싱글톤이기 때문에 메모리에 한번만 올린다.<br>
-이제 dao에 싱글톤 코드를 추가할 필요가 없어진다.<br>
-
-이와 같이 객체를 생성하고 객체에 setter메서드에 값을 추가해주는것을 setter injection이라고 한다.<br>
-
-## root-context.xml에 코드 추가하기
-```
-생성자에 값을 넣으면서 객체를 만들고 싶을 때가 있다.
-오버로드된 생성자에 들어있는 파라미터의 순서대로 넣어줘야 한다.
-	<bean id="p2" class="vo.PersonVO">
-		<constructor-arg value="박길동"/>
-		<constructor-arg value="010-2222-2222"/>
-		<constructor-arg value="33"/>
-	</bean>
-	이와 같은 형태를 constructor injection이라고 한다.
-```
-
-xml에 직접 객체를 만들 수 있지만 요즘 트랜드는 어노테이션을 이용해 만든다고 함.
-
-
-## RootContext.java 클래스만들기
+## RootContext.java 에 객체 생성하기
 ```
 package config;
 
@@ -661,6 +693,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RootContext {
 
+
+	이와 같이 객체를 생성하고 객체에 setter메서드에 값을 추가해주는것을 setter injection이라고 한다.<br>
 	@Bean
 	public PersonVO p1() {
 		PersonVO p1 = new PersonVO();
@@ -670,6 +704,8 @@ public class RootContext {
 		return p1;
 	}
 
+	생성자에 값을 추가해주는것을 constructor injection이라고 한다.
+	
 	@Bean
 	public PersonVO p2() {
 		PersonVO p2 = new PersonVO("이길동","010-2222-2222",40);
@@ -679,24 +715,14 @@ public class RootContext {
 
 ```
 
-## root-context.xml에 코드 추가하기
+실행해서 콘솔에서 출력문 뜨는지 확인하기
 
-![image](https://github.com/to7485/Web1500/assets/54658614/4d72c31c-b04d-4f23-b170-f6ec21a038d3)
+![image](https://github.com/to7485/Web1500/assets/54658614/f7d34492-1131-4887-8356-d304a2ca9596)
+
+스프링 bean은 기본이 싱글톤이기 때문에 메모리에 한번만 올린다.<br>
+이제 dao에 싱글톤 코드를 추가할 필요가 없어진다.<br>
 
 
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:context="http://www.springframework.org/schema/context"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
-		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
-	
-	<!-- Root Context: defines shared resources visible to all other web components -->
-	<context:component-scan base-package="vo"/>
-</beans>
-
-```
 
 실행하여 콘솔에서 값 확인하기
 
