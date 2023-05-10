@@ -3,6 +3,61 @@
 ## Ex_날짜_SpringMVC
 - com.korea.test_di
 
+## web.xml 수정하기
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee https://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+	
+	<filter> 
+		<filter-name>encoding-filter</filter-name> 
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class> 
+		<init-param> 
+			<param-name>encoding</param-name> 
+			<param-value>UTF-8</param-value> 
+		</init-param> 
+	</filter> 
+	<filter-mapping> 
+		<filter-name>encoding-filter</filter-name> 
+		<url-pattern>/*</url-pattern> 
+	</filter-mapping>
+
+	<!-- Processes application requests -->
+	<servlet>
+		<servlet-name>appServlet</servlet-name>
+		<servlet-class>
+			org.springframework.web.servlet.DispatcherServlet
+		</servlet-class>
+		<init-param>
+			<param-name>
+				contextClass
+			</param-name>
+			<param-value>
+                org.springframework.web.context.support.AnnotationConfigWebApplicationContext
+            </param-value>
+		</init-param>
+		 <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>
+            	config.Context
+                config.MvcConfig
+                config.ControllerConfig
+            </param-value>
+        </init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+		
+	<servlet-mapping>
+		<servlet-name>appServlet</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+
+</web-app>
+
+
+```
+
 ## dao 패키지에 BoardDAO 인터페이스 만들기
 
 ![image](https://github.com/to7485/Web1500/assets/54658614/467e3eac-259c-4d53-8549-56c25f04a188)
@@ -119,18 +174,31 @@ public class BoardServiceImpl implements BoardService {
 ![image](https://github.com/to7485/Web1500/assets/54658614/eddf47a4-8c04-4287-a336-5f1d91034078)
 
 ## bean 객체를 생성해보자
+- config 패키지에 Context.java에 객체 생성하기
 ```
-<!-- BoardDaoImpl dao = new BoardDaoImpl();-->
-	<bean id="dao" class="dao.BoardDaoImpl"></bean>	
+package config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import dao.BoardDAOImpl;
+import service.BoardServiceImpl;
+
+@Configuration
+public class Context {
+
+	@Bean
+	public BoardDAOImpl dao() {
+		return new BoardDAOImpl();
+	}
 	
-	<!-- BoardServiceImpl service = new BoardServiceImpl(dao); -->
-	<bean id="serviceBean" class="service.BoardServiceImpl">
-	
-		<!-- 생성자 파라미터로 dao를 받아준다!! -->
-		<constructor-arg ref="dao"/>
-	<!-- ref를 통해 다른 bean객체를 참조하는 형태를 Dependency injection(의존성 주입)이라고 한다. -->
-	</bean>
-</beans>
+	@Bean
+	public BoardServiceImpl service(BoardDAOImpl dao) {
+		BoardServiceImpl service = new BoardServiceImpl(new BoardDAOImpl());
+		return service;
+	}
+}
+
 ```
 
 ## BoardController 클래스 생성하기
@@ -154,31 +222,86 @@ public class BoardController {
 		this.service = service;
 	}
 	
+	생성자 주입 or setter 주입 중에 하나 사용하기	
+	
 }
 ```
 
-## servlet-context.xml에 컨트롤러 객체 만들기
+
+## config 패키지에 ControllerConfig.java 만들고 객체 만들기
 ```
-	...............
+package config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import com.korea.test.BoardController;
+
+import dao.BoardDAOImpl;
+import service.BoardServiceImpl;
+
+@Configuration
+public class ControllerConfig {
 	
-	         <!-- 오류 방지를 위해 controller패키지는 지워주자 ↓↓↓↓-->
-	<!-- BoardController생성 -->
-	<!-- 자동생성(오토디텍팅)과 수동생성은 동시에 정의하면 오류가 난다. -->
-	<context:component-scan base-package="com.increpas.test_di" />
-	
-	<!-- BoardController수동생성 -->
-	<!-- 자동완성을 사용하는 경우 생성자 파라미터나 setter 메서드를 호출하는 것이 불가능 하므로 생성자나
-	stter로 받아야 할 데이터가 있다면 자동이 아닌 수동으로 컨트롤러를 생성해줘야 한다. -->
-	
-	<beans:bean class="com.korea.test_di.BoardController">
-	<!-- 생성자 인젝션을 통해 컨트롤러에 값 추가하기 -->
-		<beans:constructor-arg ref=“serviceBean”/>
-	
-		<!-- name="service" : BoardController의 setService( service ) 메서드의 파라미터
-		     ref="serviceBean" : root-context에서 만든 id -->
-	<!-- setter 인젝션을 통해 컨트롤러에 값 추가하기 -->
-		<beans:property name="service" ref="serviceBean"></beans:property>
-	</beans:bean>
-	
-</beans:beans>
+	@Bean
+	public BoardController helloController() {
+		return new BoardController(new BoardServiceImpl(new BoardDAOImpl()));
+	}
+}
 ```
+
+## BoardController에서 바인딩 및 포워딩해주기
+```
+package com.korea.test;
+
+import java.util.List;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import service.BoardServiceImpl;
+
+@Controller
+public class BoardController {
+	
+	BoardServiceImpl service;
+	
+	public BoardController(BoardServiceImpl service) {
+		this.service = service;
+	}
+	
+	@RequestMapping("/board/list.do")
+	public String select(Model model) {
+		//서비스를 통해 dao의 selectList()메서드를 호출할 수 있다.
+		List<Object> list = service.selectList();
+		
+		model.addAttribute("list",list);
+		
+		return "board_list";
+	}
+}
+
+```
+
+## board_list.jsp에서 과일목록 출력하기
+```
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<h1>과일목록</h1>
+	
+	<c:forEach var="vo" items="${list }">
+		${ vo }<br>
+	</c:forEach>
+</body>
+</html>
+```
+
+컨트롤러 한군데 에서 여러개의 매핑이 가능하기 때문에 파일의 개수를 많이 줄일 수 있다.
