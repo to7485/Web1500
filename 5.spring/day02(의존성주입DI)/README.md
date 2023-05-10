@@ -3,58 +3,8 @@
 ## Ex_날짜_SpringMVC
 - com.korea.test_di
 
-## web.xml 수정하기
-```
-<?xml version="1.0" encoding="UTF-8"?>
-<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee https://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
-	
-	<filter> 
-		<filter-name>encoding-filter</filter-name> 
-		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class> 
-		<init-param> 
-			<param-name>encoding</param-name> 
-			<param-value>UTF-8</param-value> 
-		</init-param> 
-	</filter> 
-	<filter-mapping> 
-		<filter-name>encoding-filter</filter-name> 
-		<url-pattern>/*</url-pattern> 
-	</filter-mapping>
-
-	<!-- Processes application requests -->
-	<servlet>
-		<servlet-name>appServlet</servlet-name>
-		<servlet-class>
-			org.springframework.web.servlet.DispatcherServlet
-		</servlet-class>
-		<init-param>
-			<param-name>
-				contextClass
-			</param-name>
-			<param-value>
-                		org.springframework.web.context.support.AnnotationConfigWebApplicationContext
-            		</param-value>
-		</init-param>
-		<init-param>
-            <param-name>contextConfigLocation</param-name>
-            <param-value>
-            	config.Context
-                config.MvcConfig
-                config.ControllerConfig
-            </param-value>
-        </init-param>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
-		
-	<servlet-mapping>
-		<servlet-name>appServlet</servlet-name>
-		<url-pattern>/</url-pattern>
-	</servlet-mapping>
-
-</web-app>
-```
+## pom.xml 복사해오기, config패키지 복사해오기
+- root-context.xml,servlet-context.xml,web.xml 삭제하기
 
 ## dao 패키지에 BoardDAO 인터페이스 만들기
 
@@ -172,7 +122,7 @@ public class BoardServiceImpl implements BoardService {
 ![image](https://github.com/to7485/Web1500/assets/54658614/eddf47a4-8c04-4287-a336-5f1d91034078)
 
 ## bean 객체를 생성해보자
-- config 패키지에 Context.java에 객체 생성하기
+- config 패키지에 RootContext.java에 객체 생성하기
 ```
 package config;
 
@@ -183,7 +133,7 @@ import dao.BoardDAOImpl;
 import service.BoardServiceImpl;
 
 @Configuration
-public class Context {
+public class RootContext {
 
 	@Bean
 	public BoardDAOImpl dao() {
@@ -226,7 +176,7 @@ public class BoardController {
 ```
 
 
-## config 패키지에 ControllerConfig.java 만들고 객체 만들기
+## config 패키지에 ServletContext.java에 객체 만들기
 ```
 package config;
 
@@ -239,7 +189,8 @@ import dao.BoardDAOImpl;
 import service.BoardServiceImpl;
 
 @Configuration
-public class ControllerConfig {
+@ComponentScan("com.korea.test_di")
+public class ServletContext {
 	
 	@Bean
 	public BoardController helloController() {
