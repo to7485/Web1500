@@ -14,6 +14,11 @@ import java.util.List;
 
 public interface BoardDAO {
 
+	//Dao(Data Access Object)는 기본적으로 CRUD기능을 가지고 있다.
+	//나중에 사용할 추상메서드를 준비해보자.
+	//파라미터를 받을 수도 있긴 한데 뭘 받을지 모르기 때문에 모든걸 다 받을 수 있는 		
+	//Object타입으로 만들자!
+
 	int insert( Object  ob);
 	
 	List<Object> selectList();
@@ -33,6 +38,9 @@ import java.util.List;
 
 public class BoardDAOImpl implements BoardDAO {
 
+	//원래 DAO는 DB에 연결하여 List를 가지고 오는 작업을 하지만
+	//이 예제에서는 그 부분은 생략했다.
+
 	@Override
 	public int insert(Object ob) {
 		// TODO Auto-generated method stub
@@ -49,6 +57,9 @@ public class BoardDAOImpl implements BoardDAO {
 		list.add("복숭아");
 		return list;
 	}
+	
+	//얘가 dao 이니까 servlet이 받아서 바인딩하고 포워딩을 해서 jsp에 출력을 해줘야 된다.
+	//그 사이에 service라고 하는애가 받아준다.
 
 	@Override
 	public int update(Object ob) {
