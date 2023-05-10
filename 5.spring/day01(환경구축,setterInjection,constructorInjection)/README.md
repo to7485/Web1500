@@ -116,12 +116,12 @@ Spring은 아래 그림과 같이 기본 틀을 제공하고 필요한 기능들
 ## pom.xml 수정하기
 ```
 <?xml version="1.0" encoding="UTF-8"?>
-	<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.hds</groupId>
-	<artifactId>app</artifactId>
-	<name>ex01</name>
+	<groupId>com.korea</groupId>
+	<artifactId>kkk</artifactId>
+	<name>PomTest</name>
 	<packaging>war</packaging>
 	<version>1.0.0-BUILD-SNAPSHOT</version>
 	<properties>
@@ -131,6 +131,7 @@ Spring은 아래 그림과 같이 기본 틀을 제공하고 필요한 기능들
 		<org.slf4j-version>1.7.25</org.slf4j-version>
 	</properties>
 	<dependencies>
+	
 		<!-- Spring -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -149,21 +150,14 @@ Spring은 아래 그림과 같이 기본 틀을 제공하고 필요한 기능들
 			<artifactId>spring-webmvc</artifactId>
 			<version>${org.springframework-version}</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
-		<dependency>
-		    <groupId>org.projectlombok</groupId>
-		    <artifactId>lombok</artifactId>
-		    <version>1.18.22</version>
-		    <scope>provided</scope>
-		</dependency>
-		
+				
 		<!-- AspectJ -->
 		<dependency>
 			<groupId>org.aspectj</groupId>
 			<artifactId>aspectjrt</artifactId>
 			<version>${org.aspectj-version}</version>
-		</dependency>
-
+		</dependency>	
+		
 		<!-- Logging -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -174,25 +168,39 @@ Spring은 아래 그림과 같이 기본 틀을 제공하고 필요한 기능들
 			<groupId>org.slf4j</groupId>
 			<artifactId>jcl-over-slf4j</artifactId>
 			<version>${org.slf4j-version}</version>
+			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
 			<version>${org.slf4j-version}</version>
+			<scope>runtime</scope>
 		</dependency>
-		<!-- Log4j -->
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
-			<version>1.2.17</version>
+			<version>1.2.15</version>
+			<exclusions>
+				<exclusion>
+					<groupId>javax.mail</groupId>
+					<artifactId>mail</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>javax.jms</groupId>
+					<artifactId>jms</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.sun.jdmk</groupId>
+					<artifactId>jmxtools</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.sun.jmx</groupId>
+					<artifactId>jmxri</artifactId>
+				</exclusion>
+			</exclusions>
+			<scope>runtime</scope>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.bgee.log4jdbc-log4j2 -->
-		<dependency>
-			<groupId>org.bgee.log4jdbc-log4j2</groupId>
-			<artifactId>log4jdbc-log4j2-jdbc4</artifactId>
-			<version>1.16</version>
-		</dependency>
 		<!-- @Inject -->
 		<dependency>
 			<groupId>javax.inject</groupId>
@@ -204,7 +212,7 @@ Spring은 아래 그림과 같이 기본 틀을 제공하고 필요한 기능들
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
-			<version>3.1.0</version>
+			<version>4.0.1</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -221,31 +229,12 @@ Spring은 아래 그림과 같이 기본 틀을 제공하고 필요한 기능들
 	
 		<!-- Test -->
 		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-test</artifactId>
-			<version>5.1.20.RELEASE</version>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-test</artifactId>
-			<version>5.1.20.RELEASE</version>
-		</dependency>
-		
-		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.12</version>
 			<scope>test</scope>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/javax.xml/jaxb-api -->
-		<dependency>
-			<groupId>javax.xml</groupId>
-			<artifactId>jaxb-api</artifactId>
-			<version>2.1</version>
-		</dependency>
+		</dependency>        
 	</dependencies>
-	
     <build>
         <plugins>
             <plugin>
@@ -282,9 +271,18 @@ Spring은 아래 그림과 같이 기본 틀을 제공하고 필요한 기능들
                     <mainClass>org.test.int1.Main</mainClass>
                 </configuration>
             </plugin>
+            <plugin>
+            	<groupId>org.apache.maven.plugins</groupId>
+            	<artifactId>maven-war-plugin</artifactId>
+            	<version>3.2.0</version>
+            	<configuration>
+            		<failOnMissingWebXml>false</failOnMissingWebXml>
+            	</configuration>
+            </plugin>
         </plugins>
     </build>
 </project>
+
 
 ```
 
@@ -652,16 +650,16 @@ public class PersonVO {
 xml에 직접 객체를 만들 수 있지만 요즘 트랜드는 어노테이션을 이용해 만든다고 함.
 
 
-## InjectionTest.java 클래스만들기
+## RootContext.java 클래스만들기
 ```
-package vo;
+package config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class InjectionTest {
+public class RootContext {
 
 	@Bean
 	public PersonVO p1() {
