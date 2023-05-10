@@ -181,7 +181,13 @@ public class BoardController {
 package config;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.view.InternalResourceViewResolver;
+import org.springframework.web.servlet.view.JstlView;
 
 import com.korea.test.BoardController;
 
@@ -189,14 +195,25 @@ import dao.BoardDAOImpl;
 import service.BoardServiceImpl;
 
 @Configuration
-@ComponentScan("com.korea.test_di")
-public class ServletContext {
-	
+@EnableWebMvc
+@ComponentScan("com.korea.test")
+public class ServletContext implements WebMvcConfigurer {
+
+	@Override
+	public void addResourceHandlers(ResourceHandlerRegistry registry) {
+		registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
+	}
+
 	@Bean
-	public BoardController helloController() {
-		return new BoardController(new BoardServiceImpl(new BoardDAOImpl()));
+	public InternalResourceViewResolver resolver() {
+		InternalResourceViewResolver resolver = new InternalResourceViewResolver();
+		resolver.setViewClass(JstlView.class);
+		resolver.setPrefix("/WEB-INF/views/");
+		resolver.setSuffix(".jsp");
+		return resolver;
 	}
 }
+
 ```
 
 ## BoardController에서 바인딩 및 포워딩해주기
