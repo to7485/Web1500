@@ -147,7 +147,7 @@ public class TestController {
 	
 	@RequestMapping("/test.do") //내가 url에 test.do를 호출하면
 	public String test() { //test()메서드가 실행이 된다.
-		return VIEW_PATH + "test"; //WEB-INF/views/에 있는 test.jsp좀 실행해줘라
+		return VIEW_PATH + "test.jsp"; //WEB-INF/views/에 있는 test.jsp좀 실행해줘라
 	}
 }
 
@@ -167,13 +167,171 @@ public class TestController {
 </body>
 </html>
 ```
+## util패키지에 MyPath클래스만들기
+```
+package util;
 
+public class MyPath {
 
+	public static class TestClass{
+		
+		public static final String VIEW_PATH = "/WEB-INF/views/test/";
+	}
+	
+	public static class HomeClass{
+		
+		public static final String VIEW_PATH = "/WEB-INF/views/";
+	}
+}
 
+```
+## HomeController에 경로 붙혀보기
+```
+package com.korea.mvc;
 
+import java.text.DateFormat;
+import java.util.Date;
+import java.util.Locale;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
+import util.MyPath;
 
+/**
+ * Handles requests for the application home page.
+ */
+@Controller
+public class HomeController {
+	
+	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
+	
+	/**
+	 * Simply selects the home view to render by returning its name.
+	 */
+	@RequestMapping(value = "/", method = RequestMethod.GET)
+	public String home(Locale locale, Model model) {
+		logger.info("Welcome home! The client locale is {}.", locale);
+		
+		Date date = new Date();
+		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
+		
+		String formattedDate = dateFormat.format(date);
+		
+		model.addAttribute("serverTime", formattedDate );
+		
+		return MyPath.HomeClass.VIEW_PATH+"home.jsp";
+	}
+	
+}
+
+```
+
+더이상 실행했을 때 404오류가 나지 않는다.
+
+## TestController에서 임의의 배열을 바인딩하여 포워딩까지 해보자.
+```
+package com.korea.mvc;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+public class TestController {
+	
+	public static final String VIEW_PATH = "/WEB-INF/views/test/";
+
+	public TestController() {
+		System.out.println("----TestController의 생성자 호출---");
+	}
+	
+	@RequestMapping("/test.do") //내가 url에 test.do를 호출하면
+	public String test(Model model) { //test()메서드가 실행이 된다.
+		
+		String[] msg = {"사과","바나나","복숭아","수박","딸기"};
+		
+		model.addAttribute("msg",msg);//바인딩
+		
+		return VIEW_PATH + "test.jsp"; //WEB-INF/views/에 있는 test.jsp좀 실행해줘라
+		//포워딩
+	}
+}
+
+```
+
+## 과일목록 출력하기
+```
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<ul>
+	<c:forEach var="vo" items="${msg}">
+		<li>${vo}</li>
+	</c:forEach>
+	
+	</ul>
+</body>
+</html>
+```
+
+![image](https://github.com/to7485/Web1500/assets/54658614/6ce25e38-a72c-4f4a-aa38-0b1675b32dbe)
+
+## ip를 받아오려면 어쩔수 없이 request 객체가 필요하다.
+```
+	@RequestMapping("/test.do") //내가 url에 test.do를 호출하면
+	public String test(Model model, HttpServletRequest request) { //test()메서드가 실행이 된다.
+		
+		String[] msg = {"사과","바나나","복숭아","수박","딸기"};
+		String ip = request.getRemoteAddr();
+		model.addAttribute("msg",msg);//바인딩
+		model.addAttribute("ip",ip);
+		
+		return VIEW_PATH + "test.jsp"; //WEB-INF/views/에 있는 test.jsp좀 실행해줘라
+		//포워딩
+	}
+}
+```
+
+```
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	${ip}
+	<ul>
+	<c:forEach var="vo" items="${msg}">
+		<li>${vo}</li>
+	</c:forEach>
+	
+	</ul>
+</body>
+</html>
+```
+
+# 파라미터 넘기기
+
+## Ex_날짜_SpringParam
+- com.korea.param
+- pom.xml,config패키지 복사해오기
+- 나머지 xml 삭제하기
 
 
 
