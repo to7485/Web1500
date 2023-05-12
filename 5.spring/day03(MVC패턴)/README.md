@@ -332,9 +332,205 @@ public class TestController {
 - com.korea.param
 - pom.xml,config패키지 복사해오기
 - 나머지 xml 삭제하기
+- util패키지 복사해오기
+
+## vo 패키지에 PersonVO 클래스 만들기
+```
+package vo;
+
+@Getter
+@Setter
+public class PersonVO {
+	private String name, tel;
+	private int age;	
+	
+}
+
+```
+## views 폴더에 insert_form.jsp 만들기
+```
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	hello
+</body>
+</html>
+```
+
+## com.korea.param 패키지에 ParamController.java 만들기
+```
+@Controller
+public class ParamController {
+	value라고 하는 속성은 배열 형식으로 여러 가지 매핑을 줄 수 있다.
+	바인딩을 할게 없으면 return을 써서 바로 포워딩을 해주면 된다.
+	@RequestMapping(value= {"/","/insert_form.do"}) 가장 첫페이지 정도만 두개를 갖는다.
+	public String insert_form() {
+		return MyPath.PATH + "insert_form.jsp";
+	}
+}
+```
+
+## insert_form.jsp에 코드 추가하기
+```
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script>
+	function send1(f){
+		var name = f.name.value;
+		var age = f.age.value;
+		var tel = f.tel.value;
+		
+		if(name == ''){
+			alert("이름을 입력해주세요");
+			return;
+		}
+		
+		f.action = "insert1.do";
+		f.method = "post";
+		f.submit();
+	}
+	
+	function send2(f){
+		var name = f.name.value;
+		var age = f.age.value;
+		var tel = f.tel.value;
+		
+		f.action = "insert2.do";
+		f.method = "post";
+		f.submit();
+	}
+</script>
+</head>
+<body>
+	<form>
+	<table border="1" align="center">
+		<caption>:::개인정보 입력:::</caption>
+		<tr>
+		<th>이름</th>
+		<td><input name="name"></td>
+		</tr>
+		
+		<tr>
+		<th>나이</th>
+		<td><input name="age"></td>
+		</tr>
+		
+		<tr>
+		<th>전화번호</th>
+		<td><input name="tel"></td>
+		</tr>
+		
+		<tr>
+			<td colspan="2" align="center">
+				<input type="button" value="낱개로 받기"
+							onclick="send1(this.form);">
+				<input type="button" value="객체로 받기"
+							onclick="send2(this.form);">
+		</tr>
+	</table>
+	</form>
+</body>
+</html>
+```
+
+## ParamController.java에서 매핑 잡아주기
+```
+package com.korea.param;
+
+import java.io.UnsupportedEncodingException;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import util.MyPath;
+import vo.PersonVO;
+
+@Controller
+public class ParamController {
+	
+	//value라고 하는 속성은 배열 형식으로 여러가지 매핑을 줄 수 있다.
+	@RequestMapping(value= {"/","/insert_form.do"})
+	public String insert() {
+		return MyPath.PATH + "insert_form.jsp";
+	}
+	
+	@RequestMapping("/insert1.do")//name=홍길동&age=100&tel=010111111111
+	public String insert1(Model model, String name, int age, String tel) {
+		
+		jsp에서는 서블릿에서 파라미터를 받을 때 request객체를 이용하여 받았지만
+		스프링에서는 넘어오는 파라미터하고 메서드에서 받아주는 파라미터의 이름이 같다면
+		그냥 받아줄 수 있다.
+
+		정수는 정수로 들어와서 Integer.parseInt가 필요 없다.
+		
+		원래 post로 한글을 작성하면 깨진다. 그래서 request객체를 이용해서 setCharacterEncoding을 해줬는데
+		스프링에서는 해줘도 깨진다. 그래서 우리가 Filter를 추가해준것.
+		
+		PersonVO vo = new PersonVO();
+		vo.setName(name);
+		vo.setAge(age);
+		vo.setTel(tel);
+		
+		model.addAttribute("vo",vo);
+		return MyPath.PATH + "insert_result.jsp";
+	}
+	
+	@RequestMapping("/insert2.do")
+	public String insert2(Model model, PersonVO vo) {
+		//파라미터로 넘어온 name,age,tel을 vo 객체에 자동으로 setting을 해준다.
+		//vo에 있는 이름이 있다면 따로 받는 파라미터에 같은 이름이 있으면 오류가 난다.
+		
+		현재 PersonVO에 변수가 세 개 있는데 파라미터를 두개(name과 age)만 던지면 tel는 자동으로 null값이 들어간다.
+		하지만 PersonVO에 있는 변수보다 많은 개수의 파라미터를 던지게 되면 문제가 된다.
+		model.addAttribute("vo",vo);
+		return MyPath.PATH + "insert_result.jsp";
+	}
+}
+
+```
 
 
 
+## views폴더에 insert_result.jsp 만들기
+```
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<p>이름: ${vo.name}</p>
+	<p>나이: ${vo.age}</p>
+	<p>전화번호: ${vo.tel}</p>
+	
+	<input type="button" value="돌아가기" 
+	 onclick="location.href='insert_form.do'">
+	 <!-- 스프링에서는 jsp에서 jsp로 화면전환이 불가능 하므로 반드시
+	 컨트롤러를 거쳐서 jsp로 전환을 해줘야 한다.  -->
+</body>
+</html>
+```
+
+# Mybatis연동하기
+
+## Ex_날짜_DB
+- com.korea.db
 
 
 
