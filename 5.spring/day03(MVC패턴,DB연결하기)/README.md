@@ -604,7 +604,50 @@ public class Context_1_datasource {
 }
 
 ```
+
+2. mybatis
+
+![image](https://github.com/to7485/Web1500/assets/54658614/2278eb55-62fa-4ca8-9aaf-5976d0408117)
+
+```
+<!-- https://mvnrepository.com/artifact/org.mybatis/mybatis -->
+<dependency>
+    <groupId>org.mybatis</groupId>
+    <artifactId>mybatis</artifactId>
+    <version>3.5.6</version>
+</dependency>
+
+```
+
+```
+<!-- https://mvnrepository.com/artifact/org.mybatis/mybatis-spring -->
+<dependency>
+    <groupId>org.mybatis</groupId>
+    <artifactId>mybatis-spring</artifactId>
+    <version>1.3.1</version>
+</dependency>
+
+```
+
+3. spring jdbc
+
+![image](https://github.com/to7485/Web1500/assets/54658614/f2eb5384-eabb-48a4-941e-4c969c4219c5)
+
+
+```
+<!-- https://mvnrepository.com/artifact/org.springframework/spring-jdbc -->
+<dependency>
+    <groupId>org.springframework</groupId>
+    <artifactId>spring-jdbc</artifactId>
+    <version>3.2.2.RELEASE</version>
+</dependency>
+
+```
+
 ### Context_2_mybatis.java
+```
+
+```
 
 
 
