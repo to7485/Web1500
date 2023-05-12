@@ -531,6 +531,86 @@ public class ParamController {
 
 ## Ex_날짜_DB
 - com.korea.db
+- pom.xml, config패키지 복사해오기
+### mybatis연결을 위한 파일 스터디룸에서 다운받기
+
+## db연결하는 객체, dao관련 객체를 나눠서 만들어보자
+
+### WebInitializer 코드 수정하기
+- RootContext이름을 f2를 눌러 수정하여 만들어주자.
+```
+@Override
+	protected Class<?>[] getRootConfigClasses() {
+		return new Class[] { Context_1_datasource.class,
+				     Context_2_mybatis.class,
+				     Context_3_dao.class };
+	}
+```
+사실 깔끔하게 관리하고 싶다면 패키지도 나눠서 관리를 하는것이 좋다.<br>
+
+![image](https://github.com/to7485/Web1500/assets/54658614/29c78c28-f61b-4edc-9418-b978c29317bd)
+
+### 새로 추가하려는 기능이 있다면 context파일을 새로만들어주면 된다.
+
+ojdbc6.jar 찾아서 톰캣의 lib폴더에 넣기<br>
+
+![image](https://github.com/to7485/Web1500/assets/54658614/d761db4a-30d9-417c-8d02-d08e7ff9e9bf)
+
+### mybatis와 관련된 파일 집어넣기
+
+![image](https://github.com/to7485/Web1500/assets/54658614/772ecd6f-4abc-4dd4-8f38-4e2360007e15)
+
+### DB연결을 위한 라이브러리를 Pom.xml에 등록을 해보자.
+- java에서 호환되는것과 Spring에서 호환되는것을 다운받아야 한다.
+
+1. dbcp
+
+![image](https://github.com/to7485/Web1500/assets/54658614/c2410d94-d67b-4b08-9d60-fd19b48e61c3)
+
+1.4 버전
+
+```
+<!-- https://mvnrepository.com/artifact/commons-dbcp/commons-dbcp -->
+<dependency>
+    <groupId>commons-dbcp</groupId>
+    <artifactId>commons-dbcp</artifactId>
+    <version>1.4</version>
+</dependency>
+```
+
+### Context_1_dataSource.java 코드 추가하기
+```
+package context;
+
+import javax.sql.DataSource;
+
+import org.apache.commons.dbcp.BasicDataSource;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+
+@Configuration
+public class Context_1_datasource {
+	
+	@Bean 
+	public DataSource ds(){
+		BasicDataSource ds = new BasicDataSource();
+		ds.setDriverClassName("oracle.jdbc.OracleDriver");
+		ds.setUrl("jdbc:oracle:thin:@localhost:1521:xe");
+		ds.setUsername("test_pm");
+		ds.setPassword("1111");
+		return ds;
+	}
+}
+
+```
+### Context_2_mybatis.java
+
+
+
+
+
+
 
 
 
