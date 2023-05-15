@@ -919,8 +919,30 @@ public class ServletContext implements WebMvcConfigurer {
 	- Artifact Id, Name은 바꿔주는것이 좋다(오류날 수 있는 변수를 최대한 줄이자)
 ![image](https://github.com/to7485/Web1500/assets/54658614/3b3b62ed-a89e-4ea2-81c7-d790762971a6)
 
+2. resources에 있는 패키지 가져오기
+![image](https://github.com/to7485/Web1500/assets/54658614/c11b86d0-488d-465c-9afa-8c239669cbca)
 
+3. web.xml,root-context.xml,servlet-context.xml 삭제하기
 
+4. 이름 바꾸기
+	1. mapper 이름 바꾸기(mybatis-config.xml에서 이름 참조하기)
+
+5. Context_3_dao.java의 내용 내가 생성할 DAO코드로 변경
+
+6. ServletContext.java도 우리가 생성할 컨트롤러의 내용으로 변경
+
+* * *
+
+1. VO 생성하기
+2. DAO클래스 만들고 Context_3_dao.java에 DAO빈 생성
+3. 2에서 만든 bean객체에 context_2_mybatis.java에서 생성한 sqlSessionBean을 참조시키자
+4. 컨트롤러를 생성하고 DAO객체를 setter & 생성자 주입으로 받아준다.
+5. ServletContext.java에서 4에서 준비한 dao를 참조
+6. DAO에서 mapper접근
+7. 컨트롤러에서 url 매핑 지정 후 DAO의 메서드 호출
+8. 컨트롤러에서 DB를 거쳐 포워딩 된 정보를 jsp에서 호출
+
+### 사원테이블을 조회하여 사번, 이름, 부서번호, 급여를 테이블로 출력
 
 
 
