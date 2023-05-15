@@ -919,7 +919,7 @@ public class ServletContext implements WebMvcConfigurer {
 	- Artifact Id, Name은 바꿔주는것이 좋다(오류날 수 있는 변수를 최대한 줄이자)
 ![image](https://github.com/to7485/Web1500/assets/54658614/3b3b62ed-a89e-4ea2-81c7-d790762971a6)
 
-2. resources에 있는 패키지 가져오기
+2. resources에 있는 패키지 가져오기<br>
 ![image](https://github.com/to7485/Web1500/assets/54658614/c11b86d0-488d-465c-9afa-8c239669cbca)
 
 3. web.xml,root-context.xml,servlet-context.xml 삭제하기
@@ -944,13 +944,227 @@ public class ServletContext implements WebMvcConfigurer {
 
 ### 사원테이블을 조회하여 사번, 이름, 부서번호, 급여를 테이블로 출력
 
+## vo 패키지에 SawonVO 클래스 만들기
+```java
+package vo;
+
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
+public class SawonVO {
+
+	private int sabun,deptno,sapay;
+	private String saname;
+}
+
+```
+
+## dao 패키지에 SawonDAO 클래스 만들기
+```java
+package dao;
+
+import org.apache.ibatis.session.SqlSession;
+
+public class SawonDAO {
+
+	SqlSession sqlSession;
+	
+	public SawonDAO(SqlSession sqlSession) {
+		this.sqlSession = sqlSession;
+	}
+	
+	
+}
+
+```
+
+## Context_3_dao클래스에 dao 객체 만들기
+```java
+package context;
+
+import org.apache.ibatis.session.SqlSession;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import dao.SawonDAO;
+
+@Configuration
+public class Context_3_dao {
+	
+	SqlSession sqlSession;
+	
+	public Context_3_dao(SqlSession sqlSession) {
+		this.sqlSession = sqlSession;
+	}
+
+	@Bean
+	public SawonDAO sawon_dao() {
+		return new SawonDAO(sqlSession);
+	}
+
+}
+```
+
+## controller 패키지에 SawonController클래스 생성하기
+```java
+package controller;
+
+import org.springframework.stereotype.Controller;
+
+import dao.SawonDAO;
+
+@Controller
+public class SawonController {
+	
+	SawonDAO sawon_dao;
+	
+	public void setSawon_dao(SawonDAO sawon_dao) {
+		this.sawon_dao = sawon_dao;
+	}
+}
+```
+
+## ServletContext클래스에 SawonController객체 만들기
+```
+package mvc;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import controller.SawonController;
+import dao.SawonDAO;
 
 
+@Configuration
+@EnableWebMvc
+//@ComponentScan("com.korea.db")
+//어노테이션에도 상속관계가 있다
+/*
+ *@Component
+ *	ㄴ@Controller
+ *	ㄴ@Service
+ *	ㄴ@Repository 
+ * */
+//컴포넌트의 자식객체가 들어있으면 사실 Controller가 아니어도 만들어 질 수 있다.
+public class ServletContext implements WebMvcConfigurer {
 
+	@Override
+	public void addResourceHandlers(ResourceHandlerRegistry registry) {
+		registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
+	}
 
+	
+//	  @Bean 
+//	  public InternalResourceViewResolver resolver() {
+//	  InternalResourceViewResolver resolver = new InternalResourceViewResolver();
+//	  resolver.setViewClass(JstlView.class); resolver.setPrefix("/WEB-INF/views/");
+//	  resolver.setSuffix(".jsp"); return resolver; }
+	
+	@Bean
+	public SawonController sawonController(SawonDAO sawon_dao) {
+		SawonController sawonController = new SawonController();
+		sawonController.setSawon_dao(sawon_dao);
+		return sawonController;
+	}
+	 
+}
 
+```
 
+## dao클래스에서 테이블 조회 코드 작성하기
+```
+//사원테이블 조회
+public List<SawonVO> selectList(){
+	List<SawonVO> list = sqlSession.selectList("s.sawon_list");
+	return list;
+}
+```
 
+## sawon.xml에 쿼리문 작성하기
+```
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="s">
+
+	<select id="sawon_list" resultType="sawon">
+		select * from sawon
+	</select>
+</mapper>
+```
+
+## SawonController에서 리스트 받기
+```java
+package controller;
+
+import java.util.List;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import dao.SawonDAO;
+import vo.SawonVO;
+
+@Controller
+public class SawonController {
+	
+	SawonDAO sawon_dao;
+	
+	public void setSawon_dao(SawonDAO sawon_dao) {
+		this.sawon_dao = sawon_dao;
+	}
+	
+	@RequestMapping(value= {"/","sawon_list.do"})
+	public String list(Model model) {
+		
+		List<SawonVO> list = sawon_dao.selectList();
+		
+		model.addAttribute("list",list);
+		return "/WEB-INF/views/sawon/sawon.jsp";
+	}
+}
+
+```
+
+## /WEB-INF/views/sawon/위치에 sawon.jsp만들기
+```
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<table border="1">
+	<tr>
+		<th>사번</th>
+		<th>이름</th>
+		<th>부서번호</th>
+		<th>급여</th>
+	</tr>
+	<c:forEach var="vo" items="${list}">
+		<tr>
+			<td>${vo.sabun }</td>
+			<td>${vo.saname }</td>
+			<td>${vo.deptno }</td>
+			<td>${vo.sapay }</td>
+		</tr>
+	</c:forEach>
+	</table>
+</body>
+</html>
+```
 
 
 
