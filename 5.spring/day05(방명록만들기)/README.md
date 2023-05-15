@@ -24,7 +24,7 @@ create table visit(
 
 --샘플데이터
 insert into visit values(
-  seq_visit_ids.nextVal,
+  seq_visit_idx.nextVal,
   '일길동',
   '내가 1빠',
   '1111',
@@ -33,11 +33,13 @@ insert into visit values(
 );
 
 insert into visit values(
-  seq_visit_ids.nextVal,
+  seq_visit_idx.nextVal,
   '이길동',
   '내가 2빠',
   '1111',
   '192.1.1.1',
   sysdate
 );
+
+commit;
 ```
