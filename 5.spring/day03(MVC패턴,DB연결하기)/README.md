@@ -539,12 +539,40 @@ public class ParamController {
 ### WebInitializer 코드 수정하기
 - RootContext이름을 f2를 눌러 수정하여 만들어주자.
 ```
-@Override
+package config;
+
+import mvc.ServletContext;
+
+public class WebInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
+
+	// Root WebApplicationContext
+	@Override
 	protected Class<?>[] getRootConfigClasses() {
-		return new Class[] { Context_1_datasource.class,
-				     Context_2_mybatis.class,
-				     Context_3_dao.class };
+		return new Class[] { Context_1_dataSource.class,Context_2_mybatis.class,Context_3_dao.class };
 	}
+
+	// Servlet WebApplicationContext
+	@Override
+	protected Class<?>[] getServletConfigClasses() {
+		return new Class[] { ServletContext.class };
+	}
+	
+    // DispatcherServlet Mapping
+	@Override
+	protected String[] getServletMappings() {
+		return new String[] { "/" };
+	}
+
+	// filter
+	@Override
+    protected Filter[] getServletFilters() {
+        CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter();
+        characterEncodingFilter.setEncoding("UTF-8");
+        characterEncodingFilter.setForceEncoding(true);
+        return new Filter[] { characterEncodingFilter };
+    }
+}
+
 ```
 사실 깔끔하게 관리하고 싶다면 패키지도 나눠서 관리를 하는것이 좋다.<br>
 
@@ -646,8 +674,260 @@ public class Context_1_datasource {
 
 ### Context_2_mybatis.java
 ```
+package context;
+
+import javax.sql.DataSource;
+
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.mybatis.spring.SqlSessionFactoryBean;
+import org.mybatis.spring.SqlSessionTemplate;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+
+
+@Configuration
+public class Context_2_mybatis {
+	
+	
+	DataSource ds;
+	
+	//생성자 주입
+	public Context_2_mybatis(DataSource ds) {
+		this.ds = ds;
+	}
+	
+	@Bean
+	public SqlSessionFactory factoryBean() throws Exception {
+		SqlSessionFactoryBean factoryBean = new SqlSessionFactoryBean();
+		factoryBean.setDataSource(ds);
+		
+		// 추가적인 MyBatis 설정
+        factoryBean.setConfigLocation(new ClassPathResource("config/mybatis/mybatis-config.xml"));
+        return factoryBean.getObject();
+  
+	}
+	
+	@Bean
+	//함수의 파라미터로 호출하면 기본적으로 생성자 주입으로 주입이 된다.
+	public SqlSessionTemplate sqlSessionBean(SqlSessionFactory factoryBean) {
+		return new SqlSessionTemplate(factoryBean);
+	}
+}
 
 ```
+
+## dao패키지에 DeptDAO.java 만들기
+
+```
+package dao;
+
+import java.util.List;
+
+import org.apache.ibatis.session.SqlSession;
+
+import vo.DeptVO;
+
+public class DeptDAO {
+
+	SqlSession sqlSession;
+	
+	public void setSqlSession(SqlSession sqlSession) {
+		this.sqlSession = sqlSession;
+	}
+	
+	//전체 부서 조회
+	public List<DeptVO> selectList(){
+		List<DeptVO> list = sqlSession.selectList("dept.dept_list");
+		return list;
+	}
+}
+
+```
+
+## Context_3_dao에서 객체 생성하기
+```
+package context;
+
+import java.sql.Connection;
+
+import org.apache.ibatis.session.ExecutorType;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.TransactionIsolationLevel;
+import org.mybatis.spring.SqlSessionTemplate;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import dao.DeptDAO;
+//setter로 sqlSession을 주입받았으니...
+
+@Configuration
+public class Context_3_dao {
+
+	@Bean
+	public DeptDAO dept_dao(SqlSession sqlSession) {
+		DeptDAO dept_dao = new DeptDAO();
+		dept_dao.setSqlSession(sqlSession);
+		return dept_dao;
+	}
+}
+```
+
+## dept.xml 쿼리문 생성하기
+```
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dept">
+
+	<select id="dept_list" resultType="vo.DeptVO">
+		select * from dept
+	</select>
+</mapper>
+
+```
+
+## com.korea.db 패키지에 DeptController 클래스 만들기
+```
+package com.korea.db;
+
+import java.util.List;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import dao.DeptDAO;
+import vo.DeptVO;
+
+@Controller
+public class DeptController {
+
+	public static final String VIEW_PATH = "/WEB-INF/views/dept/";
+	
+	//dao에 대한 정보가 필요하기 때문에 이미 만들어놓은 정보를 주입해야 한다.
+	DeptDAO dept_dao;
+	
+	public DeptController(DeptDAO dept_dao) {
+		this.dept_dao = dept_dao;
+	}
+	
+	@RequestMapping(value= {"/","list.do"})
+	public String list(Model model) {
+		List<DeptVO> list = dept_dao.selectList();
+		
+		model.addAttribute("list",list);
+		return VIEW_PATH + "dept_list.jsp";
+	}
+}
+
+```
+
+## mvc 패키지에 DeptController 객체 생성하기
+```
+package mvc;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.view.InternalResourceViewResolver;
+import org.springframework.web.servlet.view.JstlView;
+
+import com.korea.db.DeptController;
+
+import dao.DeptDAO;
+
+
+@Configuration
+@EnableWebMvc
+//@ComponentScan("com.korea.db")
+//어노테이션에도 상속관계가 있다
+/*
+ *@Component
+ *	ㄴ@Controller
+ *	ㄴ@Service
+ *	ㄴ@Repository 
+ * */
+//컴포넌트의 자식객체가 들어있으면 사실 Controller가 아니어도 만들어 질 수 있다.
+public class ServletContext implements WebMvcConfigurer {
+
+	@Override
+	public void addResourceHandlers(ResourceHandlerRegistry registry) {
+		registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
+	}
+
+	
+//	  @Bean 
+//	  public InternalResourceViewResolver resolver() {
+//	  InternalResourceViewResolver resolver = new InternalResourceViewResolver();
+//	  resolver.setViewClass(JstlView.class); resolver.setPrefix("/WEB-INF/views/");
+//	  resolver.setSuffix(".jsp"); return resolver; }
+	
+	@Bean
+	public DeptController deptController(DeptDAO dept_dao) {
+		return new DeptController(dept_dao);
+	}
+}
+
+```
+## dept폴더에 dept_list.jsp 생성하기
+
+![image](https://github.com/to7485/Web1500/assets/54658614/e66968b5-d793-41fc-9e53-d548c97e00d0)
+
+```
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	안녕하세요
+	<table border = "1" align="center">
+		<tr>
+			<th>부서번호</th>
+			<th>부서명</th>
+			<th>부서위치</th>
+		</tr>
+		<c:forEach var="i" items="${list}">
+		<tr>
+			<td>${i.deptno }</td>
+			<td>${i.dname }</td> 
+			<td>${i.loc }</td>
+		</tr>
+		</c:forEach>
+	</table>
+</body>
+</html>
+```
+![image](https://github.com/to7485/Web1500/assets/54658614/809553d8-5ba6-4e26-8353-7fdbbb3b8a61)
+
+
+# 실습 : 고객,사원테이블 조회해보기
+
+## Ex_날짜_DB 프로젝트 생성하기
+1. pom.xml 복사하기
+	- Artifact Id, Name은 바꿔주는것이 좋다(오류날 수 있는 변수를 최대한 줄이자)
+![image](https://github.com/to7485/Web1500/assets/54658614/3b3b62ed-a89e-4ea2-81c7-d790762971a6)
+
+
+
+
+
+
+
+
+
+
 
 
 
