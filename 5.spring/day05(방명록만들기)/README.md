@@ -241,15 +241,15 @@ public class VisitController {
 </head>
 <body>
 	<div id="main_box">
-		<h1>방명록 리스트</h1>					<!-- 스프링에서는 jsp에서 jsp로 이동할 수 없다. -->
+		<h1>방명록 리스트</h1>	<!-- 스프링에서는 jsp에서 jsp로 이동할 수 없다. -->
 		<input type="button" value="글쓰기" onclick="location.href='insert_form.do'">
 	</div>
 	
 	<c:forEach var="vo" items="${list}">
+		<div class="visit_box">
 		<div class="type_content">${vo.content}</div>
 		<div class="type_name">작성자 : ${vo.name}(${vo.ip})</div>
 		<div class="type_regdate">작성일 ${vo.regdate }</div>
-		
 		<div>
 		<form>
 			<input type="hidden" name="idx" value="${vo.idx }">
@@ -258,15 +258,72 @@ public class VisitController {
 			<input type="button" value="삭제" onclick="del(this.form)">
 		</form>
 		</div>
+		</div>
+
 	</c:forEach>
 </body>
-</html>
+</html>```
+### 실행하면 다음과 같은 결과를 얻을 수 있다.
+
+![image](https://github.com/to7485/Web1500/assets/54658614/cbee2d1c-1a8c-41b8-b0ab-2158a3b1a804)
+
+## webapp/resources/css 안에 visit.css 파일 만들기
+
+![image](https://github.com/to7485/Web1500/assets/54658614/bb296b91-4b3d-4f90-9a0f-39da3b58c492)
+
+## jsp에서 css파일 참조하기
+```
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+
+				<!-- webapp폴더까지의 경로 -->
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/visit.css">
+
+</head>
 ```
 
+## css파일에 코드 작성하기
+```
+@charset "UTF-8";
+*{margin:0; padding:0;}
 
+#main_box{
+	width:500px;
+	margin:auto;
+	/* background-color: #ccc; */
+}
 
+h1{
+	text-align: center;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	color: #0080ff;
+	text-shadow: 2px 2px 2px black;
+}
 
+.visit_box{
+	margin:auto;
+	width:500px;
+	margin-top: 30px;
+	box-shadow: 2px 2px 2px black;
+	border: 1px solid blue;
+}
 
+.type_content{
+	min-height: 100px;
+	height:auto;
+	background:#fcc;
+}
+
+.type_name{
+	background: #cfc;
+}
+
+.type_regdate{
+	background: #ccf;
+}
+```
 
 
 
