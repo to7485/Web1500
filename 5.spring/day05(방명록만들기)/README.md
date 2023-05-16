@@ -534,9 +534,15 @@ function resultFn(){
 	if(xhr.readyState == 4 && xhr.status== 200){
 					//"[{'res':'yes'}]"
 		var data = xhr.responseText;
-		var json = (new Function('return'+data))();
-//eval(data); eval이 제이슨표기법만을 위해서 사용되는게 아니라 페이지에 대한 정보라던지 용도가 많다.
-그래서 외부에서 접근하기가 쉬워서 보안성이 좋지 않다.
+		var json = (new Function('return'+data))(); //문자열로 써있지만 돌려주는 return임
+
+		//eval()은 문자로 표현 된 JavaScript 코드를 실행하는 함수라고 정의되어있습니다.
+		//문자열(String)을 코드로 인식해 실행할 수 있게 해주는 함수라고 보시면 됩니다.
+		//eval()은 인자로 받은 코드를 caller의 권한으로 수행하는 함수로,
+		//악영향을 줄 수 있는 문자열을 eval() 로 실행하면 악의적인 코드를 수행하는 결과를 초래할 수 있습니다.
+
+		//또한 제 3자가 eval()이 호출된 위치의 스코프를 볼 수 있으며
+		// Function으로 실행할 수 없는 공격이 가능하다고 합니다.
 
 		if(json[0].res == 'no'){
 			alert("삭제실패");
