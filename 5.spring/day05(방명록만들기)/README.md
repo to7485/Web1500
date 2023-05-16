@@ -262,7 +262,8 @@ public class VisitController {
 
 	</c:forEach>
 </body>
-</html>```
+</html>
+```
 ### 실행하면 다음과 같은 결과를 얻을 수 있다.
 
 ![image](https://github.com/to7485/Web1500/assets/54658614/cbee2d1c-1a8c-41b8-b0ab-2158a3b1a804)
@@ -325,12 +326,106 @@ h1{
 }
 ```
 
+## VisitController에 새글작성을 위한 jsp로 이동하기 위한 매핑 지정하기
+```
+@RequestMapping("insert_form.do")
+public String insert_form() {
+	return MyCommon.VIEW_PATH+"visit_insert_form.jsp";
+}
+```
 
+## visit폴더에 visit_insert_form.jsp 작성하기
+```
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script>
+	function send(f){
+		
+		//유효성체크 했다 치자
+		
+		f.action="insert.do"
+		f.submit();
+	}
+</script>
+</head>
+<body>
+	<form>
+		<table border="1" align="center">
+			<caption>::새글 작성하기::</caption>
+			
+			<tr>
+				<th>작성자</th>
+				<td><input name="name" style="width:250px;"></td>
+			</tr>
+			<tr>
+				<th>내용</th>
+				<td>						wrap속성 : 
+					<textarea row="5" cols="50" name="content" style="resize:none;"wrap="on"></textarea>
+				</td>
+			</tr>
+			
+			<tr>
+				<th>비밀번호</th>
+				<td><input name="pwd" type="password"></td>
+			</tr>
+			<tr>
+				<td colspan="2" align="center">
+				<input type="button" value="등록하기" onclick="send(this.form);">
+				<input type="button" value="목록으로" onclick="location.href='visit_list.do'">
+			</td>
+			</tr>
+		
+		</table>
+	
+	</form>
+</body>
+</html>
+```
 
+## VisitController 에서 insert.do 매핑으로 넘어온 파라미터 받아주기
+```java
+//새 글 작성
+@RequestMapping("/insert.do")
+public String insert(VisitVO vo, HttpServletRequest request) {
+	//insert.do?name=일길동&content=내용&pwd=111
+	String ip = request.getRemoteAddr();
+	vo.setIp(ip);
 
+	int res = visit_dao.insert(vo);
 
+	//sendRedirect("list.do");
+	return "redirect:visit_list.do"; 
+}
+```
 
+## VisitDAO에 insert 메서드 만들기
+```java
+//방명록에 새글 추가하기
+public int insert(VisitVO vo){
+	int res = sqlSession.insert("v.visit_insert",vo);
+	return res;
+}
+```
 
+## visit.xml에 insert쿼리문 추가하기
+```xml
+<!-- 새글 추가하기 -->
+<insert id="visit_insert" parameterType="visit">
+	insert into visit values(
+			seq_visit_idx.nextVal,
+			#{name},
+			#{content},
+			#{pwd},
+			#{ip},
+			sysdate
+	)
+</insert>
+```
 
 
 
