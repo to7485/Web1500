@@ -253,7 +253,7 @@ public class VisitController {
 		<div>
 		<form>
 			<input type="hidden" name="idx" value="${vo.idx }">
-			비밀번호 <input type="password" name = pwd">
+			비밀번호 <input type="password" name = "pwd">
 			<input type="button" value="수정" onclick="modify(this.form)">
 			<input type="button" value="삭제" onclick="del(this.form)">
 		</form>
