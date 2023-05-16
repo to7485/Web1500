@@ -247,7 +247,7 @@ public class VisitController {
 	
 	<c:forEach var="vo" items="${list}">
 		<div class="visit_box">
-		<div class="type_content">${vo.content}</div>
+		<div class="type_content"><pre>${vo.content}</pre></div>
 		<div class="type_name">작성자 : ${vo.name}(${vo.ip})</div>
 		<div class="type_regdate">작성일 ${vo.regdate }</div>
 		<div>
@@ -290,7 +290,7 @@ public class VisitController {
 *{margin:0; padding:0;}
 
 #main_box{
-	width:500px;
+	width:330px;
 	margin:auto;
 	/* background-color: #ccc; */
 }
@@ -305,7 +305,7 @@ h1{
 
 .visit_box{
 	margin:auto;
-	width:500px;
+	width:330px;
 	margin-top: 30px;
 	box-shadow: 2px 2px 2px black;
 	border: 1px solid blue;
@@ -428,10 +428,126 @@ public int insert(VisitVO vo){
 </insert>
 ```
 
+* * *
 
+# 삭제하기
+- Ajax를 사용하여 삭제를 해보자.
+- resources 폴더 안에 js폴더를 만들고 RequestHttp.js
+- 
+![image](https://github.com/to7485/Web1500/assets/54658614/fe973743-4c59-4c10-90fd-500abd6c77f6)
 
+## visit_list에서 삭제버튼을 눌렀을 때 Ajax를 사용하여 알림을 줘보자.
+```
+<script src="${pageContext.request.contextPath}/resources/js/httpRequest.js"></script>
+<script>
+	function del(f){
+		var pwd = f.pwd.value;
+		if(pwd ==''){
+			alert("비밀번호를 입력하세요")
+			return;
+		}
+		
+		if(!confirm("삭제하시겠습니까?")){
+			return;
+		}
+		
+		var url = "delete.do";
+		var param = "idx="+f.idx.value+"&pwd="+encodeURIComponent(pwd);
+		
+		sendRequest(url,param,resultFn,"post");
+	}
+	
+	function resultFn(){
+		if(xhr.readyState == 4 && xhr.status== 200){
+			
+		}
+	}
 
+</script>
+```
+## VisitController에 delete.do 매핑만들기
+```java
+//게시글 삭제
+@RequestMapping("/delete.do")
+public String delete(int idx, String pwd) {
 
+낱개로 받았기 때문에 delete메서드에 파라미터로 보내기 위해서 해쉬맵 생성한다.
+키는 String으로 받으면 되는데 idx가 int고 pwd가 Stirng 이기 때문에 value를 받기가 애매함; 
+이럴 때 만능인 Object로 받자!
+
+	HashMap<String, Object> map = new HashMap<String, Object>();
+	map.put("idx", idx);
+	map.put("pwd", pwd);
+
+	int res = visit_dao.delete(map);
+}
+```
+
+## VisitDAO에 delete 메서드 만들기
+```
+//글 삭제하기
+public int delete(HashMap<String, Object> map) {
+	int res = sqlSession.delete("v.visit_delete",map);
+	return res;
+}
+```
+
+## visit.xml에 delete쿼리문 만들기
+```
+<!-- 게시글 삭제 -->
+<delete id="visit_delete" parameterType="java.util.HashMap">
+	delete from visit where idx=#{idx} and pwd=#{pwd}
+</delete>
+```
+
+## VisitController의 delete매핑 코드 추가하기
+```
+//게시글 삭제
+@RequestMapping("/delete.do")
+@ResponseBody //return 값을 view 형태로 인식하지 않고 콜백메서드로 전달하기 위한 어노테이션
+public String delete(int idx, String pwd) {
+
+	HashMap<String, Object> map = new HashMap<String, Object>();
+	map.put("idx", idx);
+	map.put("pwd", pwd);
+
+	int res = visit_dao.delete(map);
+
+	String result="no";
+
+	if( res == 1) {
+		result="yes";
+	}
+
+	String finRes= String.format("[{'res':'%s'}]",result);
+
+	이렇게 쓰면 "[{'res':'%s'}]" 이렇게 생긴 view가 있다고 생각을 해버린다.
+	그래서 return 값을 콜백함수로 돌아간다는걸 알게 하기 위해서 @ResponseBody를 추가해야 한다.
+	return finRes;
+
+	
+}
+```
+## visit_list.jsp에 콜백메서드 작성하기
+```
+function resultFn(){
+	if(xhr.readyState == 4 && xhr.status== 200){
+					//"[{'res':'yes'}]"
+		var data = xhr.responseText;
+		var json = (new Function('return'+data))();
+//eval(data); eval이 제이슨표기법만을 위해서 사용되는게 아니라 페이지에 대한 정보라던지 용도가 많다.
+그래서 외부에서 접근하기가 쉬워서 보안성이 좋지 않다.
+
+		if(json[0].res == 'no'){
+			alert("삭제실패");
+			return;
+		} 
+			alert("삭제성공");
+			location.href="list.do";
+
+	}
+}
+```
 
 
 
