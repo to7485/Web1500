@@ -364,7 +364,7 @@ public String insert_form() {
 			</tr>
 			<tr>
 				<th>내용</th>
-				<td>						wrap속성 : 
+				<td>						wrap속성 : on 끝에서 알아서 엔터값 먹여줌
 					<textarea row="5" cols="50" name="content" style="resize:none;"wrap="on"></textarea>
 				</td>
 			</tr>
@@ -406,6 +406,7 @@ public String insert(VisitVO vo, HttpServletRequest request) {
 ## VisitDAO에 insert 메서드 만들기
 ```java
 //방명록에 새글 추가하기
+스프링은 sqlSession이 insert를 해주고 알아서 commit까지 해준다.
 public int insert(VisitVO vo){
 	int res = sqlSession.insert("v.visit_insert",vo);
 	return res;
