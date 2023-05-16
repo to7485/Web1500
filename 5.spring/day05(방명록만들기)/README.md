@@ -186,8 +186,82 @@ public class ServletContext implements WebMvcConfigurer {
 
 ```
 
+## util 패키지 만들어서 MyCommon클래스 만들기
+- 경로를 설정해주자
+```java
+package util;
 
+public class MyCommon {
 
+	public static String VIEW_PATH = "/WEB-INF/views/visit/";
+}
+
+```
+## Controller에 코드 작성하기
+```java
+package com.korea.visit;
+
+import java.util.List;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import dao.VisitDAO;
+import vo.VisitVO;
+
+@Controller
+public class VisitController {
+
+	VisitDAO visit_dao;
+	
+	public VisitController(VisitDAO visit_dao) {
+		this.visit_dao = visit_dao;
+	}
+	
+	@RequestMapping(value= {"/","visit_list.do"})
+	public String select(Model model) {
+		List<VisitVO> list = visit_dao.selectList();
+		model.addAttribute("list",list);
+		return MyCommon.VIEW_PATH+"visit_list.jsp";
+	}
+}
+```
+
+## visit 폴더 생성하고 visit_list.jsp 만들기
+```jsp
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div id="main_box">
+		<h1>방명록 리스트</h1>					<!-- 스프링에서는 jsp에서 jsp로 이동할 수 없다. -->
+		<input type="button" value="글쓰기" onclick="location.href='insert_form.do'">
+	</div>
+	
+	<c:forEach var="vo" items="${list}">
+		<div class="type_content">${vo.content}</div>
+		<div class="type_name">작성자 : ${vo.name}(${vo.ip})</div>
+		<div class="type_regdate">작성일 ${vo.regdate }</div>
+		
+		<div>
+		<form>
+			<input type="hidden" name="idx" value="${vo.idx }">
+			비밀번호 <input type="password" name = pwd">
+			<input type="button" value="수정" onclick="modify(this.form)">
+			<input type="button" value="삭제" onclick="del(this.form)">
+		</form>
+		</div>
+	</c:forEach>
+</body>
+</html>
+```
 
 
 
