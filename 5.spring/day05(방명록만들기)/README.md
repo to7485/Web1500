@@ -325,6 +325,7 @@ h1{
 	background: #ccf;
 }
 ```
+# 새글 추가하기
 
 ## VisitController에 새글작성을 위한 jsp로 이동하기 위한 매핑 지정하기
 ```
