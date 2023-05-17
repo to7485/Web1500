@@ -555,5 +555,172 @@ function resultFn(){
 }
 ```
 
+# 방명록 수정하기
+- 방명록을 올린 사람이 수정을 할 수 있도록 해야 하기 위해 원본 비밀번호를 받아두자.
+
+```jsp
+<input type="hidden" name="ori_pwd" value="${vo.pwd }">
+비밀번호 <input type="password" name = "pwd">
+```
+
+## visit_list.jsp에서 modifiy메서드 작성하기
+```
+function modify(f){
+	var ori_pwd = f.ori_pwd.value.trim(); //원본 비번
+	var pwd = f.pwd.value.trim(); //수정을 위해 입력한 비번
+
+	if(ori_pwd != pwd){
+		alert('비밀번호 불일치');
+		return;
+	}
+
+	f.action = "modify_form.do";
+	f.method = "post";
+	f.submit();
+
+}
+```
+
+## VisitController에서 매핑해주기
+- idx에 해당하는 방명록의 정보를 하나 가져와서 vo에 담고 수정하는 페이지로 이동한다.
+
+```java
+@RequestMapping("modify_form.do")
+public String modify_form(Model model, int idx) {
+
+	//파라미터로 넘어온 idx를 DB로 보낸다.
+	VisitVO vo = visit_dao.selectOne(idx);
+}
+```
+## VisitDAO에 selectOne() 메서드 만들기
+
+```java
+//수정을 위한 게시글 한건 조회
+public VisitVO selectOne(int idx) {
+	VisitVO vo = sqlSession.selectOne("v.visit_one",idx);
+	return vo;
+}
+```
+
+## visit.xml에 쿼리문 추가하기
+
+```xml
+<!-- 수정을 위한 게시글 한 건 조회 -->
+<select id="visit_one" resultType="visit" parameterType="int">
+	select * from visit where idx=#{idx}
+</select>
+```
+
+## VisitController에서 바인딩하고 포워딩 해주기
+
+```java
+@RequestMapping("modify_form.do")
+public String modify_form(Model model, int idx) {
+
+	//파라미터로 넘어온 idx를 DB로 보낸다.
+	VisitVO vo = visit_dao.selectOne(idx);
+	model.addAttribute("vo",vo);
+	return MyCommon.VIEW_PATH+"visit_modify_form.jsp";
+}
+```
+
+## visit 폴더에 visit_modify_form.jsp 만들기
+```
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<form>
+		<!-- 수정할때 어떤 방명록글에 할껀지에 대한 식별자 -->
+		<input type="hidden" name="idx" value="${vo.idx}">
+		
+		<table border="1" align="center">
+			<caption>:::방명록 수정:::</caption>
+			<tr>
+				<th>작성자</th>
+				<td>${vo.name}</td>
+			</tr>
+			<tr>
+				<th>내용</th>
+				<td><textarea row="5" cols="50" name="content" 	style="resize:none;"wrap="on">${vo.content }</textarea></td>
+			</tr>
+			<tr>
+				<th>비밀번호</th>
+				<td><input type="password" name="pwd" value="${vo.pwd }"></td>
+			</tr>
+			<tr>
+				<td colspan="2" align="center">
+					<input type="button" value="수정" onclick="send(this.form)">
+					<input type="button" value="취소" onclick="location.href='visit_list.do'">
+				</td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>
+```
+- 한글자만 고치고싶을수도 있으니까 기존 내용을 넣어주고 시작하자
+
+![image](https://github.com/to7485/Web1500/assets/54658614/feaf9e83-86e9-41a7-9403-ef41db9d26a4)
+
+
+## 수정버튼을 눌렀을 때 호출되는 send메서드 작성하기
+```jsp
+<script type="text/javascript">
+	function send(f){
+		
+		f.action = "modify.do";
+		f.method = "post";
+		f.submit();
+	}
+</script>
+```
+
+## VisitController에서 매핑해주기
+```
+//게시글 수정
+@RequestMapping("modify.do")
+public String modify(VisitVO vo, HttpServletRequest request) {
+	//현재 vo에 담겨있는 정보는 무엇이 있을까?
+	//내용, 비밀번호
+	String ip = request.getRemoteAddr();
+	vo.setIp(ip);
+
+	int res = visit_dao.update(vo);
+
+	return "redirect:visit_list.do";
+}
+```
+
+## VisitDAO에 update메서드 만들기
+```
+//게시글 수정
+public int update(VisitVO vo) {
+	int res = sqlSession.update("v.visit_update",vo);
+	return res;
+}
+```
+
+## visit.xml에 쿼리문 추가하기
+```
+<!-- 진짜 수정 -->
+<update id="visit_update" parameterType="visit">
+	update visit set
+		content = #{content},
+		pwd=#{pwd},
+		ip=#{ip},
+		regdate=sysdate
+		where idx=#{idx}
+</update>
+```
+
+
+
+
 
 
