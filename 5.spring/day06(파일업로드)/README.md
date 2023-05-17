@@ -142,6 +142,74 @@ public class ServletContext implements WebMvcConfigurer {
 
 ![image](https://github.com/to7485/Web1500/assets/54658614/c7e2c3ee-4662-4e79-be59-b5f4e6966323)
 
+## insert_form.jsp에 사진을 업로드하기 위한 코드 작성하기
+```
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script>
+	function send(f){
+		f.action = "upload.do";
+		f.submit();
+	}
+</script>
+</head>
+<body>
+	<form method="post" enctype="multipart/form-data">
+		제목 : <input name="title"><br>
+		사진 : <input type="file" name="photo"><br>
+		<input type="button" value="전송" onclick="send(this.form)">
+	</form>
+</body>
+</html>
+```
+
+## vo 패키지에 Photo클래스 생성하기
+- jsp를 할 때는 파일의 이름만 받았었지만, 파일을 직접 받아주기 위한 속성이 하나 더 있어야 한다.
+```
+package vo;
+
+import org.springframework.web.multipart.MultipartFile;
+
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
+public class PhotoVO {
+	//<input name="title"><br>
+	//<input type="file" name="photo"><br>
+
+	private String title; //우리가 설정한 제목
+	private String filename; //실제 파일 제목
+	private MultipartFile photo; //사진이든 동영상이든 일단 정보를 담아주자.(용량, 이름과 같은 정보를 알 수 없다)
+}
+
+```
+
+## FileUploadController에서 매핑받아주기
+```
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
