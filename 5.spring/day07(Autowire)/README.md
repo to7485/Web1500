@@ -204,7 +204,109 @@ public class TestController {
 
 ## DeptDAO에서 부서목록 조회메서드 만들기
 ```java
+package dao;
 
+import java.util.List;
+
+import org.apache.ibatis.session.SqlSession;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import vo.DeptVO;
+
+@Repository("dept_dao")//dept_dao : 현재 DeptDAO를 자동생성하기 위한 별칭
+public class DeptDAO {
+	
+	@Autowired
+	SqlSession sqlSession;
+
+	//확인을 하는 용도
+	public DeptDAO() {
+		System.out.println("--deptdao의 생성자---");
+	}
+	
+	public List<DeptVO> selectList(){
+		List<DeptVO> list = sqlSession.selectList("d.dept_list");
+		return list;
+	}
+}
+
+```
+
+## dept.xml 매퍼에 쿼리문 작성하기
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="d">
+
+	<select id="dept_list" resultType="dept">
+		select * from dept
+	</select>
+
+</mapper>
+```
+
+## mybatis-config.xml 매핑 맞춰주기
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "HTTP://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+	<settings>
+		<setting name="cacheEnabled" value="false" />
+		<setting name="useGeneratedKeys" value="true" />
+		<setting name="defaultExecutorType" value="REUSE" />
+	</settings>
+	
+	<typeAliases>
+		  <typeAlias type="vo.SawonVO" alias="dept"/>  
+	</typeAliases>
+	
+	<mappers>
+		<mapper resource="config/mybatis/mapper/dept.xml" />
+	</mappers>
+</configuration>
+```
+
+## TestController에서 list받아주고 포워딩하기
+```java
+@RequestMapping(value= {"/","list.do"})
+public String deptList(Model model) {
+	List<DeptVO> list = dept_dao.selectList();
+	model.addAttribute("list",list);
+	return "/WEB-INF/views/dept_list.jsp";
+}
+```
+## views 폴더에 dept_list.jsp 만들기
+```jsp
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Insert title here</title>
+	</head>
+	<body>
+		<table border="1" align="center">
+			<tr>
+				<th>부서번호</th>
+				<th>부서명</th>
+				<th>위치</th>
+			</tr>
+			<c:forEach var="vo" items="${list }">
+				<tr>
+					<td>${vo.deptno }</td>
+					<td>${vo.dname }</td>
+					<td>${vo.loc }</td>
+				</tr>
+			</c:forEach>
+		</table>
+	</body>
+</html>
 ```
 
 
