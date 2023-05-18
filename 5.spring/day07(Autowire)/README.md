@@ -30,7 +30,7 @@ public class DeptDAO {
 Servlet_Context에서도 자동탐색으로 컨트롤러 객체를 만들어보자.
 
 ## Servlet_Context 코드 수정하기
-```
+```java
 package mvc;
 
 import org.springframework.context.annotation.ComponentScan;
@@ -69,7 +69,7 @@ public class Servlet_Context implements WebMvcConfigurer {
 ![image](https://github.com/to7485/Web1500/assets/54658614/3f2ef563-0716-4d04-b2ef-6ecf5648f12e)
 
 ## controller 패키지에 TestController클래스 생성하기
-```
+```java
 package controller;
 
 import org.springframework.stereotype.Controller;
@@ -84,7 +84,7 @@ public class TestController {
 ```
 - Servlet_Context에 패키지 경로 잘 잡아주기
 
-```
+```java
 package mvc;
 
 @Configuration
@@ -112,5 +112,100 @@ public class DeptVO {
 }
 
 ```
+- 이전에 DAO를 살펴보면 sqlSession객체가 필요했다.
+- SqlSession도 라이브러리가 있으면 @Autowired로 받을 수 있다.
+
+## DeptDAO에 코드 추가하기
+```java
+package dao;
+
+import org.apache.ibatis.session.SqlSession;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public class DeptDAO {
+	
+	@Autowired
+	SqlSession sqlSession;
+
+	//확인을 하는 용도
+	public DeptDAO() {
+		System.out.println("--deptdao의 생성자---");
+	}
+}
+```
+이제 sqlSession을 갖고 있는 DeptDAO를 컨트롤러가 참조를 해야 한다.<br>
+그런데 자동생성을 해서 setter,생성자 주입이 불가능하다.<br>
+
+## TestController에 코드 추가하기
+```java
+package controller;
+
+import org.springframework.stereotype.Controller;
+
+import dao.DeptDAO;
+
+@Controller
+public class TestController {
+	
+	DeptDAO dept_dao; 아무런 정보도 들어있지 않은 dao객체
+
+	public TestController() {
+		System.out.println("--TestController의 생성자--");
+	}
+}
+
+```
+
+## DeptDAO클래스에 코드 추가하기
+```java
+package dao;
+
+import org.apache.ibatis.session.SqlSession;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+@Repository("dept_dao")//dept_dao : 현재 DeptDAO를 자동생성하기 위한 별칭
+public class DeptDAO {
+	
+	@Autowired
+	SqlSession sqlSession;
+
+	//확인을 하는 용도
+	public DeptDAO() {
+		System.out.println("--deptdao의 생성자---");
+	}
+}
+
+```
+
+## TestController에서 자동주입으로 DAO 받기
+```java
+package controller;
+
+import org.springframework.stereotype.Controller;
+
+import dao.DeptDAO;
+
+@Controller
+public class TestController {
+	
+	@Autowired
+	DeptDAO dept_dao;//@Repository("dept_dao") 객체이름과 별칭을 같게 만들어준다.
+
+	public TestController() {
+		System.out.println("--TestController의 생성자--");
+	}
+}
+```
+
+자동으로 만들게 되면 Context_3_dao 파일이 필요가 없어진다.
+
+## DeptDAO에서 부서목록 조회메서드 만들기
+```java
+
+```
+
 
 
