@@ -261,7 +261,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</settings>
 	
 	<typeAliases>
-		  <typeAlias type="vo.SawonVO" alias="dept"/>  
+		  <typeAlias type="vo.DeptVO" alias="dept"/>
 	</typeAliases>
 	
 	<mappers>
