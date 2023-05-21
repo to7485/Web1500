@@ -483,9 +483,89 @@ public List<PersonVO> listJson(){
 ```
 
 ## VisitController 복사하여 VisitJsonController 만들기
+- Servlet_Context에서 객체 생성하고 기존것은 주석처리하기(매핑이 겹치기 때문!)
+
+```
+//방명록 전체조회
+@RequestMapping(value= {"/","visit_list.do"})
+@ResponseBody
+public List<VisitVO> list(Model model) {
+	List<VisitVO> list = visit_dao.selectList();
+
+	return list;
+}
+```
+게시글 추가 부분을 Json으로 받기
+```
+//새 글 작성
+@RequestMapping("insert.do")
+@ResponseBody
+//name=홍길동&content=내용&pwd=1111
+public Map<String,String> insert(VisitVO vo,HttpServletRequest request) {
+	String ip = request.getRemoteAddr();
+	vo.setIp(ip);
+
+	//절대경로잡기
+	String webPath = "/resources/upload";
+	String savePath = application.getRealPath(webPath);
+	System.out.println(savePath);
+
+	//업로드된 파일의 정보
+	MultipartFile photo = vo.getPhoto();
+
+	String filename = "no_file";
+
+	//업로드된 파일이 존재한다면
+	if(!photo.isEmpty()) {
+		//업로드된 실제 파일의 이름
+		filename = photo.getOriginalFilename();
+
+		File saveFile = new File(savePath,filename);
+		if(!saveFile.exists()) {
+			saveFile.mkdirs();
+		} else {
+			//동일파일명 방지
+			long time = System.currentTimeMillis();
+			filename = String.format("%d_%s", time,filename);
+			saveFile = new File(savePath, filename);
+		}
+
+		try {
+			//업로드를 위한 실제 파일을 물리적으로 기록
+			photo.transferTo(saveFile);
+		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	vo.setFilename(filename);
 
 
+	//res가 1이면 success를 0이면 fail을 return 하자
+	int res = visit_dao.insert(vo);
 
+	String result = "fail";
+	if(res != 0 ) {
+		result = "success";
+	}
+
+	Map<String, String> map = new HashMap<String, String>();
+	map.put("reuslt", result);
+
+	//sendRedirect("visit_list.do");
+	//만약 Ajax를 사용해서 결과를 받고싶다면
+	return map;
+
+}
+```
+### 주소창에 insert_form.do로 직접이동하여 등록을 하면 다음과 같은 결과를 얻을 수 있다.
+- 더이상 텍스트를 받아서 Json으로 변경할 필요가 없이 직접 전달한다.
+
+![image](https://github.com/to7485/Web1500/assets/54658614/dd1925ad-66b0-41b2-9d0c-235e8aa440c2)
 
 
 
