@@ -376,6 +376,113 @@ public class JsonMakerController {
 
 ```
 
+## Servlet_Context클래스에서 객체 만들기
+- 컴포넌트 스캔으로 자동으로 만들거나
+- 수동으로 객체를 만들어보자.
+
+
+### 실행해서 확인하기
+
+![image](https://github.com/to7485/Web1500/assets/54658614/baf6cc99-4f34-41da-80c9-a5d42768e64e)
+
+## Map을 Json으로 만들기
+```
+package com.korea.json;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import vo.PersonVO;
+
+@Controller
+public class JsonMakerController {
+
+	@RequestMapping("/")
+	@ResponseBody
+	public PersonVO voJson() {
+		PersonVO p = new PersonVO();
+		p.setAddr("인천시 부평구");
+		p.setAge(30);
+		p.setName("홍길동");
+		return p;
+	}
+	
+	@RequestMapping("/map_to_json")
+	@ResponseBody
+	public HashMap<String, Object> mapJson() {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("name","김길동");
+		map.put("age", "20");
+		
+		HashMap<String,String> tel_map = new HashMap<String, String>();
+		tel_map.put("home", "032-1111-1111");
+		tel_map.put("cell", "010-2222-2222");
+		
+		map.put("tel",tel_map);
+		
+		return map;
+	}	
+}
+```
+
+### 실행해서 결과 확인하기
+
+![image](https://github.com/to7485/Web1500/assets/54658614/24a5ca47-ada9-4c81-88f3-14e3f00ece29)
+
+```
+json = {"name":"김길동",
+        "tel":{"cell":"010-2222-2222","home":"032-1111-1111"},
+        "age":"20"}
+```
+
+## List를 Json으로 변환하기
+```
+@RequestMapping("/list_to_json")
+@ResponseBody
+public List<PersonVO> listJson(){
+
+	List<PersonVO> list = new ArrayList<PersonVO>();
+
+	PersonVO p1 = new PersonVO();
+	p1.setAddr("인천시 부평구");
+	p1.setAge(30);
+	p1.setName("홍길동");
+
+	PersonVO p2 = new PersonVO();
+	p2.setAddr("서울시 은평구");
+	p2.setAge(21);
+	p2.setName("한왕호");
+
+	list.add(p1);
+	list.add(p2);
+
+	return list;
+}
+```
+
+### 실행하여 결과 확인하기
+
+![image](https://github.com/to7485/Web1500/assets/54658614/9441afd4-6c57-4bce-bffb-abc67faa8850)
+
+# 방명록 프로그램에서 DB에서 넘어온 데이터를 Json으로 받아보자.
+
+## 방명록 프로젝트의 pom.xml에 라이브러리 복사해 넣기
+```
+<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
+<!-- Java Object를 JSON으로 변환하거나 JSON을 Java Object로 변환하는데 사용하는 라이브러리 -->
+<!-- jackson-databind 라이브러리는 jackson-core 및 jackson-annotation 라이브러리의 의존성을 포함 -->
+<dependency>
+    <groupId>com.fasterxml.jackson.core</groupId>
+    <artifactId>jackson-databind</artifactId>
+    <version>2.9.8</version>
+</dependency>
+```
+
+## VisitController 복사하여 VisitJsonController 만들기
 
 
 
