@@ -83,12 +83,6 @@ public class BoardDAO {
 		this.sqlSession = sqlSession;
 	}
 	
-	//페이지별로 게시글 조회
-	public List<BoardVO> selectList(HashMap<String, Integer> map){
-		List<BoardVO> list = sqlSession.selectList("b.board_list", map);
-		return list;
-	}
-	
 	//게시글 추가
 	public int insert(BoardVO vo) {
 		int res = sqlSession.insert("b.board_insert", vo);
