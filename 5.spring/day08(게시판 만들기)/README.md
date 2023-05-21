@@ -33,6 +33,10 @@ public class Common {
 }
 
 ```
+- resources에 img폴더와 js폴더 복사해서 넣기
+
+![image](https://github.com/to7485/Web1500/assets/54658614/77a64e64-c7ef-4fa4-a077-5002fc4db488)
+
 
 ## vo패키지에 BoardVO클래스 만들기
 
@@ -83,23 +87,7 @@ public class BoardDAO {
 		this.sqlSession = sqlSession;
 	}
 	
-	//게시글 추가
-	public int insert(BoardVO vo) {
-		int res = sqlSession.insert("b.board_insert", vo);
-		return res;
-	}
-	
-	//idx에 해당하는 상세 내용 한건 조회
-	public BoardVO selectOne(int idx) {
-		BoardVO vo = sqlSession.selectOne("b.board_one",idx);
-		return vo;
-	}
-	
-	//조회수 증가
-	public int update_readhit(int idx) {
-		int res = sqlSession.update("b.update_readhit",idx);
-		return res;
-	}
+
 	
 	//댓글추가를 위한 step+1
 	public int update_step(BoardVO vo) {
@@ -298,7 +286,7 @@ public class BoardController {
 		model.addAttribute("list",list);
 		model.addAttribute("pageMenu",pageMenu);
 		
-		return Common.Board.VIEW_PATH+"board_list.jsp";
+		return Common.Board.VIEW_PATH+"board_list.jsp?page="+nowPage;
 	}
 	
 }
@@ -378,7 +366,7 @@ public class BoardController {
 			<tr>
 				<td colspan="5" align="right">
 					<img src="img/btn_reg.gif"
-					 onclick="location.href='insert_form.jsp'"
+					 onclick="location.href='insert_form.'"
 					 style="cursor:pointer;">
 				</td>
 			</tr>
@@ -387,6 +375,197 @@ public class BoardController {
 </body>
 </html>
 ```
+
+# 게시글 하나 눌러서 상세보기
+
+## BoardController에서 매핑해주기
+```java
+@RequestMapping("view.do")
+public String view(Model model, int idx) {
+	//view.do?idx=5
+
+	BoardVO vo = board_dao.selectOne(idx); 
+
+	//조회수 증가
+	HttpSession session = request.getSession();
+	String show = (String)session.getAttribute("show");
+
+	if(show == null) {
+		int res = board_dao.update_readhit(idx);
+		session.setAttribute("show", "0");
+	}
+
+	//상세보기 페이지로 전환하기 위해 바인딩 및 포워딩
+	model.addAttribute("vo", vo);
+
+	return Common.Board.VIEW_PATH+"board_view.jsp";
+}
+```
+
+## dao 패키지에 메서드 만들기
+```java
+//idx에 해당하는 상세 내용 한건 조회
+public BoardVO selectOne(int idx) {
+
+	BoardVO vo = sqlSession.selectOne("b.board_one",idx);
+	return vo;
+}
+
+//조회수 증가
+public int update_readhit(int idx) {
+
+	int res = sqlSession.update("b.update_readhit",idx);
+	return res;
+}
+```
+
+## board.xml에 쿼리문 작성하기
+```xml
+<!-- idx에 해당되는 게시글 정보 조회(상세보기) -->
+<select id="board_one" resultType="board" parameterType="int">
+	select * from board where idx=#{idx}
+</select>
+
+<!-- 조회수 업데이트 -->
+<update id="update_readhit" parameterType="int">
+	update board set readhit = readhit + 1
+	where idx=#{idx}
+</update>	
+```
+
+## 이미지 넣기 위한 버튼들의 경로 수정하기
+```
+<script src="resources/js/httpRequest.js"></script>
+
+<td colspan="2">
+<!-- 목록보기 -->
+	<img src="resources/img/btn_list.gif" onclick="location.href='list.do?page=${param.page}'">
+
+	<c:if test="${ vo.depth lt 1 }">
+<!-- 답변 -->
+	<img src="resources/img/btn_reply.gif" onclick="reply();">
+	</c:if>
+<!-- 글삭제 -->
+	<img src="resources/img/btn_delete.gif" onclick="del();">
+</td>
+```
+
+# 글 추가하기
+- jsp에서 jsp로 이동하지 못하는점을 유의하며 작성한다.
+
+## BoardController에 매핑해주기
+```java
+@RequestMapping("insert_form.do")
+public String insert_form() {
+	return Common.Board.VIEW_PATH + "insert_form.jsp";
+}
+```
+
+## insert_from.jsp 만들기
+```jsp
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script>
+	function send_check(){
+		var f = document.f; //f라는 name을 가진 form태그를 가져옴
+		
+		f.submit();
+	}
+</script>
+</head>
+<body>
+<form name="f" method="post" action="insert.do">
+	<table border="1">
+		<caption>:::새 글 쓰기:::</caption>
+
+		<tr>
+			<th>제목</th>
+			<td><input name="subject" style="width:370px;"></td>
+		</tr>
+		<tr>
+			<th>작성자</th>
+			<td><input name="name" style="width:370px;"></td>
+		</tr>
+		<tr>
+			<th>내용</th><!-- 가로로 50글자 세로로 엔터 10번정도 칠수 있는 크기 -->
+			<td><textarea name="content" rows="10" cols="50" style="resize:none;"></textarea></td>
+		</tr>
+		<tr>
+			<th>비밀번호</th>
+			<td><input name="pwd" type="password"></td>
+		</tr>
+		<tr>
+			<td colspan="2">
+			<img src="resources/img/btn_reg.gif" onclick="send_check();">
+			<img src="resources/img/btn_back.gif" onclick="location.href='list.do'">
+			</td>
+		</tr>
+	</table>
+</form>
+
+</body>
+</html>
+
+```
+
+## BoardController에서 insert.do 매핑 만들기
+```java
+@RequestMapping("insert.do")
+public String insert(BoardVO vo) {
+	String ip = request.getRemoteAddr();//ip
+
+	vo.setIp(ip);
+
+	int res = board_dao.insert(vo);
+
+	if(res > 0) {
+		//등록완료후 게시판의 첫 페이지로 복귀
+		return "redirect:list.do";
+	}
+
+	return null;
+}
+```
+## dao패키지에 메서드 추가하기
+```java
+//게시글 추가
+public int insert(BoardVO vo) {
+	int res = sqlSession.insert("b.board_insert", vo);
+	return res;
+}
+```
+
+## board.xml에 쿼리문 추가하기
+
+```xml
+<!-- 새글 추가 -->
+<insert id="board_insert" parameterType="board">
+	insert into board values(
+		seq_board_idx.nextVal, 
+		#{name}, 
+		#{subject}, 
+		#{content}, 
+		#{pwd}, 
+		#{ip}, 
+		sysdate, 
+		0, 
+		seq_board_idx.currVal, 
+		0, 
+		0, 
+		0
+	)
+</insert>
+```
+
+
+
+
+
 
 
 
