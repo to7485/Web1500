@@ -567,6 +567,71 @@ public Map<String,String> insert(VisitVO vo,HttpServletRequest request) {
 
 ![image](https://github.com/to7485/Web1500/assets/54658614/dd1925ad-66b0-41b2-9d0c-235e8aa440c2)
 
+# 외부 api 사용해보기
+
+## visit_list.jsp 코드 수정하기
+```
+function apiList(){
+				
+	var url=""; //우리가 갖고 있는 매핑으로 접근하는것이 아님
+	var param = "";
+
+	sendRequest(url, param, resultApi,"GET");
+}
+
+function resultApi(){
+	if( xhr.readyState == 4 && xhr.status == 200){
+
+		var data = xhr.responseText;
+		alert(data);
+	}
+}
+
+<div id="main_box" align="right">
+	<h1>방명록 리스트</h1>
+
+	<input type="button" value="API" onclick="apiList()">
+
+							<!-- 스프링에서는 jsp에서 jsp로 이동할 수 없다. -->
+	<input type="button" value="글쓰기" onclick="location.href='insert_form.do'">
+</div>
+
+<input id="api">
+ 
+```
+
+## 구글에서 영화진흥위원회 api 검색하기
+
+![image](https://github.com/to7485/Web1500/assets/54658614/67780084-d57c-4564-826c-929d6977ac53)
+
+url 부분에 복사하여 붙혀넣기
+
+![image](https://github.com/to7485/Web1500/assets/54658614/1781ed0c-8ccf-4a3f-a32d-978898146824)
+
+```
+제목을 가져오고 싶다면...
+json.boxOfficeResult.dailyBoxOfficeList[0].movieNm
+```
+
+## 콜백함수에 작성하기
+```
+function resultApi(){
+	if( xhr.readyState == 4 && xhr.status == 200){
+
+		var data = xhr.responseText;
+		var json = (new Function('return'+data))();
+
+		var res = json.boxOfficeResult.dailyBoxOfficeList[0].movieNm;
+		
+		api버튼을 눌렀을때 input 태그에 제목이 뜨게 하려면...
+		var api = document.getElementById("api");
+		api.value = res;
+	}
+}
+```
+
+### 실행하고 api버튼을 누르면 제목을 가져온다.
+
 
 
 
