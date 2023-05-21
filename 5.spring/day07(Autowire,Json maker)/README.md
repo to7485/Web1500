@@ -308,6 +308,80 @@ public String deptList(Model model) {
 	</body>
 </html>
 ```
+# JSON 형식 사용해보기
+
+## Ex_날짜_JsonMaker
+- com.korea.json
+- pom.xml, resources 패키지 복사하기
+
+## jackson 라이브러리 다운로드받기
+
+![image](https://github.com/to7485/Web1500/assets/54658614/9b457b31-3446-41f1-bcf5-cbe6f8e84c4b)
+
+
+
+```
+<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
+<!-- Java Object를 JSON으로 변환하거나 JSON을 Java Object로 변환하는데 사용하는 라이브러리 -->
+<!-- jackson-databind 라이브러리는 jackson-core 및 jackson-annotation 라이브러리의 의존성을 포함 -->
+<dependency>
+    <groupId>com.fasterxml.jackson.core</groupId>
+    <artifactId>jackson-databind</artifactId>
+    <version>2.9.8</version>
+</dependency>
+```
+
+## vo 패키지에 PersonVO 만들기
+```java
+package vo;
+
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
+public class PersonVO {
+
+	private String name, addr;
+	private int age;
+}
+
+```
+
+## JsonMakerController 클래스 만들기
+```
+package com.korea.visit;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import vo.PersonVO;
+
+@Controller
+public class JsonMakerController {
+
+	@RequestMapping("/vo_to_json.do")
+	@ResponseBody
+	public PersonVO voJson() {
+		PersonVO p = new PersonVO();
+		p.setAddr("인천시 부평구");
+		p.setAge(30);
+		p.setName("홍길동");
+		return p;
+	}
+	
+	
+}
+
+```
+
+
+
+
+
+
+
 
 
 
