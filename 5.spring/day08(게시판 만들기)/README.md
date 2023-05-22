@@ -86,32 +86,6 @@ public class BoardDAO {
 	public BoardDAO(SqlSession sqlSession) {
 		this.sqlSession = sqlSession;
 	}
-	
-
-	
-	//댓글추가를 위한 step+1
-	public int update_step(BoardVO vo) {
-		int res = sqlSession.update("b.board_update_step", vo);
-		return res;
-	}
-	
-	//댓글추가
-	public int reply(BoardVO vo) {
-		int res = sqlSession.insert("b.board_reply",vo);
-		return res;
-	}
-	
-	//게시글삭제(된것처럼 업데이트)
-	public int del_update(BoardVO vo) {
-		int res = sqlSession.update("b.del_update",vo);
-		return res;
-	}
-	
-	//전체 게시물 수 조회
-	public int getRowTotal() {
-		int count = sqlSession.selectOne("b.board_count");
-		return count;
-	}
 }
 
 ```
@@ -210,6 +184,12 @@ public class Servlet_Context implements WebMvcConfigurer {
 public List<BoardVO> selectList(HashMap<String, Integer> map){
 	List<BoardVO> list = sqlSession.selectList("b.board_list", map);
 	return list;
+}
+
+//전체 게시물 수 조회
+public int getRowTotal() {
+	int count = sqlSession.selectOne("b.board_count");
+	return count;
 }
 ```
 
