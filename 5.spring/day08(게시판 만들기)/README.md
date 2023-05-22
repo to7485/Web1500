@@ -381,7 +381,7 @@ public class BoardController {
 ## BoardController에서 매핑해주기
 ```java
 @RequestMapping("view.do")
-public String view(Model model, int idx) {
+public String view(Model model, int idx, int page) {
 	//view.do?idx=5
 
 	BoardVO vo = board_dao.selectOne(idx); 
@@ -398,7 +398,7 @@ public String view(Model model, int idx) {
 	//상세보기 페이지로 전환하기 위해 바인딩 및 포워딩
 	model.addAttribute("vo", vo);
 
-	return Common.Board.VIEW_PATH+"board_view.jsp";
+	return Common.Board.VIEW_PATH+"board_view.jsp?page="+page;
 }
 ```
 
@@ -706,11 +706,155 @@ public int del_update(BoardVO vo) {
 # 댓글달기
 - 상세보기 페이지에서 답글달기를 눌러서 댓글이 달리도록 해보자.
 
-## 
+## board_view.jsp에 reply()메서드 추가하기
+```JS
+function reply(){
+	location.href="reply_form.do?idx=${vo.idx}&page=${param.page}";
+}
+```
+
+## BoardController에서 매핑하기
+- idx와 page를 가져가야한다.
+```java
+@RequestMapping("reply_form.do")
+public String reply_form(int idx, int page) {
+	return Common.VIEW_PATH + "reply_from.jsp?idx="+idx+"&page="+page;
+}
+```
+## reply_form.jsp 생성하기
+```
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script>
+	function send_check(){
+		var f = document.f;
+		
+		f.submit();
+	}
+</script>
+</head>			<!-- reply.do?subject=ooo&name=홍길동&content=aaaaaaa.... -->
+<body>
+	<form name="f"
+		  method="post"
+		  action="reply.do">
+	<input type="hidden" name="idx" value="${param.idx}">
+	<input type="hidden" name="page" value="${param.page}">
+		  
+	<table border="1">
+		<caption>:::댓글 쓰기:::</caption>
+		<tr>
+			<th>제목</th>
+			<td><input name="subject" style="width:370px;"></td>
+		</tr>
+		<tr>
+			<th>작성자</th>
+			<td><input name="name" style="width:370px;"></td>
+		</tr>
+		<tr>
+			<th>내용</th>
+			<td><textarea name="content" rows="10" cols="50" style="resize:none;"></textarea></td>
+		</tr>
+		<tr>
+			<th>비밀번호</th>
+			<td><input name="pwd" type="password"></td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<img src="img/btn_reg.gif" onclick="send_check();">
+				<img src="img/btn_back.gif" onclick="location.href='board_list.do'">
+			</td>
+		</tr>
+	</table>
+	</form>
+</body>
+</html>
+```
+
+## send_check()메서드 작성하기
+```js
+function send_check(){
+	var f = document.f;
+	f.submit();
+}
+```
+
+## BoardController에 reply.do 매핑 만들어주기
+```java
+@RequestMapping("reply.do")
+public String reply(BoardVO vo,int idx, int page) {
+	String ip = request.getRemoteAddr();
 
 
+	//같은 레퍼런스를 가지고 있는 데이터들 중에서 지금 내가 추가하려고 하는
+	//step값 이상인 애들을 +1을 해놔야 하기 때문에 insert를 먼저하지 않는다.
 
+	//기준글의 idx를 이용해서 댓글을 달고싶은 게시글의 정보를 가져온다.
+	BoardVO base_vo = board_dao.selectOne(idx);
 
+	//기준글에 step이상 값은 step = step + 1 처리
+	int res = board_dao.update_step(base_vo); //-> dao에 만들러 가기
 
+	vo.setIp(ip);
 
+	//댓글이 들어갈 위치 선정
+	vo.setRef(base_vo.getRef());
+	vo.setStep(base_vo.getStep()+1);
+	vo.setDepth(base_vo.getDepth()+1);
+
+	res = board_dao.reply(vo);
+
+	if(res > 0) {
+		return "redirect:board_list.do?page="+page;
+	}
+
+	return null;
+}
+```
+
+## BoardDAO에 메서드 만들기
+```java
+//댓글추가를 위한 step+1
+public int update_step(BoardVO vo) {
+	int res = sqlSession.update("b.board_update_step",vo);
+	return res;
+}
+
+//댓글추가
+public int reply(BoardVO vo) {
+	int res = sqlSession.insert("b.board_reply",vo);
+	return res;
+}
+```
+
+## board.xml에 쿼리문 추가하기
+```xml
+<!-- 댓글작성을 위한 STEP 증가 -->
+<update id="board_update_step" parameterType="board">
+	update board set step = step + 1
+	where ref = #{ref} and step > #{step}
+</update>
+
+<!-- 댓글달기 -->
+<insert id="board_reply" parameterType="board">
+	insert into board values(
+		seq_board_idx.nextVal,
+		#{name},
+		#{subject},
+		#{content},
+		#{pwd},
+		#{ip},
+		sysdate,
+		0,
+		#{ref},
+		#{step},
+		#{depth},
+		0
+	)
+</insert>
+```
 
