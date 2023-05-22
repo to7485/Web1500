@@ -245,7 +245,7 @@ public class BoardController {
 		this.board_dao = board_dao;
 	}
 	
-	@RequestMapping(value= {"/","list.do"})
+	@RequestMapping(value= {"/","board_list.do"})
 	public String list(Model model, String page) {
 		
 		int nowPage = 1;
@@ -311,7 +311,7 @@ public class BoardController {
 <body>
 	<table border="1" width="700">
 		<tr>
-			<td colspan="5"><img src="img/title_04.gif"></td>
+			<td colspan="5"><img src="resources/img/title_04.gif"></td>
 		</tr>
 		<tr>
 			<th>번호</th>
@@ -365,8 +365,8 @@ public class BoardController {
 			
 			<tr>
 				<td colspan="5" align="right">
-					<img src="img/btn_reg.gif"
-					 onclick="location.href='insert_form.'"
+					<img src="resources/img/btn_reg.gif"
+					 onclick="location.href='insert_form.do'"
 					 style="cursor:pointer;">
 				</td>
 			</tr>
@@ -433,21 +433,107 @@ public int update_readhit(int idx) {
 </update>	
 ```
 
-## 이미지 넣기 위한 버튼들의 경로 수정하기
+## board폴더에 board_view.jsp 만들기
 ```
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
 <script src="resources/js/httpRequest.js"></script>
+<script>
+	function reply(){
+		location.href="reply_form.jsp?idx=${vo.idx}&page=${param.page}";
+	}
+	
+	function del(){
+		if(!confirm("삭제하시겠습니까?")){
+			return;
+		}
+		
+		var pwd = ${vo.pwd}; //원본비밀번호
+		var c_pwd = document.getElementById("c_pwd").value;
+		
+		if(pwd != c_pwd){
+			alert("비밀번호 불일치");
+			return;
+		}
+		
+		var url = "del.do";
+		var param = "idx=${vo.idx}";
+		
+		sendRequest(url,param,delCheck,"post");
+	}
+	
+	function delCheck(){
+		if(xhr.readyState == 4 && xhr.status == 200){
+			var data = xhr.responseText;
+			//"[{'param':'yes'}]" 문자열 형태로 데이터를 받아옴
+			
+			var json = eval(data);
+			
+			if(json[0].param == 'yes'){
+				alert("삭제 성공");
+				location.href="board_list.do?page=${param.page}";
+			} else {
+				alert("삭제 실패");
+			}
+		}
+	}
+	
+</script>
+</head>
+<body>
+	<table border="1">
+		<caption>:::게시글 상세보기:::</caption>
+		<tr>
+			<th>제목</th>
+			<td>${vo.subject}</td>
+		</tr>
+		<tr>
+			<th>작성자</th>
+			<td>${vo.name}</td>
+		</tr>
+		<tr>
+			<th>작성일</th>
+			<td>${vo.regdate}</td>
+		</tr>
+		<tr>
+			<th>ip</th>
+			<td>${vo.ip}</td>
+		</tr>
+		<tr>
+			<th>내용</th>
+			<td width="500px" height="200px"><pre>${vo.content}</pre></td>
+		</tr>
+		<tr>
+			<th>비밀번호</th>
+			<td><input type="password" id="c_pwd"></td>
+		<tr>
+			<td colspan="2">
+			<!-- 목록보기 -->
+				<img src="resources/img/btn_list.gif" onclick="location.href='board_list.do?page=${param.page}'">
+				
+				<c:if test="${vo.depth lt 1 }">
+			<!-- 답변  -->
+				<img src="resources/img/btn_reply.gif" onclick="reply();">
+				</c:if>
+			<!-- 삭제 -->
+				<img src="resources/img/btn_delete.gif" onclick="del();">
+			</td>
+		</tr>
+	
+	</table>
+</body>
+</html>
 
-<td colspan="2">
-<!-- 목록보기 -->
-	<img src="resources/img/btn_list.gif" onclick="location.href='list.do?page=${param.page}'">
 
-	<c:if test="${ vo.depth lt 1 }">
-<!-- 답변 -->
-	<img src="resources/img/btn_reply.gif" onclick="reply();">
-	</c:if>
-<!-- 글삭제 -->
-	<img src="resources/img/btn_delete.gif" onclick="del();">
-</td>
+
+
+
 ```
 
 # 글 추가하기
@@ -502,7 +588,7 @@ public String insert_form() {
 		<tr>
 			<td colspan="2">
 			<img src="resources/img/btn_reg.gif" onclick="send_check();">
-			<img src="resources/img/btn_back.gif" onclick="location.href='list.do'">
+			<img src="resources/img/btn_back.gif" onclick="location.href='board_list.do'">
 			</td>
 		</tr>
 	</table>
@@ -525,7 +611,7 @@ public String insert(BoardVO vo) {
 
 	if(res > 0) {
 		//등록완료후 게시판의 첫 페이지로 복귀
-		return "redirect:list.do";
+		return "redirect:board_list.do";
 	}
 
 	return null;
@@ -562,7 +648,65 @@ public int insert(BoardVO vo) {
 </insert>
 ```
 
+# 삭제하기
+- 삭제 버튼을 누르면 삭제된것 처럼 보이게 만들기
 
+## BoardController에 매핑만들기
+```
+@RequestMapping("del.do")
+@ResponseBody
+public String delete(int idx) {
+	BoardVO baseVO = board_dao.selectOne(idx);
+
+	baseVO.setSubject("이미 삭제된 글입니다.");
+	baseVO.setName("unknown");
+
+	int res = board_dao.del_update(baseVO);
+	if(res == 1) {
+		return "[{'result':'yes'}]";
+	} else {
+		return "[{'result':'no'}]";
+	}
+}
+```
+## BoardDAO에 메서드 만들기
+
+```java
+//한가지 글 조회
+public BoardVO selectOne(int idx) {
+	BoardVO vo = sqlSession.selectOne("b.board_one",idx);
+	return vo;
+}
+
+//게시글 삭제(가 된것처럼 업데이트 하기)
+public int del_update(BoardVO vo) {
+	int res = sqlSession.update("b.del_update",vo);
+	return res;
+}
+```
+
+## board.xml에 쿼리문 추가하기
+
+```xml
+<!-- idx에 해당하는 게시글 한 건 조회 -->
+<select id="board_one" resultType="board" parameterType="int">
+	select * from board where idx= #{idx}
+</select>
+
+<!-- 게시글 삭제(된 것 처럼 업데이트) -->
+<update id="del_update" parameterType="board">
+	update board set subject = #{subject},
+					 name = #{name},
+					 del_info = -1
+					 where idx=#{idx}
+</update>
+
+```
+
+# 댓글달기
+- 상세보기 페이지에서 답글달기를 눌러서 댓글이 달리도록 해보자.
+
+## 
 
 
 
