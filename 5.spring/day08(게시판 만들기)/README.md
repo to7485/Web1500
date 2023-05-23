@@ -193,6 +193,24 @@ public int getRowTotal() {
 }
 ```
 
+## board.xml에 쿼리문 작성하기
+- 게시글에 순위를 매겨서 10개씩 한 페이지에 보여줬었다.
+
+```xml
+<!-- 페이지별 게시물 조회 -->
+<select id="board_list" resultType="board" parameterType="java.util.HashMap">
+	select * from 
+		(select rank() over(order by ref desc,step) no, b.*
+		 from board b)
+		 where no between #{start} and #{end}
+</select>
+
+<!-- 전체 게시물 개수 조회 -->
+<select id="board_count" resultType="int">
+	select count(*) from board
+</select>
+```
+
 ## BoardController에서 조회하기 위한 매핑 만들기
 
 ```java
@@ -510,10 +528,6 @@ public int update_readhit(int idx) {
 </body>
 </html>
 
-
-
-
-
 ```
 
 # 글 추가하기
@@ -580,6 +594,7 @@ public String insert_form() {
 ```
 
 ## BoardController에서 insert.do 매핑 만들기
+
 ```java
 @RequestMapping("insert.do")
 public String insert(BoardVO vo) {
@@ -597,7 +612,9 @@ public String insert(BoardVO vo) {
 	return null;
 }
 ```
-## dao패키지에 메서드 추가하기
+
+## BoardDAO클래스에 메서드 추가하기
+
 ```java
 //게시글 추가
 public int insert(BoardVO vo) {
