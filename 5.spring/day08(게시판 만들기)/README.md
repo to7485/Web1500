@@ -854,4 +854,242 @@ public int reply(BoardVO vo) {
 	)
 </insert>
 ```
+# 로그인 구현하기
+- 로그인을 해야만 글을 쓸 수 있도록 로그인 기능을 구현해보자.
+
+## MemberVO클래스 생성하기
+
+```java
+package vo;
+
+@setter
+@getter
+public class MemberVO {
+
+	private int idx;
+	private String name;
+	private String id;
+	private String pwd;
+	private String email;
+}
+
+```
+
+## login_form.jsp 생성하기
+
+```jsp
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<!-- ajax사용하기 위해 등록해주기
+로그인시도할 때 아이디가 없으면 아이디가 없다고 경고, 비밀번호가 틀리면 비밀번호가 틀렸다고 경고를 따로 띄워주자.
+'아이디나 비밀번호가 틀렸습니다' 라고 나오면 개발자가 귀찮아서 코드를 추가하지 않은것 -->
+	<script src="resources/js/httpRequest.js"></script>
+	<script>
+		function send(f){
+			var id = f.id.value.trim();
+			var pwd = f.pwd.value.trim();
+			
+			//유효성체크
+			if(id==''){
+				alert("아이디를 입력해주세요");
+				return;
+			}
+			
+			if(pwd==''){
+				alert("비밀번호를 입력하세요");
+				return;
+			}
+			
+			var url = "login.do";
+			var param ="id="+encodeURIComponent(id)+"&pwd="+encodeURIComponent(pwd);
+			
+			sendRequest(url,param,myCheck,"POST");
+		}
+		
+		//콜백메서드
+		function myCheck(){
+			if(xhr.readyState == 4 && xhr.status == 200){
+				var data = xhr.responseText;
+				var json = eval(data);
+				
+				if(json[0].param == 'no_id'){
+					alert("아이디가 존재하지 않습니다.");
+				}else if(json[0].param == 'no_pwd'){
+					alert("비밀번호가 맞지 않습니다.");
+				}else {
+					alert("로그인 성공");
+					location.href="board_list.do";
+
+				}
+			}
+		}
+	</script>
+</head>
+<body>
+	<form>
+		<table border="1" align="center">
+			<caption>:::로그인:::</caption>
+			<tr>
+				<th>아이디</th>
+				<td><input name="id"></td>
+			</tr>
+			<tr>
+				<th>비밀번호</th>
+				<td><input name="pwd" type="password"></td>
+			</tr>
+			<tr>
+			
+				<td colspan="2" align="center">
+					<input type="button" value="로그인" onclick="send(this.form)">
+				</td>
+			</tr>
+		</table>
+	</form>
+
+</body>
+</html>
+```
+
+## BoardController에 매핑 추가하기
+```
+@RequestMapping("login.do")
+		@ResponseBody
+		public String login(String id, String pwd) {
+			
+			MemberVO vo = member_dao.logincheck(id);
+			
+			//vo가 null인경우 id자체가 DB에 존재하지 않는다는 의미
+			if(vo==null) {
+				return "[{'param':'no_id'}]";
+			} 
+
+			if(!vo.getPwd().equals(pwd)) {
+				//비밀번호가 일치하지 않을 때
+				return "[{'param':'no_pwd'}]";
+			}
+			
+			//아이디와 비빌번호 체크에 문제가 없다면 세션에 바인딩 한다.
+			//세션은 서버의 메모리(램)를 사용하기 때문에 세션을 많이 사용할수록 브라우저가 느려지기 때문에
+			//필요한 곳에서만 세션을 쓰도록 하자
+
+			//세션유지시간(기본값 30분)
+			//session.setMaxInactiveInterval(3600); //세션이 1시간 유지 초단위로 써줘야함;;
+			session.setAttribute("id", vo); 
+			
+			//로그인 성공한 경우
+			return "[{'param':'clear'}]";
+		}
+```
+
+## MemberDAO클래스 생성하기
+
+```java
+package dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import org.apache.ibatis.session.SqlSession;
+
+import vo.MemberVO;
+
+public class MemberDAO {
+
+	SqlSession sqlSession;
+	public MemberDAO(SqlSession sqlSession) {
+		this.sqlSession = sqlSession;
+	}
+	
+	//로그인 체크
+	/*
+	 * 실수를 많이 하는부분 id랑 pwd를 둘다 받았다고 가정해보자 쿼리문이 select * from member where id=? and
+	 * pwd=? 이렇게 만드는 순간 id가 없어도 null이 들어오고 비밀번호가 틀려도 null이 들어온다. 아이디나 비밀번호가 잘못되었습니다
+	 * 라고 나옴;;
+	 */
+	
+	//로그인 조회
+	public MemberVO logincheck(String id) {
+		MemberVO vo = sqlSession.selectOne("m.idCheck",id);
+		return vo;
+	}
+	
+}
+```
+
+## Context_3_dao클래스에서 객체 생성하기
+```
+@Bean
+public MemberDAO member_dao(SqlSession sqlSession) { 
+	return new MemberDAO(sqlSession);
+}
+```
+
+## member.xml 만들고 쿼리문 작성하기
+
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="m">
+
+	<select id="idCheck" resultType="member" parameterType="String">
+		select * from member where id=#{id}
+	</select>
+</mapper>
+```
+
+## mybatis-config.xml에 매퍼 등록하기
+
+```xml
+<typeAliases>
+	 <typeAlias type="vo.BoardVO" alias="board"/>
+	 <typeAlias type="vo.MemberVO" alias="member"/>
+</typeAliases>
+
+<mappers>
+	 <mapper resource="config/mybatis/mapper/board.xml" />
+	 <mapper resource="config/mybatis/mapper/member.xml" /> 
+</mappers>
+```
+
+## BoardController에 코드 추가하기
+```
+//글쓰기 화면으로 이동
+@RequestMapping("insert_form.do")
+public String insert_form() {
+	HttpSession session = request.getSession();
+
+	MemberVO show = (MemberVO)session.getAttribute("id");
+
+	if(show == null) {
+		return Common.VIEW_PATH + "login_form.jsp;";
+	}
+	return Common.VIEW_PATH + "insert_form.jsp";
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
