@@ -1321,7 +1321,7 @@ public String m_insert() {
 				<th>아이디</th>
 				<td>
 				<input name="id" id="id" onchange="che()">
-				<input type="button" value="중복체크" onclick="check_id()";>
+				<input type="button" value="중복체크" onclick="check_id()">
 				</td>
 			</tr>
 			<tr>
