@@ -1126,17 +1126,236 @@ function myCheck(){
 ## board_list.jsp의 로그아웃 버튼에 매핑 정해주기
 ```
 <c:when test="${not empty id }">
-		<input type="button" value="로그아웃" onclick="logout.do">
+	<input type="button" value="로그아웃" onclick="location.href='logout.do'">
 </c:when>
 ```
 
+## BoardController에서 매핑 만들기
+- 세션을 제거하되 vo만 제거해주도록 하자
 
+```java
+@RequestMapping("logout.do")
+public String logout() {
 
+	session.removeAttribute("id");
+	//세션에 들어있는 모든 속성을 제거한다.
+	//session.invalidate();
 
+	return "redirect:board_list.do";
+}
+```
 
+# 회원가입 기능 구현하기
+- 아이디 중복체크를 하며 회원을 DB에 저장해보자
 
+## member_insert_form.jsp 생성하기
+```
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<form>
+		<table border="1">
+			<caption>:::회원가입:::</caption>
+			
+			<tr>
+				<th>아이디</th>
+				<td>
+				<input name="id" id="id">
+				<input type="button" value="중복체크" onclick="check_id()";>
+				</td>
+			</tr>
+			<tr>
+				<th>이름</th>
+				<td>
+				<input name="name">
+				</td>
+			</tr>
+			<tr>
+				<th>비밀번호</th>
 
+				<td>
+				<input name="pwd" type="password">
+				</td>
+			</tr>
+			<tr>
+				<th>이메일</th>
+				<td>
+				<input name="email">
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2" align="center">
+					<input type="button" value="가입" onclick="send(this.form);">
+					<input type="button" value="취소" onclick="location.href='board_list.do'">
+				</td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>
 
+```
+
+## 회원가입 버튼과 연결하기
+- 메인의 우측상단 버튼, 로그인창에 버튼을 만든 후 연결하기
+
+### board_list.jsp의 버튼에 연결하기
+```html
+<c:when test="${empty id }">
+		<input type="button" value="로그인" onclick="location.href='login_form.do'">
+		<input type="button" value="회원가입" onclick="location.href='m_insert.do'">
+</c:when>
+```
+
+### login_form.jsp에 버튼 추가하기
+```java
+<td colspan="2" align="center">
+	<input  type="button" value="로그인" onclick="send(this.form)">
+	<input type="button" value="회원가입" onclick="location.href='m_insert.do'">
+	<input type="button" value="취소" onclick="location.href='board_list.do'">
+</td>
+```
+
+## BoardController에서 매핑해주기
+
+```java
+@RequestMapping("m_insert.do")
+public String m_insert() {
+	return Common.VIEW_PATH + "member_insert_form.jsp";
+}
+```
+
+## member_insert_form.jsp 코드 추가하기
+```jsp
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+
+	<script src="resources/js/httpRequest.js"></script>
+	
+	<script type="text/javascript">
+		
+	//아이디 중복여부 체크
+	var b_idCheck = false;
+
+	function send(f){
+		//입력내용 체크
+		var id = f.id.value.trim();
+		var pwd = f.pwd.value.trim();
+
+		if( !b_idCheck ){
+			alert("아이디 중복체크를 하세요");	
+			return;
+		}
+
+		f.action = "insert.do";
+		f.submit();
+
+	}//send()			
+		
+		
+	//아이디 중복체크를 위한 메서드
+	function check_id(){
+
+		//아이디 중복체크
+		var id = document.getElementById("id").value.trim();
+
+		if(id == ''){
+			alert("아이디를 입력하세요");
+			return;
+		}
+		완전히 새로고침을 하면 텍스트필드에 적혀있는 것도 다 날아간다. 무한으로 중복체크만 하게 될 것이다.
+
+		//id를 Ajax를 통해서 서버로 전송
+		var url = "check_id.do";//MemberCheckIdAction.java 서블릿
+
+		//id에 @와 같은 특수문자가 들어가 있는 경우를 대비하여 인코딩하여 보낸다.
+		var param = "id=" + encodeURIComponent(id);
+
+		sendRequest( url, param, resultFn, "POST" );
+
+	}//check_id()
+		
+	function resultFn(){
+		if(xhr.readyState == 4 && xhr.status == 200){
+			//"[{'res':'no'}]"
+			var data = xhr.responseText;
+			//문자열 구조인 data를 실제 JSON형태로 변환
+			var json = (new Function('return'+data)();
+
+			if(json[0].res == 'no'){
+				alert("이미 사용중인 아이디 입니다.");
+				return;
+			} else {
+				//회원가입이 가능한 경우
+				alert("사용 가능한 아이디 입니다");
+				b_idCheck = true;
+			}
+		}
+	}//resultFn()
+		
+	</script>
+	
+</head>
+<body>
+	<form>
+		<table border="1">
+			<caption>:::회원가입:::</caption>
+			
+			<tr>
+				<th>아이디</th>
+				<td>
+				<input name="id" id="id">
+				<input type="button" value="중복체크" onclick="check_id()";>
+				</td>
+			</tr>
+			<tr>
+				<th>이름</th>
+				<td>
+				<input name="name">
+				</td>
+			</tr>
+			<tr>
+				<th>비밀번호</th>
+
+				<td>
+				<input name="pwd" type="password">
+				</td>
+			</tr>
+			<tr>
+				<th>이메일</th>
+				<td>
+				<input name="email">
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2" align="center">
+					<input type="button" value="가입" onclick="send(this.form);">
+					<input type="button" value="취소" onclick="location.href='board_list.do'">
+				</td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>
+
+```
+
+## BoardContorller에 매핑 만들기
+
+```java
+
+```
 
 
 
