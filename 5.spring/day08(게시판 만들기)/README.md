@@ -875,6 +875,37 @@ public class MemberVO {
 
 ```
 
+## MemberDAO클래스 생성하기
+
+```java
+package dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import org.apache.ibatis.session.SqlSession;
+
+import vo.MemberVO;
+
+public class MemberDAO {
+
+	SqlSession sqlSession;
+	public MemberDAO(SqlSession sqlSession) {
+		this.sqlSession = sqlSession;
+	}
+}
+```
+
+## Context_3_dao클래스에서 객체 생성하기
+```
+@Bean
+public MemberDAO member_dao(SqlSession sqlSession) { 
+	return new MemberDAO(sqlSession);
+}
+```
+
 ## login_form.jsp 생성하기
 
 ```jsp
@@ -914,18 +945,7 @@ public class MemberVO {
 		//콜백메서드
 		function myCheck(){
 			if(xhr.readyState == 4 && xhr.status == 200){
-				var data = xhr.responseText;
-				var json = eval(data);
 				
-				if(json[0].param == 'no_id'){
-					alert("아이디가 존재하지 않습니다.");
-				}else if(json[0].param == 'no_pwd'){
-					alert("비밀번호가 맞지 않습니다.");
-				}else {
-					alert("로그인 성공");
-					location.href="board_list.do";
-
-				}
 			}
 		}
 	</script>
@@ -955,80 +975,53 @@ public class MemberVO {
 </html>
 ```
 
-## BoardController에 매핑 추가하기
-```
-@RequestMapping("login.do")
-		@ResponseBody
-		public String login(String id, String pwd) {
-			
-			MemberVO vo = member_dao.logincheck(id);
-			
-			//vo가 null인경우 id자체가 DB에 존재하지 않는다는 의미
-			if(vo==null) {
-				return "[{'param':'no_id'}]";
-			} 
-
-			if(!vo.getPwd().equals(pwd)) {
-				//비밀번호가 일치하지 않을 때
-				return "[{'param':'no_pwd'}]";
-			}
-			
-			//아이디와 비빌번호 체크에 문제가 없다면 세션에 바인딩 한다.
-			//세션은 서버의 메모리(램)를 사용하기 때문에 세션을 많이 사용할수록 브라우저가 느려지기 때문에
-			//필요한 곳에서만 세션을 쓰도록 하자
-
-			//세션유지시간(기본값 30분)
-			//session.setMaxInactiveInterval(3600); //세션이 1시간 유지 초단위로 써줘야함;;
-			session.setAttribute("id", vo); 
-			
-			//로그인 성공한 경우
-			return "[{'param':'clear'}]";
-		}
-```
-
-## MemberDAO클래스 생성하기
+## BoardController에 MemberDAO 주입하고 매핑 추가하기
 
 ```java
-package dao;
+@RequestMapping("login.do")
+@ResponseBody
+public String login(String id, String pwd) {
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+	MemberVO vo = member_dao.logincheck(id);
 
-import org.apache.ibatis.session.SqlSession;
+	//vo가 null인경우 id자체가 DB에 존재하지 않는다는 의미
+	if(vo==null) {
+		return "[{'param':'no_id'}]";
+	} 
 
-import vo.MemberVO;
-
-public class MemberDAO {
-
-	SqlSession sqlSession;
-	public MemberDAO(SqlSession sqlSession) {
-		this.sqlSession = sqlSession;
+	if(!vo.getPwd().equals(pwd)) {
+		//비밀번호가 일치하지 않을 때
+		return "[{'param':'no_pwd'}]";
 	}
-	
-	//로그인 체크
-	/*
-	 * 실수를 많이 하는부분 id랑 pwd를 둘다 받았다고 가정해보자 쿼리문이 select * from member where id=? and
-	 * pwd=? 이렇게 만드는 순간 id가 없어도 null이 들어오고 비밀번호가 틀려도 null이 들어온다. 아이디나 비밀번호가 잘못되었습니다
-	 * 라고 나옴;;
-	 */
-	
-	//로그인 조회
-	public MemberVO logincheck(String id) {
-		MemberVO vo = sqlSession.selectOne("m.idCheck",id);
-		return vo;
-	}
-	
+
+	//아이디와 비빌번호 체크에 문제가 없다면 세션에 바인딩 한다.
+	//세션은 서버의 메모리(램)를 사용하기 때문에 세션을 많이 사용할수록 브라우저가 느려지기 때문에
+	//필요한 곳에서만 세션을 쓰도록 하자
+
+	//세션유지시간(기본값 30분)
+	//session.setMaxInactiveInterval(3600); //세션이 1시간 유지 초단위로 써줘야함;;
+	session.setAttribute("id", vo); //세션도 autowired로 받아주자
+
+	//로그인 성공한 경우
+	return "[{'param':'clear'}]";
 }
 ```
 
-## Context_3_dao클래스에서 객체 생성하기
-```
-@Bean
-public MemberDAO member_dao(SqlSession sqlSession) { 
-	return new MemberDAO(sqlSession);
+## MemberDAO에서 메서드 작성하기
+```java
+//로그인 체크
+/*
+ * 실수를 많이 하는부분 id랑 pwd를 둘다 받았다고 가정해보자 쿼리문이 select * from member where id=? and
+ * pwd=? 이렇게 만드는 순간 id가 없어도 null이 들어오고 비밀번호가 틀려도 null이 들어온다. 아이디나 비밀번호가 잘못되었습니다
+ * 라고 나옴;;
+ */
+
+//로그인 조회
+public MemberVO logincheck(String id) {
+	MemberVO vo = sqlSession.selectOne("m.idCheck",id);
+	return vo;
 }
+	
 ```
 
 ## member.xml 만들고 쿼리문 작성하기
@@ -1061,6 +1054,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 ```
 
 ## BoardController에 코드 추가하기
+- 로그인이 되어있다면 session에 뭐라도 들어있을 것이고 글쓰기 창으로 이동
+- null이라면 로그인을 하도록 로그인창으로 이동하도록 만들자
 ```
 //글쓰기 화면으로 이동
 @RequestMapping("insert_form.do")
@@ -1077,6 +1072,7 @@ public String insert_form() {
 ```
 
 ## board_list.jsp에 코드 추가하기
+- 세션이 있으면 로그아웃 버튼이, 세션이 없으면 로그인,회원가입 버튼이 보이게 하자.
 ```
 <tr>
 	<td colspan="5" align="right">
@@ -1093,7 +1089,46 @@ public String insert_form() {
 </tr>
 ```
 
+## BoardContrller에 login_form.do 매핑 잡아주기
+- 로그인창으로 이동만 해주는 매핑 만들기
 
+```java
+@RequestMapping("login_form.do")
+public String login_form() {
+	return Common.VIEW_PATH + "login_form.jsp";
+}
+```
+
+## login_form.jsp의 콜백메서드 채워주기
+
+```
+function myCheck(){
+	if(xhr.readyState == 4 && xhr.status == 200){
+		var data = xhr.responseText;
+		var json = eval(data);
+
+		if(json[0].param == 'no_id'){
+			alert("아이디가 존재하지 않습니다.");
+		}else if(json[0].param == 'no_pwd'){
+			alert("비밀번호가 맞지 않습니다.");
+		}else {
+			alert("로그인 성공");
+			location.href="board_list.do";
+
+		}
+	}
+}
+```
+
+# 로그아웃 기능 만들기
+- 로그아웃 버튼을 누르면 로그아웃을 할 수 있도록 해보자
+
+## board_list.jsp의 로그아웃 버튼에 매핑 정해주기
+```
+<c:when test="${not empty id }">
+		<input type="button" value="로그아웃" onclick="logout.do">
+</c:when>
+```
 
 
 
