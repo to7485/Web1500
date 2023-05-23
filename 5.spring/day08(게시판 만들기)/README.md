@@ -1076,6 +1076,22 @@ public String insert_form() {
 }
 ```
 
+## board_list.jsp에 코드 추가하기
+```
+<tr>
+	<td colspan="5" align="right">
+	<c:choose>
+		<c:when test="${empty id }">
+				<input type="button" value="로그인" onclick="location.href='login_form.do'">
+				<input type="button" value="회원가입">
+		</c:when>
+		<c:when test="${not empty id }">
+				<input type="button" value="로그아웃">
+		</c:when>
+	</c:choose>
+	</td>
+</tr>
+```
 
 
 
