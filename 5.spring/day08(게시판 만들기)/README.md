@@ -1018,7 +1018,7 @@ public String login(String id, String pwd) {
 
 //로그인 조회
 public MemberVO logincheck(String id) {
-	MemberVO vo = sqlSession.selectOne("m.idCheck",id);
+	MemberVO vo = sqlSession.selectOne("m.loginCheck",id);
 	return vo;
 }
 	
@@ -1033,7 +1033,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="m">
 
-	<select id="idCheck" resultType="member" parameterType="String">
+	<select id="loginCheck" resultType="member" parameterType="String">
 		select * from member where id=#{id}
 	</select>
 </mapper>
@@ -1209,7 +1209,7 @@ public String logout() {
 ```html
 <c:when test="${empty id }">
 		<input type="button" value="로그인" onclick="location.href='login_form.do'">
-		<input type="button" value="회원가입" onclick="location.href='m_insert.do'">
+		<input type="button" value="회원가입" onclick="location.href='member_insert_form.do'">
 </c:when>
 ```
 
@@ -1217,7 +1217,7 @@ public String logout() {
 ```java
 <td colspan="2" align="center">
 	<input  type="button" value="로그인" onclick="send(this.form)">
-	<input type="button" value="회원가입" onclick="location.href='m_insert.do'">
+	<input type="button" value="회원가입" onclick="location.href='member_insert_form.do'">
 	<input type="button" value="취소" onclick="location.href='board_list.do'">
 </td>
 ```
@@ -1225,7 +1225,7 @@ public String logout() {
 ## BoardController에서 매핑해주기
 
 ```java
-@RequestMapping("m_insert.do")
+@RequestMapping("member_insert_form.do")
 public String m_insert() {
 	return Common.VIEW_PATH + "member_insert_form.jsp";
 }
@@ -1291,7 +1291,7 @@ public String m_insert() {
 			//"[{'res':'no'}]"
 			var data = xhr.responseText;
 			//문자열 구조인 data를 실제 JSON형태로 변환
-			var json = (new Function('return'+data)();
+			var json = (new Function('return'+data))();
 
 			if(json[0].res == 'no'){
 				alert("이미 사용중인 아이디 입니다.");
@@ -1303,6 +1303,11 @@ public String m_insert() {
 			}
 		}
 	}//resultFn()
+	
+	//아이디를 입력받는 입력상자의 값이 변환되면 호출되는 메서드
+	function che(){
+		b_idCheck = false;
+	}
 		
 	</script>
 	
@@ -1315,7 +1320,7 @@ public String m_insert() {
 			<tr>
 				<th>아이디</th>
 				<td>
-				<input name="id" id="id">
+				<input name="id" id="id" onchange="che()">
 				<input type="button" value="중복체크" onclick="check_id()";>
 				</td>
 			</tr>
@@ -1354,7 +1359,60 @@ public String m_insert() {
 ## BoardContorller에 매핑 만들기
 
 ```java
+@RequestMapping("check_id.do")
+@ResponseBody
+public String check_id(String id) {
 
+	MemberVO vo = member_dao.selectOne(id);
+
+	if(vo == null) {//중복조회를 해서 회원가입이 가능한 경우
+		return "[{'res':'yes'}]";
+	}
+	return "[{'res':'no'}]";
+
+}
+
+@RequestMapping("member_insert.do")
+public String member_insert(MemberVO vo) {
+	int res = member_dao.insert(vo);
+
+	if(res > 0) {
+		return "redirect:board_list.do";
+	}
+	return null;
+
+}
+```
+
+## MemberDAO에 메서드 추가하기
+```java
+//아이디 중복체크
+public MemberVO selectOne(String id) {
+	MemberVO vo = sqlSession.selectOne("m.idCheck",id);
+	return vo;
+}
+
+//회원 추가
+public int insert(MemberVO vo) {
+	int res = sqlSession.insert("m.insert",vo);
+	return res;
+}
+```
+
+## member.xml에 쿼리문 추가하기
+```xml
+<select id="idCheck" resultType="member" parameterType="String">
+	select * from member where id=#{id}
+</select>
+
+<insert id="insert" parameterType="member">
+	insert into member values( seq_member_idx.nextVal,
+			 #{name}, 
+			 #{id},
+			 #{pwd},
+			 #{email}
+			 )
+</insert>
 ```
 
 
