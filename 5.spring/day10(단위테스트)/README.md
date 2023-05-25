@@ -30,11 +30,11 @@
 
 
 ```xml
-		<dependency>
-		    <groupId>org.springframework</groupId>
-		    <artifactId>spring-test</artifactId>
-		    <version>5.1.20.RELEASE</version>
-		</dependency>
+<dependency>
+    <groupId>org.springframework</groupId>
+    <artifactId>spring-test</artifactId>
+    <version>5.1.20.RELEASE</version>
+</dependency>
  ```
  
  ## src/test/java의 com.korea.test패키지에 DataSourceTests 클래스 만들기
@@ -57,8 +57,14 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import context.Context_1_dataSource;
 import lombok.extern.log4j.Log4j;
 
+//JUnit 프레임워크의 테스트 실행방법을 확장할 때 사용하는 어노테이션
+//톰캣 대신에 스프링에 접근할 수 있게 해준다.
 @RunWith(SpringJUnit4ClassRunner.class)
+
+//설정 파일을 읽어야 하는데, 이런 설정파일을 로드하는 어노테이션이 ContextConfiguration이다.
 @ContextConfiguration(classes={Context_1_dataSource.class})
+
+//로그 객체를 생성합니다.
 @Log4j
 public class DataSourceTests {
 
