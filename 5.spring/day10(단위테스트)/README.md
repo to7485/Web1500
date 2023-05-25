@@ -86,4 +86,155 @@ public class DataSourceTests {
  ### 실행했을 때 콘솔에 db접속과 관련된 정보가 출력된다.
  
  ![image](https://github.com/to7485/Web1500/assets/54658614/d6106c67-e369-4378-be1c-561ff66bad2f)
+ 
+ # 부서 테이블 조회해보기
+ 
+ - log4jdbc-log4j2-jdbc4.1 라이브러리 추가하기
+ 
+ ```xml
+ <!-- https://mvnrepository.com/artifact/org.bgee.log4jdbc-log4j2/log4jdbc-log4j2-jdbc4.1 -->
+<dependency>
+    <groupId>org.bgee.log4jdbc-log4j2</groupId>
+    <artifactId>log4jdbc-log4j2-jdbc4.1</artifactId>
+    <version>1.16</version>
+</dependency>
+```
+
+- src/main/resources에 log4jdbc.log4j2.properties 파일만들기
+
+![image](https://github.com/to7485/Web1500/assets/54658614/a4c51354-6673-49d5-97b4-4535905b95dd)
+
+- log4jdbc.spylogdelegator.name=net.sf.log4jdbc.log.slf4j.Slf4jSpyLogDelegator 작성하고 저장하기
+ 
+ ## vo패키지에 DeptVO클래스 생성하기
+ ```java
+ package vo;
+
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+public class DeptVO {
+
+	private int deptno;
+	private String dname,loc;
+}
+
+ ```
+ 
+ ## dao패키지에 DeptDAO클래스 생성하기
+ ```java
+ package dao;
+
+import java.util.List;
+
+import org.apache.ibatis.session.SqlSession;
+
+import vo.DeptVO;
+
+public class DeptDAO {
+
+	SqlSession sqlSession;
+	
+	public DeptDAO(SqlSession sqlSession) {
+		this.sqlSession = sqlSession;
+	}
+	
+	public List<DeptVO> selectList(){
+		List<DeptVO> list = sqlSession.selectList("dept.dept_list");
+		return list;
+	}
+}
+
+```
+
+## Context_3_dao에 객체 생성하기
+```java
+package context;
+
+import org.apache.ibatis.session.SqlSession;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import dao.DeptDAO;
+
+@Configuration
+public class Context_3_dao {
+	
+	@Bean
+	public DeptDAO deptDAO(SqlSession sqlSession) {
+		return new DeptDAO(sqlSession);
+	}
+}
+
+```
+
+## dept.xml에 쿼리문 작성하기
+
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dept">
+
+	<select id="dept_list" resultType="vo.DeptVO">
+		select * from dept
+	</select>
+</mapper>
+```
+
+## src/test/java의 com.korea.test패키지에 DeptTest클래스 생성하기
+```
+package com.korea.test;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import context.Context_1_dataSource;
+import context.Context_2_mybatis;
+import context.Context_3_dao;
+import dao.DeptDAO;
+import lombok.extern.log4j.Log4j;
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes={Context_1_dataSource.class,Context_2_mybatis.class,Context_3_dao.class})
+@Log4j
+public class DeptTest {
+	
+	@Autowired
+	private DeptDAO dept_dao;
+	
+	
+	@Test
+	public void getListTest() {
+		dept_dao.selectList().forEach(log::info);
+	
+	}
+}
+
+```
+
+### 실행하여 콘솔 확인하기
+
+![image](https://github.com/to7485/Web1500/assets/54658614/ccfc467b-ea04-4876-8ebb-bd464650f756)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
