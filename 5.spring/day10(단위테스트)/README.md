@@ -105,6 +105,35 @@ public class DataSourceTests {
 ![image](https://github.com/to7485/Web1500/assets/54658614/a4c51354-6673-49d5-97b4-4535905b95dd)
 
 - log4jdbc.spylogdelegator.name=net.sf.log4jdbc.log.slf4j.Slf4jSpyLogDelegator 작성하고 저장하기
+
+## Context_1_Datasource 클래스에 코드 수정하기
+```
+package context;
+
+import javax.sql.DataSource;
+
+import org.apache.commons.dbcp.BasicDataSource;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+
+@Configuration
+public class Context_1_dataSource {
+
+	@Bean
+	public DataSource ds() {
+		BasicDataSource ds = new BasicDataSource();
+	//	ds.setDriverClassName("oracle.jdbc.OracleDriver");
+	//	ds.setUrl("jdbc:oracle:thin:@localhost:1521:xe");
+		ds.setDriverClassName("net.sf.log4jdbc.sql.jdbcapi.DriverSpy");
+		ds.setUrl("jdbc:log4jdbc:oracle:thin:@localhost:1521:xe");
+		ds.setUsername("test_pm");
+		ds.setPassword("1111");
+		return ds;
+	}
+
+}
+```
  
  ## vo패키지에 DeptVO클래스 생성하기
  ```java
