@@ -729,5 +729,30 @@ public class RootContext {
 ![image](https://github.com/to7485/Web1500/assets/54658614/63bc703e-a577-4e91-8fc8-cf1e7f071fe6)
 
 
+# Spring Framework의 구동순서
 
+![SpringFramework구동 순서](https://github.com/to7485/Web1500/assets/54658614/fb2abb40-6124-4cb2-9a26-58974725ca1f)
+
+1. 웹 어플리케이션이 실행되면 Tomcat(WAS)에 의해 web.xml이 실행된다.
+
+2. web.xml에 등록되어있는 ContextLoaderListener생성
+- ContextLoaderListener는 ServletContextListener 인터페이스를 구현하고있으며, ApplicationContext를 생성한다. 
+	- ApplicationContext는 별도의 설정 정보를 참고하고 IoC를 적용하여 빈의 생성, 관계설정 등의 제어 작업을 총괄한다.
+
+3. ContextLoaderListener가 root-context를 로딩
+	- * ContextLoaderListener : 서블릿을 초기화하는 용도로 사용
+
+4. root-contex에 등록되어있는 설정에 따라 Spring Container가 구동
+
+5. 클라이언트로부터 Web Appllication에 요청을 받는다.
+
+6. DispatcherServlet생성
+	- DispatcherServlet : 서블릿 컨테이너의 가장 앞단에서 HTTP 프로토콜로 들어오는 모든 요청을 먼저 받아 적합한 컨트롤러에 위임해주는 프론트 컨트롤러이다.
+	- 프론트 컨트롤러 : 서블릿 컨테이너의 제일 앞에서 서버로 들어오는 클라이언트의 모든 요청을 받아서 처리해주는 컨트롤러
+
+![image](https://github.com/to7485/Web1500/assets/54658614/c110197d-ad20-47ee-81f1-2e1d82e70589)
+
+7. DispatcherServlet이 servlet-context를 로딩
+
+8. 두번째 Spring Container가 구동되며, 응답에 맞는 Controller들이 동작한다.
 
