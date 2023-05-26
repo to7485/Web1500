@@ -749,6 +749,12 @@ public class RootContext {
 6. DispatcherServlet생성
 	- DispatcherServlet : 서블릿 컨테이너의 가장 앞단에서 HTTP 프로토콜로 들어오는 모든 요청을 먼저 받아 적합한 컨트롤러에 위임해주는 프론트 컨트롤러이다.
 	- 프론트 컨트롤러 : 서블릿 컨테이너의 제일 앞에서 서버로 들어오는 클라이언트의 모든 요청을 받아서 처리해주는 컨트롤러
+		- HandlerMapping이 컨트롤러를 찾아주는 기능을 한다. 스프링이 제공하는 Handler Mapping방법은 5가지이다.
+			- BeanNameUrlHandlerMapping : 빈의 이름에 들어있는 URL을 HTTP 요청의 URL과 비교해서 일치하는 빈을 찾아준다. 가장 직관적이고 사용하기 쉬운 핸들러 매핑 전략이다.
+			- ControllerBeanNameHandlerMapping : BeanNameUrlHandlerMapping과 유사하지만 빈 이름을 URL 형태로 짓지 않아도 된다는 것이 차이점이다. 빈 이름 앞에 자동으로 / 이 붙여져 URL에 매핑된다.
+			- ControllerClassNameHandlerMapping : 빈의 클래스 이름을 URL에 매핑해주는 매핑 클래스.<br> 기본적으로 클래스 이름을 모두 사용하지만 클래스 이름이 Controller로 끝날 경우 Controller를 뺀 나머지 이름을 URL에 매핑해준다.
+			- SimpleUrlHandlerMapping : URL과 컨트롤러 매핑정보를 한곳에 모아놓을 수 있는 전략이다.<br> 매핑정보는 SImpleUrlHandlerMapping 빈의 프로퍼티에 넣어준다.<br>디폴트 핸들러 매핑 전략이 아니기도 하고 프로퍼티에 매핑정보를 직접 넣어줘야 하므로 SimpleUrlHandlerMapping 빈을 등록해야 사용할 수 있다.
+			- DefaultAnnotationHandlerMapping : @RequestMapping 어노테이션을 이용해 매핑하는 전략이다. 클래스는 물론 메서드 단위로도 URL을 매핑할 수 있다.
 
 ![image](https://github.com/to7485/Web1500/assets/54658614/c110197d-ad20-47ee-81f1-2e1d82e70589)
 
