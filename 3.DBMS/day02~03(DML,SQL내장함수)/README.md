@@ -401,7 +401,7 @@ SELECT POWER(2,1),POWER(2,2),POWER(2,3),POWER(2,0) FROM DUAL;
 
 - SYSDATE : 현재 날짜
 
-```
+```SQL
 -- 특정 날짜에 개월수를 더한다.
 
 select sysdate, add_months(sysdate, 2)from dual;
@@ -433,6 +433,19 @@ select first_name, hire_date,mon from employees where trunc(months_between(sysda
 문제) 사번이 120번인 사원이 입사후 3년 6개월이 되는날 퇴사했다. 이 사원의 사번,이름,입사일,퇴사일을 출력
 
 SELECT EMPLOYEE_ID, FIRST_NAME, HIRE_DATE, add_months(HIRE_DATE, 42) fired FROM EMPLOYEES WHERE EMPLOYEE_ID = 120;
+
+SELECT SYSDATE,
+	NEXT_DAY(SYSDATE-8,'SUN') prev_sunday, --이전 일요일 
+	NEXT_DAY(SYSDATE,'SUN')   next_sunday --다음 일요일 
+FROM DUAL
+  
+SELECT NEXT_DAY(SYSDATE, 1)        FROM DUAL;
+SELECT NEXT_DAY(SYSDATE, '일요일') FROM DUAL;
+SELECT NEXT_DAY(SYSDATE, '일')     FROM DUAL;
+SELECT NEXT_DAY(SYSDATE, 'SUNDAY') FROM DUAL;
+SELECT NEXT_DAY(SYSDATE, 'SUN')    FROM DUAL;
+
+SELECT LAST_DAY(TO_DATE('2022-01-17', 'YYYY-MM-DD')) FROM dual
 ```
 
 오라클에서는 문자열을 날짜형 데이터로 형 변환을 하기 위해서 TO_DATE()함수를 사용합니다.
