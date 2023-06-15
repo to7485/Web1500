@@ -140,5 +140,60 @@ public class ServletContext1 implements WebMvcConfigurer {
 
 ```
 
+## src/main/java/controller/BasicController.java
+
+```java
+package controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+
+@Controller
+@RequestMapping("/tpl")
+public class BasicController {
+	
+	@GetMapping("/ex01")
+	public String ex01(Model model) {
+		model.addAttribute("data", "타임리프 예제입니다.");
+		return "ex01";
+	}
+}
+```
+
+## src/webapps/WEB-INF/view/ex01.html
+
+```html
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>Title</title>
+</head>
+<body>
+    <p th:text="${data}">Hello Thymeleaf!!</p>
+</body>
+</html>
+```
+
+## Thymeleaf 기본문법
+- 타임리프는 크게 변수식, 페이지식, 링크 식의 세 가지 식과 선택 변수 식을 제공한다.
+
+- <b>변수 식: </b> ${OGNL}
+- <b>메시지 식:</b> #{코드}
+- <b>링크 식 :</b> @{링크}
+- <b>선택 변수 식 :</b> \*{OGNL}
+
+- 변수 식은 OGNL에 해당하는 변수를 값으로 사용한다. 타임리프에는 템플릿을 변환할 때 필요한 데이터를 가진 컨텍스트가 존재하는데 변수명을 사용해서 이 컨텍스트에 보관된 객체에 접근한다. 스프링 MVC에 연동할 경우 <b>컨트롤러에서 생성한 모델 속성 이름이 변수명이 된다.</b>
+
+
+
+
+
+
+
+
+
 
 
