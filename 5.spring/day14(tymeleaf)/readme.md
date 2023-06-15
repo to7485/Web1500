@@ -100,7 +100,8 @@ public class ServletContext1 implements WebMvcConfigurer {
 		templateResolver.setCacheable(false);
 		return templateResolver;
 	}
-	 
+	
+	//타임리프의 템플릿 엔진을 선정한다. 템플릿 파일을 읽어올 때 선언한 TemplateResolver를 사용한다.
 	@Bean
 	public SpringTemplateEngine templateEngine() {
 		SpringTemplateEngine templateEngine = new SpringTemplateEngine();
@@ -136,7 +137,6 @@ public class ServletContext1 implements WebMvcConfigurer {
 		return new HomeController();
 	}	 
 }
-
 
 ```
 
