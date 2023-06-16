@@ -2,7 +2,8 @@
 - 타임리프는 컨트롤러가 전달하는 데이터를 이용해 동적으로 화면을 만들어주는 역할을 하는 view 템플릿 엔진이다.
 - 스프링부트에서는 공식적으로 VIEW영역에서 JSP의 사용을 권장하지 않습니다.
 
-![image](https://github.com/to7485/Web1500/assets/54658614/d5d4ff17-44c6-4513-b2bc-4b55e7242a63){: width="60%" height="60%"}
+<img src="https://github.com/to7485/Web1500/assets/54658614/d5d4ff17-44c6-4513-b2bc-4b55e7242a63" width="60%" height="60%">
+
 
 - 가능하다면 JSP를 피하고 Thymeleaf와 같은 템플릿 엔진을 사용하라고 권장하고 있다.
 
