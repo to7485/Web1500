@@ -191,7 +191,8 @@ public class BasicController {
 
 ## Thymeleaf 기본문법
 
-- xmlns:th=""
+### 설정
+- **xmlns:th=""**
 
 ```html
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
@@ -199,14 +200,17 @@ public class BasicController {
 - Thymeleaf의 th속성을 사용하기 위해 선언된 네임스페이스이다.
 - 순수 HTML로만 이루어진 페이지인 경우 선언하지 않아도 된다.
 <hr>
-- th:text="${}"
+
+### 기본 기능
+- **th:text="${}"**
 
 ```html
 <div th:text="${data}"></div>
 ```
 - JSP의 EL표현식인 ${}와 마찬가지로 ${}표현식을 사용해서 컨트롤러에서 전달받은 데이터에 접근할 수 있다.
 <hr>
-- th:href="@{}"
+
+- **th:href="@{}"**
 
 ```html
  <a th:href="@{/boardListPage?currentPageNum={page}}"></a>
@@ -221,11 +225,25 @@ public class BasicController {
 <a href="#" th:href="@{/members/{memId}(memId=${mem.id})}"></a>
 ```
 <hr>
-	
-- th:with="${}"
-```html
 
+- **th:with="${}"**
+```html
+<div th:with="userId=${number}" th:text="${usesrId}">
 ```
+- 변수형태의 값을 재정의하는 속성이다. 즉 **th:with**를 이용하여 새로운 변수값을 생성할 수 있다.
+	
+<hr>
+
+- **th:value="${}"
+```html
+<input type="text" id="userId" th:value="${userId} + '의 이름은 ${userName}"/>
+```
+- input의 value에 값을 삽입할 때 사용한다.
+- 여러개의 값을 넣을땐 + 기호를 사용한다.
+	
+<hr>
+	
+### 레이아웃
 	
 - 타임리프는 크게 변수식, 페이지식, 링크 식의 세 가지 식과 선택 변수 식을 제공한다.
 	- <b>변수 식: </b> ${OGNL}
