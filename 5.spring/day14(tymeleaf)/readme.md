@@ -268,8 +268,31 @@ public class BasicController {
 - #lists, #sets, #maps : List, Set, Map을 위한 기능 제공
 
 # Thmeleaf 실습
-	
+## Ex_날짜_Thymeleaf 프로젝트 생성하기
+- pom.xml, resources의 패키지 옮기기, 나머지 xml파일들 지우기
+
 ## MemberVO 클래스 생성하기
+```
+package vo;
+
+import java.time.LocalDateTime;
+
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
+public class MemberVO {
+
+	private Long memNo;
+	private String memId;
+	private String memNm;
+	private LocalDateTime regDt;
+	private LocalDateTime modDt;
+}
+```
+	
+## MemberController 생성하기
 ```
 
 ```
