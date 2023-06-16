@@ -199,18 +199,18 @@ public class BasicController {
 ```
 - Thymeleaf의 th속성을 사용하기 위해 선언된 네임스페이스이다.
 - 순수 HTML로만 이루어진 페이지인 경우 선언하지 않아도 된다.
-<hr>
+
+---
 
 ### 기본 기능
-- **th:text="${}"**
+1. **th:text="${}"**
 
 ```html
 <div th:text="${data}"></div>
 ```
-- JSP의 EL표현식인 ${}와 마찬가지로 ${}표현식을 사용해서 컨트롤러에서 전달받은 데이터에 접근할 수 있다.
-<hr>
+- JSP의 EL표현식인 ${}와 마찬가지로 ${}표현식을 사용해서 컨트롤러에서 전달받은 데이터에 접근할 수 있다.<br>
 
-- **th:href="@{}"**
+2. **th:href="@{}"**
 
 ```html
  <a th:href="@{/boardListPage?currentPageNum={page}}"></a>
@@ -220,28 +220,24 @@ public class BasicController {
 	
 - 링크의 일부를 식으로 변경하고 싶다면 경로에 {변수}를 사용할 수 있다. 
 
-
 ```
 <a href="#" th:href="@{/members/{memId}(memId=${mem.id})}"></a>
 ```
-<hr>
-
-- **th:with="${}"**
+<br>
+3. **th:with="${}"**
 ```html
 <div th:with="userId=${number}" th:text="${usesrId}">
 ```
-- 변수형태의 값을 재정의하는 속성이다. 즉 **th:with**를 이용하여 새로운 변수값을 생성할 수 있다.
+- 변수형태의 값을 재정의하는 속성이다. 즉 **th:with**를 이용하여 새로운 변수값을 생성할 수 있다.<br>
 	
-<hr>
-
-- **th:value="${}"
+4. **th:value="${}"
 ```html
 <input type="text" id="userId" th:value="${userId} + '의 이름은 ${userName}"/>
 ```
 - input의 value에 값을 삽입할 때 사용한다.
 - 여러개의 값을 넣을땐 + 기호를 사용한다.
-	
-<hr>
+
+---
 	
 ### 레이아웃
 	
