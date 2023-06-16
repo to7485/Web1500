@@ -228,7 +228,9 @@ public class ServletContext1 implements WebMvcConfigurer {
 - #numbers : 포맷팅 등 숫자 타입을 위한 기능 제공
 - #dates, #calendars, #temporals : Date타입과 Calendar 타입, LocalDateTIme 타입을 위한 기능 제공
 - #lists, #sets, #maps : List, Set, Map을 위한 기능 제공
-	
+
+# Thymeleaf 실습
+
 ## ThymeController 생성하기
 ```java
 package com.korea.test3;
