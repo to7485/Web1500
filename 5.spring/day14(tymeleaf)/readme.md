@@ -143,9 +143,9 @@ public class ServletContext1 implements WebMvcConfigurer {
 
 ```
 
-## Thymeleaf 기본문법
+# Thymeleaf 기본문법
 
-### 설정
+## 설정
 - **xmlns:th=""**
 
 ```html
@@ -156,7 +156,7 @@ public class ServletContext1 implements WebMvcConfigurer {
 
 ---
 
-### 기본 기능
+## 기본 기능
 - 타임리프는 크게 변수식, 페이지식, 링크 식의 세 가지 식과 선택 변수 식을 제공한다.
 	- <b>변수 식: </b> ${OGNL}
 	- <b>메시지 식:</b> #{코드}
@@ -212,7 +212,7 @@ public class ServletContext1 implements WebMvcConfigurer {
 
 ---
 	
-### 타임리프 식 객체
+## 타임리프 식 객체
 - 타임리프는 식에서 사용할 수 있는 객체를 제공한다. 이 식 객체를 이용하면 문자열 처리나 날짜 형식 변환 등의 작업을 할 수 있다. "#객체명"을 사용해서 식 객체를 사용한다. 
 - 다음은 dates, 식 객체를 이용해서 Date 타입 변수 값을 형식에 맞게 출력하는 예이다.
 
@@ -222,7 +222,7 @@ public class ServletContext1 implements WebMvcConfigurer {
 
 - 각 식 객체는 기능이나 속성을 제공한다. dates 식 객체의 경우 format을 비롯해 날짜 형식 포맷팅을 위한 다양한 기능을 제공한다. 
 
-#### 타임리프가 제공하는 주요 식 객체
+### 타임리프가 제공하는 주요 식 객체
 
 - #strings : 문자열 비교, 문자열 추출 등 String 타입을 위한 기능 제공
 - #numbers : 포맷팅 등 숫자 타입을 위한 기능 제공
