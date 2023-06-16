@@ -28,6 +28,9 @@
 - JSP와 달리 Servlet Code로 변환되지 않기 때문에 비즈니스 로직과 분리되어 오로지 View에 집중할 수 있다.
 - 서버상에서 동작하지 않아도 되기 때문에 서버 동작 없이 화면을 확인할 수 있다. 때문에 더미 데이터를 넣고 화면 디자인 및 테스트에 용이하다.
 
+# Ex_날짜_Thymeleaf 프로젝트 생성하기
+- pom.xml, resources의 패키지 옮기기, 나머지 xml파일들 지우기
+
 ## Thymeleaf사용을 위한 라이브러리 추가하기
 - 스프링 MVC에서 타임리프는 뷰 영역에 해당한다. 스프링 MVC의 구성 요소에 대해 설명할 때 뷰 영역과 관련된 구성 요소는 ViewResolver와 View였다. 타임리프는 thymeleaf-spring5 모듈을 제공하는데 이 모듈에 타임리프 연동을 위한 ViewResolver와 View 구현 클래스가 존재한다. 스프링 MVC에서 타임리프가 제공하는 ViewResolver를 사용하도록 설정하면 결과를 타임리프 템플릿을 이용해서 생성할 수 있다.
 
@@ -135,50 +138,9 @@ public class ServletContext1 implements WebMvcConfigurer {
 //	  InternalResourceViewResolver resolver = new InternalResourceViewResolver();
 //	  resolver.setViewClass(JstlView.class); resolver.setPrefix("/WEB-INF/views/");
 //	  resolver.setSuffix(".jsp"); return resolver; }
-	
-	@Bean
-	public HomeController homeController() {
-		return new HomeController();
-	}	 
+		 
 }
 
-```
-
-## src/main/java/controller/BasicController.java
-
-```java
-package controller;
-
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-
-@Controller
-@RequestMapping("/tpl")
-public class BasicController {
-	
-	@GetMapping("/ex01")
-	public String ex01(Model model) {
-		model.addAttribute("data", "타임리프 예제입니다.");
-		return "ex01";
-	}
-}
-```
-
-## src/webapps/WEB-INF/view/ex01.html
-
-```html
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="utf-8">
-    <title>Title</title>
-</head>
-<body>
-    <p th:text="${data}">Hello Thymeleaf!!</p>
-</body>
-</html>
 ```
 
 ## Thymeleaf 기본문법
@@ -266,10 +228,65 @@ public class BasicController {
 - #numbers : 포맷팅 등 숫자 타입을 위한 기능 제공
 - #dates, #calendars, #temporals : Date타입과 Calendar 타입, LocalDateTIme 타입을 위한 기능 제공
 - #lists, #sets, #maps : List, Set, Map을 위한 기능 제공
+	
+## ThymeController 생성하기
+```java
+package com.korea.test3;
 
-# Thmeleaf 실습
-## Ex_날짜_Thymeleaf 프로젝트 생성하기
-- pom.xml, resources의 패키지 옮기기, 나머지 xml파일들 지우기
+import java.time.LocalDateTime;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+/**
+ * Handles requests for the application home page.
+ */
+@Controller
+public class ThymeController {
+	
+	/**
+	 * Simply selects the home view to render by returning its name.
+	 */
+	@RequestMapping(value = "/")
+	public String home(Model model) {
+		model.addAttribute("data","타임리프 예제입니다.");
+		
+		return "/WEB-INF/views/ex01.html";
+	}	
+}
+
+```
+	
+## ThymeController 객체 생성하기
+- Servlet_Context 클래스에 객체 생성하기
+```java
+@Bean
+public ThymeController thymeController() {
+	return new ThymeController();
+}
+	
+```
+	
+## views 폴더에 ex01.html 생성하기
+```
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>Title</title>
+</head>
+<body>
+    <p th:text="${data}">Hello Thymeleaf!!</p>
+</body>
+</html>
+
+```
+
+![image](https://github.com/to7485/Web1500/assets/54658614/cb1f90c5-3226-4939-8fff-c681fcef2cc6)
+
+
+# Controller에서 객체 받아서 출력하기
 
 ## MemberVO 클래스 생성하기
 ```
@@ -292,11 +309,50 @@ public class MemberVO {
 }
 ```
 	
-## MemberController 생성하기
+## ThymeController 코드 추가하기
+```
+@RequestMapping("/ex02")
+public String ex02(Model model) {
+	MemberVO vo = new MemberVO();
+
+	vo.setMemNo(1L);
+	vo.setMemId("user1");
+	vo.setMemNm("이름1");
+	vo.setRegDt(LocalDateTime.now());
+
+	model.addAttribute("vo",vo);
+	return "/WEB-INF/views/ex02.html";
+}
+```
+	
+## views에 ex02.html 생성하기
+```
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		<title>Insert title here</title>
+	</head>
+	<body>
+		<h1>회원정보 출력 예제</h1>
+		<div>
+			회원번호 : <span th:text="${vo.memNo}"></span>
+		</div>
+				<div>
+			아이디 : <span th:text="${vo.memId}"></span>
+		</div>
+				<div>
+			이름 : <span th:text="${vo.memNm}"></span>
+		</div>
+				<div>
+			가입일시 : <span th:text="${#temporals.format(vo.regDt, 'yyyy-MM-dd HH:mm:ss')}"></span>
+		</div>
+		
+	</body>
+</html>	
 ```
 
-```
-
+![image](https://github.com/to7485/Web1500/assets/54658614/0b9cee16-1bcb-4b3d-981e-5d89ffe64346)
 
 
 
