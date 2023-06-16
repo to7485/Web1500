@@ -1,5 +1,11 @@
 # 타임리프(Thymeleaf)
 - 타임리프는 컨트롤러가 전달하는 데이터를 이용해 동적으로 화면을 만들어주는 역할을 하는 view 템플릿 엔진이다.
+- 스프링부트에서는 공식적으로 VIEW영역에서 JSP의 사용을 권장하지 않습니다.
+
+![image](https://github.com/to7485/Web1500/assets/54658614/d5d4ff17-44c6-4513-b2bc-4b55e7242a63)
+
+- 가능하다면 JSP를 피하고 Thymeleaf와 같은 템플릿 엔진을 사용하라고 권장하고 있다.
+
 
 ## Thymeleaf가 제공해주는 템플릿
 - Thymeleaf는 2개의 Markup Template Mode(HTML,XML)가 있고 3개의 Textual Template Mode(TEXT, Javascript, CSS)가 있고 1개의 no-op Template Mode(Raw)가 있다.
@@ -185,15 +191,68 @@ public class BasicController {
 - <b>링크 식 :</b> @{링크}
 - <b>선택 변수 식 :</b> \*{OGNL}
 
+※OGNL : 자바 언어가 지원하는 범위보다 더 단순한 식을 사용하면서 속성(자바빈즈에서 발견되는 setProperty와 getPeroperty 메소드를 통해)을 가져오고 설정하는 것을 허용하고 자바 클래스의 메소드를 실행하는 오픈 소스 표현식 언어(EL)이다. 
+
 - 변수 식은 OGNL에 해당하는 변수를 값으로 사용한다. 타임리프에는 템플릿을 변환할 때 필요한 데이터를 가진 컨텍스트가 존재하는데 변수명을 사용해서 이 컨텍스트에 보관된 객체에 접근한다. 스프링 MVC에 연동할 경우 <b>컨트롤러에서 생성한 모델 속성 이름이 변수명이 된다.</b>
 
+```
+<p>아이디: <span th:text="${member.id}">id</span></p>
+```
+
+- 메시지 식은 외부 메시지 자원에서 코드에 해당하는 문자열을 읽어와 출력한다. 지정한 경로에 위치한 프로퍼티 파일을 메시지 자원으로 사용한다. 스프링 MVC 연동을 하면 \<spring:message\>와 동일하게 스프링이 제공하는 MessageSource로 부터 코드에 해당하는 메시지를 읽어온다. 
+
+```
+<title th:text="#{message.register}">title</title>
+```
+
+- 링크 식은 링크 문자열을 생성한다. 링크 식이 절대 경로면 JSTL의 \<c:url\>태그와 동일하게 웹 어플리케이션 컨텍스트 경로를 기준으로 링크를 생성한다.
+
+```
+<a href="#" th:href="@{/members}">목록</a>
+```
+
+- 링크의 일부를 식으로 변경하고 싶다면 경로에 {변수}를 사용할 수 있다. 
+
+```
+<a href="#" th:href="@{/members/{memId}(memId=${mem.id})}">상세</a>
+```
+
+- 위 코드에서 링크 식의 {memId}는 경로 변수이다. 경로 변수 memId에 넣을 값을 뒤에 붙인 괄호 안에 지정한다. 위 코드에서 뒤에 붙인 (memId\=${memId})는 경로 변수 memId의 값으로 ${mem.id}를 사용한다는 것을 뜻한다.
+
+- 선택 변수식 th:object 속성과 관련되어 있다. th:object 속성은 특정 객체를 선택하는데 선택 변수식은 th:object로 선택한 객체를 기준으로 나머지 경로를 값으로 사용한다. 
+- 예를 들어 아래 코드에서 \*{name}은 \<div\> 태그의 th:object에서 선택한 member 객체를 기준으로 name경로를 선택한다. 따라서 \*{name}은 ${member.name}과 같은 경로가 된다.
+
+```
+<div th:object="${member}">
+	<span th:text="*{name}">name</span>
+</div>
+```
+
+### 타임리프 식 객체
+- 타임리프는 식에서 사용할 수 있는 객체를 제공한다. 이 식 객체를 이용하면 문자열 처리나 날짜 형식 변환 등의 작업을 할 수 있다. "#객체명"을 사용해서 식 객체를 사용한다. 
+- 다음은 dates, 식 객체를 이용해서 Date 타입 변수 값을 형식에 맞게 출력하는 예이다.
+
+```
+<span th:text="${#dates.format(date, 'yyyy-MM-dd')}">date</span>
+```
+
+- 각 식 객체는 기능이나 속성을 제공한다. dates 식 객체의 경우 format을 비롯해 날짜 형식 포맷팅을 위한 다양한 기능을 제공한다. 
+
+#### 타임리프가 제공하는 주요 식 객체
+
+- #strings : 문자열 비교, 문자열 추출 등 String 타입을 위한 기능 제공
+- #numbers : 포맷팅 등 숫자 타입을 위한 기능 제공
+- #dates, #calendars, #temporals : Date타입과 Calendar 타입, LocalDateTIme 타입을 위한 기능 제공
+- #lists, #sets, #maps : List, Set, Map을 위한 기능 제공
 
 
 
+### th:text
 
+- 뷰 영역에서 사용할 MemberDto(커맨드 객체, 데이터 전달용 객체 Data Transfer Object)를 생성해서 사용합니다.
 
-
-
+- th:text : 식의 값을 태그 몸페로 출력한다. '\<'나 '&'와 같은 HTML 특수 문자를 '&lt;'과 '&amp;'와 같은 엔티티 형식으로 변환한다.
+- th:utext : 식의 값을 태그 몸체로 출력한다. '\<'나 '&'와 같은 HTML 특수 문자를 그대로 출력한다.
 
 
 
