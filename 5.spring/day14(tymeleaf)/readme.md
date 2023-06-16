@@ -209,6 +209,7 @@ public class BasicController {
 <div th:text="${data}"></div>
 ```
 - JSP의 EL표현식인 ${}와 마찬가지로 ${}표현식을 사용해서 컨트롤러에서 전달받은 데이터에 접근할 수 있다.<br>
+<br>
 
 2. **th:href="@{}"**
 
@@ -220,17 +221,20 @@ public class BasicController {
 	
 - 링크의 일부를 식으로 변경하고 싶다면 경로에 {변수}를 사용할 수 있다. 
 
-```
+```html
 <a href="#" th:href="@{/members/{memId}(memId=${mem.id})}"></a>
 ```
 <br>
+	
 3. **th:with="${}"**
 ```html
 <div th:with="userId=${number}" th:text="${usesrId}">
 ```
 - 변수형태의 값을 재정의하는 속성이다. 즉 **th:with**를 이용하여 새로운 변수값을 생성할 수 있다.<br>
+
+<br>
 	
-4. **th:value="${}"
+4. **th:value="${}"**
 ```html
 <input type="text" id="userId" th:value="${userId} + '의 이름은 ${userName}"/>
 ```
@@ -238,8 +242,6 @@ public class BasicController {
 - 여러개의 값을 넣을땐 + 기호를 사용한다.
 
 ---
-	
-### 레이아웃
 	
 - 타임리프는 크게 변수식, 페이지식, 링크 식의 세 가지 식과 선택 변수 식을 제공한다.
 	- <b>변수 식: </b> ${OGNL}
