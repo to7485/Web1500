@@ -228,7 +228,35 @@ public class ServletContext1 implements WebMvcConfigurer {
 - #numbers : 포맷팅 등 숫자 타입을 위한 기능 제공
 - #dates, #calendars, #temporals : Date타입과 Calendar 타입, LocalDateTIme 타입을 위한 기능 제공
 - #lists, #sets, #maps : List, Set, Map을 위한 기능 제공
+	
+## Form태그
+```html
+예시
+<body>
+  <form th:action="@{/join}" th:object="${joinForm}" method="post">
+    <input type="text" id="userId" th:field="*{userId}" >
+    <input type="password" id="userPw" th:field="*{userPw}" >
+  </form>
+</body>
+	
+```
+	
+1. **th:action="@{}"**
+    - \<form\>태그 사용시, 해당 경로로 요청을 보낼 때 사용한다.
 
+2. **th:object="${}"**
+    - \<form\>태그에서 데이터를 보내기 위해 Submit을 할 때 데이터가 th:object 속성을 통해 object에 지정한 객체에 값을 담아 넘긴다.
+    - 이때 값을 **th:field**속성과 함께 사용하여 넘긴다.
+    - Controller와 View 사이의 VO클래스 객체라고 생각하면 된다.
+	
+3. **th:field="*{}"**
+    - **th:object**속성과 함께 **th:field**를 이용해서 HTML태그에 멤버 변수를 매핑할 수 있다.
+    - **th:field**을 이용한 사용자 입력 필드는 id, name, value속성 값이 자동으로 매핑된다.
+    - **th:object**와 **th:field**는 Controller에서 특정 클래스의 객체를 전달 받을 경우에만 사용 가능하다.
+	
+## 제어문
+
+	
 # Thymeleaf 실습
 
 ## ThymeController 생성하기
