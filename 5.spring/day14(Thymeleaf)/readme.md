@@ -271,7 +271,7 @@ public class ServletContext1 implements WebMvcConfigurer {
 </th:block>	
 ```
 
-3. **th:each="변수 : ${list}"
+3. **th:each="변수 : ${list}"**
 	- JSP의 JSTL에서 <c:foreach> 그리고 JAVA의 반복문 중 for문을 뜻한다.
 	- ${list}에 받아온 것을 변수로 하나씩 가져온다는 뜻으로 변수는 이름을 마음대로 지정할 수 있다.
 
@@ -323,7 +323,7 @@ public ThymeController thymeController() {
 ```
 	
 ## views 폴더에 ex01.html 생성하기
-```
+```html
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -343,7 +343,8 @@ public ThymeController thymeController() {
 # Controller에서 객체 받아서 출력하기
 
 ## MemberVO 클래스 생성하기
-```
+
+```java
 package vo;
 
 import java.time.LocalDateTime;
@@ -364,7 +365,8 @@ public class MemberVO {
 ```
 	
 ## ThymeController 코드 추가하기
-```
+
+```java
 @RequestMapping("/ex02")
 public String ex02(Model model) {
 	MemberVO vo = new MemberVO();
@@ -380,7 +382,8 @@ public String ex02(Model model) {
 ```
 	
 ## views에 ex02.html 생성하기
-```
+
+```html
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 	<head>
@@ -411,8 +414,9 @@ public String ex02(Model model) {
 ## 반복문
 
 ## ThymeController 코드 추가하기
-```html
-@GetMapping("/ex03")
+
+```java
+@RequestMapping("/ex03")
 	public String ex03(Model model) {
 		
 		List<MemberVO> list = new ArrayList<>();
@@ -433,7 +437,7 @@ public String ex02(Model model) {
 ```
 
 ## ex03.html 작성하기
-```
+```html
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -468,11 +472,13 @@ public String ex02(Model model) {
 ```
 
 ## 조건문
+
+## th:if, th:unless : 조건문
 - 순번이 짝수이면 '짝수'를 출력하고, 짝수가 아니면 '홀수'를 출력하기
 
 ## ThymeController 코드 추가하기
 ```java	
-@GetMapping("/ex04")
+@RequestMapping("/ex04")
 public String ex04(Model model) {
 
   List<MemberVO> list = new ArrayList<>();
@@ -530,7 +536,7 @@ public String ex04(Model model) {
   
 ## ThymeController에 코드 작성하기
 ```java	
-@GetMapping("/ex05")
+@RequestMapping("/ex05")
 public String ex05(Model model) {
 
   List<MemberVO> list = new ArrayList<>();
@@ -549,6 +555,8 @@ public String ex05(Model model) {
   return "/WEB-INF/views/ex05.html";
 }
 ```
+
+## th:switch, th:case : 선택문
 
 ## ex05.html
 ```html
@@ -572,15 +580,15 @@ public String ex05(Model model) {
             </tr>
         </thead>
         <tbody>
-            <tr th:each="memberDto, status : ${memberDtoList}">
+            <tr th:each="vo, status : ${list}">
                 <td th:switch="${status.even}">
                     <span th:case=true>짝수</span>
                     <span th:case=false>홀수</span>
                 </td>
-                <td th:text="${memberDto.memNo}"></td>
-                <td th:text="${memberDto.memId}"></td>
-                <td th:text="${memberDto.memNm}"></td>
-                <td th:text="${#temporals.format(memberDto.regDt, 'yyyy.MM.dd')}"></td>
+                <td th:text="${vo.memNo}"></td>
+                <td th:text="${vo.memId}"></td>
+                <td th:text="${vo.memNm}"></td>
+                <td th:text="${#temporals.format(vo.regDt, 'yyyy.MM.dd')}"></td>
             </tr>
         </tbody>
     </table>
@@ -588,17 +596,158 @@ public String ex05(Model model) {
 </html>
 ```
 
+## th:href
+- Thymeleaf에서는 링크를 처리하는 문법으로 th:href가 있습니다. 
+- Absolute URL :  이동할 서버의 URL을 입력해주는 Absolute URL 방식은 http:// 또는 https:// 로 시작합니다.
+- Context-relative URL : 가장 많이 사용되는 URL 형식이며 우리가 실행하는 애플리케이션의 서버 내부를 이동하는 방법이라고 생각하면 됩니다. 
+- 웹 애플리케이션 루트에 상대적인 URL을 입력합니다. 상대경로는 URL의 프로토콜이나 호스트 이름을 지정하지 않습니다.
 
+## ThymeController에 코드 작성하기
+```java
+	@RequestMapping("/ex06")
+	public String ex06() {
+		return "ex06";
+	}
+```
 
+## ex06.html 파일 생성하기
+```html
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		<title>Insert title here</title>
+	</head>
+	<body>
+		 <h1>Thymeleaf 링크처리 예제</h1>
+	    <div>
+	        <a th:href="@{ex02}">예제2 페이지 이동</a>
+	    </div>
+	    <div>
+	        <a th:href="@{https://www.naver.com/}">thymeleaf 공식페이지 이동</a>
+	    </div>
+	</body>
+</html>
+```
+- 링크로 넘기면서 같이 파라미터를 넘길 수 있습니다.
 
+```html
+<a th:href="@{ex07(param1 = '파라미터1', param= '파라미터2')}">Thymeleaf 파라미터 전달</a>
 
+<a th:href="@{ex07?param1='파라미터1'&amp;param2='파라미터2'}">Thymeleaf 파라미터 전달</a>
+```
 
+## ex06.html 코드 수정하기
+```html
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		<title>Insert title here</title>
+	</head>
+	<body>
+		 <h1>Thymeleaf 링크처리 예제</h1>
+	    <div>
+	        <a th:href="@{ex02}">예제2 페이지 이동</a>
+	    </div>
+	    <div>
+	        <a th:href="@{https://www.naver.com/}">thymeleaf 공식페이지 이동</a>
+	    </div>
+	    <div>
+	        <a th:href="@{ex07(param1 = '파라미터 데이터1', param2='파라미터 데이터2')}">ex07로 이동</a>
+	    </div>
+        <div>
+	        <a th:href="@{ex07?param1='파라미터1'&amp;param2='파라미터2'}">ex07로이동2</a>
+	    </div>
+	</body>
+</html>
+```
 
+## ThymeController에서 파라미터 받아주기
+```java
+	@RequestMapping("ex07")
+	public String ex07(String param1, String param2, Model model) {
+		model.addAttribute("param1", param1);
+		model.addAttribute("param2", param2);
+		return "/WEB-INF/views/ex07.html";
+	}
+```
 
+## ex07.html 파일 생성하기
+```html
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+    </head>
+    <body>
+        <h1>파라미터 전달 예제</h1>
+        <div th:text="${param1}"></div>
+        <div th:text="${param2}"></div>
+    </body>
+</html>
+```
 
+## th:object : 선택 변수식
+- **th:object**, **\*{...}**,**th:field** 3개를 함께 사용하면 \<form\>을 편리하게 작성할 수 있다.
+- **th:object** : 커맨드 객체를 지정한다.
+    - 단, 정보를 model에 담아서 넘겨줘야 한다.
+    - 등록 폼이기 때문에 데이터가 비어있는 빈 오브젝트를 만들어서 뷰에 전달한다.
 
+※ 커맨드 객체 : request를 통해 들어온 요청 파라미터들을 setter메서드를 이용하여 객체에 정의되어있는 속성에 바인딩 되는 객체<br>보통 VO를 의미한다. 스프링에서는 HttpServletRequest와 setter를 이용하여 자동으로 바인딩을 시켜준다.
 
+- **\*{...}** : **th:object**에서 선택한 객체에 접근한다.
+    - ${객체.필드}와 같은 의미
+    - **th:object=${객체명}** + **\*{필드명}**을 사용하던지, ${객체.필드}를 사용하던지 선택하면 된다.
 
+- **th:field** : HTML 태그의 id, name, value속성을 자동으로 만들어준다.
+    - input에 적용하는 속성이다.
+    - id와 name은 **th:field**에서 지정한 변수의 이름과 같게 만들어진다.
+        - <label>등과 함께 사용시 id가 존재하지 않으면 ide측에서 오류로 간주한다.(타임리프는 렌더링시 만들어주기 때문). 따라서 필요할 시에는 id를 직접 적어야 한다.
+        - value는 **th:field**에서 지정한 변수의 값(model에 담긴 값)을 사용한다.
+
+## ThymeController에 코드 추가하기
+```java
+	@RequestMapping("/ex08")
+	public String ex08(Model model) {
+		MemberVO vo = new MemberVO();
+		
+		vo.setMemNo(Long.valueOf(1));
+		vo.setMemId("user1");
+		vo.setMemNm("이름1");
+		vo.setRegDt(LocalDateTime.now());
+		
+		model.addAttribute("vo", vo);
+		return "/WEB-INF/views/ex08.html";
+	}
+```
+
+## ex08.html 파일 생성하기
+```html
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+        <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+    </head>
+    <body th:object="${vo}">
+        <h1>회원정보 출력 예제</h1>
+        <div>
+            회원번호 : <span th:text="*{memNo}"></span>
+        </div>
+        <div>
+            아이디 : <span th:text="*{memId}"></span>
+        </div>
+        <div>
+            이름 : <span th:text="*{memNm}"></span>
+        </div>
+        <div>
+            가입일시 : <span th:text="${#temporals.format(vo.regDt, 'yyyy-MM-dd HH:mm:ss')}"></span>
+        </div>
+    </body>
+</html>
+```
 
 
 
