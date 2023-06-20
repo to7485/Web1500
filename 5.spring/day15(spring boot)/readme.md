@@ -77,51 +77,36 @@ spring java reconcile -> yes
 4. src/main/resources/static : css,js,image 등 정적 파일 경로
 5. src/main/resources/templates : html 파일 경로
 6. build.gradle : 라이브러리 의존성 관리
-	- ```
-		plugins {
-		id 'java'
-		id 'org.springframework.boot' version '3.1.0'
-		id 'io.spring.dependency-management' version '1.1.0'
-		}
-		
-		group = 'com.korea'
-		version = '0.0.1-SNAPSHOT'
-		
-		java {
-			sourceCompatibility = '11'
-		}
-		
-		configurations {
-			compileOnly {
-				extendsFrom annotationProcessor
-			}
-		}
-		
-		repositories {
-			mavenCentral()
-		}
-		
-		dependencies {
-		    implementation 'org.springframework.boot:spring-boot-starter-web'
-		    implementation 'org.springframework.boot:spring-boot-starter-web-services'
-		    compileOnly 'org.projectlombok:lombok'
-		    developmentOnly 'org.springframework.boot:spring-boot-devtools'
-		    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-		    annotationProcessor 'org.projectlombok:lombok'
-		    testAnnotationProcessor 'org.projectlombok:lombok'
-		    testImplementation 'org.projectlombok:lombok'
-		    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-		}
-		
-		tasks.named('test') {
-			useJUnitPlatform()
-		}
+7. application.yml : 서버 및 DB, 라이브러리 설정파일(properties로 관리를 해도 되지만 yml은 공통적인 부분을 많이 제거할 수 있다.)
 
-8. application.yml : 서버 및 DB, 라이브러리 설정파일(properties로 관리를 해도 되지만 yml은 공통적인 부분을 많이 제거할 수 있다.)
+- main이 서버가 실행될 때 반영이 되는 영역이다.
 
+![image](https://github.com/to7485/Web1500/assets/54658614/4ff1ba78-6160-4eb2-93ea-2c97ef1c5924)
 
+- 패키지 안의 파일에 main 메서드가 서버를 돌린다.
 
+![image](https://github.com/to7485/Web1500/assets/54658614/007454d1-9d79-46a9-a68f-d275253f4975)
 
+- 실행을 하면 8080포트는 이미 사용중이라고 뜬다.
+
+![image](https://github.com/to7485/Web1500/assets/54658614/ddee64db-4194-428a-91cf-938037c985c5)
+
+- 이 때 application.properties에 코드를 작성해주는것.
+- 하지만 server와 관련된 다른 설정을 하려면 공통된 부분으로 매번 시작을 해야 한다는 단점이 있다.
+
+![image](https://github.com/to7485/Web1500/assets/54658614/e5137f71-3022-409c-94f5-127aea4b4d1b)
+
+- 지워버리고 yml 파일로 만들자
+
+![image](https://github.com/to7485/Web1500/assets/54658614/cb0a5fd6-3f87-4f62-91f1-85e7233ec2b2)
+
+- main > java > resources 
+- 이름은 application.yml이라고 파일을 만들자.
+![image](https://github.com/to7485/Web1500/assets/54658614/30b910a3-5be9-42f1-8012-aba8db9c52f6)
+
+- 공통된 부분은 한번만 작성할 수 있다는 장점이 있다.
+
+![image](https://github.com/to7485/Web1500/assets/54658614/35034f1f-6c01-4304-a53e-c94d5f89397d)
 
 
 
