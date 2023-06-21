@@ -34,7 +34,7 @@
 ![image](https://github.com/to7485/Web1500/assets/54658614/c7c8da21-40a8-4153-a437-f32d596d8942)
 
 
-## 프로젝트 생성하기
+## Ex_날짜 프로젝트 생성하기
 
 - File > New > Spring Starter Project
 
@@ -115,13 +115,107 @@ spring java reconcile -> yes
 
 ![image](https://github.com/to7485/Web1500/assets/54658614/3ba05405-2f85-4520-818d-8651936136e1)
 
+## dependency 패키지 생성하기
 
+![image](https://github.com/to7485/Web1500/assets/54658614/40d6be53-dd87-46cd-b352-7eef35a28485)
 
+## Computer.java 클래스 생성하기
+- 코딩을 하기 위해선 컴퓨터가 필요하다
+- ram이라는 부품이 있다.
+```java
+package dependency;
 
+import lombok.Data;
 
+@Data //getter,setter,생성자,toString()메서드를 만들어주는 롬복 어노테이션
+public class Computer {
 
+	int ram;
+}
+```
 
+## Coding.java 클래스 생성하기
+```java
+package dependency;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+public class Coding {
+
+	private Computer computer; //코딩을 하기 위해선 컴퓨터가 필요하다.
+	//하지만 computer = new Computer();를 통해서 직접 객체를 생성하지 않는다.
+}
+
+```
+
+## src/test/java 에 단위테스트용 패키지 만들기
+
+![image](https://github.com/to7485/Web1500/assets/54658614/550de46e-905c-4078-b8f5-45bf2491c20b)
+
+## dependency 패키지 아래 ComputerTest 클래스 생성하기
+```java
+package dependency;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+import lombok.extern.slf4j.Slf4j;
+
+@SpringBootTest
+@Slf4j //롬복에 있는 콘솔을 쓸수 있는 어노테이션
+public class ComputerTest {
+
+	@Test
+	public void computerTest() {
+		Coding coding = new Coding(); //Computer 클래스의 ram을 호출하기 위해 Coding의 객체를 만들어야 한다.
+		//log.info는 자동으로 toString()메서드를 붙혀주지 않기 때문에 직접 붙혀야 한다.
+		log.info(coding.getComputer().toString()); //당연히 객체를 메모리에 올리지 않았기 때문에 null이 나올 것이다.
+	}
+}
+
+```
+
+## Coding클래스에 코드 추가하기
+- 그렇기 때문에 의존성 주입을 해줘야 한다.
+```java
+package dependency;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import lombok.Getter;
+
+@Component //어차피 ComputerTest에서 Coding에 대한 객체도 필요하니 Coding클래스에도 Component를 달아서 객체로 만들어주자.
+@Getter
+public class Coding {
+
+	//필드 주입
+	//ApplicationContext가 Component를 찾아서 주입을 해줌.
+	
+	@Autowired
+	private Computer computer;
+}
+
+```
+
+## Computer 클래스에 @Component 어노테이션 달아주기
+```java
+package dependency;
+
+import org.springframework.stereotype.Component;
+
+import lombok.Data;
+
+@Component
+@Data
+public class Computer {
+
+	int ram;
+}
+
+```
+
+- 하지만 다시 실행하면 null이 뜨는걸 볼 수 있다.
+
+  
 
 
 
