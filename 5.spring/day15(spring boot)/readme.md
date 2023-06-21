@@ -106,51 +106,15 @@ spring java reconcile -> yes
 
 - 공통된 부분은 한번만 작성할 수 있다는 장점이 있다.
 - 80번 포트는 뒤에 포트 번호를 작성하지 않아도 된다.
+
 ![image](https://github.com/to7485/Web1500/assets/54658614/35034f1f-6c01-4304-a53e-c94d5f89397d)
 
-## Hello World 출력하기
-- Project1Application.java에 코드 추가하기
+# 의존성 주입
 
-```java
-package com.korea.project1;
+- 스프링의 작동 순서
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.web.bind.annotation.GetMapping;
+![image](https://github.com/to7485/Web1500/assets/54658614/3ba05405-2f85-4520-818d-8651936136e1)
 
-import org.springframework.web.bind.annotation.RestController;
-
-@RestController
-@SpringBootApplication
-public class Project1Application {
-
-	public static void main(String[] args) {
-		SpringApplication.run(Project1Application.class, args);
-	}
-	
-	@GetMapping("/")
-	public String helloWorld() {
-		return "Hello World";
-	}
-
-}
-
-```
-### @RestController
-- @RestController는 Restful Web API를 좀 더 쉽게 만들기 위해 스프링 프레임워크 4.0에 도입된 기능입니다. 
-- @Controller와 @ResponseBody를 합쳐 놓은 어노테이션입니다. 
-- 클래스 이름 위에 @Controller 어노테이션을 선언하면 해당 클래스를 요청을 처리하는 컨트롤러로 사용합니다. 
-- @ResponseBody 어노테이션은 자바 객체를 HTTP 응답 본문의 객체로 변환해 클라이언트에게 전송합니다. 이를 통해 따로 html 파일을 만들지 않아도 웹 브라우저에 "Hello World" 라는 문자열을 출력할 수 있습니다.
-
-### @GetMapping
-
-- 컨트롤러 클래스에 @GetMapping 어노테이션을 이용해 클라이언트의 요청을 처리할 URL을 매핑합니다. 
-- 현재는 서버의 루트로 오는 요청을 처리할 수 있도록 "/"로 선언했습니다.
-
-
-## 프로젝트 실행하기
-
-![image](https://github.com/to7485/Web1500/assets/54658614/f8b99b4b-57bb-4245-9d30-2471e75205d7)
 
 
 
