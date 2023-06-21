@@ -87,6 +87,15 @@ spring java reconcile -> yes
 
 ![image](https://github.com/to7485/Web1500/assets/54658614/007454d1-9d79-46a9-a68f-d275253f4975)
 
+- @SpringBootApplication
+  - @Configuration, @EnableAutoConfiguration, @ComponentScan 세가지를 하나로 합친것이다.
+    - @Configuration : 해당 클래스가 설정 파일임을 알려주는 용도
+    - @ComponentScan : 자동으로 컴포넌트 클래스를 검색하여 컴포넌트와 빈 클래스를 등록함
+    - @EnableAutoConfiguration : 스프링의 다양한 설정이 자동으로 구성되고 완료됨
+
+※ 메인 클래스가 위치한 패키지부터 이하 모든 클래스를 검색하여 Bean으로 등록하기 때문에 패키지를 만드려면 main클래스가 들어있는 패키지 하위에 작성을 해야 한다.
+   	
+
 - 실행을 하면 8080포트는 이미 사용중이라고 뜬다.
 
 ![image](https://github.com/to7485/Web1500/assets/54658614/ddee64db-4194-428a-91cf-938037c985c5)
