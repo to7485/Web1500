@@ -104,7 +104,7 @@ public class ServletContext1 implements WebMvcConfigurer {
 		templateResolver.setApplicationContext(applicationContext);
 		//templateResolver.setPrefix("/WEB-INF/views/");
 		//templateResolver.setSuffix(".html");
-		templateResolver.setCacheable(false);
+		templateResolver.setCacheable(false);//캐시 사용 안함(사용하면 html수정시 서버를 재기동)
 		return templateResolver;
 	}
 	
@@ -113,7 +113,7 @@ public class ServletContext1 implements WebMvcConfigurer {
 	public SpringTemplateEngine templateEngine() {
 		SpringTemplateEngine templateEngine = new SpringTemplateEngine();
 		templateEngine.setTemplateResolver(templateResolver());
-		templateEngine.setEnableSpringELCompiler(true);
+		templateEngine.setEnableSpringELCompiler(true);//el표현식을 사용할것인지
 		templateEngine.addDialect(new Java8TimeDialect()); //자바8의 시간타입을 지원하기 위한 Dialect 추가
 		templateEngine.addDialect(new LayoutDialect()); //개선된 레이아웃 추가 기능을 위해 LayoutDialect 역시 추가
 		return templateEngine;
