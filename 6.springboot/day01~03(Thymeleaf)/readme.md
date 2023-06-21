@@ -36,16 +36,21 @@
 
 - 스프링 MVC와 타임리프를 연동하려면 먼저 타임리프의 스프링 연동 모듈을 의존에 추가해야 한다. 다음의 세 가지(thymeleaf-spring5, thymeleaf-extras-java8time, thymeleaf-layout-dialect) 의존 설정을 추가한다.
 ```
+<!-- thymeleaf-spring5 스프링 MVC에서 Thymeleaf를 View로 사용하기 위한 기능을 제공 -->
 <dependency>
 	<groupId>org.thymeleaf</groupId>
 	<artifactId>thymeleaf-spring5</artifactId>
 	<version>3.0.15.RELEASE</version>
 </dependency>
+
+<!-- thymeleaf-extras-java8time 자바에서 제공하는 시간타입을 Thymeleaf에서 사용하기 위한 기능 -->
 <dependency>
 	<groupId>org.thymeleaf.extras</groupId>
 	<artifactId>thymeleaf-extras-java8time</artifactId>
 	<version>3.0.4.RELEASE</version>
 </dependency>
+
+<!-- thymeleaf-layout-dialect Thymeleaf가 페이지 레이아웃 기능을 사용하기 위한 기능 -->
 <dependency>
 	<groupId>nz.net.ultraq.thymeleaf</groupId>
 	<artifactId>thymeleaf-layout-dialect</artifactId>
