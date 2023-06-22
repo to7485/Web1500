@@ -306,3 +306,205 @@ public class Coding {
 ```
 - 실행하고 봐도 결과는 다르지 않다.
 
+## @Qualifier
+- 같은 타입의 여러 객체가 존재할 때 Autowired로 주입을 하려고 하면 스프링이 어떤 Bean을 줘야 할지 모른다.
+- 그래서 같은 타입에 객체가 여러개 존재할 때 @Qualifier라는 어노테이션을 붙혀서 구분을 해준다.
+
+### qualifier 패키지 생성하기
+
+![image](https://github.com/to7485/Web1500/assets/54658614/2d6fcc7e-a4da-44f8-ba2a-5f32c0e9310b)
+
+
+### Computer 인터페이스 생성하기
+```java
+package com.korea.project1.dependency.qualifier;
+
+public interface Computer {
+
+	public int getScreenWidth();
+}
+
+```
+
+### Laptop 클래스 생성하기
+```java
+package com.korea.project1.dependency.qualifier;
+
+@Component
+public class Laptop implements Computer{
+
+	@Override
+	public String getScreenWidth() {
+		// TODO Auto-generated method stub
+		return "1600";
+	}
+}
+```
+
+### DeskTop 클래스 생성하기
+```java
+package com.korea.project1.dependency.qualifier;
+
+@Component
+public class DeskTop implements Computer{
+
+	@Override
+	public String getScreenWidth() {
+		// TODO Auto-generated method stub
+		return "1920";
+	}
+}
+```
+
+### test/java에 qualifier패키지 만들고 ComputerTest클래스 생성하기
+
+![image](https://github.com/to7485/Web1500/assets/54658614/9c06ec81-f926-4ed1-8fd9-d86b96ac9d2f)
+
+
+```java
+package com.korea.project1.dependency.qualifier;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import lombok.extern.slf4j.Slf4j;
+
+@SpringBootTest
+@Slf4j
+public class ComputerTest {
+
+	@Autowired
+	Computer computer;
+	
+	@Test
+	public void computerTest() {
+		log.info(computer.getScreenWidth());
+	}
+}
+
+```
+
+![image](https://github.com/to7485/Web1500/assets/54658614/95a5569d-2709-4bff-b701-2aa9329de5a5)
+
+- Computer로 된 객체가 두개 존재해서 스프링이 뭘 주입해줄지 모른다
+
+### Laptop,DeskTop클래스에 코드 추가하기
+
+```java
+package com.korea.project1.dependency.qualifier;
+
+@Component
+@Qualifier("laptop")
+public class Laptop implements Computer{
+
+	@Override
+	public String getScreenWidth() {
+		// TODO Auto-generated method stub
+		return "1600";
+	}
+}
+```
+
+```java
+package com.korea.project1.dependency.qualifier;
+
+@Component
+@Qualifier("desktop")
+public class DeskTop implements Computer{
+
+	@Override
+	public String getScreenWidth() {
+		// TODO Auto-generated method stub
+		return "1920";
+	}
+}
+```
+
+### ComputerTest 코드 수정하기
+```java
+package com.korea.project1.dependency.qualifier;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import lombok.extern.slf4j.Slf4j;
+
+@SpringBootTest
+@Slf4j
+public class ComputerTest {
+
+	@Autowired @Qualifier("laptop")
+	Computer laptop;
+	
+	@Autowired @Qualifier("desktop")
+	Computer desktop;
+	
+	@Test
+	public void computerTest() {
+		log.info(laptop.getScreenWidth());
+		log.info(desktop.getScreenWidth());
+	}
+	
+}
+```
+
+- 매번 **@Qualifier** 어노테이션을 붙히기 귀찮다면 default값으로 사용할 클래스에 **@Primary** 어노테이션을 붙히면 된다.
+
+```java
+package com.korea.project1.dependency.qualifier;
+
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Component;
+
+@Component
+@Qualifier("desktop") @Primary
+public class DeskTop implements Computer{
+
+	@Override
+	public String getScreenWidth() {
+		// TODO Auto-generated method stub
+		return "1920";
+	}
+}
+```
+
+### ComputerTest 코드 수정하기
+```java
+package com.korea.project1.dependency.qualifier;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import lombok.extern.slf4j.Slf4j;
+
+@SpringBootTest
+@Slf4j
+public class ComputerTest {
+
+	@Autowired @Qualifier("laptop")
+	Computer laptop;
+	
+	@Autowired @Qualifier("desktop")
+	Computer desktop;
+	
+	@Autowired
+	Computer computer;
+	
+	@Test
+	public void computerTest() {
+		log.info(laptop.getScreenWidth());
+		log.info(desktop.getScreenWidth());
+	}
+	
+}
+
+```
+
+
+
