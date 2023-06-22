@@ -1,13 +1,7 @@
-# 타임리프(Thymeleaf)
-- 타임리프는 컨트롤러가 전달하는 데이터를 이용해 동적으로 화면을 만들어주는 역할을 하는 view 템플릿 엔진이다.
-- 스프링부트에서는 공식적으로 VIEW영역에서 JSP의 사용을 권장하지 않습니다.
-
-<img src="https://github.com/to7485/Web1500/assets/54658614/d5d4ff17-44c6-4513-b2bc-4b55e7242a63" width="60%" height="60%">
-
-
-- 가능하다면 JSP를 피하고 Thymeleaf와 같은 템플릿 엔진을 사용하라고 권장하고 있다.
-
-※템플릿 엔진 : 지정된 템플릿 양식과 데이터가 합쳐져 HTML 문서를 출력하는 소프트웨어입니다.<br> 웹사이트 화면을 어떤 형태로 만들지 도와주는 양식웹 템플릿 엔진은 view code(HTML)와 data logic code(DB connection)를<br> 분리해주는 기능을 합니다.템플릿 엔진은 **서버 사이드 템플릿 엔진**과 **클라이언트 사이드 템플릿 엔진**으로 나눌 수 있습니다.
+# 템플릿 엔진
+- 지정된 템플릿 양식과 데이터가 합쳐져 HTML 문서를 출력하는 소프트웨어입니다.
+- 웹사이트 화면을 어떤 형태로 만들지 도와주는 양식웹 템플릿 엔진은 view code(HTML)와 data logic code(DB connection)를 분리해주는 기능을 합니다.
+- 템플릿 엔진은 **서버 사이드 템플릿 엔진**과 **클라이언트 사이드 템플릿 엔진**으로 나눌 수 있습니다.
 
 ## 서버 사이드 템플릿 엔진
   - 서버에서 DB혹은 API에서 가져온 데이터를 미리 정의된 템플릿에 넣어서 HTML을 그려서 클라이언트에 전달해주는 역할
@@ -34,6 +28,17 @@
 
 - URL이 바뀌어도 HTML을 다시 내려받지 않고 클라이언트에서 알아서 그리기 때문에 주로 단일 화면에서 화면이 변경되는 경우에 사용됩니다.
 - 대표적인 클라이언트 사이드 템플릿 엔진으로는 Mustache, Squirrelly, Handlebars가 있습니다.
+
+# 타임리프(Thymeleaf)
+- 타임리프는 컨트롤러가 전달하는 데이터를 이용해 동적으로 화면을 만들어주는 역할을 하는 view 템플릿 엔진이다.
+- 스프링부트에서는 공식적으로 VIEW영역에서 JSP의 사용을 권장하지 않습니다.
+
+<img src="https://github.com/to7485/Web1500/assets/54658614/d5d4ff17-44c6-4513-b2bc-4b55e7242a63" width="60%" height="60%">
+
+
+- 가능하다면 JSP를 피하고 Thymeleaf와 같은 템플릿 엔진을 사용하라고 권장하고 있다.
+
+
 
 ## Thymeleaf가 제공해주는 템플릿
 - Thymeleaf는 2개의 Markup Template Mode(HTML,XML)가 있고 3개의 Textual Template Mode(TEXT, Javascript, CSS)가 있고 1개의 no-op Template Mode(Raw)가 있다.
