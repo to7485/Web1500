@@ -785,6 +785,79 @@ public String ex05(Model model) {
     </body>
 </html>
 ```
+# 타임리프 페이지 레이아웃
+- 페이지를 구성하다보면 header, footer 등 공통적인 구성 요소들이 존재한다.
+- 각각의 페이지마다 같은 소스코드를 넣는다면 변경이 일어날 때마다 이를 포함하고 있는 모든 페이지를 수정해야 한다.
+- Thymeleaf의 페이지 레이아웃 기능을 사용한다면 공통 요소 관리를 쉽게 할 수 있다.
 
+## /WEB-INF/views/outlines 폴더 생성후 header,footer 만들기
+```html
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <header th:fragment="header">
+        header 영역 입니다.
+    </header>
+</html>
+```
 
+```html
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <footer th:fragment="footer">
+        footer 영역 입니다.
+    </footer>
+</html>
+```
 
+## /WEB-INF/views/아래에 layouts 폴더를 만들고 main.html 생성하기
+
+```html
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+          xmlns:layout="http:'//www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    
+    <th:block layout:fragment="script"></th:block>
+    <th:block layout:fragment="css"></th:block>
+</head>
+<body>
+    <header th:replace="outlines/header::header"></header>
+    
+    <main layout:fragment="content"></main>
+    
+    <footer th:replace="outlines/footer::footer"></footer>
+</body>
+</html>
+```
+
+## Controller에 매핑하기
+```java
+... 생략
+
+@Controller
+@RequestMapping("/tpl")
+public class BasicController {
+	
+	... 생략
+	
+	@GetMapping("/ex09")
+	public String ex09() {
+		return "ex09";
+	}
+}
+```
+
+## ex09.html 파일 생성하기
+```html
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+          xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+          layout:decorate="~{layouts/main}">
+          
+          <main layout:fragment="content">
+                본문영역 입니다.
+          </main>
+</html>
+```
