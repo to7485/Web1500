@@ -124,11 +124,13 @@ spring java reconcile -> yes
 
 ![image](https://github.com/to7485/Web1500/assets/54658614/3ba05405-2f85-4520-818d-8651936136e1)
 
-## dependency 패키지 생성하기
+## 필드주입
+
+### dependency 패키지 생성하기
 
 ![image](https://github.com/to7485/Web1500/assets/54658614/40d6be53-dd87-46cd-b352-7eef35a28485)
 
-## Computer.java 클래스 생성하기
+### Computer.java 클래스 생성하기
 - 코딩을 하기 위해선 컴퓨터가 필요하다
 - ram이라는 부품이 있다.
 ```java
@@ -143,7 +145,7 @@ public class Computer {
 }
 ```
 
-## Coding.java 클래스 생성하기
+### Coding.java 클래스 생성하기
 ```java
 package dependency;
 
@@ -157,11 +159,11 @@ public class Coding {
 
 ```
 
-## src/test/java 에 단위테스트용 패키지 만들기
+### src/test/java 에 단위테스트용 패키지 만들기
 
 ![image](https://github.com/to7485/Web1500/assets/54658614/550de46e-905c-4078-b8f5-45bf2491c20b)
 
-## dependency 패키지 아래 ComputerTest 클래스 생성하기
+### dependency 패키지 아래 ComputerTest 클래스 생성하기
 ```java
 package dependency;
 
@@ -183,7 +185,7 @@ public class ComputerTest {
 
 ```
 
-## Coding클래스에 코드 추가하기
+### Coding클래스에 코드 추가하기
 - 그렇기 때문에 의존성 주입을 해줘야 한다.
 ```java
 package dependency;
@@ -205,7 +207,7 @@ public class Coding {
 
 ```
 
-## Computer 클래스에 @Component 어노테이션 달아주기
+### Computer 클래스에 @Component 어노테이션 달아주기
 ```java
 package dependency;
 
@@ -223,10 +225,84 @@ public class Computer {
 ```
 
 - 하지만 다시 실행하면 null이 뜨는걸 볼 수 있다.
+- Coding coding = new Coding(); 코드는 우리가 직접 메모리에 할당해준 객체이기 때문에 스프링에서 인식을 하지 못한다.
 
+### dependency 패키지 아래 ComputerTest 클래스 생성하기
+```java
+package dependency;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+import lombok.extern.slf4j.Slf4j;
+
+@SpringBootTest
+@Slf4j //롬복에 있는 콘솔을 쓸수 있는 어노테이션
+public class ComputerTest {
+
+	@Autowired
+	Coding coding; //스프링에서 직접 만든 객체를 주입받아야 한다.
+	
+	@Test
+	public void computerTest() {
+		
+		//log.info는 자동으로 toString()메서드를 붙혀주지 않기 때문에 직접 붙혀야 한다.
+		log.info(coding.getComputer().toString()); //당연히 객체를 메모리에 올리지 않았기 때문에 null이 나올 것이다.
+	}
+}
+
+```
+
+- 실행을 하면 ram에 0이 나오는걸 확인할 수 있다.
   
+![image](https://github.com/to7485/Web1500/assets/54658614/704c869a-fb68-4f90-96ff-91c5494c699e)
 
+## 생성자 주입
+- 필드주입시 굉장히 편하게 주입할 수 있으나 순환참조(무한루프)시 오류가 발생하지 않기 때문에 StackOverflow가 발생한다.
+- 생성자 주입은 순환참조시 컴파일러 인지 가능, 오류가 발생
+- 메모리에 할당되면서 초기값으로 주입되므로 초기값에 문제 발생 시 할당이 아예 되지 않는다.
+- 초기화 생성자를 사용하면 해당 객체에 final을 사용할 수 있다. 다른곳에서 변형 불가능
+- 의존성 주입이 되지 않으면 객체가 생성되지 않으므로 **NullPointerException**을 방어
+- 스프링부트에서는 생성자 주입을 하는걸 권장한다.
 
+※순환참조 : A 클래스가 B 클래스의 Bean 을 주입받고, B 클래스가 A 클래스의 Bean 을 주입받는 상황처럼 서로 순환되어 참조할 경우 발생하는 문제를 의미한다.
 
+### Coding 클래스 수정하기
+```java
+package com.korea.project1.dependency;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import lombok.Getter;
+
+@Component
+@Getter
+//@AllArgsConstructor 전체 필드를 요소로 갖는 생성자 생성
+@RequiredArgsConstructor // final이 붙어있거나 @NonNull어노테이션이 붙어있는 애만 생성자에 파라미터로 넣는다.
+//@NoArgsConstructor 기본생성자 생성
+public class Coding {
+	
+	//필드주입
+	//@Autowired
+	//private Computer computer;
+
+	//생성자 주입
+	//
+/*
+ * int data; -> 여기는 값이 안들어가도 오류가 안난다.
+ * data = 10; -> 필드주입
+ * 
+ * 
+ * int data = 10; -> 값을 넣어주지 않으면 애초에 오류가 일어난다.
+ */
+	
+	private final Computer computer;
+	
+	//public Coding(Computer computer) {
+	//	this.computer = computer;
+	//}
+}
+
+```
+- 실행하고 봐도 결과는 다르지 않다.
 
