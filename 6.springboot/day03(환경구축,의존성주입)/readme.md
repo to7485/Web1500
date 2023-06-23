@@ -67,6 +67,58 @@ spring java reconcile -> yes
 
 ![image](https://github.com/to7485/Web1500/assets/54658614/1e0078e1-c0b6-43bb-8444-697a5dbd406b)
 
+## Gradle
+- 매우 유연한 범용 빌드툴
+- Maven과 같은 구조화 된 build프레임워크
+- Maven등의 기존 저장소 도는 pom.xml에 대한 migration의 편의성 제공
+- 멀티 프로젝트 빌드 지원
+- 의존성 관리의 다양한 방법 제공
+- build Script를 xml이 아닌 Groovy기반의 DSL(Domain Specific Language)을 사용
+- 기존 Build를 구성하기 위한 풍부한 도메인 모델 제공.
+- Gradle 설치 없이 Gradle Wrapper를 이용하여 빌드 지원
+
+### 기본구조
+
+![image](https://github.com/to7485/Web1500/assets/54658614/96fa878d-ef09-4d8f-b19a-36e97b7b6cc4)
+
+- build.gradle : 프로젝트 빌드에 대한 모든 기능 정의
+- gradlew,gradlew.bat : gradle 명령파일
+- setting.gradle : 빌드할 프로젝트 정보 설정
+
+### Build Lifecycle
+1. 초기화(Initializtion) : 빌드 대상 프로젝트를 결정하고 각각에 대한 Project객체를 생성.
+  - setting.gradle 파일에서 프로젝트 구성
+2. 구성(Configuration) : 빌드 대상이 되는 모든 프로젝트의 빌드 스크립트를 실행
+3. 실행(Execution) : 구성 단계에서 생성하고 설정된 프로젝트의 태스크 중에 실행 대상 결정
+
+### build.gradle의 구성
+- plugin 설정
+  - plugin은 미리 구성해놓은 task들의 그룹이며, 특정 빌드과정에 필요한 기본정보를 포함하고, 필요에 따라 정보를 수정하여 목적에 맞게 사용할 수 있다.
+
+![image](https://github.com/to7485/Web1500/assets/54658614/9fc61375-6e2f-4d27-907d-94767bcaf6ef)
+
+- 저장소 설정
+  - Gradle은 Maven repository, JCenter repository, Ivy directory 등 다양한 저장소를 지원한다.
+
+![image](https://github.com/to7485/Web1500/assets/54658614/81a4c4ca-94a1-4fdb-b3fd-b23b4e29a88a)
+
+- 의존관계 옵션
+  - implementation : 프로젝트 컴파일 과정에서 필요한 라이브러리
+  - providedCompile : compile시에는 필요하지만, 배포시에는 제외될 dependency를 설정한다.<br> (war plugin이 설정된 경우에만 사용 가능하다)
+  - providedRuntime : runtime시에만 필요하고, 실행환경에서 제공되는 dependency를 설정한다.<br> (war plugin이 설정된 경우에만 사용 가능하다)
+  - testImplementation : test 시에 필요한 dependency 관리.
+  - compileOnly: 이름에서 알 수 있듯이 compile 시에만 빌드하고 빌드 결과물에는 포함하지 않는다.
+  - runtimeOnly: runtime 시에만 필요한 라이브러리인 경우
+  - annotationProcessor: annotation processor 명시 (ex:lombok)
+  - testImplementation : 테스트 코드를 수행할 때만 적용.
+  
+![image](https://github.com/to7485/Web1500/assets/54658614/192a4a9d-853b-45f3-81b0-38dcfa5071d3)
+
+### Gradle에서의 의존성 관리
+
+![image](https://github.com/to7485/Web1500/assets/54658614/7389f236-69a1-46c8-aa73-0c9606ed9821)
+
+
 ## 스프링부트 프로젝트 구성
 
 ![image](https://github.com/to7485/Web1500/assets/54658614/1a15af1b-5cdc-4a19-a975-6308fcdc0ca3)
