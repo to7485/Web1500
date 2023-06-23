@@ -53,6 +53,40 @@ public class MybatisConfig {
 }
 
 ```
+## 서버와 DB의 연결
+- WAS(Web Application Server)와 데이터베이스 사이의 연결에는 많은 자원이 든다.
+- 서버가 DB에 연결하기 위한 Connection 자원이 가장 큰 비율을 차지한다.
+- 이를 보완할 수 있는 방법이 ConnectionPool이다.
+
+### 커넥션 풀(Connection Pool)이란?
+- 데이터베이스와 연결된 커넥션을 미리 만들어놓고 이를 pool로 관리하는것이다.
+- 필요할때마다 Connection Pool의 Connection을 이용하고 반환하는 기법이다.
+- 미리 만들어놓은 Connection을 이용하면 Connection에 필요한 자원을 줄일수 있다.
+- 커넥션 풀을 사용하면 커넥션 수를 제한할 수 있어서 과도한 접속으로 인한 서버 자원 고갈을 방지할 수 있다.
+- DB 접속 모듈을 공통화해 DB 서버의 환경이 바뀔 경우 유지보수를 쉽게 할 수 있다.
+
+### HikariCP란?
+- HikariCP는 가벼운 용량과 빠른 속도를 가지는 JDBC의 커넥션 풀 프레임워크이다.
+- SpringBoot는 커넥션 풀 관리를 위해 HikariCP를 사용한다.
+
+- Thread가 커넥션을 요청했을 때 유휴 커넥션이 존재한다면 해당 커넥션을 반환해준다.
+
+![image](https://github.com/to7485/Web1500/assets/54658614/188f7309-b889-4a45-9ac5-147e233aa2a3)
+
+### Connection Pool의 크기와 성능
+-  Connection을 사용하는 주체인 Thread의 개수보다 커넥션 풀의 크기가 크다면 사용되지 않고 남는 커넥션이 생겨 메모리의 낭비가 발생하게 된다.
+-  MySQL의 공식레퍼런스에서는 600여 명의 유저를 대응하는데 15~20개의 커넥션 풀만으로도 충분하다고 언급하고 있다.
+
+우아한 형제들 테크 블로그에서는 다음과 같은 공식을 추천하고 있다.
+
+![image](https://github.com/to7485/Web1500/assets/54658614/c2b28eba-a26d-4f1d-9a4b-3a25666342cd)
+
+[커넥션 풀 size 공식 출처](https://techblog .woowahan.com/2663/)
+
+- Tn = 전체 Thread의 개수
+- Cm = 하나의 Task에서 동시에 필요한 Connection 수
+
+- DB와 WAS의 Context Switching 역시 한계가 있기 때문에 Thread Pool의 크기는 Conncetion Pool의 크기를 결정하는데 매우 중요하다.
 
 ## application.yml에 코드 작성하기
 ```yml
