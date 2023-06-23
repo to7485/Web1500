@@ -73,41 +73,102 @@ spring:
 ```java
 package com.korea.db.mybatis;
 
-import javax.sql.DataSource;
-
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+import lombok.RequiredArgsConstructor;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.mybatis.spring.SqlSessionFactoryBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
-
-import lombok.RequiredArgsConstructor;
+import javax.sql.DataSource;
+import java.io.IOException;
 
 @Configuration
 @RequiredArgsConstructor
-public class MybatisConfig {
+public class MyBatisConfig {
+    private final ApplicationContext applicationContext;
 
-	
-	private final ApplicationContext applicationContext;
+    @ConfigurationProperties(prefix = "spring.datasource.hikari")
+    @Bean
+    public HikariConfig hikariConfig() {return new HikariConfig();}
 
-  //spring.datasource.hikari 가 붙은 모든 설정을 가져와라
-	@ConfigurationProperties(prefix = "spring.datasource.hikari")
-	@Bean
-	public HikariConfig hikariConfig() {
-		return new HikariConfig();
-	}
-	
-	@Bean
-	public DataSource dataSource() {
-		return new HikariDataSource(hikariConfig());
-	}
-	
+    @Bean
+    public DataSource dataSource() {return new HikariDataSource(hikariConfig());}
+
+    @Bean
+    public SqlSessionFactory sqlSessionFactory() throws IOException {
+        SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
+        sqlSessionFactoryBean.setDataSource(dataSource());
+        sqlSessionFactoryBean.setMapperLocations(applicationContext.getResources("classpath*:/mapper/*.xml"));
+        sqlSessionFactoryBean.setConfigLocation(applicationContext.getResource("classpath:/config/config.xml"));
+
+        try {
+            SqlSessionFactory sqlSessionFactory = sqlSessionFactoryBean.getObject();
+            sqlSessionFactory.getConfiguration().setMapUnderscoreToCamelCase(true);
+            return sqlSessionFactory;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+}
+```
+
+## resources 패키지 아래 mapper,config 폴더 만들기
+
+![image](https://github.com/to7485/Web1500/assets/54658614/782efd6b-72f3-470f-9c05-08cf396a8c55)
+
+- config폴더 아래 config.xml파일 만들고 코드 작성하기
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0/EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+</configuration>
+```
+- mapper폴더 아래 timeMapper.xml 파일 작성하기
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0/EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.korea.db.mapper.TimeMapper">
+
+</mapper>
+```
+
+## main/java 아래에 mapper 패키지 만들고 TimeMapper인터페이스 생성하기
+```java
+package com.korea.db.mapper;
+
+import org.apache.ibatis.annotations.Mapper;
+
+@Mapper
+public interface TimeMapper {
+
+	public String getTime(); //쿼리문과 1대1로 매치가 됨
 }
 
 ```
 
+## timeMapper.xml에 쿼리문 작성하기
+```java
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0/EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.korea.db.mapper.TimeMapper">
+	<select id="getTime"> 아이디를 인터페이스의 추상메서드의 이름과 일치시켜야 한다.
+		SELECT SYSDATE FROM DUAL
+	</select>
+</mapper>
+```
 
+## 단위테스트를 해보자.
+- test/java에 mapper 패키지 만들기
 
+![image](https://github.com/to7485/Web1500/assets/54658614/c56baf4a-6770-4697-9663-53f870540daa)
 
+### MapperTest클래스 생성하기
+```java
+
+```
