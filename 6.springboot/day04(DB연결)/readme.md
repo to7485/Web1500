@@ -1,4 +1,4 @@
-# OracleDatabase와 Springboot 연결하기
+![image](https://github.com/to7485/Web1500/assets/54658614/8b275b39-c0a1-4153-9769-ab695c2f898c)# OracleDatabase와 Springboot 연결하기
 
 ## Ex_날짜_DB 프로젝트 생성하기
 - 기존에는 MvnRepository 사이트를 통해서 필요한 라이브러리들을 일일히 찾아서 다운로드를 받았다면 스프링부트에서는 손쉽게 의존성 추가가 가능하다.
@@ -68,6 +68,10 @@ public class MybatisConfig {
 ### HikariCP란?
 - HikariCP는 가벼운 용량과 빠른 속도를 가지는 JDBC의 커넥션 풀 프레임워크이다.
 - SpringBoot는 커넥션 풀 관리를 위해 HikariCP를 사용한다.
+- org.springframework.boot:spring-boot-starter-jdbc에 포함되어있다.
+
+![image](https://github.com/to7485/Web1500/assets/54658614/1d85546f-efa7-4ebf-9f80-455a6715776a)
+
 
 - Thread가 커넥션을 요청했을 때 유휴 커넥션이 존재한다면 해당 커넥션을 반환해준다.
 
