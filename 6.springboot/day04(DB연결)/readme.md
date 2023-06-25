@@ -248,3 +248,77 @@ public class MapperTests {
 
 ![image](https://github.com/to7485/Web1500/assets/54658614/c3bb2626-453e-467f-9563-1a471a1cdcc0)
 
+## 상품 테이블 생성하기
+```sql
+CREATE SEQUENCE SEQ_PRODUCT;
+
+CREATE TABLE PRODUCT(
+	PRODUCT_ID NUMBER PRIMARY KEY,
+	PRODUCT_NAME VARCHAR2(500) NOT NULL,
+	PRODUCT_STOCK NUMBER DEFAULT 0,
+	PRODUCT_PRICE NUMBER DEFAULT 0,
+	REGISTER_DATE DATE DEFAULT SYSDATE,
+	UPDATE_DATE DATE DEFAULT SYSDATE
+);
+```
+
+## main/java/vo 패키지 생성하고 ProductVO 클래스 생성하기
+
+```java
+package com.example.db.vo;
+
+import lombok.Data;
+
+@Data
+public class ProductVO {
+
+	private int productId;
+	private String productName;
+	private int productStock;
+	private int productPrice;
+	private String registerDate;
+	private String updateDate;
+}
+```
+
+## main/java/mapper 패키지에 ProductMapper.java 인터페이스 생성하기
+```java
+package com.example.db.mapper;
+
+import org.apache.ibatis.annotations.Mapper;
+
+import com.example.db.vo.ProductVO;
+
+@Mapper
+public interface ProductMapper {
+
+	//상품 추가
+	public void insert(ProductVO productVO);
+	//상품 조회
+	//상품 수정
+	//상품 삭제
+	//상품 전체 조회
+}
+```
+
+## main/resources에 product.xml 파일 생성하기
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.db.mapper.ProductMapper">
+	<insert id="insert">
+		insert into product
+		(PRODUCT_ID, PRODUCT_NAME, PRODUCT_STOCK, PRODUCT_PRICE)
+		values (seq_product.nextVal, #{productName}, #{productStock}, #{productPrice})
+	</insert>
+</mapper>
+```
+
+
+
+
+
+
+
+
+
