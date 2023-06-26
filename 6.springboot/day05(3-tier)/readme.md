@@ -43,3 +43,199 @@
 우리는 'MVC 패턴을 적용하였고 3-tier 구조로 되어있는 프레임워크를 갖추고 있다.'라고 할 수 있다.
 
 ![image](https://github.com/to7485/Web1500/assets/54658614/ce86031e-de2c-46c5-a575-1337e92108dc)
+
+# Ex_날짜_tier 프로젝트 생성하기
+- application.properties 지우고 application.yml 파일 복사해오기
+- com.korea.tier패키지 안에 vo,mapper,mybatis,controller 패키지 생성하기
+  - 이전프로젝트에 있던 파일들 복사해오기
+- src/main/resources 안에 mapper,config 패키지 생성하기
+  - 이전프로젝트에 있던 파일들 복사해오기(경로만 잘 설정해주기)
+
+![image](https://github.com/to7485/Web1500/assets/54658614/0ea7bb92-4f7e-45a8-b4e9-f21f18d5c2df)
+
+## Order 테이블 생성하기
+
+```sql
+CREATE TABLE "ORDER"(
+	ORDER_ID NUMBER PRIMARY KEY,
+	PRODUCT_ID NUMBER NOT NULL,
+	PRODUCT_COUNT NUMBER DEFAULT 1,
+	ORDER_DATE DATE DEFAULT SYSDATE,
+	CONSTRAINT FK_ORDER_PRODUCT FOREIGN KEY(PRODUCT_ID) REFERENCES PRODUCT(PRODUCT_ID)
+);
+```
+## vo 패키지에 OrderVO 클래스 생성하기
+```java
+package com.korea.tier.vo;
+
+import lombok.Data;
+
+@Data
+public class OrderVO {
+	private int orderId;
+	private int productId;
+	private int productCount;
+	private String orderDate;
+}
+
+```
+
+## com.korea.tier패키지 안에 dao 패키지 생성하고 ProductDAO 클래스 생성하기
+
+```java
+package com.korea.tier.dao;
+
+import java.util.List;
+
+import org.springframework.stereotype.Repository;
+
+import com.korea.tier.mapper.ProductMapper;
+import com.korea.tier.vo.ProductVO;
+
+import lombok.RequiredArgsConstructor;
+
+@Repository
+@RequiredArgsConstructor
+public class ProductDAO {
+	
+	private final ProductMapper productMapper;
+	
+	//상품 추가
+	public void save(ProductVO productVO) {
+		productMapper.insert(productVO);
+	}
+	//상품 조회
+	public List<ProductVO> findAll(){
+		return productMapper.selectAll();
+	}
+}
+
+```
+
+Mapper -> DAO -> Service -> Controller 순으로 거쳐오면 된다.
+
+## com.korea.tier패키지 안에 service 패키지 생성하고 ProductService 인터페이스 생성하기
+- 지금은 컨트롤러 하나에 하나의 쿼리가 나가기 때문에 서비스에 대한 목적이 두드러지지 않는다.
+- 여러개를 연동하다보면 하나의 서비스에 여러개의 쿼리가 필요하다 보니 묶어서 메서드 하나로 처리하기 위해 추가해주자.
+- 예를들어 게시판을 구현하면 공지사항, 자유게시판, 후기게시판등 여러 게시판이 있을수 있다.
+- 이때 공통적인 부분을 인터페이스로 추상화를 시켜놓고 사용하자는 것.(나중에 qualifier로 골라서 주입해주면 된다.)
+
+```java
+package com.korea.tier.service;
+
+import java.util.List;
+
+import com.korea.tier.vo.ProductVO;
+
+public interface ProductService {
+	
+	//상품 추가
+	public void register(ProductVO productVO);
+	//상품 조회
+	public List<ProductVO> getList(); 
+
+}
+```
+
+## service 패키지에 ProductServiceImpl 클래스 생성하기
+```java
+package com.korea.tier.service;
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import com.korea.tier.dao.ProductDAO;
+import com.korea.tier.vo.ProductVO;
+
+import lombok.RequiredArgsConstructor;
+
+@Service
+@RequiredArgsConstructor
+public class ProductServiceImpl implements ProductService {
+	
+	private final ProductDAO productDAO;
+
+	@Override
+	public void register(ProductVO productVO) {
+		productDAO.save(productVO);
+		
+	}
+
+	@Override
+	public List<ProductVO> getList() {
+		
+		return productDAO.findAll();
+	}
+
+}
+
+```
+
+## ProductController클래스 코드 수정하기
+```java
+package com.korea.tier.controller;
+
+import java.util.List;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.view.RedirectView;
+
+import com.korea.tier.mapper.ProductMapper;
+import com.korea.tier.service.ProductService;
+import com.korea.tier.vo.ProductVO;
+
+import lombok.RequiredArgsConstructor;
+
+@Controller
+@RequiredArgsConstructor
+@RequestMapping("/product/*")
+public class ProductController { 
+
+	//private final ProductMapper productMapper;
+	//지금까지 서비스 하나당 쿼리문 하나라서 Mapper를 직접 주입했지만
+	//매퍼를 여러개 추가하기 보다는 여러개를 묶어놓은 Service를 주입하자.
+	
+	private final ProductService productService;
+	
+	@GetMapping("register")
+	public String register(Model model) {
+		model.addAttribute("productVO",new ProductVO());
+		return "product/product-insert";
+	}
+	
+	@PostMapping("register")
+	public RedirectView register(ProductVO productVO) {
+		productService.register(productVO);
+		return new RedirectView("product/list");
+	}
+	
+	@GetMapping("list")
+	public String list(Model model) {
+		List<ProductVO> list = productService.getList();
+		model.addAttribute("list",list);
+		return "product/product-list";
+	}
+	
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
