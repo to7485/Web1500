@@ -264,17 +264,6 @@ CREATE TABLE PRODUCT(
 );
 ```
 
-## 주문 테이블 생성하기
-```sql
-CREATE TABLE "ORDER"(
-	ORDER_ID NUMBER PRIMARY KEY,
-	PRODUCT_ID NUMBER NOT NULL,
-	PRODUCT_COUNT NUMBER DEFAULT 1,
-	ORDER_DATE DATE DEFAULT SYSDATE,
-	CONSTRAINT FK_ORDER_PRODUCT FOREIGN KEY(PRODUCT_ID) REFERENCES PRODUCT(PRODUCT_ID)
-);
-```
-
 ## main/java/vo 패키지 생성하고 ProductVO 클래스 생성하기
 
 ```java
@@ -291,21 +280,6 @@ public class ProductVO {
 	private int productPrice;
 	private String registerDate;
 	private String updateDate;
-}
-```
-
-## OrderVO 클래스 생성하기
-```java
-package com.korea.db.vo;
-
-import lombok.Data;
-
-@Data
-public class OrderVO {
-	private int orderId;
-	private int productId;
-	private int productCount;
-	private String orderDate;
 }
 ```
 
