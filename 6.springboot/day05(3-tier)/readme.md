@@ -507,9 +507,113 @@ public class OrderService {
 
 ![image](https://github.com/to7485/Web1500/assets/54658614/73f42696-213f-4c10-ac09-6a38b0a39f1a)
 
+# 사용자가 직접 선택하여 주문하게 하기
 
+## OrderController에서 포워딩 해주기
+```java
+package com.korea.tier.controller;
 
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.view.RedirectView;
 
+import com.korea.tier.service.OrderService;
+import com.korea.tier.vo.OrderVO;
 
+import lombok.RequiredArgsConstructor;
+
+@Controller
+@RequiredArgsConstructor
+@RequestMapping("order/*")
+public class OrderController {
+
+	private final OrderService orderService;
+	
+	//주문
+	@GetMapping("done")
+	public RedirectView order(OrderVO vo) {
+		orderService.order(vo);
+		return new RedirectView("/product/list"); 
+	}
+}
+
+```
+
+## product-list.html 수정하기
+```html
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<title>상품 목록</title>
+	<style>
+		form{
+			width : 1000px;
+			margin: 0 auto;
+			
+		}
+		
+		table{
+			width : 100%;
+		}
+		
+		button{
+			width : 100%;
+		}
+		
+	</style>
+</head>
+
+<body>
+	<form>
+	<table border="1">
+		<tr>
+			<th>단일 선택</th>
+			<th>주문 개수</th>
+			<th>상품 번호</th>
+			<th>상품 이름</th>
+			<th>상품 재고</th>
+			<th>상품 가격</th>
+			<th>등록 날짜</th>
+			<th>수정 날짜</th>
+		</tr>
+		<th:block th:each="product : ${list}">
+			<tr th:object="${product}">
+				<td><input type="radio" name="productId" th:value="*{productId}"></td>
+				<td><input type="text" name="productCount" readonly></td>
+				<td th:text="*{productId}"></td>
+				<td th:text="*{productName}"></td>
+				<td th:text="*{productStock}"></td>
+				<td th:text="*{productPrice}"></td>
+				<td th:text="*{registerDate}"></td>
+				<td th:text="*{updateDate}"></td>
+			</tr>
+		</th:block>
+	</table>
+	<button>주문 완료</button>
+	</form>
+</body>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+	const $radios = $("input[type='radio']");
+	const $inputs = $("input[name='productCount']");
+	let $temp;
+	
+	$radios.on("click",function(){
+		let i = $radios.index(this);
+		//console.log($inputs.eq(i).prop("readOnly"))
+		if($temp){
+			$temp.prop("readOnly",true);
+			$temp.val("");
+		}
+		$inputs.eq(i).prop("readOnly",false);
+		$temp = $inputs.eq(i)
+	});
+</script>
+
+</html>
+```
 
 
