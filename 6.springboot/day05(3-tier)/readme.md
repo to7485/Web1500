@@ -56,6 +56,8 @@
 ## Order 테이블 생성하기
 
 ```sql
+CREATE SEQUENCE SEQ_ORDER;
+
 CREATE TABLE "ORDER"(
 	ORDER_ID NUMBER PRIMARY KEY,
 	PRODUCT_ID NUMBER NOT NULL,
@@ -312,8 +314,82 @@ public class OrderDAO {
 	
 }
 ```
+## service패키지에 OrderService 클래스 생성하기
+- 나중에 음식만 팔다가 조리도구를 팔수도 있다.
+- 인터페이스를 만들어놓고 클래스로 구현을 하는 이유는 확장을 염두해두는것.
+
+```java
+package com.korea.tier.service;
+
+import org.springframework.stereotype.Service;
+
+import com.korea.tier.dao.OrderDAO;
+import com.korea.tier.vo.OrderVO;
+
+import lombok.RequiredArgsConstructor;
+
+@Service
+@RequiredArgsConstructor
+public class OrderService {
+
+	private final OrderDAO orderDAO;
+	
+	//주문하기
+	public void order(OrderVO orderVO) {
+		orderDAO.save(orderVO);
+	}
+}
+```
 
 ## mapper 폴더에 orderMapper.xml 파일 생성하기
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.korea.tier.mapper.OrderMapper">
+	<insert id="insert">
+		INSERT INTO ORDER (ORDER_ID, PRODUCT_ID, PRODUCT_COUNT)
+		VALUES (SEQ_ORDER.NEXTVAL, #{productId}, #{productCount})
+	</insert>
+</mapper>
+```
+
+## controller 패키지에 OrderController 클래스 생성하기
+```java
+package com.korea.tier.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.korea.tier.service.OrderService;
+import com.korea.tier.vo.OrderVO;
+
+import lombok.RequiredArgsConstructor;
+
+@Controller
+@RequiredArgsConstructor
+@RequestMapping("order/*")
+public class OrderController {
+
+	private final OrderService orderService;
+	
+	@GetMapping("order")
+	public String order() {
+		OrderVO vo = new OrderVO();
+		vo.setOrderId(4);
+		vo.setProductCount(5);
+		orderService.order(vo);
+		return null;
+		
+	}
+	
+}
+```
+- 만약 실행을 한다면 order 테이블에서 orderId에 대한 행이 추가될 것이다.
+
+![image](https://github.com/to7485/Web1500/assets/54658614/dfee1a04-7510-4a44-b107-61afaaa32c01)
+
+- productCount(주문개수)는 늘지만 실제 product테이블에서의 재고도 update를 통해 감소하게 해줘야 한다.
 
 
 
