@@ -248,6 +248,8 @@ public class MapperTests {
 
 ![image](https://github.com/to7485/Web1500/assets/54658614/c3bb2626-453e-467f-9563-1a471a1cdcc0)
 
+# 테이블 만들어서 CRUD 해보기
+
 ## 상품 테이블 생성하기
 ```sql
 CREATE SEQUENCE SEQ_PRODUCT;
@@ -320,10 +322,6 @@ public interface ProductMapper {
 
 	//상품 추가
 	public void insert(ProductVO productVO);
-	//상품 조회
-	//상품 수정
-	//상품 삭제
-	//상품 전체 조회
 }
 ```
 
@@ -479,7 +477,8 @@ public interface ProductMapper {
 
 @GetMapping("list")
 public String list(Model model) {
-	model.addAttribute("list",productMapper.selectAll());
+	List<ProductVO> list = productMapper.selectAll();
+	model.addAttribute("list",list);
 	return "product-list";
 }
 
@@ -503,7 +502,7 @@ public String list(Model model) {
             <th>등록 날짜</th>
             <th>수정 날짜</th>
         </tr>
-        <th:block th:each="product : ${products}">
+        <th:block th:each="product : ${list}">
             <tr th:object="${product}">
                 <td th:text="*{productId}"></td>
                 <td th:text="*{productName}"></td>
@@ -517,5 +516,43 @@ public String list(Model model) {
 </body>
 </html>
 ```
+
+![image](https://github.com/to7485/Web1500/assets/54658614/17077c9a-41b8-4c1f-a7db-e10df781c0d2)
+
+
+# 3-tier
+- 스프링 프로젝트는 3-tier방식으로 구성한다.
+
+## tier의 종류
+
+### Presentation Tier - 화면계층
+- 화면에 보여주는 기술을 사용하는 영역
+- Controller에서 사용자의 요청에 맞는 응답처리를 진행한다
+- HTML엔진(Thymeleaf), HTML등이 담당하는 영역이다.
+- 화면 구성이 이에 속한다.
+### Business Tier - 비즈니스 계층
+- 순수한 Business Logic을 담고있는 영역
+- Presentation tier와 presistence tier의 bridge 역할을 한다.
+- 고객이 원하는 요구사항을 반영하는 계층이다.
+- 서비스에 있어서 가장 중요한 영역이다.
+- 이 영역의 설계는 고객의 요구사항과 정확히 일치해야 한다.
+- Service영역이다.(로그인, 마이페이지, 회원가입)
+- 예를들어 쇼핑몰에서는 상품 구매시 포인트 적립을 가정한다면, Presistence tier의 설계는 '상품','회원'으로 나눠 설계하지만<br> Business tier는 상품 영역과 회원 영역을 동시에 사용해서 하나의 로직을 처리하게 된다.이 때 하나의 서비스에 필요한 여러 개의 쿼리 메서드를 하나로 묶어주는 역할이 필요한데, 이를 Service 객체로 사용한다.
+
+### Presistence Tier - 영속 계층
+- 데이터를 어떤 방식으로 보관하고, 사용하는 가에 대한 설계가 들어가는 계층
+- 일반적으로 DBMS를 많이 사용한다.
+- Presistence tier는 DBMS를 기준으로, Business tier는 Logic을 기준으로 처리한다.
+
+각 영역은 독립적으로 설계되어 나중에 특정한 기술이 변하더라도 필요한 부분을 전자제품의 부품처럼 쉽게 교환할 수 있게 하자는 방식이다.<br> 각 연결부위는 인터페이스를 이용해서 설계하는 것이 일반적인 구성방식이다.
+
+![image](https://github.com/to7485/Web1500/assets/54658614/c9fb3ccf-8cc0-4600-a0f8-9cce7d1b1cd4)
+
+
+
+
+
+
+
 
 
