@@ -376,7 +376,7 @@ public class OrderController {
 	@GetMapping("order")
 	public String order() {
 		OrderVO vo = new OrderVO();
-		vo.setOrderId(4);
+		vo.setProductId(4);
 		vo.setProductCount(5);
 		orderService.order(vo);
 		return null;
@@ -385,16 +385,127 @@ public class OrderController {
 	
 }
 ```
-- 만약 실행을 한다면 order 테이블에서 orderId에 대한 행이 추가될 것이다.
+- 만약 실행을 한다면 order 테이블에 행이 추가될 것이다.
 
 ![image](https://github.com/to7485/Web1500/assets/54658614/dfee1a04-7510-4a44-b107-61afaaa32c01)
 
-- productCount(주문개수)는 늘지만 실제 product테이블에서의 재고도 update를 통해 감소하게 해줘야 한다.
+- 하지만 productCount(주문개수)는 늘지만 실제 product테이블에서의 재고도 update를 통해 감소하게 해줘야 한다.
 
+## product.xml에 쿼리문 추가하기
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.korea.tier.mapper.ProductMapper">
+	<insert id="insert">
+		insert into product
+		(PRODUCT_ID, PRODUCT_NAME, PRODUCT_STOCK, PRODUCT_PRICE)
+		values (seq_product.nextVal, #{productName}, #{productStock}, #{productPrice})
+	</insert>
+	<select id="selectAll" resultType="productVO">
+		select * from product
+	</select>
+	
+	<update id="updateStock">
+		UPDATE PRODUCT
+		SET PRODUCT_STOCK = PRODUCT_STOCK - #{productCount} //주문한 개수만큼 재고 차감하기
+		WHERE PRODUCT_ID = #{productId} //제품id에서
+	</update>
+</mapper>
+```
+## ProductMapper에 메서드 추가하기
+```java
+package com.korea.tier.mapper;
 
+import java.util.List;
 
+import org.apache.ibatis.annotations.Mapper;
 
+import com.korea.tier.vo.OrderVO;
+import com.korea.tier.vo.ProductVO;
 
+@Mapper
+public interface ProductMapper {
+
+	//상품 추가
+	public void insert(ProductVO productVO);
+	//상품 조회
+	public List<ProductVO> selectAll();
+	//상품 재고 수정
+	public void updateStock(OrderVO orderVO);
+}
+
+```
+
+## ProductDAO에 메서드 추가하기
+```java
+package com.korea.tier.dao;
+
+import java.util.List;
+
+import org.springframework.stereotype.Repository;
+
+import com.korea.tier.mapper.ProductMapper;
+import com.korea.tier.vo.OrderVO;
+import com.korea.tier.vo.ProductVO;
+
+import lombok.RequiredArgsConstructor;
+
+@Repository
+@RequiredArgsConstructor
+public class ProductDAO {
+	
+	private final ProductMapper productMapper;
+	
+	//상품 추가
+	public void save(ProductVO productVO) {
+		productMapper.insert(productVO);
+	}
+	//상품 조회
+	public List<ProductVO> findAll(){
+		return productMapper.selectAll();
+	}
+	
+	//상품 재고 수정
+	public void setProductStock(OrderVO orderVO) {
+		productMapper.updateStock(orderVO);
+	}
+}
+```
+
+## OrderService 클래스에서 메서드 사용하기
+- 컨트롤러에서 dao를 두번 호출하는게 아니라 order 메서드 한번만 호출하면 DB에 두번 접근한다.
+```java
+package com.korea.tier.service;
+
+import org.springframework.stereotype.Service;
+
+import com.korea.tier.dao.OrderDAO;
+import com.korea.tier.dao.ProductDAO;
+import com.korea.tier.vo.OrderVO;
+
+import lombok.RequiredArgsConstructor;
+
+@Service
+@RequiredArgsConstructor
+public class OrderService {
+
+	private final OrderDAO orderDAO;
+	private final ProductDAO productDAO;
+	
+	//주문하기
+	public void order(OrderVO orderVO) {
+		productDAO.setProductStock(orderVO);
+		orderDAO.save(orderVO);	
+	}
+}
+
+```
+
+![image](https://github.com/to7485/Web1500/assets/54658614/579774c0-a429-4ea8-92b7-0babe67f21a2)
+
+- product 테이블에서도 재고가 같이 감소한 모습을 볼 수 있다.
+
+![image](https://github.com/to7485/Web1500/assets/54658614/73f42696-213f-4c10-ac09-6a38b0a39f1a)
 
 
 
