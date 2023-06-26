@@ -360,12 +360,11 @@ public class DBController {
 	
 	private final ProductMapper productMapper;
 	
-	@RequestMapping("insertForm")
-	public String ex02(Model model) {
-		model.addAttribute("vo",new ProductVO());
-		
-		return "product-insert";
-	}
+    @GetMapping("register")
+    public String register(Model model){
+        model.addAttribute("productVO", new ProductVO());
+        return "product-insert";
+    }
 }
 
 ```
@@ -373,24 +372,25 @@ public class DBController {
 ## product-insert.html 파일 생성하기
 ```html
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-	<head>
-		<meta charset="EUC-KR">
-		<title>Insert title here</title>
-	</head>
-	<body>
-		<form th:action"@{insert}" th:object="${vo}" method="post">
-			<div>
-				<input type="text" th:field="*{productName}" placeholder="상품 이름">
-			</div>
-			<div>
-				<input type="text" th:field="*{productStock}" placeholder="상품 재고">
-			</div>
-			<div>
-				<input type="text" th:field="*{productPrice}" placeholder="상품 가격">
-			</div>
-		</form>
-	</body>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>상품 추가</title>
+</head>
+<body>
+    <form th:action="@{/register}" th:object="${productVO}" method="post">
+        <div>
+            <input type="text" th:field="*{productName}" placeholder="상품 이름">
+        </div>
+        <div>
+            <input type="text" th:field="*{productStock}" placeholder="상품 재고">
+        </div>
+        <div>
+            <input type="text" th:field="*{productPrice}" placeholder="상품 가격">
+        </div>
+        <input type="submit" value="등록">
+    </form>
+</body>
 </html>
 ```
 
@@ -417,23 +417,23 @@ public class DBController {
 	
 	private final ProductMapper productMapper;
 	
-	@RequestMapping("insertForm")
+	@RequestMapping("register")
 	public String ex02(Model model) {
 		model.addAttribute("vo",new ProductVO());
 		
 		return "product-insert";
 	}
 	
-	@PostMapping("insert")
-	public RedirectView insert(ProductVO productVO) {
-		productMapper.insert(productVO);
-		return new RedirectView("list"); //RedirectView의 생성자로 redirect가 가능하다.
-	}
-	
-	@GetMapping("list")
-	public String list() {
-		return "product-list";
-	}
+    @PostMapping("register")
+    public RedirectView register(ProductVO productVO){
+        productMapper.insert(productVO);
+        return new RedirectView("list");
+    }
+
+    @GetMapping("list")
+    public String list(Model model){
+        return "product-list";
+    }
 }
 ```
 
@@ -450,8 +450,8 @@ public interface ProductMapper {
 
 	//상품 추가
 	public void insert(ProductVO productVO);
-	//상품 전체 목록 조회
-	public List<ProductVO> selectAll();
+	//상품 전체 목록
+    	public List<ProductVO> selectAll();
 }
 ```
 
@@ -459,7 +459,7 @@ public interface ProductMapper {
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.db.mapper.ProductMapper">
+<mapper namespace="com.korea.db.mapper.ProductMapper">
 	<insert id="insert">
 		insert into product
 		(PRODUCT_ID, PRODUCT_NAME, PRODUCT_STOCK, PRODUCT_PRICE)
@@ -467,9 +467,8 @@ public interface ProductMapper {
 	</insert>
 	
 	<select id="selectAll" resultType="productVO">
-		SELECT PRODUCT_ID,PRODUCT_NAME,PRODUCT_STOCK,PRODUCT_PRICE,REGISTER_DATE,UPDATE_DATE
-		FROM PRODUCT
-	</select>
+        	SELECT PRODUCT_ID, PRODUCT_NAME, PRODUCT_STOCK, PRODUCT_PRICE, REGISTER_DATE, UPDATE_DATE FROM PRODUCT
+    	</select>
 </mapper>
 ```
 
@@ -488,7 +487,35 @@ public String list(Model model) {
 
 ## product-list.html 생성하기
 ```html
-
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>상품 목록</title>
+</head>
+<body>
+    <table border="1">
+        <tr>
+            <th>상품 번호</th>
+            <th>상품 이름</th>
+            <th>상품 재고</th>
+            <th>상품 가격</th>
+            <th>등록 날짜</th>
+            <th>수정 날짜</th>
+        </tr>
+        <th:block th:each="product : ${products}">
+            <tr th:object="${product}">
+                <td th:text="*{productId}"></td>
+                <td th:text="*{productName}"></td>
+                <td th:text="*{productStock}"></td>
+                <td th:text="*{productPrice}"></td>
+                <td th:text="*{registerDate}"></td>
+                <td th:text="*{updateDate}"></td>
+            </tr>
+        </th:block>
+    </table>
+</body>
+</html>
 ```
 
 
