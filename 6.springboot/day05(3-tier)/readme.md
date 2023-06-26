@@ -532,10 +532,13 @@ public class OrderController {
 	
 	//주문
 	@GetMapping("done")
-	public RedirectView order(OrderVO vo) {
-		orderService.order(vo);
-		return new RedirectView("/product/list"); 
+	public RedirectView order(OrderVO orderVO) {
+		System.out.println("주문개수 : " + orderVO.getProductCount());
+		orderService.order(orderVO);
+		return new RedirectView("/product/list");
+		 
 	}
+	
 }
 
 ```
