@@ -521,7 +521,10 @@ public String list(Model model) {
 
 
 # 3-tier
+- Presentation Tier,Business Tier,Presistence Tier를 각각 물리적으로 독립된 모듈로 개발하고 유지하는 구조를 말한다.
 - 스프링 프로젝트는 3-tier방식으로 구성한다.
+
+![image](https://github.com/to7485/Web1500/assets/54658614/aef7e187-ffdb-4ab8-a287-b27b6ef368a9)
 
 ## tier의 종류
 
@@ -530,6 +533,7 @@ public String list(Model model) {
 - Controller에서 사용자의 요청에 맞는 응답처리를 진행한다
 - HTML엔진(Thymeleaf), HTML등이 담당하는 영역이다.
 - 화면 구성이 이에 속한다.
+
 ### Business Tier - 비즈니스 계층
 - 순수한 Business Logic을 담고있는 영역
 - Presentation tier와 presistence tier의 bridge 역할을 한다.
@@ -548,8 +552,19 @@ public String list(Model model) {
 
 ![image](https://github.com/to7485/Web1500/assets/54658614/c9fb3ccf-8cc0-4600-a0f8-9cce7d1b1cd4)
 
+# 3-tier vs MVC
 
+## 디자인 패턴
+- 물릭적으로 구분할 수 없는 설계를 문서화 하면서 고안된 방법
+- 프로그램의 규모가 커질수록 다양한 문제를 겪게 되는데, 이 문제들을 효율적으로 해결할 수 있게 유형별로 패턴화 한 것
 
+## 차이점
+- **3-tier 아키텍처** 는 물리적인 공간을 기준으로 역할을 구분
+- **MVC 패턴**은 소프트웨어 디자인패턴 중 하나로 하나의 컴포넌트간 역할 분담
+
+우리는 'MVC 패턴을 적용하였고 3-tier 구조로 되어있는 프레임워크를 갖추고 있다.'라고 할 수 있다.
+
+![image](https://github.com/to7485/Web1500/assets/54658614/ce86031e-de2c-46c5-a575-1337e92108dc)
 
 
 
