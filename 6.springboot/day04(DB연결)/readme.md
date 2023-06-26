@@ -262,6 +262,17 @@ CREATE TABLE PRODUCT(
 );
 ```
 
+## 주문 테이블 생성하기
+```sql
+CREATE TABLE "ORDER"(
+	ORDER_ID NUMBER PRIMARY KEY,
+	PRODUCT_ID NUMBER NOT NULL,
+	PRODUCT_COUNT NUMBER DEFAULT 1,
+	ORDER_DATE DATE DEFAULT SYSDATE,
+	CONSTRAINT FK_ORDER_PRODUCT FOREIGN KEY(PRODUCT_ID) REFERENCES PRODUCT(PRODUCT_ID)
+);
+```
+
 ## main/java/vo 패키지 생성하고 ProductVO 클래스 생성하기
 
 ```java
@@ -278,6 +289,21 @@ public class ProductVO {
 	private int productPrice;
 	private String registerDate;
 	private String updateDate;
+}
+```
+
+## OrderVO 클래스 생성하기
+```java
+package com.korea.db.vo;
+
+import lombok.Data;
+
+@Data
+public class OrderVO {
+	private int orderId;
+	private int productId;
+	private int productCount;
+	private String orderDate;
 }
 ```
 
@@ -314,11 +340,155 @@ public interface ProductMapper {
 </mapper>
 ```
 
+## DBController 클래스 생성하기
+```java
+package com.korea.db.controller;
 
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.korea.db.mapper.ProductMapper;
+import com.korea.db.mapper.TimeMapper;
+import com.korea.db.vo.ProductVO;
 
+import lombok.RequiredArgsConstructor;
 
+@Controller
+@RequiredArgsConstructor
+public class DBController {
+	
+	private final ProductMapper productMapper;
+	
+	@RequestMapping("insertForm")
+	public String ex02(Model model) {
+		model.addAttribute("vo",new ProductVO());
+		
+		return "product-insert";
+	}
+}
 
+```
 
+## product-insert.html 파일 생성하기
+```html
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="EUC-KR">
+		<title>Insert title here</title>
+	</head>
+	<body>
+		<form th:action"@{insert}" th:object="${vo}" method="post">
+			<div>
+				<input type="text" th:field="*{productName}" placeholder="상품 이름">
+			</div>
+			<div>
+				<input type="text" th:field="*{productStock}" placeholder="상품 재고">
+			</div>
+			<div>
+				<input type="text" th:field="*{productPrice}" placeholder="상품 가격">
+			</div>
+		</form>
+	</body>
+</html>
+```
+
+## DBController에 코드 추가하기
+```java
+package com.korea.db.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.view.RedirectView;
+
+import com.korea.db.mapper.ProductMapper;
+import com.korea.db.mapper.TimeMapper;
+import com.korea.db.vo.ProductVO;
+
+import lombok.RequiredArgsConstructor;
+
+@Controller
+@RequiredArgsConstructor
+public class DBController {
+	
+	private final ProductMapper productMapper;
+	
+	@RequestMapping("insertForm")
+	public String ex02(Model model) {
+		model.addAttribute("vo",new ProductVO());
+		
+		return "product-insert";
+	}
+	
+	@PostMapping("insert")
+	public RedirectView insert(ProductVO productVO) {
+		productMapper.insert(productVO);
+		return new RedirectView("list"); //RedirectView의 생성자로 redirect가 가능하다.
+	}
+	
+	@GetMapping("list")
+	public String list() {
+		return "product-list";
+	}
+}
+```
+
+## 조회하기 메서드 작성하기
+```java
+package com.korea.db.mapper;
+
+import org.apache.ibatis.annotations.Mapper;
+
+import com.korea.db.vo.ProductVO;
+
+@Mapper
+public interface ProductMapper {
+
+	//상품 추가
+	public void insert(ProductVO productVO);
+	//상품 전체 목록 조회
+	public List<ProductVO> selectAll();
+}
+```
+
+## product.xml에 쿼리문 작성하기
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.db.mapper.ProductMapper">
+	<insert id="insert">
+		insert into product
+		(PRODUCT_ID, PRODUCT_NAME, PRODUCT_STOCK, PRODUCT_PRICE)
+		values (seq_product.nextVal, #{productName}, #{productStock}, #{productPrice})
+	</insert>
+	
+	<select id="selectAll" resultType="productVO">
+		SELECT PRODUCT_ID,PRODUCT_NAME,PRODUCT_STOCK,PRODUCT_PRICE,REGISTER_DATE,UPDATE_DATE
+		FROM PRODUCT
+	</select>
+</mapper>
+```
+
+## DBController에 코드 작성하기
+```java
+
+... 중략
+
+@GetMapping("list")
+public String list(Model model) {
+	model.addAttribute("list",productMapper.selectAll());
+	return "product-list";
+}
+
+```
+
+## product-list.html 생성하기
+```html
+
+```
 
 
