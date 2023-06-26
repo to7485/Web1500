@@ -224,9 +224,96 @@ public class ProductController {
 }
 ```
 
+## templates에 product 폴더 생성하고 html파일들 복사해오기
+### product-insert.html 코드 수정하기
+```html
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>상품 추가</title>
+</head>
+<body><!--action 수정하기-->
+    <form th:action="@{/product/register}" th:object="${productVO}" method="post">
+        <div>
+            <input type="text" th:field="*{productName}" placeholder="상품 이름">
+        </div>
+        <div>
+            <input type="text" th:field="*{productStock}" placeholder="상품 재고">
+        </div>
+        <div>
+            <input type="text" th:field="*{productPrice}" placeholder="상품 가격">
+        </div>
+        <input type="submit" value="등록">
+    </form>
+</body>
+</html>
+```
+- 실행하고 url에 localhost:1000/product/list 입력하여 결과 확인하기
 
+![image](https://github.com/to7485/Web1500/assets/54658614/672f8094-7a02-4e57-93dc-917e459b40ec)
 
+- localhost:10000/product/register 입력하여 추가가 잘 되는지도 확인하기
 
+# 주문기능 만들기
+- 제품 테이블과 PRODUCT_ID가 PK,FK로 연결이 되어 있다.
+- 라디오 버튼을 만들고 주문할 개수를 입력할 수 있게 하고 버튼을 누르면 주문 테이블에 등록이 되게 만든다.
+- 등록이 되는 동시에 제품 테이블에서는 재고가 감소하게 해야 한다.
+
+## config.xml에 OrderVO의 별칭 만들어주기
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0/EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <typeAliases>
+		<typeAlias type="com.korea.tier.vo.ProductVO" alias="productVO" />
+		<typeAlias type="com.korea.tier.vo.OrderVO" alias="orderVO" />
+	</typeAliases>
+</configuration>
+```
+
+## mapper 패키지에 OrderMapper 인터페이스 만들기
+```java
+package com.korea.tier.mapper;
+
+import org.apache.ibatis.annotations.Mapper;
+
+import com.korea.tier.vo.OrderVO;
+
+@Mapper
+public interface OrderMapper {
+
+	//주문하기
+	public void insert(OrderVO orderVO);	
+}
+```
+
+## dao 패키지에 OrderDAO 클래스 만들기
+```java
+package com.korea.tier.dao;
+
+import org.springframework.stereotype.Repository;
+
+import com.korea.tier.mapper.OrderMapper;
+import com.korea.tier.vo.OrderVO;
+
+import lombok.RequiredArgsConstructor;
+
+@Repository
+@RequiredArgsConstructor
+public class OrderDAO {
+
+	private final OrderMapper orderMapper;
+	
+	//주문하기
+	public void save(OrderVO orderVO) {
+		orderMapper.insert(orderVO);
+	}
+	
+}
+```
+
+## mapper 폴더에 orderMapper.xml 파일 생성하기
 
 
 
