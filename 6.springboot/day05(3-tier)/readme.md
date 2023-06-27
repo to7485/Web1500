@@ -591,7 +591,7 @@ public class OrderController {
                 </tr>
             </th:block>
         </table>
-        <button type="button" id="order-done">주문 완료</button><button type="button" onclick="location.href='/order/list';">주문 내역</button>
+        <button type="button" id="order-done">주문 완료</button>
     </div>
     <form th:action="@{/order/done}" method="get" name="order-form">
         <input type="hidden" name="productId">
@@ -609,10 +609,12 @@ public class OrderController {
     $radios.on("click", function(){ //라디오버튼의 클릭 이벤트 처리하는 함수
        i = $radios.index(this); //i에 선택한 라디오 버튼의 index값을 저장
        if($temp) {
-           $temp.prop("readOnly", true); //변수를 사용하여 이전에 선택된 입력 필드를 확인하고, readOnly 속성을 true로 설정하여 읽기 전용으로 변경합니다.
+           $temp.prop("readOnly", true);
+	//변수를 사용하여 이전에 선택된 입력 필드를 확인하고, readOnly 속성을 true로 설정하여 읽기 전용으로 변경합니다.
            $temp.val(""); 
        }
-       $inputs.eq(i).prop("readOnly", false); //클릭된 라디오 버튼에 해당하는 입력 필드를 선택하고, readOnly 속성을 false로 설정하여 편집 가능한 상태로 변경합니다.
+       $inputs.eq(i).prop("readOnly", false);
+	//클릭된 라디오 버튼에 해당하는 입력 필드를 선택하고, readOnly 속성을 false로 설정하여 편집 가능한 상태로 변경합니다.
        $temp = $inputs.eq(i); //$temp 변수에 선택된 입력 필드를 저장합니다.
     });
 
@@ -640,7 +642,7 @@ button {
 	}
 </style>
  ... 중략
-<button>주문 완료</button><button type="button" onclick="location.href='/order/list';">주문 내역</button>
+<button type="button" id="order-done">주문 완료</button><button type="button" onclick="location.href='/order/list';">주문 내역</button>
 ```
 
 ![image](https://github.com/to7485/Web1500/assets/54658614/7d224395-04c3-4d4a-bf1d-c2be5f58dca9)
