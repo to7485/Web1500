@@ -623,5 +623,212 @@ public class OrderController {
 
 </html>
 ```
+# 주문 내역 만들기
+## product-list.html에 버튼 추가하기
+```html
+button {
+	width: 50%;
+	}
+</style>
+ ... 중략
+<button>주문 완료</button><button onclick="location.href='';">주문 내역</button>
+```
+
+![image](https://github.com/to7485/Web1500/assets/54658614/7d224395-04c3-4d4a-bf1d-c2be5f58dca9)
+
+## order폴더에 order-list.html 파일 생성하기
+```html
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		<title>주문내역</title>
+		<style>
+				#container {
+					width: 1000px;
+					margin: 0 auto;
+		
+				}
+				
+				table{
+					width:100%;
+					
+				}
+		
+				button {
+					width: 100%;
+				}
+			</style>
+	</head>
+	<body>
+		<div id="container">
+			<table border="1">
+					<tr>
+						<th>상품 이름</th>
+						<th>상품 가격</th>
+						<th>결제 금액</th>
+						<th>주문 날짜</th>
+					</tr>
+					<th:block th:each="order : ${orders}">
+					<tr th:object="${order}">
+						<td th:text="*{productName}"></td>
+						<td th:text="*{productPrice}"></td>
+						<td th:text="*{orderPrice"></td>
+						<td th:text="*{orderDate}"></td>
+					</tr>
+					</th:block>
+					<button onclick="location.href='/product/list'">상품 목록</button>
+				</table>
+			</div>
+	</body>
+</html>
+```
+
+## orderMapper.xml에 쿼리문 작성하기
+- 현재 product 테이블과 order테이블은 productId컬럼을 통해 관계를 맺고 있다.
+- product의 팔드와 order의 필드를 동시에 갖고 있는 vo가 없기 때문에 새롭게 만들어준다.
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.korea.tier.mapper.OrderMapper">
+	<insert id="insert">
+		INSERT INTO "ORDER" (ORDER_ID, PRODUCT_ID, PRODUCT_COUNT)
+		VALUES (SEQ_ORDER.NEXTVAL, #{productId}, #{productCount})
+	</insert>
+	
+	<select id="selectAll" resultType="orderDTO">
+		select P.PRODUCT_ID, PRODUCT_NAME, PRODUCT_STOCK, PRODUCT_PRICE, REGISTER_DATE, UPDATE_DATE, ORDER_ID, PRODUCT_COUNT, ORDER_DATE
+		FROM PRODUCT P JOIN ORDER O ON P.PRODUCT_ID = O.PRODUCT_ID
+	</select>
+</mapper>
+```
+
+## vo 패키지에 OrderDTO만들기
+```java
+package com.korea.tier.vo;
+
+import lombok.Data;
+
+@Data
+public class OrderDTO {
+	
+	private int productId;
+	private String productName;
+	private int productStock;
+	private int productPrice;
+	private String registerDate;
+	private String updateDate;
+	private int orderId;
+	private int productCount;
+	private String orderDate;
+
+}
+
+```
+
+## config.xml에 별칭 만들어주기
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0/EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <typeAliases>
+		<typeAlias type="com.korea.tier.vo.ProductVO" alias="productVO" />
+		<typeAlias type="com.korea.tier.vo.OrderVO" alias="orderVO" />
+		<typeAlias type="com.korea.tier.vo.OrderDTO" alias="orderDTO" />
+	</typeAliases>
+</configuration>
+```
+
+## OrderMapper인터페이스에 메서드 생성하기
+```java
+package com.korea.tier.mapper;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
+
+import com.korea.tier.vo.OrderDTO;
+import com.korea.tier.vo.OrderVO;
+
+@Mapper
+public interface OrderMapper {
+
+	//주문하기
+	public void insert(OrderVO orderVO);
+	
+	//주문내역
+	public List<OrderDTO> selectAll();
+}
+
+```
+
+## dao패키지의 OrderDAO클래스에 메서드 추가하기
+```java
+package com.korea.tier.dao;
+
+import java.util.List;
+
+import org.springframework.stereotype.Repository;
+
+import com.korea.tier.mapper.OrderMapper;
+import com.korea.tier.vo.OrderDTO;
+import com.korea.tier.vo.OrderVO;
+
+import lombok.RequiredArgsConstructor;
+
+@Repository
+@RequiredArgsConstructor
+public class OrderDAO {
+
+	private final OrderMapper orderMapper;
+	
+	//주문하기
+	public void save(OrderVO orderVO) {
+		orderMapper.insert(orderVO);
+	}
+	
+	//주문내역
+	public List<OrderDTO> findAll(){
+		return orderMapper.selectAll();
+	}
+	
+}
+
+```
+
+## OrderService에 메서드 추가하기
+```java
+package com.korea.tier.service;
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import com.korea.tier.dao.OrderDAO;
+import com.korea.tier.dao.ProductDAO;
+import com.korea.tier.vo.OrderDTO;
+import com.korea.tier.vo.OrderVO;
+
+import lombok.RequiredArgsConstructor;
+
+@Service
+@RequiredArgsConstructor
+public class OrderService {
+
+	private final OrderDAO orderDAO;
+	private final ProductDAO productDAO;
+	
+	//주문하기
+	public void order(OrderVO orderVO) {
+		orderDAO.save(orderVO);
+		productDAO.setProductStock(orderVO);
+	}
+	
+	//주문내역
+	public List<OrderDTO> getList(){
+		return orderDAO.findAll();
+	}
+}
+```
 
 
