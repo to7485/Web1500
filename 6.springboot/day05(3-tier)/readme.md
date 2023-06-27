@@ -666,19 +666,21 @@ button {
 					<tr>
 						<th>상품 이름</th>
 						<th>상품 가격</th>
+						<th>주문 개수</th>
 						<th>결제 금액</th>
 						<th>주문 날짜</th>
 					</tr>
 					<th:block th:each="order : ${orders}">
-					<tr th:object="${order}">
-						<td th:text="*{productName}"></td>
-						<td th:text="*{productPrice}"></td>
-						<td th:text="*{orderPrice}"></td>
-						<td th:text="*{orderDate}"></td>
-					</tr>
+						<tr th:object="${order}">
+							<td th:text="*{productName}"></td>
+							<td th:text="*{productPrice}"></td>
+							<td th:text="*{productCount}"></td>
+							<td th:text="*{orderPrice}"></td>
+							<td th:text="*{orderDate}"></td>
+						</tr>
 					</th:block>
-					<button type="button" onclick="location.href='/product/list'">상품 목록</button>
 				</table>
+				<button type="button" onclick="location.href='/product/list'">상품 목록</button>
 			</div>
 	</body>
 </html>
@@ -878,6 +880,7 @@ public class OrderController {
 ```
 ## 실행하여 확인하기
 
-![image](https://github.com/to7485/Web1500/assets/54658614/4d9dedbe-a637-41e0-a899-d4b50be61153)
+![image](https://github.com/to7485/Web1500/assets/54658614/5e634197-dab3-472b-aa07-ef81752a4c37)
+
 
 
