@@ -631,7 +631,7 @@ button {
 	}
 </style>
  ... 중략
-<button>주문 완료</button><button onclick="location.href='';">주문 내역</button>
+<button>주문 완료</button><button type="button" onclick="location.href='/order/list';">주문 내역</button>
 ```
 
 ![image](https://github.com/to7485/Web1500/assets/54658614/7d224395-04c3-4d4a-bf1d-c2be5f58dca9)
@@ -673,11 +673,11 @@ button {
 					<tr th:object="${order}">
 						<td th:text="*{productName}"></td>
 						<td th:text="*{productPrice}"></td>
-						<td th:text="*{orderPrice"></td>
+						<td th:text="*{orderPrice}"></td>
 						<td th:text="*{orderDate}"></td>
 					</tr>
 					</th:block>
-					<button onclick="location.href='/product/list'">상품 목록</button>
+					<button type="button" onclick="location.href='/product/list'">상품 목록</button>
 				</table>
 			</div>
 	</body>
@@ -697,7 +697,7 @@ button {
 	</insert>
 	
 	<select id="selectAll" resultType="orderDTO">
-		select P.PRODUCT_ID, PRODUCT_NAME, PRODUCT_STOCK, PRODUCT_PRICE, REGISTER_DATE, UPDATE_DATE, ORDER_ID, PRODUCT_COUNT, ORDER_DATE
+		select P.PRODUCT_ID, PRODUCT_NAME, PRODUCT_STOCK, PRODUCT_PRICE, REGISTER_DATE, UPDATE_DATE, ORDER_ID, PRODUCT_COUNT, ORDER_DATE, PRODUCT_PRICE * PRODUCT_COUNT ORDER_PRICE
 		FROM PRODUCT P JOIN ORDER O ON P.PRODUCT_ID = O.PRODUCT_ID
 	</select>
 </mapper>
@@ -721,9 +721,9 @@ public class OrderDTO {
 	private int orderId;
 	private int productCount;
 	private String orderDate;
+	private int orderPrice;
 
 }
-
 ```
 
 ## config.xml에 별칭 만들어주기
@@ -830,5 +830,54 @@ public class OrderService {
 	}
 }
 ```
+
+## OrderController에 코드 추가하기
+```java
+package com.korea.tier.controller;
+
+import java.util.List;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.view.RedirectView;
+
+import com.korea.tier.service.OrderService;
+import com.korea.tier.vo.OrderDTO;
+import com.korea.tier.vo.OrderVO;
+
+import lombok.RequiredArgsConstructor;
+
+@Controller
+@RequiredArgsConstructor
+@RequestMapping("order/*")
+public class OrderController {
+
+	private final OrderService orderService;
+	
+	//주문
+	@GetMapping("done")
+	public RedirectView order(OrderVO orderVO) {
+		System.out.println("주문개수 : " + orderVO.getProductCount());
+		orderService.order(orderVO);
+		return new RedirectView("/product/list");
+		 
+	}
+	
+	@GetMapping("list")
+	public String list(Model model) {
+		List<OrderDTO> list = orderService.getList();
+		model.addAttribute("orders",list);
+		return "/order/order-list";
+		
+	}
+	
+}
+
+```
+## 실행하여 확인하기
+
+![image](https://github.com/to7485/Web1500/assets/54658614/4d9dedbe-a637-41e0-a899-d4b50be61153)
 
 
