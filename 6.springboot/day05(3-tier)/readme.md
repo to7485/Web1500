@@ -601,29 +601,32 @@ public class OrderController {
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
     const $radios = $("input[type='radio']"); //input태그중 type속성이 radio인 모든 요소 선택
-    const $inputs = $("input[class='productCount']");
-    const $done = $("#order-done");
-    const $form = $("form[name='order-form']");
-    let $temp, i;
+    const $inputs = $("input[class='productCount']"); //input태그중 class 속성이 productCount인 모든 요소 선택
+    const $done = $("#order-done"); //id속성이 order-form인 요소 선택
+    const $form = $("form[name='order-form']"); //name 속성이 order-form인 form태그 선택
+    let $temp, i; //temp는 임시로 사용할 변수, i는 선택된 라디오 버튼의 인덱스 저장
 
-    $radios.on("click", function(){
-       i = $radios.index(this);
+    $radios.on("click", function(){ //라디오버튼의 클릭 이벤트 처리하는 함수
+       i = $radios.index(this); //i에 선택한 라디오 버튼의 index값을 저장
        if($temp) {
-           $temp.prop("readOnly", true);
-           $temp.val("");
+           $temp.prop("readOnly", true); //변수를 사용하여 이전에 선택된 입력 필드를 확인하고, readOnly 속성을 true로 설정하여 읽기 전용으로 변경합니다.
+           $temp.val(""); 
        }
-       $inputs.eq(i).prop("readOnly", false);
-       $temp = $inputs.eq(i);
+       $inputs.eq(i).prop("readOnly", false); //클릭된 라디오 버튼에 해당하는 입력 필드를 선택하고, readOnly 속성을 false로 설정하여 편집 가능한 상태로 변경합니다.
+       $temp = $inputs.eq(i); //$temp 변수에 선택된 입력 필드를 저장합니다.
     });
 
-    $done.on("click", function(){
+    $done.on("click", function(){ //order-done 버튼의 클릭이벤트를 처리하는 함수
         if(i) {
             console.log(i);
             $form.find("input[name='productId']").val($radios.eq(i).val());
+	    //폼 내에서 name 속성이 "productId"인 입력 필드를 선택하고, 선택된 라디오 버튼의 값을 설정합니다.
             $form.find("input[name='productCount']").val($inputs.eq(i).val());
+	    //폼 내에서 name 속성이 "productCount"인 입력 필드를 선택하고, 선택된 입력 필드의 값을 설정합니다.
             console.log($form.find("input[name='productId']").val());
             console.log($form.find("input[name='productCount']").val());
             $form.submit();
+	    폼을 제출합니다.
         }
     });
 </script>
