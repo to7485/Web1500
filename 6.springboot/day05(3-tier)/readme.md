@@ -547,80 +547,86 @@ public class OrderController {
 ```html
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-
 <head>
-	<meta charset="UTF-8">
-	<title>상품 목록</title>
-	<style>
-		form{
-			width : 1000px;
-			margin: 0 auto;
-			
-		}
-		
-		table{
-			width : 100%;
-		}
-		
-		button{
-			width : 100%;
-		}
-		
-	</style>
-</head>
+    <meta charset="UTF-8">
+    <title>상품 목록</title>
+    <style>
+        div {
+            margin: 0 auto;
+            width: 1000px;
+        }
 
+        table {
+            width: 100%;
+        }
+
+        button {
+            width: 50%;
+        }
+    </style>
+</head>
 <body>
-	<form>
-	<table border="1">
-		<tr>
-			<th>단일 선택</th>
-			<th>주문 개수</th>
-			<th>상품 번호</th>
-			<th>상품 이름</th>
-			<th>상품 재고</th>
-			<th>상품 가격</th>
-			<th>등록 날짜</th>
-			<th>수정 날짜</th>
-		</tr>
-		<th:block th:each="product : ${list}">
-			<tr th:object="${product}">
-				<td><input type="radio" name="productId" th:value="*{productId}" onchange="getValue()"></td>
-				<td><input type="text" name="productCount" readonly="true"></td>
-				<td th:text="*{productId}"></td>
-				<td th:text="*{productName}"></td>
-				<td th:text="*{productStock}"></td>
-				<td th:text="*{productPrice}"></td>
-				<td th:text="*{registerDate}"></td>
-				<td th:text="*{updateDate}"></td>
-			</tr>
-		</th:block>
-	</table>
-	<button>주문 완료</button>
-	</form>
+    <div>
+        <table border="1">
+            <tr>
+                <th>단일 선택</th>
+                <th>주문 개수</th>
+                <th>상품 번호</th>
+                <th>상품 이름</th>
+                <th>상품 재고</th>
+                <th>상품 가격</th>
+                <th>등록 날짜</th>
+                <th>수정 날짜</th>
+            </tr>
+            <th:block th:each="product : ${list}">
+                <tr th:object="${product}">
+                    <td><input type="radio" name="productId" th:value="*{productId}"></td>
+                    <td><input type="text" class="productCount" readonly></td>
+                    <td th:text="*{productId}"></td>
+                    <td th:text="*{productName}"></td>
+                    <td th:text="*{productStock}"></td>
+                    <td th:text="*{productPrice}"></td>
+                    <td th:text="*{registerDate}"></td>
+                    <td th:text="*{updateDate}"></td>
+                </tr>
+            </th:block>
+        </table>
+        <button type="button" id="order-done">주문 완료</button><button type="button" onclick="location.href='/order/list';">주문 내역</button>
+    </div>
+    <form th:action="@{/order/done}" method="get" name="order-form">
+        <input type="hidden" name="productId">
+        <input type="hidden" name="productCount">
+    </form>
 </body>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
-	/*const $radios = $("input[type='radio']");
-	const $inputs = $("input[name='productCount']");
-	let $temp;
+    const $radios = $("input[type='radio']"); //input태그중 type속성이 radio인 모든 요소 선택
+    const $inputs = $("input[class='productCount']");
+    const $done = $("#order-done");
+    const $form = $("form[name='order-form']");
+    let $temp, i;
 
-	$radios.on("click", function () {
-		let i = $radios.index(this);
-		//console.log($inputs.eq(i).prop("readOnly"))
-		if ($temp) {
-			$temp.prop("readOnly", true);
-			$temp.val("");
-		}
-		$inputs.eq(i).prop("readOnly", false);
-		$temp = $inputs.eq(i)
-	});*/
-	function getValue() {
-		var radio = document.querySelector('input[name=productId]:checked');
-		var input = document.querySelector('input[name=productCount]').readOnly = false;
+    $radios.on("click", function(){
+       i = $radios.index(this);
+       if($temp) {
+           $temp.prop("readOnly", true);
+           $temp.val("");
+       }
+       $inputs.eq(i).prop("readOnly", false);
+       $temp = $inputs.eq(i);
+    });
 
-	}
+    $done.on("click", function(){
+        if(i) {
+            console.log(i);
+            $form.find("input[name='productId']").val($radios.eq(i).val());
+            $form.find("input[name='productCount']").val($inputs.eq(i).val());
+            console.log($form.find("input[name='productId']").val());
+            console.log($form.find("input[name='productCount']").val());
+            $form.submit();
+        }
+    });
 </script>
-
 </html>
 ```
 # 주문 내역 만들기
