@@ -584,7 +584,7 @@ public class OrderController {
 		</tr>
 		<th:block th:each="product : ${list}">
 			<tr th:object="${product}">
-				<td><input type="radio" name="productId" th:value="*{productId}" onchange="getValue()></td>
+				<td><input type="radio" name="productId" th:value="*{productId}" onchange="getValue()"></td>
 				<td><input type="text" name="productCount" readonly="true"></td>
 				<td th:text="*{productId}"></td>
 				<td th:text="*{productName}"></td>
