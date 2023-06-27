@@ -584,8 +584,8 @@ public class OrderController {
 		</tr>
 		<th:block th:each="product : ${list}">
 			<tr th:object="${product}">
-				<td><input type="radio" name="productId" th:value="*{productId}"></td>
-				<td><input type="text" name="productCount" readonly></td>
+				<td><input type="radio" name="productId" th:value="*{productId}" onchange="getValue()></td>
+				<td><input type="text" name="productCount" readonly="true"></td>
 				<td th:text="*{productId}"></td>
 				<td th:text="*{productName}"></td>
 				<td th:text="*{productStock}"></td>
@@ -600,20 +600,25 @@ public class OrderController {
 </body>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
-	const $radios = $("input[type='radio']");
+	/*const $radios = $("input[type='radio']");
 	const $inputs = $("input[name='productCount']");
 	let $temp;
-	
-	$radios.on("click",function(){
+
+	$radios.on("click", function () {
 		let i = $radios.index(this);
 		//console.log($inputs.eq(i).prop("readOnly"))
-		if($temp){
-			$temp.prop("readOnly",true);
+		if ($temp) {
+			$temp.prop("readOnly", true);
 			$temp.val("");
 		}
-		$inputs.eq(i).prop("readOnly",false);
+		$inputs.eq(i).prop("readOnly", false);
 		$temp = $inputs.eq(i)
-	});
+	});*/
+	function getValue() {
+		var radio = document.querySelector('input[name=productId]:checked');
+		var input = document.querySelector('input[name=productCount]').readOnly = false;
+
+	}
 </script>
 
 </html>
