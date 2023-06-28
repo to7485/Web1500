@@ -92,9 +92,7 @@ $('#single').click(function(){
 });
 ```
 
-![image](https://github.com/to7485/Web1500/assets/54658614/f7f54857-c08d-444c-b489-039dac5e6b38)
-
-
+![image](https://github.com/to7485/Web1500/assets/54658614/5bc0d5d1-1099-4911-8267-6afa517b5f0a)
 
 - **dblclick()** 사용자가 HTML 요소를 두 번 클릭하면 함수가 실행됩니다.
 
