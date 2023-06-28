@@ -187,3 +187,41 @@ public class ProductController {
 }
 
 ```
+## 실행하고 확인하기
+
+![image](https://github.com/to7485/Web1500/assets/54658614/48d00bc8-97b0-4c59-85a4-39550a140d44)
+
+# 주문하기 기능 만들기
+
+## ProductController 코드 추가하기
+```java
+	@PostMapping("new")
+	@ResponseBody //JSON의 키값이 VO의 필드로 잡힌다			
+	public void register(@RequestBody ProductVO productVO) {
+		productService.register(productVO);
+	}
+```
+
+## product.xml 코드 수정하기
+```html
+...
+
+$registerDone.on("click", function () {
+	/*$(this).hide();
+	$registerReady.show();
+	등록버튼 누르면 새로고침이 될것이기 때문에 필요없다.
+	*/
+	$.ajax({
+		url: "new",
+		type:"post",
+		data:JSON.stringify({productName:$("#productName").val(), productStock:$("#productStock").val(), productPrice:$("#productPrice").val()}),
+		contentType:"application/json; charset=utf-8",
+		success: function(){
+			location.reload();//현재 페이지 새로고침
+		}
+	});
+});
+
+...
+
+```
