@@ -3,7 +3,7 @@
 
 ## JQuery 변수
 - $기호가 붙는다.
-```
+```js
 var $변수명
 ```
 - jQuery 내장함수 (= 메서드) 사용 가능.
@@ -24,13 +24,13 @@ $("p")
 
 ### \#id 선택기
 - jQuery 선택기는 HTML 태그의 id 속성을 사용하여 특정 요소를 찾습니다.
-```
+```js
 $("#test")
 ```
 
 ### .class 선택기
 - jQuery .class선택기는 특정 클래스의 요소를 찾습니다.
-```
+```js
 $(".test")
 ```
 
@@ -66,11 +66,13 @@ $(".test")
 
 ### 일반적으로 사용되는 jQuery 이벤트 메서드
 - <b>$(document).ready()</b> 메서드를 사용하면 문서가 완전히 로드되었을 때 함수를 실행할 수 있습니다.
-```
+
+```js
 $(document).ready()
 ```
 - **click()** 사용자가 HTML 요소를 클릭하면 함수가 실행됩니다.
-```
+
+```js
 $("p").click(function(){
 $(this).hide();
 });
@@ -80,7 +82,7 @@ $(this)는 일종의 변수, 선택자인데, this 키워드를 $()함수에 전
 
 ```
 
-```
+```js
 <div>
   <button id="single" type="button"> 클릭하세요 </button>
 </div>
@@ -97,7 +99,7 @@ $('#single').click(function(){
 - **dblclick()** 사용자가 HTML 요소를 두 번 클릭하면 함수가 실행됩니다.
 
 - **mouseenter()** 마우스 포인터가 HTML 요소에 들어갈 때 실행됩니다.
-```
+```js
 $("#p1").mouseenter(function(){
 alert("You entered p1!");
 });
@@ -110,7 +112,7 @@ alert("You entered p1!");
 
 - **hover()**
 
-```
+```js
 $("#p1").hover(function(){
 alert("You entered p1!");
 },
@@ -121,7 +123,7 @@ alert("Bye! You now leave p1!");
 
 - **focus()** 양식 필드에 포커스가 있을 때 실행됩니다.
 
-```
+```js
   $("input").focus(function(){
   $(this).css("background-color", "#cccccc");
 });
@@ -130,7 +132,7 @@ alert("Bye! You now leave p1!");
 
 - **on()** on()메서드는 선택한 요소에 대해 하나 이상의 이벤트 핸들러를 연결합니다.
 
-```
+```js
 <p> 요소에 여러 이벤트 핸들러를 연결합니다.
 
 $("p").on({
@@ -149,7 +151,7 @@ click: function(){
 ## JQuery Effects
 - JQuery 숨기기 및 표시
   - jQuery를 사용하면 **hide()**및 **show()**메서드를 사용하여 HTML 요소를 숨기거나 표시할 수 있습니다.
-```
+```js
 $("#hide").click(function(){
   $("p").hide();
 });
@@ -161,7 +163,7 @@ $("#show").click(function(){
 - jQuery 토글
   - **toggle()**메서드 를 사용하여 요소를 숨기거나 표시하는 사이를 전환할 수도 있습니다 .
   - 표시된 요소는 숨겨지고 숨겨진 요소는 표시됩니다.
-```
+```js
 $("button").click(function(){
   $("p").toggle();
 });
@@ -179,7 +181,7 @@ $("button").click(function(){
 2. **html()** - 선택한 요소(HTML 마크업 포함)의 내용을 설정하거나 반환합니다.
 3. **val()** - 양식 필드의 값을 설정하거나 반환합니다.
 
-```
+```js
 $("#btn1").click(function(){
   alert("Text: " + $("#test").text());
 });
@@ -190,7 +192,7 @@ $("#btn2").click(function(){
 
 4. **attr()** - 속성값을 가져올때 사용할 수 있다.
 
-```
+```js
 $("button").click(function(){
   alert($("#w3s").attr("href"));
 });
@@ -215,15 +217,17 @@ $("button").click(function(){
 ### JQuery load()메서드
 - jQuery load()메서드는 간단하지만 강력한 AJAX 메서드입니다.
 - load()메서드는 서버에서 데이터를 로드하고 반환된 데이터를 선택한 요소에 넣습니다.
-```
+
+```js
 $(selector).load(URL,data,callback);
 ```
+
 - 필수 URL 매개변수는 로드하려는 URL을 지정합니다.
 - 선택적 data 매개변수는 요청과 함께 보낼 쿼리 문자열 키/값 쌍 세트를 지정합니다.
 - 선택적 callback 매개변수는 load()메소드가 완료된 후 실행할 함수의 이름입니다
 
 ### jQuery를 이용한 Ajax 기본 사용방법
-```
+```js
 $.ajax({
     url: "",
     type: "",
