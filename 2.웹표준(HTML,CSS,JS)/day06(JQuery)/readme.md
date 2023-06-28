@@ -206,28 +206,26 @@ $(selector).load(URL,data,callback);
 ### jQuery를 이용한 Ajax 기본 사용방법
 ```
 $.ajax({
-    type : 'post',           // 타입 (get, post, put 등등)
-    url : '/test',           // 요청할 서버url
-    async : true,            // 비동기화 여부 (default : true)
-    headers : {              // Http header
-      "Content-Type" : "application/json",
-      "X-HTTP-Method-Override" : "POST"
+    url: "",
+    type: "",
+    cache: ,
+    dataType: "",
+    data: "",
+    success: function(data){
+  
     },
-    dataType : 'text',       // 데이터 타입 (html, xml, json, text 등등)
-    data : JSON.stringify({  // 보낼 데이터 (Object , String, Array)
-      "no" : no,
-      "name" : name,
-      "nick" : nick
-    }),
-    success : function(result) { // 결과 성공 콜백함수
-        console.log(result);
-    },
-    error : function(request, status, error) { // 결과 에러 콜백함수
-        console.log(error)
-    }
-})
-```
+    error: function (request, status, error){        
 
+    }
+});
+```
+- url : 요청 url을 의미한다.
+- type : 데이터 전송방식. GET 또는 POST
+- cache : 요청 페이지의 캐시 여부. false 또는 true
+- datatype : 서버에서 받아올 데이터를 어떤 형태로 해석할 것인지. xml, json, html, script를 선택할 수 있다.
+- data : 서버로 데이터를 전송할 때 사용한다. "name="+name 이런 형태로
+- success : Ajax 통신에 성공했을 때 실행되는 이벤트.
+- error : Ajax 통신에 실패했을 때 실행되는 이벤트. request, status, error로 에러 정보를 확인할 수 있다.
 
 
 
