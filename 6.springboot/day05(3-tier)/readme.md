@@ -893,5 +893,229 @@ public class OrderController {
 
 ![image](https://github.com/to7485/Web1500/assets/54658614/5e634197-dab3-472b-aa07-ef81752a4c37)
 
+## 정렬하기
+- order-list.html 코드 추가하기
+```html
+<div id="container">
+	<div>
+		<span>최신순</span>
+		<span>결제 금액순</span>
+	</div>
+	<table border="1">
+```
+
+## Mybatis의 동적 쿼리
+- Mybatis의 동적쿼리문을 이용한다.
+  - Mybatis의 상황에 따라서 분기를 처리하는 유동적으로 동작하는 SQL쿼리문을 뜻한다.
+  - 공통적으로 작성되는 코드를 줄이고 유용하게 이용하기 위해 등장한것이 동적쿼리이다.
+
+### MyBatis 동적쿼리 SQL문의 특징
+- 주로 SQL문의 조건절에서 사용한다.
+- 조건절(WHERE절)에 조건을 동적으로 추가한다.
+- JSTL과 XML기반으로 동적 SQL문을 작성한다.
+
+### Mybatis 동적쿼리의 SQL문의 구성요소
+- if
+- choose(when, otherwise)
+- trim(where, set)
+- foreach
+
+## orderMapper.xml에 쿼리문 수정하기
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.korea.tier.mapper.OrderMapper">
+	<insert id="insert">
+		INSERT INTO "ORDER" (ORDER_ID, PRODUCT_ID, PRODUCT_COUNT)
+		VALUES (SEQ_ORDER.NEXTVAL, #{productId}, #{productCount})
+	</insert>
+	
+	<select id="selectAll" resultType="orderDTO">
+		select P.PRODUCT_ID, PRODUCT_NAME, PRODUCT_STOCK, PRODUCT_PRICE, REGISTER_DATE, UPDATE_DATE, ORDER_ID, PRODUCT_COUNT, ORDER_DATE, PRODUCT_PRICE * PRODUCT_COUNT ORDER_PRICE
+		FROM PRODUCT P JOIN "ORDER" O ON P.PRODUCT_ID = O.PRODUCT_ID
+		<choose>
+		<when test="sort == 'recent'.toString()">
+			ORDER BY ORDER_ID DESC
+		</when>
+		<otherwise>
+			ORDER BY ORDER_PRICE DESC
+		</otherwise>
+		</choose>	
+	</select>
+</mapper>
+```
+## OrderMapper 인터페이스에 sort 파라미터로 받아주기
+```java
+@Mapper
+public interface OrderMapper {
+
+	//주문하기
+	public void insert(OrderVO orderVO);
+	
+	//주문내역
+	public List<OrderDTO> selectAll(String sort);
+}
+
+```
+
+## OrderDAO 클래스에 sort 파라미터로 받기
+```java
+@Repository
+@RequiredArgsConstructor
+public class OrderDAO {
+
+	private final OrderMapper orderMapper;
+	
+	//주문하기
+	public void save(OrderVO orderVO) {
+		orderMapper.insert(orderVO);
+	}
+	
+	//주문내역
+	public List<OrderDTO> findAll(String sort){
+		return orderMapper.selectAll(sort);
+	}	
+}
+```
+## OrderService클래스에 sort 파라미터로 받기
+```java
+@Service
+@RequiredArgsConstructor
+public class OrderService {
+
+	private final OrderDAO orderDAO;
+	private final ProductDAO productDAO;
+	
+	//주문하기
+	public void order(OrderVO orderVO) {
+		orderDAO.save(orderVO);
+		productDAO.setProductStock(orderVO);
+	}
+	
+	//주문내역
+	public List<OrderDTO> getList(String sort){
+		return orderDAO.findAll(sort);
+	}
+}
+```
+
+## OrderController 클래스에서 sort 파라미터로 받기
+```java
+@Controller
+@RequiredArgsConstructor
+@RequestMapping("order/*")
+public class OrderController {
+
+	private final OrderService orderService;
+	
+	//주문
+	@GetMapping("done")
+	public RedirectView order(OrderVO orderVO) {
+		//System.out.println("주문개수 : " + orderVO.getProductCount());
+		orderService.order(orderVO);
+		return new RedirectView("/product/list");
+		 
+	}
+	
+	@GetMapping("list")
+	//@RequestParam(required = false) : 해당 파라미터 null값 허용
+	public String list(@RequestParam(required = false) String sort,Model model) {
+		if(sort == null) {
+			sort = "recent";
+		}
+		List<OrderDTO> list = orderService.getList(sort);
+		model.addAttribute("orders",list);
+		return "/order/order-list";
+		
+	}
+}
+```
+## order-list.html 코드 수정하기
+```html
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>주문 내역</title>
+    <style>
+        span {
+            cursor: pointer;
+        }
+
+        span.on {
+            font-weight: bold;
+        }
+
+        #container {
+            margin: 0 auto;
+            width: 1000px;
+        }
+
+        table {
+            width: 100%;
+        }
+
+        button {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div class="sort">
+            <span class="on" id="recent" data-sort="recent">최신순</span>
+            <span class="" id="money" data-sort="money">결제 금액순</span>
+        </div>
+        <table border="1">
+            <tr>
+                <th>상품 이름</th>
+                <th>상품 가격</th>
+                <th>주문 개수</th>
+                <th>결제 금액</th>
+                <th>주문 날짜</th>
+            </tr>
+            <th:block th:each="order : ${orders}">
+                <tr th:object="${order}">
+                    <td th:text="*{productName}"></td>
+                    <td th:text="*{productPrice}"></td>
+                    <td th:text="*{productCount}"></td>
+                    <td th:text="*{orderPrice}"></td>
+                    <td th:text="*{orderDate}"></td>
+                </tr>
+            </th:block>
+        </table>
+        <button type="button" onclick="location.href='/product/list';">상품 목록</button>
+    </div>
+</body>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script th:inline="javascript">
+    let sort = [[${sort}]]
+    const $spans = $("div.sort span");
+
+    $("span").attr("class", "");
+    $("span#" + sort).attr("class", "on");
+
+    $spans.on("click", function(){
+        location.href = `/order/list?sort=${$(this).data("sort")}`;
+    });
+</script>
+</html>
+```
+
+## OrderController 코드 수정하기
+```java
+@GetMapping("list")
+//@RequestParam(required = false) : 해당 파라미터 null값 허용
+public String list(@RequestParam(required = false) String sort,Model model) {
+	if(sort == null) {
+		sort = "recent";
+	}
+	model.addAttribute("sort",sort);
+	List<OrderDTO> list = orderService.getList(sort);
+	model.addAttribute("orders",list);
+	return "/order/order-list";
+	
+}
+```
 
 
