@@ -566,7 +566,7 @@ public class OrderController {
     </style>
 </head>
 <body>
-    <div>
+    <div id="container">
         <table border="1">
             <tr>
                 <th>단일 선택</th>
