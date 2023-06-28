@@ -55,8 +55,8 @@ public class ProductController {
   		}
   		
   		button.register-done {
-              width: 100%;
-          }
+              		width: 100%;
+          	}
   
   		div.register-wrap {
   			display: none;
@@ -68,8 +68,8 @@ public class ProductController {
   		}
   		
   		 div.register-wrap input {
-              width: 100%;
-          }
+              		width: 100%;
+          	}
   	</style>
 </head>
 <body>
