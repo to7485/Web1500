@@ -203,7 +203,7 @@ public class ProductController {
 ```
 
 ## product.xml 코드 수정하기
-```html
+```js
 ...
 
 $registerDone.on("click", function () {
