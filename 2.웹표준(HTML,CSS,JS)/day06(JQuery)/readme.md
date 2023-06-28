@@ -96,6 +96,34 @@ $('#single').click(function(){
 
 ![image](https://github.com/to7485/Web1500/assets/54658614/5bc0d5d1-1099-4911-8267-6afa517b5f0a)
 
+- index() 함수와 this를 이용한 중복클래스 제어
+```
+<div>
+  <button class="multi" type="button">button0 (0번 클릭됨)</button>
+  <button class="multi" type="button">button1 (0번 클릭됨)</button>
+  <button class="multi" type="button">button2 (0번 클릭됨)</button>
+</div>
+
+let multicnt = { multi : [0, 0, 0] };
+// 버튼 별로 횟수를 담아줄 객체를 만든다.
+// 값을 배열형식으로 설정했다.
+
+$('multi').click(function(){
+// 버튼을 클릭할 때 발생하는 이벤트
+
+    let idx = $(this).index();
+    multicnt.multi.[idx]++;
+// 버튼을 클릭할 때 해당 버튼이 몇 번째 요소인지 idx에 저장
+// 아까 만든 객체 배열에 버튼이 눌릴 때 마다 
+// 해당 배열에 숫자를 한 개씩 증가시켜서 넣어줌
+
+    $(this).html('button' + idx + 
+    '(' + multicnt.multi[idx] + '번 클릭됨)');
+});
+```
+
+![image (1)](https://github.com/to7485/Web1500/assets/54658614/4768d77d-c2a6-4955-b45e-fc8a11c6f780)
+
 - **dblclick()** 사용자가 HTML 요소를 두 번 클릭하면 함수가 실행됩니다.
 
 - **mouseenter()** 마우스 포인터가 HTML 요소에 들어갈 때 실행됩니다.
