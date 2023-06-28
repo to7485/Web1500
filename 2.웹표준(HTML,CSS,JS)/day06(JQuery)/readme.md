@@ -74,7 +74,28 @@ $(document).ready()
 $("p").click(function(){
 $(this).hide();
 });
+
+이벤트에 의해 실행되는 함수 영역 안에서 특수 키워드 this를 사용할 수 있다.
+$(this)는 일종의 변수, 선택자인데, this 키워드를 $()함수에 전달하면, 이벤트가 발생한 자기 자신을 감지할 수 있게 된다.
+
 ```
+
+```
+<div>
+  <button id="single" type="button"> 클릭하세요 </button>
+</div>
+
+let cnt = 0;
+
+$('#single').click(function(){
+	$(this).text((++cnt) +'번 클릭하셨습니다.');
+});
+```
+
+![image](https://github.com/to7485/Web1500/assets/54658614/f7f54857-c08d-444c-b489-039dac5e6b38)
+
+
+
 - **dblclick()** 사용자가 HTML 요소를 두 번 클릭하면 함수가 실행됩니다.
 
 - **mouseenter()** 마우스 포인터가 HTML 요소에 들어갈 때 실행됩니다.
