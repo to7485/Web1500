@@ -282,6 +282,7 @@ public class OrderController {
     private final OrderService orderService;
 	
     @GetMapping("list/{sort}")
+    //@PathVariable : 경로 변수를 메서드의 매개변수로 바인딩하는 데 사용
     public List<OrderDTO> list(@PathVariable("sort") String sort){
         return orderService.getList(sort);
     }
@@ -301,7 +302,7 @@ public class OrderController {
 
 ... 중략
 let $temp, i, sort; //sort 변수 정의
-const $spans = $("div.sort span");
+const $spans = $("div.sort span");//div 요소 내부에 있는 class 속성 값이 "sort"인 모든 span 요소들을 선택
 const $orderList = $("button#order-list");
 
 $spans.on("click", function () {
@@ -317,6 +318,12 @@ $orderList.on("click", function () { //주문내역 버튼을 눌렀을 때
 			sort = $(span).data("sort");
 		}
 	});
+//$spans.each() 메서드를 사용하여 $spans 객체의 각 span 요소에 대해 반복문을 실행합니다.
+// 반복문은 인덱스 i와 현재 요소 span을 매개변수로 받는 콜백 함수를 실행합니다.
+//콜백 함수 내에서는 조건문을 사용하여 현재 span 요소의 class 속성을 확인합니다.
+// $(span).attr("class")를 통해 span 요소의 class 속성 값을 가져옵니다.
+//만약 class 속성이 존재한다면, $(span).data("sort")를 사용하여 span 요소의 sort 데이터 속성 값을 가져옵니다.
+// 이 값을 sort 변수에 할당합니다.
 
 	$("span").attr("class", "");
 	$("span#" + sort).attr("class", "on");
@@ -366,63 +373,7 @@ orderService.order(orderVO);
 
 ## product.html 코드 추가하기
 ```html
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>상품 목록</title>
-    <style>
-        div {
-            margin: 0 auto;
-            width: 1000px;
-        }
 
-        table {
-            width: 100%;
-        }
-
-        button {
-            width: 50%;
-        }
-
-        button.register-ready {
-            width: 100%;
-        }
-
-        button.register-done {
-            width: 100%;
-        }
-
-        div.register-wrap {
-            display: none;
-            width: 500px;
-        }
-
-        div.register-wrap div {
-            width: 100%;
-        }
-
-        div.register-wrap input {
-            width: 100%;
-        }
-        span {
-            cursor: pointer;
-        }
-
-        span.on {
-            font-weight: bold;
-        }
-
-        #container {
-            margin: 0 auto;
-            width: 1000px;
-            display: none;
-        }
-        div.sort {
-            text-align: right;
-        }
-    </style>
-</head>
 <body>
     <div>
         <button type="button" class="register-ready">상품 추가</button>
@@ -476,7 +427,6 @@ orderService.order(orderVO);
 <script>
     const $radios = $("input[type='radio']");
     const $inputs = $("input.productCount");
-    const $ids = $("input[name='productId']");
     const $done = $("#order-done");
     const $form = $("form[name='order-form']");
     const $registerReady = $("button.register-ready");
@@ -485,22 +435,24 @@ orderService.order(orderVO);
     let $temp, i, sort;
     const $spans = $("div.sort span");
 
-    $done.on("click", function(){
+    const $ids = $("input[name='productId']");
+
+    $done.on("click", function(){ //주문완료 버튼을 눌렀을 때
         $.ajax({
             url: "/order/write",
             type: "post",
             data: JSON.stringify({productId: $ids.eq(i).val(), productCount: $inputs.eq(i).val()}),
             contentType: "application/json; charset=utf-8",
-            success: function(){
-
-                $.ajax({
+            success: function(){ //주문이 성공했을 때
+----------------------------아래 컨트롤러 매핑 작성하고 돌아오기--------------------------------------------
+                $.ajax({ //재고 감소를 위한 ajax
                     url: "/product/" + $ids.eq(i).val(),
                     success: function(products) {
                         console.log(products.productStock);
                         $($("tr").eq(i + 1).children()).eq(4).text(products.productStock);
                     }
                 });
-
+----------------------------아래 컨트롤러 매핑 작성하고 돌아오기--------------------------------------------
                 $orderList.click();
             }
         });
@@ -509,6 +461,15 @@ orderService.order(orderVO);
 
 </script>
 </html>
+```
+
+## ProductController에 매핑 추가하기
+```java
+@GetMapping("{productId}")
+@ResponseBody
+public ProductVO getProduct(@PathVariable("productId") int productId){
+return productService.getProduct(productId);
+}
 ```
 
 ## productMapper.xml 쿼리문 추가하기
