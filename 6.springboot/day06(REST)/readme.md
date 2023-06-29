@@ -293,7 +293,9 @@ package com.korea.rest.controller;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.korea.rest.service.OrderService;
@@ -301,23 +303,21 @@ import com.korea.rest.vo.OrderDTO;
 
 import lombok.RequiredArgsConstructor;
 
-@RestController //내부적으로 @Controller와 @ResponseBody 어노테이션을 포함
+@RestController
 @RequiredArgsConstructor
+@RequestMapping("/order/*")
 public class OrderController {
 
 	private final OrderService orderService;
 	
-	@GetMapping("list")
-	public List<OrderDTO> list(@RequestBody(required = false) String sort){
-		if( sort == null) {
-			sort ="recent";
-		}
-		
-		return orderService.getList(sort);
-	}
-	
+    @GetMapping("list/{sort}")
+    public List<OrderDTO> list(@RequestBody(required = false) @PathVariable("sort") String sort){
+    	if(sort == null) {
+    		sort = null;
+    	}
+        return orderService.getList(sort);
+    }	
 }
-
 ```
 
 ## product.html 코드 작성하기
@@ -351,7 +351,7 @@ $spans.on("click", function () {
 		$("span").attr("class", "");
 		$("span#" + sort).attr("class", "on");
 		$.ajax({
-			url: "/order/list/" + sort,
+			url: "/order/" + sort,
 			success: function (orders) {
 				let text = `
                     <table border="1">
