@@ -212,16 +212,173 @@ $registerDone.on("click", function () {
 	등록버튼 누르면 새로고침이 될것이기 때문에 필요없다.
 	*/
 	$.ajax({
-		url: "new",
-		type:"post",
+		url: "new", //URL 요청
+		type:"post", //전송 방식
 		data:JSON.stringify({productName:$("#productName").val(), productStock:$("#productStock").val(), productPrice:$("#productPrice").val()}),
-		contentType:"application/json; charset=utf-8",
-		success: function(){
-			location.reload();//현재 페이지 새로고침
+		//요청과 함께 전송할 데이터를 설정합니다. 이 경우 데이터는 객체 형태이며,JSON.stringify()를 사용하여 먼저 JSON 문자열로 변환됩니다.
+		contentType:"application/json; charset=utf-8", //요청의 콘텐츠 타입을 JSON으로 설정합니다.
+		success: function(){ //성공적으로 처리된 경우 실행될 성공 콜백 함수입니다. 이 경우 location.reload()를 사용하여 현재 페이지를 새로 고침합니다. 
+			location.reload();
 		}
 	});
 });
 
 ...
 
+```
+
+# 주문내역 띄우기
+
+## 주문내역 버튼을 눌렀을 때 밑에 띄워주기
+
+## product.html 코드 수정하기
+```html
+
+스타일 수정 
+span {
+    cursor: pointer;
+}
+
+span.on {
+    font-weight: bold;
+}
+
+#container {
+    margin: 0 auto;
+    width: 1000px;
+}
+
+div.sort{
+		text-align: right;
+	}
+
+코드 수정
+
+<button type="button" id="order-done">주문 완료</button><button type="button" id="order-list">주문 내역</button>
+
+tier 프로젝트에 order-list.xml에 div부분 복사해오기
+
+</div>
+<div id="container">
+<div class="sort">
+    <span class="on" id="recent" data-sort="recent">최신순</span>
+    <span class="" id="money" data-sort="money">결제 금액순</span>
+</div>
+<table border="1">
+    <tr>
+	<th>상품 이름</th>
+	<th>상품 가격</th>
+	<th>주문 개수</th>
+	<th>결제 금액</th>
+	<th>주문 날짜</th>
+    </tr>
+    <th:block th:each="order : ${orders}">
+	<tr th:object="${order}">
+	    <td th:text="*{productName}"></td>
+	    <td th:text="*{productPrice}"></td>
+	    <td th:text="*{productCount}"></td>
+	    <td th:text="*{orderPrice}"></td>
+	    <td th:text="*{orderDate}"></td>
+	</tr>
+    </th:block>
+</table>
+</div>
+```
+- 주문 내역 버튼을 눌렀을 때 ajax를 이용해 아래에 주문내역 테이블이 뜨도록 코드 작성하기
+
+## OrderController 생성하기
+```java
+package com.korea.rest.controller;
+
+import java.util.List;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.korea.rest.service.OrderService;
+import com.korea.rest.vo.OrderDTO;
+
+import lombok.RequiredArgsConstructor;
+
+@RestController //내부적으로 @Controller와 @ResponseBody 어노테이션을 포함
+@RequiredArgsConstructor
+public class OrderController {
+
+	private final OrderService orderService;
+	
+	@GetMapping("list")
+	public List<OrderDTO> list(@RequestBody(required = false) String sort){
+		if( sort == null) {
+			sort ="recent";
+		}
+		
+		return orderService.getList(sort);
+	}
+	
+}
+
+```
+
+## product.html 코드 작성하기
+- 주문내역 버튼을 눌렀을 때만 테이블 보이게 하기
+```html
+<div id="container">
+	<div class="sort">
+		<span class="on" id="recent" data-sort="recent">최신순</span>
+		<span class="" id="money" data-sort="money">결제 금액순</span>
+	</div>
+	<div class="order-list"></div>
+</div>
+
+const $orderList = $("button#order-list");
+
+$spans.on("click", function () {
+		$spans.attr("class", "");
+		$(this).attr("class", "on");
+		$orderList.click();
+	});
+
+	$orderList.on("click", function () {
+		$("#container").show();
+		$spans.each((i, span) => {
+
+			if ($(span).attr("class")) {
+				sort = $(span).data("sort");
+			}
+		});
+
+		$("span").attr("class", "");
+		$("span#" + sort).attr("class", "on");
+		$.ajax({
+			url: "/order/list/" + sort,
+			success: function (orders) {
+				let text = `
+                    <table border="1">
+                        <tr>
+                            <th>상품 이름</th>
+                            <th>상품 가격</th>
+                            <th>주문 개수</th>
+                            <th>결제 금액</th>
+                            <th>주문 날짜</th>
+                        </tr>
+                `;
+				orders.forEach(order => {
+					text += `
+
+                            <tr>
+                                <td>${order.productName}</td>
+                                <td>${order.productPrice}</td>
+                                <td>${order.productCount}</td>
+                                <td>${order.orderPrice}</td>
+                                <td>${order.orderDate}</td>
+                            </tr>
+                    `;
+				});
+				text += `</table>`;
+
+				$("div.order-list").html(text);
+			}
+		});
+	});
 ```
