@@ -132,16 +132,17 @@ public class ProductController {
     const $registerDone = $("button.register-done");
     let $temp, i;
     
-    $registerReady.on("click",function(){
+	$registerReady.on("click",function(){
+		
 		$(this).hide();
 		$("div.register-wrap").show();
-		
+	
 	});
 	
-	$registerDone.on("click",function(){
-		$(this).hide();
+	$registerDone.on("click", function(){
+	
+		$("div.register-wrap").hide();
 		$registerReady.show();
-		
 	});
 
     $radios.on("click", function(){
