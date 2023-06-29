@@ -308,15 +308,12 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/order/*")
 public class OrderController {
 
-	private final OrderService orderService;
+    private final OrderService orderService;
 	
     @GetMapping("list/{sort}")
-    public List<OrderDTO> list(@RequestBody(required = false) @PathVariable("sort") String sort){
-    	if(sort == null) {
-    		sort = null;
-    	}
+    public List<OrderDTO> list(@PathVariable("sort") String sort){
         return orderService.getList(sort);
-    }	
+    }
 }
 ```
 
@@ -381,4 +378,280 @@ $spans.on("click", function () {
 			}
 		});
 	});
+```
+
+# 주문완료 처리하기
+- 주문하면서 재고 감소하게 하기
+
+## OrderController에 매핑 추가하기
+```java
+//주문하기
+@PostMapping("write")
+public void register(@RequestBody OrderVO orderVO){
+orderService.order(orderVO);
+}
+```
+
+## product.html 코드 추가하기
+```html
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>상품 목록</title>
+    <style>
+        div {
+            margin: 0 auto;
+            width: 1000px;
+        }
+
+        table {
+            width: 100%;
+        }
+
+        button {
+            width: 50%;
+        }
+
+        button.register-ready {
+            width: 100%;
+        }
+
+        button.register-done {
+            width: 100%;
+        }
+
+        div.register-wrap {
+            display: none;
+            width: 500px;
+        }
+
+        div.register-wrap div {
+            width: 100%;
+        }
+
+        div.register-wrap input {
+            width: 100%;
+        }
+        span {
+            cursor: pointer;
+        }
+
+        span.on {
+            font-weight: bold;
+        }
+
+        #container {
+            margin: 0 auto;
+            width: 1000px;
+            display: none;
+        }
+        div.sort {
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <button type="button" class="register-ready">상품 추가</button>
+        <div class="register-wrap" th:object="${productForm}">
+            <div>
+                <input type="text" th:field="*{productName}" placeholder="상품 이름">
+            </div>
+            <div>
+                <input type="text" th:field="*{productStock}" placeholder="상품 재고">
+            </div>
+            <div>
+                <input type="text" th:field="*{productPrice}" placeholder="상품 가격">
+            </div>
+            <input type="button" class="register-done" value="등록">
+        </div>
+        <table border="1">
+            <tr>
+                <th>단일 선택</th>
+                <th>주문 개수</th>
+                <th>상품 번호</th>
+                <th>상품 이름</th>
+                <th>상품 재고</th>
+                <th>상품 가격</th>
+                <th>등록 날짜</th>
+                <th>수정 날짜</th>
+            </tr>
+            <th:block th:each="product : ${list}">
+                <tr th:object="${product}">
+                    <td><input type="radio" name="productId" th:value="*{productId}"></td>
+                    <td><input type="text" class="productCount" readonly></td>
+                    <td th:text="*{productId}"></td>
+                    <td th:text="*{productName}"></td>
+                    <td th:text="*{productStock}"></td>
+                    <td th:text="*{productPrice}"></td>
+                    <td th:text="*{registerDate}"></td>
+                    <td th:text="*{updateDate}"></td>
+                </tr>
+            </th:block>
+        </table>
+        <button type="button" id="order-done">주문 완료</button><button type="button" id="order-list">주문 내역</button>
+    </div>
+    <div id="container">
+        <div class="sort">
+            <span class="on" id="recent" data-sort="recent">최신순</span>
+            <span class="" id="money" data-sort="money">결제 금액순</span>
+        </div>
+        <div class="order-list"></div>
+    </div>
+</body>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+    const $radios = $("input[type='radio']");
+    const $inputs = $("input.productCount");
+    const $ids = $("input[name='productId']");
+    const $done = $("#order-done");
+    const $form = $("form[name='order-form']");
+    const $registerReady = $("button.register-ready");
+    const $registerDone = $("input.register-done");
+    const $orderList = $("button#order-list");
+    let $temp, i, sort;
+    const $spans = $("div.sort span");
+
+    $done.on("click", function(){
+        $.ajax({
+            url: "/order/write",
+            type: "post",
+            data: JSON.stringify({productId: $ids.eq(i).val(), productCount: $inputs.eq(i).val()}),
+            contentType: "application/json; charset=utf-8",
+            success: function(){
+
+                $.ajax({
+                    url: "/product/" + $ids.eq(i).val(),
+                    success: function(products) {
+                        console.log(products.productStock);
+                        $($("tr").eq(i + 1).children()).eq(4).text(products.productStock);
+                    }
+                });
+
+                $orderList.click();
+            }
+        });
+    });
+
+    $spans.on("click", function(){
+        $spans.attr("class", "");
+        $(this).attr("class", "on");
+        $orderList.click();
+    });
+
+    $orderList.on("click", function(){
+        $("#container").show();
+        $spans.each((i, span) => {
+
+            if($(span).attr("class")){
+                sort = $(span).data("sort");
+            }
+        });
+
+        $("span").attr("class", "");
+        $("span#" + sort).attr("class", "on");
+        $.ajax({
+            url: "/order/list/" + sort,
+            success: function(orders){
+                let text = `
+                    <table border="1">
+                        <tr>
+                            <th>상품 이름</th>
+                            <th>상품 가격</th>
+                            <th>주문 개수</th>
+                            <th>결제 금액</th>
+                            <th>주문 날짜</th>
+                        </tr>
+                `;
+                orders.forEach(order => {
+                    text += `
+
+                            <tr>
+                                <td>${order.productName}</td>
+                                <td>${order.productPrice}</td>
+                                <td>${order.productCount}</td>
+                                <td>${order.orderPrice}</td>
+                                <td>${order.orderDate}</td>
+                            </tr>
+                    `;
+                });
+                text += `</table>`;
+
+                $("div.order-list").html(text);
+            }
+        });
+    });
+
+    $registerReady.on("click", function(){
+        $(this).hide();
+        $("div.register-wrap").show();
+    });
+
+    $registerDone.on("click", function(){
+        $.ajax({
+            url: "/product/new",
+            type: "post",
+            data: JSON.stringify({productName: $("#productName").val(), productStock: $("#productStock").val(), productPrice: $("#productPrice").val()}),
+            contentType: "application/json; charset=utf-8",
+            success: function(){
+                location.reload();
+            }
+        });
+    });
+
+    $radios.on("click", function(){
+        i = $radios.index(this);
+        if($temp) {
+            $temp.prop("readOnly", true);
+            $temp.val("");
+        }
+        $inputs.eq(i).prop("readOnly", false);
+        $temp = $inputs.eq(i);
+    });
+
+    $done.on("click", function(){
+        if(i) {
+            $form.find("input[name='productId']").val($radios.eq(i).val());
+            $form.find("input[name='productCount']").val($inputs.eq(i).val());
+            $form.submit();
+        }
+    });
+</script>
+</html>
+```
+
+## productMapper.xml 쿼리문 추가하기
+```xml
+<select id="select" resultType="productVO">
+	select * from product where PRODUCT_ID = #{productId}
+</select>
+```
+## ProductMapper 인터페이스에 추가하기
+```java
+//상품 조회
+public ProductVO select(int productId);
+```
+
+## ProductDAO에 메서드 추가하기
+```java
+//상품조회
+public ProductVO findById(int productId) {
+	return productMapper.select(productId);
+}
+```
+
+## ProductService에 메서드 추가하기
+```java
+//상품 조회
+public ProductVO getProduct(int productId);
+```
+
+## ProductServiceImpl에 메서드 추가하기
+```java
+@Override
+public ProductVO getProduct(int productId) {
+	// TODO Auto-generated method stub
+	return productDAO.findById(productId);
+}
 ```
