@@ -145,26 +145,8 @@ public class ProductController {
 		$registerReady.show();
 	});
 
-    $radios.on("click", function(){
-       i = $radios.index(this);
-       if($temp) {
-           $temp.prop("readOnly", true);
-           $temp.val("");
-       }
-       $inputs.eq(i).prop("readOnly", false);
-       $temp = $inputs.eq(i);
-    });
+...
 
-    $done.on("click", function(){
-        if(i) {
-            console.log(i);
-            $form.find("input[name='productId']").val($radios.eq(i).val());
-            $form.find("input[name='productCount']").val($inputs.eq(i).val());
-            console.log($form.find("input[name='productId']").val());
-            console.log($form.find("input[name='productCount']").val());
-            $form.submit();
-        }
-    });
 </script>
 </html>
 ```
@@ -192,15 +174,15 @@ public class ProductController {
 
 ![image](https://github.com/to7485/Web1500/assets/54658614/48d00bc8-97b0-4c59-85a4-39550a140d44)
 
-# 주문하기 기능 만들기
+# 등록하기 기능 만들기
 
 ## ProductController 코드 추가하기
 ```java
-	@PostMapping("new")
-	@ResponseBody //JSON의 키값이 VO의 필드로 잡힌다			
-	public void register(@RequestBody ProductVO productVO) {
-		productService.register(productVO);
-	}
+@PostMapping("new")
+@ResponseBody //JSON의 키값이 VO의 필드로 잡힌다			
+public void register(@RequestBody ProductVO productVO) {
+	productService.register(productVO);
+}
 ```
 
 ## product.xml 코드 수정하기
@@ -227,6 +209,7 @@ $registerDone.on("click", function () {
 ...
 
 ```
+- 실행하면 제품이 추가 되는걸 확인할 수 있다.
 
 # 주문내역 띄우기
 
@@ -250,60 +233,47 @@ span.on {
 }
 
 div.sort{
-		text-align: right;
-	}
+	text-align: right;
+}
 
 코드 수정
 
 <button type="button" id="order-done">주문 완료</button><button type="button" id="order-list">주문 내역</button>
+</div>
 
 tier 프로젝트에 order-list.xml에 div부분 복사해오기
 
-</div>
 <div id="container">
-<div class="sort">
-    <span class="on" id="recent" data-sort="recent">최신순</span>
-    <span class="" id="money" data-sort="money">결제 금액순</span>
-</div>
-<table border="1">
-    <tr>
-	<th>상품 이름</th>
-	<th>상품 가격</th>
-	<th>주문 개수</th>
-	<th>결제 금액</th>
-	<th>주문 날짜</th>
-    </tr>
-    <th:block th:each="order : ${orders}">
-	<tr th:object="${order}">
-	    <td th:text="*{productName}"></td>
-	    <td th:text="*{productPrice}"></td>
-	    <td th:text="*{productCount}"></td>
-	    <td th:text="*{orderPrice}"></td>
-	    <td th:text="*{orderDate}"></td>
-	</tr>
-    </th:block>
-</table>
+	<div class="sort">
+	    <span class="on" id="recent" data-sort="recent">최신순</span>
+	    <span class="" id="money" data-sort="money">결제 금액순</span>
+	</div>
+----------------------------------------테이블 부분은 JS로 들어가야 한다.
+	<table border="1">
+	    <tr>
+		<th>상품 이름</th>
+		<th>상품 가격</th>
+		<th>주문 개수</th>
+		<th>결제 금액</th>
+		<th>주문 날짜</th>
+	    </tr>
+	    <th:block th:each="order : ${orders}">
+		<tr th:object="${order}">
+		    <td th:text="*{productName}"></td>
+		    <td th:text="*{productPrice}"></td>
+		    <td th:text="*{productCount}"></td>
+		    <td th:text="*{orderPrice}"></td>
+		    <td th:text="*{orderDate}"></td>
+		</tr>
+	    </th:block>
+	</table>
+----------------------------------------------------------------------
 </div>
 ```
 - 주문 내역 버튼을 눌렀을 때 ajax를 이용해 아래에 주문내역 테이블이 뜨도록 코드 작성하기
 
 ## OrderController 생성하기
 ```java
-package com.korea.rest.controller;
-
-import java.util.List;
-
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.korea.rest.service.OrderService;
-import com.korea.rest.vo.OrderDTO;
-
-import lombok.RequiredArgsConstructor;
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/order/*")
@@ -322,63 +292,64 @@ public class OrderController {
 - 주문내역 버튼을 눌렀을 때만 테이블 보이게 하기
 ```html
 <div id="container">
-	<div class="sort">
+	<div class="sort"> 
 		<span class="on" id="recent" data-sort="recent">최신순</span>
 		<span class="" id="money" data-sort="money">결제 금액순</span>
 	</div>
 	<div class="order-list"></div>
 </div>
 
+... 중략
+let $temp, i, sort; //sort 변수 정의
+const $spans = $("div.sort span");
 const $orderList = $("button#order-list");
 
 $spans.on("click", function () {
-		$spans.attr("class", "");
-		$(this).attr("class", "on");
-		$orderList.click();
+		$spans.attr("class", ""); //전체 span 태그의 class를 비우고
+		$(this).attr("class", "on"); //누른애만 class의 값을 on으로 바꾼다.
+		$orderList.click(); //버튼을 누른다.
+});
+
+$orderList.on("click", function () { //주문내역 버튼을 눌렀을 때
+	$("#container").show(); //주문내역 코드가 보이게 하기
+	$spans.each((i, span) => {
+		if ($(span).attr("class")) {
+			sort = $(span).data("sort");
+		}
 	});
 
-	$orderList.on("click", function () {
-		$("#container").show();
-		$spans.each((i, span) => {
-
-			if ($(span).attr("class")) {
-				sort = $(span).data("sort");
-			}
-		});
-
-		$("span").attr("class", "");
-		$("span#" + sort).attr("class", "on");
-		$.ajax({
-			url: "/order/" + sort,
-			success: function (orders) {
-				let text = `
-                    <table border="1">
-                        <tr>
-                            <th>상품 이름</th>
-                            <th>상품 가격</th>
-                            <th>주문 개수</th>
-                            <th>결제 금액</th>
-                            <th>주문 날짜</th>
-                        </tr>
-                `;
-				orders.forEach(order => {
-					text += `
-
-                            <tr>
-                                <td>${order.productName}</td>
-                                <td>${order.productPrice}</td>
-                                <td>${order.productCount}</td>
-                                <td>${order.orderPrice}</td>
-                                <td>${order.orderDate}</td>
-                            </tr>
-                    `;
-				});
-				text += `</table>`;
-
-				$("div.order-list").html(text);
-			}
-		});
+	$("span").attr("class", "");
+	$("span#" + sort).attr("class", "on");
+	$.ajax({
+		url: "/order/" + sort,
+		success: function (orders) {
+			let text = `
+	    <table border="1">
+		<tr>
+		    <th>상품 이름</th>
+		    <th>상품 가격</th>
+		    <th>주문 개수</th>
+		    <th>결제 금액</th>
+		    <th>주문 날짜</th>
+		</tr>
+	`;
+	orders.forEach(order => {
+		text += `
+		    <tr>
+			<td>${order.productName}</td>
+			<td>${order.productPrice}</td>
+			<td>${order.productCount}</td>
+			<td>${order.orderPrice}</td>
+			<td>${order.orderDate}</td>
+		    </tr>
+	    `;
 	});
+	text += `</table>`;
+
+	$("div.order-list").html(text);
+		}
+	});
+});
 ```
 
 # 주문완료 처리하기
