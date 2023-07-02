@@ -528,4 +528,68 @@ private final HttpServletRequest request;
 }	
 ```
 
+## tamplates 에 board패키지 생성후 board_list.html 생성하기
+```html
+<!DOCTYPE html>
+<html>
 
+<head>
+	<meta charset="UTF-8">
+	<title>Insert title here</title>
+	<style>
+		a {
+			text-decoration: none;
+		}
+
+		table {
+			border-collapse: collapse;
+		}
+	</style>
+</head>
+
+<body>
+	<table border="1" width="700">
+		<tr>
+			<td colspan="5"><img src="/img/title_04.gif"></td>
+		</tr>
+		<tr>
+			<th>번호</th>
+			<th width="350">제목</th>
+			<th width="120">작성자</th>
+			<th width="100">작성일</th>
+			<th width="50">조회수</th>
+		</tr>
+		<th:block th:each="vo : ${list}">
+			<tr th:object="${vo}">
+				<td align="center" th:text"*{idx}" ></td>
+				<td>
+				<th:block th:each="depth : ${#numbers.sequence(1,*{depth})">&nbsp;</th:block>
+				<th:block th:if="${*{depth} ne 0}">ㄴ</th:block>
+				<th:block th:if="${*{del_info} ne -1}">
+					<a href="/view?idx=*{idx}&page=*{page}">
+						<font color="black" th:text="*{subject}"></font>
+					</a>
+				</th:block>
+				<th:block th:if="${*{del_info} eq -1}">
+					<font color="gray" th:text="*{subject}"></font>
+				</th:block>
+				</td>
+				<td th:text="${name}"></td>
+				<td th:if="${*{del_info} ne -1}" th:text="${#temporals.format(*{regdate},'yyyy.MM.dd')}"></td>
+				<td th:if="${*{del_info} eq -1}"> unknown</td>
+				<td th:text="*{readhit}"></td>
+			</tr>
+		</th:block>
+		<tr>
+			<td colspan="5" align="center" th:text="${pageMenu}"></td>
+		</tr>
+		<tr>
+			<td colspan="5" align="right">
+				<img src="/img/btn_reg.gif" onclick="location.href='insert_form'" style="cursor:pointer;">
+			</td>
+		</tr>
+	</table>
+</body>
+
+</html>
+```
