@@ -25,7 +25,8 @@ CREATE TABLE board(
 	--계층형 게시판을 운영하기 위한 추가정보들
 	ref int,  --기준글번호(댓글을 달기위한 메인글)
 	step int, --댓글순서(수직적)
-	depth int --댓글의깊이(댓글의 댓글 개념)
+	depth int, --댓글의깊이(댓글의 댓글 개념)
+	del_info NUMBER(2) default 0
 );
 
 --샘플데이터 추가(메인글1 -> 댓글1)
