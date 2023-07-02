@@ -104,6 +104,221 @@ public class BoardVO {
 
 }
 ```
+## common패키지 만들고 Common클래스 생성하기
+```java
+package com.example.boatd.common;
+
+public class Common {
+	//객체 관리를 편하게 하기 위한 클래스
+
+	//일반게시판과 공지사항에서
+	//한 페이지당 보여줘야 하는 갯수가 다른경우에 다음과 같이 
+	//게시판별로 상수화 시켜놓으면 관리하기 편해진다.
+
+	//일반게시판용 상수
+	public static class Board{
+		
+		//한 페이지당 보여줄 게시물 수
+		public final static int BLOCKLIST = 10;
+
+		//한 화면에 보여지는 페이지 메뉴 수
+		//<- 1 2 3 4 5 ->
+		public final static int BLOCKPAGE = 5;
+	}
+
+	//댓글의 페이징 처리를 위한 LIST
+	public static class Comment{
+		//한 페이지당 보여줄 게시물 수
+		public final static int BLOCKLIST = 5;
+
+		//한 화면에 보여지는 페이지 메뉴 수
+		//<- 1 2 3 4 5 ->
+		public final static int BLOCKPAGE = 5;
+	}
+}
+
+```
+
+## util패키지에 Paging 클래스
+```java
+package com.example.boatd.util;
+/*
+        nowPage:현재페이지
+        rowTotal:전체데이터갯수
+        blockList:한페이지당 게시물수
+        blockPage:한화면에 나타낼 페이지 메뉴 수
+ */
+public class Paging {
+	public static String getPaging(String pageURL,int nowPage, int rowTotal,int blockList, int blockPage){
+		
+		int totalPage/*전체페이지수*/,
+            startPage/*시작페이지번호*/,
+            endPage;/*마지막페이지번호*/
+
+		boolean  isPrevPage,isNextPage;
+		StringBuffer sb; //모든 상황을 판단하여 HTML코드를 저장할 곳
+		
+		
+		isPrevPage=isNextPage=false;
+		//입력된 전체 자원을 통해 전체 페이지 수를 구한다..
+		totalPage = (int)(rowTotal/blockList);
+		if(rowTotal%blockList!=0)totalPage++;
+		
+
+		//만약 잘못된 연산과 움직임으로 인하여 현재 페이지 수가 전체 페이지 수를
+		//넘을 경우 강제로 현재페이지 값을 전체 페이지 값으로 변경
+		if(nowPage > totalPage)nowPage = totalPage;
+		
+
+		//시작 페이지와 마지막 페이지를 구함.
+		startPage = (int)(((nowPage-1)/blockPage)*blockPage+1);
+		endPage = startPage + blockPage - 1; //
+		
+		//마지막 페이지 수가 전체페이지수보다 크면 마지막페이지 값을 변경
+		if(endPage > totalPage)endPage = totalPage;
+		
+		//마지막페이지가 전체페이지보다 작을 경우 다음 페이징이 적용할 수 있도록
+		//boolean형 변수의 값을 설정
+		if(endPage < totalPage) isNextPage = true;
+		//시작페이지의 값이 1보다 작으면 이전페이징 적용할 수 있도록 값설정
+		if(startPage > 1)isPrevPage = true;
+		
+		//HTML코드를 저장할 StringBuffer생성=>코드생성
+		sb = new StringBuffer();
+//-----그룹페이지처리 이전 --------------------------------------------------------------------------		
+		if(isPrevPage){
+			sb.append( "<a href='#' onclick='comment_list(" );
+			sb.append( startPage-1 );
+			sb.append( ");'>◀</a>" );
+		}
+		else
+			sb.append("◀");
+		
+//------페이지 목록 출력 ---------------------------------------------------------------------------
+		sb.append("|");
+		for(int i=startPage; i<= endPage ;i++){
+			if(i>totalPage)break;
+			if(i == nowPage){ //현재 있는 페이지
+				sb.append("&nbsp;<b><font color='#91b72f'>");
+				sb.append(i);
+				sb.append("</font></b>");
+			}
+			else{//현재 페이지가 아니면
+				sb.append( "<a href='#' onclick='comment_list(" );
+				sb.append(i);
+				sb.append( ");'>&nbsp;" );
+				sb.append(i);
+				sb.append( "&nbsp;</a>" );
+			}
+		}// end for
+		
+		sb.append("&nbsp;|");
+		
+//-----그룹페이지처리 다음 ----------------------------------------------------------------------------------
+		if(isNextPage){
+			sb.append( "<a href='#' onclick='comment_list(" );
+			sb.append(endPage + 1);
+			sb.append( ");'>▶</a>" );
+		}
+		else
+			sb.append("▶");
+//------------------------------------------------------------------------	    
+
+		return sb.toString();
+	}
+	
+public static String getPaging(String pageURL,int nowPage, int rowTotal, String search_param, int blockList, int blockPage){
+		
+		int totalPage/*전체페이지수*/,
+            startPage/*시작페이지번호*/,
+            endPage;/*마지막페이지번호*/
+
+		boolean  isPrevPage,isNextPage;
+		StringBuffer sb; //모든 상황을 판단하여 HTML코드를 저장할 곳
+		
+		
+		isPrevPage=isNextPage=false;
+		//입력된 전체 자원을 통해 전체 페이지 수를 구한다..
+		totalPage = (int)(rowTotal/blockList);
+		if(rowTotal%blockList!=0)totalPage++;
+		
+
+		//만약 잘못된 연산과 움직임으로 인하여 현재 페이지 수가 전체 페이지 수를
+		//넘을 경우 강제로 현재페이지 값을 전체 페이지 값으로 변경
+		if(nowPage > totalPage)nowPage = totalPage;
+		
+
+		//시작 페이지와 마지막 페이지를 구함.
+		startPage = (int)(((nowPage-1)/blockPage)*blockPage+1);
+		endPage = startPage + blockPage - 1; //
+		
+		//마지막 페이지 수가 전체페이지수보다 크면 마지막페이지 값을 변경
+		if(endPage > totalPage)endPage = totalPage;
+		
+		//마지막페이지가 전체페이지보다 작을 경우 다음 페이징이 적용할 수 있도록
+		//boolean형 변수의 값을 설정
+		if(endPage < totalPage) isNextPage = true;
+		//시작페이지의 값이 1보다 작으면 이전페이징 적용할 수 있도록 값설정
+		if(startPage > 1)isPrevPage = true;
+		
+		//HTML코드를 저장할 StringBuffer생성=>코드생성
+		sb = new StringBuffer();
+//-----그룹페이지처리 이전 --------------------------------------------------------------------------------		
+		if(isPrevPage){
+			sb.append("<a href ='"+pageURL+"?page=");
+			//sb.append(nowPage - blockPage);
+			sb.append( startPage-1 );
+			sb.append("&"+search_param);
+			sb.append("'>◀</a>");
+		}
+		else
+			sb.append("◀");
+		
+//------페이지 목록 출력 ---------------------------------------------------------------------------------
+		sb.append("|");
+		for(int i=startPage; i<= endPage ;i++){
+			if(i>totalPage)break;
+			if(i == nowPage){ //현재 있는 페이지
+				sb.append("&nbsp;<b><font color='#91b72f'>");
+				sb.append(i);
+				sb.append("</font></b>");
+			}
+			else{//현재 페이지가 아니면
+				sb.append("&nbsp;<a href='"+pageURL+"?page=");
+				sb.append(i);
+				sb.append("&"+search_param);
+				sb.append("'>");
+				sb.append(i);
+				sb.append("</a>");
+			}
+		}// end for
+		
+		sb.append("&nbsp;|");
+		
+//-----그룹페이지처리 다음 --------------------------------------------------------------------------------
+		if(isNextPage){
+			sb.append("<a href='"+pageURL+"?page=");
+			
+			sb.append(endPage + 1);
+			
+			sb.append("&"+search_param);
+			
+			/*if(nowPage+blockPage > totalPage)nowPage = totalPage;
+			else
+				nowPage = nowPage+blockPage;
+			sb.append(nowPage);*/
+			sb.append("'>▶</a>");
+		}
+		else
+			sb.append("▶");
+//-------------------------------------------------------------------------------------------------	    
+
+		return sb.toString();
+	}	
+}
+```
+
+
 ## mapper패키지에 BoardMapper 클래스 생성하기
 ```java
 package com.example.boatd.mapper;
@@ -139,6 +354,7 @@ public class BoardDAO {
 ```
 
 ## controller패키지에 BoardController클래스 만들기
+
 ```java
 package com.example.boatd.controller;
 
@@ -164,6 +380,7 @@ public class BoardController {
 - 페이지별 게시물 조회하기
 
 ## BoardMapper에 메서드 작성하기
+
 ```java
 package com.example.boatd.mapper;
 
@@ -187,6 +404,7 @@ public interface BoardMapper {
 ```
 
 ## config.xml에 별칭 작성해주기
+
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 	  
@@ -251,6 +469,7 @@ public class BoardDAO {
 ```
 
 ## BoardController에 매핑 잡아주기
+
 ```java
 package com.example.boatd.controller;
 
@@ -262,6 +481,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.boatd.common.Common;
 import com.example.boatd.dao.BoardDAO;
@@ -281,7 +501,7 @@ public class BoardController {
 	private final HttpServletRequest request;
 	
 	@GetMapping("board_list.do")
-	public String list(Model model, String page) {
+	public String list(Model model, @RequestParam("page") String page) {
 		int nowPage = 1;
 		
 		//board_list.do <-- null
@@ -320,10 +540,9 @@ public class BoardController {
 		model.addAttribute("list",list);
 		model.addAttribute("pageMenu",pageMenu);
 		
-		return Common.Board.VIEW_PATH+"board_list/page="+nowPage;		
+		return "board_list";	
 	}	
 }
-
 ```
 
 
