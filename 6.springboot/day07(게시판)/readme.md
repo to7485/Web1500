@@ -1,9 +1,9 @@
 # 게시판 만들기
 
 ## Ex_날짜_board 프로젝트 생성하기
-- resources에 config패키지,mapper패키지 생성하기(config.xml,mapper.xml 복사하기)
+- resources에 config패키지,mapper패키지 생성하기(config.xml,mapper.xml 복사하기), application.yml파일 복사하기
   - static에 img폴더 복사해서 넣기
-- java에 controller,dao,vo패키지 만들기
+- java에 controller,dao,vo,mybatis패키지 만들기
 
 
 
@@ -81,6 +81,57 @@ commit;
 
 ```
 
+## mybatis패키지에 MybatisConfig클래스 복사하기
+```java
+package com.korea.board.mybatis;
+
+import java.io.IOException;
+
+import javax.sql.DataSource;
+
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.mybatis.spring.SqlSessionFactoryBean;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+
+import lombok.RequiredArgsConstructor;
+
+@Configuration
+@RequiredArgsConstructor 
+public class MyBatisConfig {
+    private final ApplicationContext applicationContext; 
+
+    @ConfigurationProperties(prefix = "spring.datasource.hikari")
+    @Bean
+    public HikariConfig hikariConfig() {return new HikariConfig();}
+
+    @Bean
+    public DataSource dataSource() {return new HikariDataSource(hikariConfig());}
+
+    @Bean
+    public SqlSessionFactory sqlSessionFactory() throws IOException {
+        SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
+        sqlSessionFactoryBean.setDataSource(dataSource());
+        sqlSessionFactoryBean.setMapperLocations(applicationContext.getResources("classpath*:/mapper/*.xml"));
+        sqlSessionFactoryBean.setConfigLocation(applicationContext.getResource("classpath:/config/config.xml"));
+
+        try {
+            SqlSessionFactory sqlSessionFactory = sqlSessionFactoryBean.getObject();
+            sqlSessionFactory.getConfiguration().setMapUnderscoreToCamelCase(true);
+            return sqlSessionFactory;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+}
+```
+
 ## vo패키지에 BoardVO클래스 만들기
 ```java
 package vo;
@@ -145,7 +196,7 @@ public class Common {
 
 ## util패키지에 Paging 클래스
 ```java
-package com.example.boatd.util;
+ppackage com.korea.board.util;
 /*
         nowPage:현재페이지
         rowTotal:전체데이터갯수
@@ -155,12 +206,21 @@ package com.example.boatd.util;
 public class Paging {
 	public static String getPaging(String pageURL,int nowPage, int rowTotal,int blockList, int blockPage){
 		
-		int totalPage/*전체페이지수*/,
+	    int totalPage/*전체페이지수*/,
             startPage/*시작페이지번호*/,
             endPage;/*마지막페이지번호*/
 
 		boolean  isPrevPage,isNextPage;
 		StringBuffer sb; //모든 상황을 판단하여 HTML코드를 저장할 곳
+		
+		//String vs StringBuffer
+		//String :immutable(불변)
+		//기존 문자열에 이어붙히면 버리고 메모리 새로 할당받음
+		//문자열이 많은경우 성능이 좋아지지 않는다.
+		
+		//StringBuffer : mutable(변함)
+		//기존의 버퍼 크기를 늘리며 유연하게 동작합니다.
+		
 		
 		
 		isPrevPage=isNextPage=false;
@@ -189,96 +249,17 @@ public class Paging {
 		
 		//HTML코드를 저장할 StringBuffer생성=>코드생성
 		sb = new StringBuffer();
-//-----그룹페이지처리 이전 --------------------------------------------------------------------------		
-		if(isPrevPage){
-			sb.append( "<a href='#' onclick='comment_list(" );
-			sb.append( startPage-1 );
-			sb.append( ");'>◀</a>" );
-		}
-		else
-			sb.append("◀");
-		
-//------페이지 목록 출력 ---------------------------------------------------------------------------
-		sb.append("|");
-		for(int i=startPage; i<= endPage ;i++){
-			if(i>totalPage)break;
-			if(i == nowPage){ //현재 있는 페이지
-				sb.append("&nbsp;<b><font color='#91b72f'>");
-				sb.append(i);
-				sb.append("</font></b>");
-			}
-			else{//현재 페이지가 아니면
-				sb.append( "<a href='#' onclick='comment_list(" );
-				sb.append(i);
-				sb.append( ");'>&nbsp;" );
-				sb.append(i);
-				sb.append( "&nbsp;</a>" );
-			}
-		}// end for
-		
-		sb.append("&nbsp;|");
-		
-//-----그룹페이지처리 다음 ----------------------------------------------------------------------------------
-		if(isNextPage){
-			sb.append( "<a href='#' onclick='comment_list(" );
-			sb.append(endPage + 1);
-			sb.append( ");'>▶</a>" );
-		}
-		else
-			sb.append("▶");
-//------------------------------------------------------------------------	    
-
-		return sb.toString();
-	}
-	
-public static String getPaging(String pageURL,int nowPage, int rowTotal, String search_param, int blockList, int blockPage){
-		
-		int totalPage/*전체페이지수*/,
-            startPage/*시작페이지번호*/,
-            endPage;/*마지막페이지번호*/
-
-		boolean  isPrevPage,isNextPage;
-		StringBuffer sb; //모든 상황을 판단하여 HTML코드를 저장할 곳
-		
-		
-		isPrevPage=isNextPage=false;
-		//입력된 전체 자원을 통해 전체 페이지 수를 구한다..
-		totalPage = (int)(rowTotal/blockList);
-		if(rowTotal%blockList!=0)totalPage++;
-		
-
-		//만약 잘못된 연산과 움직임으로 인하여 현재 페이지 수가 전체 페이지 수를
-		//넘을 경우 강제로 현재페이지 값을 전체 페이지 값으로 변경
-		if(nowPage > totalPage)nowPage = totalPage;
-		
-
-		//시작 페이지와 마지막 페이지를 구함.
-		startPage = (int)(((nowPage-1)/blockPage)*blockPage+1);
-		endPage = startPage + blockPage - 1; //
-		
-		//마지막 페이지 수가 전체페이지수보다 크면 마지막페이지 값을 변경
-		if(endPage > totalPage)endPage = totalPage;
-		
-		//마지막페이지가 전체페이지보다 작을 경우 다음 페이징이 적용할 수 있도록
-		//boolean형 변수의 값을 설정
-		if(endPage < totalPage) isNextPage = true;
-		//시작페이지의 값이 1보다 작으면 이전페이징 적용할 수 있도록 값설정
-		if(startPage > 1)isPrevPage = true;
-		
-		//HTML코드를 저장할 StringBuffer생성=>코드생성
-		sb = new StringBuffer();
-//-----그룹페이지처리 이전 --------------------------------------------------------------------------------		
+//-----그룹페이지처리 이전 --------------------------------------------------------------------------------------------		
 		if(isPrevPage){
 			sb.append("<a href ='"+pageURL+"?page=");
 			//sb.append(nowPage - blockPage);
 			sb.append( startPage-1 );
-			sb.append("&"+search_param);
-			sb.append("'>◀</a>");
+			sb.append("'><img src='img/btn_prev.gif'></a>");
 		}
 		else
-			sb.append("◀");
+			sb.append("<img src='img/btn_prev.gif'>");
 		
-//------페이지 목록 출력 ---------------------------------------------------------------------------------
+//------페이지 목록 출력 -------------------------------------------------------------------------------------------------
 		sb.append("|");
 		for(int i=startPage; i<= endPage ;i++){
 			if(i>totalPage)break;
@@ -290,7 +271,6 @@ public static String getPaging(String pageURL,int nowPage, int rowTotal, String 
 			else{//현재 페이지가 아니면
 				sb.append("&nbsp;<a href='"+pageURL+"?page=");
 				sb.append(i);
-				sb.append("&"+search_param);
 				sb.append("'>");
 				sb.append(i);
 				sb.append("</a>");
@@ -299,27 +279,25 @@ public static String getPaging(String pageURL,int nowPage, int rowTotal, String 
 		
 		sb.append("&nbsp;|");
 		
-//-----그룹페이지처리 다음 --------------------------------------------------------------------------------
+//-----그룹페이지처리 다음 ----------------------------------------------------------------------------------------------
 		if(isNextPage){
 			sb.append("<a href='"+pageURL+"?page=");
 			
 			sb.append(endPage + 1);
-			
-			sb.append("&"+search_param);
-			
 			/*if(nowPage+blockPage > totalPage)nowPage = totalPage;
 			else
 				nowPage = nowPage+blockPage;
 			sb.append(nowPage);*/
-			sb.append("'>▶</a>");
+			sb.append("'><img src='img/btn_next.gif'></a>");
 		}
 		else
-			sb.append("▶");
-//-------------------------------------------------------------------------------------------------	    
+			sb.append("<img src='img/btn_next.gif'>");
+//---------------------------------------------------------------------------------------------------------------------	    
 
 		return sb.toString();
-	}	
+	}
 }
+
 ```
 
 
@@ -373,9 +351,7 @@ import lombok.RequiredArgsConstructor;
 public class BoardController {
 	
 	private final BoardDAO board_dao;
-	
-	
-	
+		
 }
 
 ```
@@ -415,7 +391,7 @@ public interface BoardMapper {
 <!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0/EN" "https://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
 	<typeAliases>
-		<typeAlias type="com.korea.board.vo" alias="boardVO"/>
+		<typeAlias type="com.korea.board.vo.BoardVO" alias="boardVO"/>
 	</typeAliases>
 </configuration>
 ```
