@@ -411,7 +411,7 @@ public interface BoardMapper {
 <!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0/EN" "https://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
 	<typeAliases>
-		<typeAlias type="com.example.boatd.vo" alias="boardVO"/>
+		<typeAlias type="com.korea.board.vo" alias="boardVO"/>
 	</typeAliases>
 </configuration>
 ```
@@ -421,9 +421,9 @@ public interface BoardMapper {
 <?xml version="1.0" encoding="UTF-8"?>
 	  
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0/EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.boatd.mapper.BoardMapper">
+<mapper namespace="com.korea.board.mapper.BoardMapper">
 	<!-- 페이지별 게시물 조회 -->
-	<select id="board_list" resultType="board">
+	<select id="selectList" resultType="boardVO">
 		select * from
 		(select rank() over(order by ref desc,step) no, b.*
 		from board b)
@@ -431,7 +431,7 @@ public interface BoardMapper {
 	</select>
 
 	<!-- 전체 게시물 개수 조회 -->
-	<select id="board_count" resultType="int">
+	<select id="getRowTotal" resultType="int">
 		select count(*) from board
 	</select>
 </mapper>
@@ -471,25 +471,7 @@ public class BoardDAO {
 ## BoardController에 매핑 잡아주기
 
 ```java
-package com.example.boatd.controller;
-
-import java.util.HashMap;
-import java.util.List;
-
-import org.springframework.http.HttpRequest;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import com.example.boatd.common.Common;
-import com.example.boatd.dao.BoardDAO;
-import com.example.boatd.util.Paging;
-import com.example.boatd.vo.BoardVO;
-
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -498,9 +480,10 @@ import lombok.RequiredArgsConstructor;
 public class BoardController {
 	
 	private final BoardDAO board_dao;
-	private final HttpServletRequest request;
 	
-	@GetMapping("board_list.do")
+private final HttpServletRequest request;
+	
+	@GetMapping("board_list")
 	public String list(Model model, @RequestParam("page") String page) {
 		int nowPage = 1;
 		
@@ -529,7 +512,7 @@ public class BoardController {
 		
 		//페이지 메뉴 생성하기
 		String pageMenu = Paging.getPaging(
-				"board_list.do",
+				"board_list",
 				nowPage, //현재 페이지 번호
 				rowTotal, //전체 게시물 수
 				Common.Board.BLOCKLIST, //한 페이지에 표기할 게시물 수
@@ -541,8 +524,8 @@ public class BoardController {
 		model.addAttribute("pageMenu",pageMenu);
 		
 		return "board_list";	
-	}	
-}
+	}
+}	
 ```
 
 
