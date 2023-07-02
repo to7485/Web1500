@@ -195,8 +195,9 @@ public class Common {
 ```
 
 ## util패키지에 Paging 클래스
+
 ```java
-ppackage com.korea.board.util;
+package com.korea.board.util;
 /*
         nowPage:현재페이지
         rowTotal:전체데이터갯수
@@ -249,17 +250,19 @@ public class Paging {
 		
 		//HTML코드를 저장할 StringBuffer생성=>코드생성
 		sb = new StringBuffer();
-//-----그룹페이지처리 이전 --------------------------------------------------------------------------------------------		
+//-----그룹페이지처리 이전 --------------------------------------------------------
+
 		if(isPrevPage){
 			sb.append("<a href ='"+pageURL+"?page=");
 			//sb.append(nowPage - blockPage);
 			sb.append( startPage-1 );
-			sb.append("'><img src='img/btn_prev.gif'></a>");
+			sb.append("'><img src='/img/btn_prev.gif'></a>");
 		}
 		else
-			sb.append("<img src='img/btn_prev.gif'>");
+			sb.append("<img src='/img/btn_prev.gif'>");
 		
-//------페이지 목록 출력 -------------------------------------------------------------------------------------------------
+//------페이지 목록 출력 ------------------------------------------------------------
+
 		sb.append("|");
 		for(int i=startPage; i<= endPage ;i++){
 			if(i>totalPage)break;
@@ -279,7 +282,8 @@ public class Paging {
 		
 		sb.append("&nbsp;|");
 		
-//-----그룹페이지처리 다음 ----------------------------------------------------------------------------------------------
+//-----그룹페이지처리 다음 -------------------------------------------------------------
+
 		if(isNextPage){
 			sb.append("<a href='"+pageURL+"?page=");
 			
@@ -288,16 +292,16 @@ public class Paging {
 			else
 				nowPage = nowPage+blockPage;
 			sb.append(nowPage);*/
-			sb.append("'><img src='img/btn_next.gif'></a>");
+			sb.append("'><img src='/img/btn_next.gif'></a>");
 		}
 		else
-			sb.append("<img src='img/btn_next.gif'>");
-//---------------------------------------------------------------------------------------------------------------------	    
+			sb.append("<img src='/img/btn_next.gif'>");
+//-----------------------------------------------------------------------------------
+
 
 		return sb.toString();
 	}
 }
-
 ```
 
 
@@ -315,6 +319,7 @@ public interface BoardMapper {
 ```
 
 ## dao패키지에 BoardDAO클래스 생성하기
+
 ```java
 package com.example.boatd.dao;
 
@@ -329,7 +334,6 @@ import lombok.RequiredArgsConstructor;
 public class BoardDAO {
 
 	private final BoardMapper boardMapper;
-	
 	
 }
 
@@ -353,7 +357,6 @@ public class BoardController {
 	private final BoardDAO board_dao;
 		
 }
-
 ```
 
 # 조회하기
@@ -397,6 +400,7 @@ public interface BoardMapper {
 ```
 
 ## board.xml에 쿼리문 작성하기
+
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 	  
@@ -418,6 +422,7 @@ public interface BoardMapper {
 ```
 
 ## BoardDAO에 메서드 작성하기
+
 ```java
 package com.example.boatd.dao;
 
@@ -445,7 +450,6 @@ public class BoardDAO {
 		return boardMapper.getRowTotal();
 	}
 }
-
 ```
 
 ## BoardController에 매핑 잡아주기
@@ -461,7 +465,7 @@ public class BoardController {
 	
 	private final BoardDAO board_dao;
 	
-private final HttpServletRequest request;
+	private final HttpServletRequest request;
 	
 	@GetMapping("board_list")
 	public String list(Model model, @RequestParam("page") String page) {
@@ -541,27 +545,41 @@ private final HttpServletRequest request;
 		</tr>
 		<th:block th:each="vo : ${list}">
 			<tr th:object="${vo}">
-				<td align="center" th:text"*{idx}" ></td>
+				<td align="center" th:text="*{idx}"></td>
+
 				<td>
-				<th:block th:each="depth : ${#numbers.sequence(1,*{depth})">&nbsp;</th:block>
-				<th:block th:if="${*{depth} ne 0}">ㄴ</th:block>
-				<th:block th:if="${*{del_info} ne -1}">
-					<a href="/view?idx=*{idx}&page=*{page}">
-						<font color="black" th:text="*{subject}"></font>
-					</a>
-				</th:block>
-				<th:block th:if="${*{del_info} eq -1}">
-					<font color="gray" th:text="*{subject}"></font>
-				</th:block>
+					<!--depth가 0보다 크면 depth의 수만큼 반복하여 띄어쓰기를 해라-->
+					<th:block th:if="${vo.depth > 0}">
+						<span th:each="depth : ${#numbers.sequence(1,vo.depth)}">&nbsp;</span>
+					</th:block>
+
+					<!--depth가 0이 아니면 댓글이기 때문에 ㄴ을 써라-->
+					<th:block th:if="${vo.depth ne 0}">ㄴ</th:block>
+
+					<!-- del_info가 -1이 아니면 삭제가 안된 글이기 때문에 누를수 있게 해주자.-->
+					<th:block th:if="${vo.del_info ne -1}">
+						<a th:href="@{view(idx='${vo.idx}',page='${param.page}')}">
+							<font color="black" th:text="*{subject}"></font>
+						</a>
+					</th:block>
+
+					<!-- del_info가 -1면 삭제된 글이기 때문에 누를수 없게 해주자.-->
+					<th:block th:if="${del_info eq -1}">
+						<font color="gray" th:text="*{subject}"></font>
+					</th:block>
 				</td>
-				<td th:text="${name}"></td>
-				<td th:if="${*{del_info} ne -1}" th:text="${#temporals.format(*{regdate},'yyyy.MM.dd')}"></td>
-				<td th:if="${*{del_info} eq -1}"> unknown</td>
+
+				<!--del_info가 -1이면 unknown으로 나오게 아니면 작성자명이 나오게 해주자.-->
+				<td th:if"${del_info eq -1}" th:text="unknown"></td>
+				<td th:unless"${del_info eq -1}" th:text="*{name}"></td>
+				<td th:text="*{regdate}"></td>
 				<td th:text="*{readhit}"></td>
 			</tr>
 		</th:block>
 		<tr>
-			<td colspan="5" align="center" th:text="${pageMenu}"></td>
+			<td colspan="5" align="center">
+				<div id="pageMenu"></div>
+			</td>
 		</tr>
 		<tr>
 			<td colspan="5" align="right">
@@ -570,6 +588,14 @@ private final HttpServletRequest request;
 		</tr>
 	</table>
 </body>
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script th:inline="javascript">
+	//pageMenu 변수에 controller에서 넘어온 pageMenu를 담아주자.
+	let pageMenu = /*[[${pageMenu}]]*/
+
+		//pageMenu라는 id를 가진 div에 pageMenu를 넣어주자.
+		$("#pageMenu").html(pageMenu)
+</script>
 
 </html>
 ```
