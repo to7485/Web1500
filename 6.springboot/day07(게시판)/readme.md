@@ -551,7 +551,7 @@ public class BoardController {
 
 					<!-- del_info가 -1이 아니면 삭제가 안된 글이기 때문에 누를수 있게 해주자.-->
 					<th:block th:if="${vo.del_info ne -1}">
-						<a th:href="@{view(idx='${vo.idx}',page='${param.page}')}">
+						<a th:href="@{/board/view(idx=*{idx},page=${param.page})}">
 							<font color="black" th:text="*{subject}"></font>
 						</a>
 					</th:block>
