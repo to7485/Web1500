@@ -36,7 +36,7 @@ $(".test")
 
 ### 속성 선택기
 - 태그의 속성을 기반으로 클래스의 요소를 찾는다.
-```
+```js
 $(input[name='value']) name속성이 value인 input태그를 선택
 ```
 
