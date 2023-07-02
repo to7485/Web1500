@@ -42,6 +42,7 @@ insert into board values(
 		0, 
 		seq_board_idx.currVal,  -- 현재 시퀀스값 
 		0, 
+		0,
 		0);
 
 --댓글쓰기
@@ -56,7 +57,8 @@ insert into board values(
 		0, 
 		1, --메인글의 idx
 		1, -- step
-		1 -- depth
+		1, -- depth
+		0
 );
 
 --댓글의 댓글
@@ -71,7 +73,8 @@ insert into board values(
 		0, 
 		1, --메인글의 idx
 		2, -- step
-		2 -- depth
+		2, -- depth
+		0
 );
 
 commit;
