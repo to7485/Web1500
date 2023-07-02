@@ -565,7 +565,7 @@ public class BoardController {
 				<!--del_info가 -1이면 unknown으로 나오게 아니면 작성자명이 나오게 해주자.-->
 				<td th:if="${vo.del_info eq -1}" th:text="unknown"></td>
 				<td th:unless="${vo.del_info eq -1}" th:text="*{name}"></td>
-				<td th:text="*{regdate}"></td>
+				<td th:text="${#strings.substring(vo.regdate,0,10)}"></td>
 				<td th:text="*{readhit}"></td>
 			</tr>
 		</th:block>
