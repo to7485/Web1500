@@ -592,3 +592,63 @@ public class BoardController {
 
 </html>
 ```
+
+# 게시글 상세보기
+
+## BoardController에서 매핑해주기
+```java
+
+	@GetMapping("view")
+	public String view(Model model,int idx, @RequestParam(required = false) String page) {
+		BoardVO vo = board_dao.selectOne(idx);
+		
+		//조회수 중가
+		String show = (String)request.getSession().getAttribute("show");
+		
+		if(show == null) {
+			int res = board_dao.update_readhit(idx);
+			request.getSession().setAttribute("show", "0");
+		}
+		
+		//상세보기 페이지로 전환하기 위해 바인딩 및 포워딩
+		model.addAttribute("vo", vo);
+		return "board_view";
+	}
+```
+
+## board.xml에 쿼리문 작성하기
+```xml
+<!--idx에 해당하는 게시글 정보 조회(상세보기)-->
+<select id="board_one" resultType="boardVO">
+	select * from board where idx = #{idx}
+</select>
+
+<!--조회수 업데이트-->
+<update id="update_readhit">
+	update board set readhit = readhit + 1
+	where idx = #{idx}
+</update>
+```
+
+## BoardMapper 인터페이스에 메서드 작성하기
+```java
+//게시글 한 건 조회
+public BoardVO board_one(int idx);
+
+//조회수 변경하기
+public int update_readhit(int idx);
+```
+
+## BoardDAO에 메서드 작성하기
+```java
+//게시글 한건 조회
+public BoardVO selectOne(int idx) {
+	return boardMapper.board_one(idx);
+}
+
+//조회수 증가
+public int update_readhit(int idx) {
+	return boardMapper.update_readhit(idx);
+}
+```
+
