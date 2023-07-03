@@ -576,7 +576,9 @@ public class BoardController {
 		</tr>
 		<tr>
 			<td colspan="5" align="right">
-				<img src="/img/btn_reg.gif" onclick="location.href='insert_form'" style="cursor:pointer;">
+				<a th:href="@{/board/insert_form(page=${param.page})}">
+					<img src="/img/btn_reg.gif" style="cursor:pointer;">
+				</a>
 			</td>
 		</tr>
 	</table>
@@ -709,4 +711,125 @@ public int update_readhit(int idx) {
 
 </html>
 ```
+# 새글 추가하기
+
+## BoardController에 매핑해주기
+```java
+@GetMapping("insert_form")
+public String insert_form(Model model,@RequestParam(required = false) String page) {
+	model.addAttribute("vo", new BoardVO());
+	return "/board/insert_form";
+}
+```
+## insert_form.html 생성하기
+```html
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="EUC-KR">
+	<title>Insert title here</title>
+</head>
+
+<body>
+	<form name="f" th:action="@{/board/insert}" th:object="${vo}" method="get">
+		 <input type="hidden" name="page" th:value="${param.page}"/> //BoardController에서 넘어온 page 받아주기
+		<table border="1">
+			<caption>:::새 글 쓰기:::</caption>
+
+			<tr>
+				<th>제목</th>
+				<td><input th:field="*{subject}" style="width:370px;"></td>
+			</tr>
+			<tr>
+				<th>작성자</th>
+				<td><input th:field="*{name}" style="width:370px;"></td>
+			</tr>
+			<tr>
+				<th>내용</th><!-- 가로로 50글자 세로로 엔터 10번정도 칠수 있는 크기 -->
+				<td><textarea th:field="*{content}" rows="10" cols="50" style="resize:none;"></textarea></td>
+			</tr>
+			<tr>
+				<th>비밀번호</th>
+				<td><input th:field="*{pwd}" type="password"></td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<img src="/img/btn_reg.gif" id="send_check" style="cursor:pointer;">
+					<a th:href="@{/board/board_list(page=${param.page})}">
+						<img src="/img/btn_back.gif" style="cursor:pointer;">
+					</a>
+				</td>
+			</tr>
+		</table>
+	</form>
+</body>
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script>
+	const $sendBtn = $("img#send_check");
+
+	$sendBtn.on("click", function () {
+		$("form[name='f']").submit();
+	});
+</script>
+</html>
+```
+
+## BoardController에 insert매핑 만들어주기
+```java
+@GetMapping("insert")
+public RedirectView insert(BoardVO vo,@RequestParam(required = false) String page) {
+	String ip = request.getRemoteAddr();
+	vo.setIp(ip);
+	
+	int res = board_dao.insert(vo);
+	
+	if(res > 0) {
+		return new RedirectView("/board/board_list?page="+page);
+	}
+	return null;
+}
+```
+## board.xml에 쿼리문 추가하기
+```xml
+<!-- 새글 추가 -->
+<insert id="board_insert">
+	insert into board values(
+	seq_board_idx.nextVal,
+	#{name},
+	#{subject},
+	#{content},
+	#{pwd},
+	#{ip},
+	sysdate,
+	0,
+	seq_board_idx.currVal,
+	0,
+	0,
+	0
+	)
+</insert>
+```
+## BoardMapper에 메서드 작성하기
+```java
+//게시글 추가하기
+public int board_insert(BoardVO vo);
+```
+
+## BoardDAO에 메서드 추가하기
+```java
+//게시글 추가
+public int board_insert(BoardVO vo) {
+	return boardMapper.board_insert(vo);
+}
+```
+
+# 삭제하기
+- 삭제 버튼을 누르면 삭제된것 처럼 보이게 하기
+
+## BoardController에 매핑 만들기
+```java
+
+```
+
 
