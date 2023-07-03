@@ -684,14 +684,14 @@ public int update_readhit(int idx) {
 		</tr>
 		<tr>
 			<th>내용</th>
-			<td width:"500px" height="200px" th:text="${vo.content}"></td>
+			<td width="500px" height="200px" th:text="${vo.content}"></td>
 		</tr>
 		<tr>
 			<th>비밀번호</th>
 			<td><input type="password" id="c_pwd"></td>
 		</tr>
 		<tr>
-			<td>
+			<td colspan="2">
 				<!--목록보기-->
 				<img src="/img/btn_list.gif" onclick="location.href='/board/board_list?page=${param.page}'">
 				<th:block th:if="${vo.depth lt 1 }">
