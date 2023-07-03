@@ -612,7 +612,7 @@ public class BoardController {
 		
 		//상세보기 페이지로 전환하기 위해 바인딩 및 포워딩
 		model.addAttribute("vo", vo);
-		return "board_view";
+		return "/board/board_view";
 	}
 ```
 
@@ -693,7 +693,9 @@ public int update_readhit(int idx) {
 		<tr>
 			<td colspan="2">
 				<!--목록보기-->
-				<img src="/img/btn_list.gif" onclick="location.href='/board/board_list?page=${param.page}'">
+				<a th:href="@{/board/board_list(page=${param.page})}">
+					<img src="/img/btn_list.gif">
+				</a>
 				<th:block th:if="${vo.depth lt 1 }">
 					<!-- 답변  -->
 					<img src="/img/btn_reply.gif" onclick="reply();">
