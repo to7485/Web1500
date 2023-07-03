@@ -652,3 +652,59 @@ public int update_readhit(int idx) {
 }
 ```
 
+## board_view.html 생성하기
+```html
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Insert title here</title>
+</head>
+
+<body>
+	<table border="1">
+
+		<caption>:::게시글 상세보기:::</caption>
+		<tr>
+			<th>제목</th>
+			<td th:text="${vo.subject}"></td>
+		</tr>
+		<tr>
+			<th>작성자</th>
+			<td th:text="${vo.name}"></td>
+		</tr>
+		<tr>
+			<th>작성일</th>
+			<td th:text="${vo.regdate}"></td>
+		</tr>
+		<tr>
+			<th>ip</th>
+			<td th:text="${vo.ip}"></td>
+		</tr>
+		<tr>
+			<th>내용</th>
+			<td width:"500px" height="200px" th:text="${vo.content}"></td>
+		</tr>
+		<tr>
+			<th>비밀번호</th>
+			<td><input type="password" id="c_pwd"></td>
+		</tr>
+		<tr>
+			<td>
+				<!--목록보기-->
+				<img src="/img/btn_list.gif" onclick="location.href='/board/board_list?page=${param.page}'">
+				<th:block th:if="${vo.depth lt 1 }">
+					<!-- 답변  -->
+					<img src="/img/btn_reply.gif" onclick="reply();">
+				</th:block>
+				<!-- 삭제 -->
+				<img src="/img/btn_delete.gif" onclick="del();">
+			</td>
+		</tr>
+	</table>
+</body>
+
+</html>
+```
+
