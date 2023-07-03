@@ -827,9 +827,101 @@ public int board_insert(BoardVO vo) {
 # 삭제하기
 - 삭제 버튼을 누르면 삭제된것 처럼 보이게 하기
 
+## board_view.html에 메서드 작성하기
+```html
+		<tr>
+			<th>비밀번호</th>
+			<td><input type="password" id="c_pwd"></td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<!--목록보기-->
+				<a th:href="@{/board/board_list(page=${param.page})}">
+					<img src="/img/btn_list.gif">
+				</a>
+				<th:block th:if="${vo.depth lt 1 }">
+					<!-- 답변  -->
+					<img src="/img/btn_reply.gif" onclick="reply();">
+				</th:block>
+				<!-- 삭제 -->
+				<img src="/img/btn_delete.gif" id="del" style="cursor:pointer;">
+			</td>
+		</tr>
+	</table>
+</body>
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script th:inline="javascript">
+	let idx = /*[[${vo.idx}]]*/''
+	let pwd =  /*[[${vo.pwd}]]*/''
+	let page =  /*[[${param.page}]]*/''
+
+
+
+	$("img[id='del']").on("click", function () {
+		if (!confirm("삭제하시겠습니까?")) {
+			return;
+		}
+
+
+		let $c_pwd = $("input[type='password']").val();
+
+		if ($pwd != $c_pwd) {
+			alert("비밀번호 불일치");
+			return;
+		}
+
+		$.ajax({
+			url: "/board/del",
+			type: post,
+			data: JSON.stringify({idx: $idx}),
+			contentType: "application/json; charset=utf-8",
+			success: function () {
+				window.location.href = "/board/board_list?page=" + page;
+			}
+		});
+	})
+</script>
+
+</html>
+```
+
 ## BoardController에 매핑 만들기
 ```java
+@PostMapping("del")
+@ResponseBody
+public void delete(int idx) {
+	BoardVO vo = board_dao.selectOne(idx);
+	
+	vo.setSubject("이미 삭제된 게시글 입니다.");
+	vo.setName("unknown");
+	
+	int res = board_dao.del_update(vo);
+}
+```
 
+## board.xml에 쿼리문 작성하기
+```xml
+<!-- 게시글 삭제(된 것 처럼 업데이트) -->
+<update id="del_update">
+	update board set subject = #{subject},
+	name = #{name},
+	del_info = -1
+	where idx=#{idx}
+</update>
+```
+
+## BoardMapper에 메서드 작성하기
+```java
+//게시글 삭제
+public int del_update(BoardVO vo);
+```
+
+## BoardDAO에 메서드 작성하기
+```java
+//게시글 삭제
+public int del_update(BoardVO vo) {
+	return boardMapper.del_update(vo);
+}
 ```
 
 
