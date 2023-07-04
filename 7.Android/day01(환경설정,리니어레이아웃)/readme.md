@@ -202,3 +202,120 @@ public class MainActivity extends AppCompatActivity {
 
 ![image](https://github.com/to7485/Web1500/assets/54658614/0cbca288-e41c-4280-9cf9-4ed0fa4dc178)
 
+### 액티비티 이름 바꾸기
+- shift + f6 누르면 이름을 변경할 수 있다.
+- 메인 액티비티를 FirstActivity로 바꿔보자
+
+![image](https://github.com/to7485/Web1500/assets/54658614/e9978d20-dfd2-46e8-9118-dd985e5c722e)
+
+- 해당하는 레이아웃의 이름도 맞춰줘야 한다.
+- 레이아웃의 이름에는 대문자가 들어가면 안된다.
+
+![image](https://github.com/to7485/Web1500/assets/54658614/83f16935-21cc-4c25-b770-f42affaa6e96)
+
+# 레이아웃의 종류
+- 가장 바깥쪽을 담당하는 body 태그의 역할을 하는게 레이아웃이다.
+- 레이아웃마다 요소를 배치하고 위치를 정하는게 다 다르다.
+- ConstraintLayout이 디폴트로 되어있는데 가장 안좋은 것 같다. 
+
+- 패키지에서 new -> activity -> Empty Activity 생성하기 액티비티도 클래스다
+
+![image](https://github.com/to7485/Web1500/assets/54658614/50739421-fc2c-4dbe-b006-741d09472f3e)
+
+- 코드 자동정렬 : ctrl + alt + L
+
+## LinearLayout
+- 방향성을 갖고 있는 레이아웃
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".LinearActivity">
+    <!--LinearLayout은 방향성을 가지고 있다.
+    orientation : vertical -> 수직정렬
+                horizontal -> 수평정렬 -->
+
+    텍스트뷰는 세로와 가로 속성을 반드시 갖는다.
+    wrap_contet : 컨텐츠의 길이만큼 공간을 차지하겠다.
+    match_parent : 부모의 길이와 똑같은 공간을 차지하겠다.
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView1"/>
+
+    밑에있는 요소의 크기를 math_parent로 바꿔도 위에있는 객체의 범위까지 침범하지 못한다.
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#aaf"
+        android:text="안녕하세요"
+        android:textSize="10mm" />
+    <!--mm과 같은 절대값을 사용해버리면 휴대폰 크기가 바뀌면 크기가 다르게 나올 수 있다. 그래서 dp와 같은 단위를 사용하는게좋다-->
+    dp : device independens pixel
+    사용중인 디바이스의 해상도에 맞는 pixel값을 계산하여 크기를 결정해주는 단위
+    완전히 해결되는건 아니지만 mm 보다는 훨씬더 편리한 단위기 때문에 모든 단위는 dp값으로 통일한다.
+
+    <SeekBar
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content" /> <!-- -> 음량 조절하는 바-->
+
+      <ProgressBar
+        android:layout_width="100dp"
+        android:layout_height="100dp" />
+    <!-- -> 로딩할 때 뜨는 요소-->
+
+        <RatingBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:numStars="3" /> -> 별점 요소 별점을 3개로 조절할 수도 있다.
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="체크박스" /> -> 간혹 크기를 변경하지 못하는 요소들도 있음
+
+        <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="btn1" /> -> 라디오 그룹안에 있는 속성은 하나만 선택 가능
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="btn2" />
+    </RadioGroup>
+
+    현재 버티컬 레이아웃인데 레이아웃 안에 가로로 요소를 배치하고 싶을 때가 있다.
+    리니어 레이아웃을 한 개 더 집어넣어서 영역을 확보할 수 있다.
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#afa"
+        android:orientation="horizontal">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="btn1" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="btn2" />
+    </LinearLayout>
+
+</LinearLayout>
+```
+
+![image](https://github.com/to7485/Web1500/assets/54658614/431c4ed0-0626-4fa9-9bba-e95a2988bed8)
