@@ -131,3 +131,74 @@
 방화벽 같은거 물어볼 수 있으니 수락하자.<br>
 오른쪽 아래 프로젝트 생성이 완료가 되어야 한다.<br>
 
+- 왼쪽 위에 안드로이드로 되어 있다. 프로젝트로 바꾸면 이클립스랑 더 유사하다.
+- app -> src -> main -> java -> 패키지 -> 액티비티 클래스 존재
+
+![image](https://github.com/to7485/Web1500/assets/54658614/080a98f8-65e1-4f50-b452-c6061ab4de24)
+
+### 글자 크기 바꾸기
+- file -> Settings -> font 검색 -> 글씨체는 consolas
+
+![image](https://github.com/to7485/Web1500/assets/54658614/73eaa3ec-5dfe-4025-a9b0-880df0e85fa8)
+
+- 디자인은 html 처럼 태그를 가지고 한다.
+- 자바 gui 처럼 이벤트 처리는 클래스에서 한다.
+
+```java
+package com.korea.ex_0705;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.os.Bundle;
+
+public class MainActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main); -> 내가 어떤 화면을 점유하고 있는지 표시를 해줌
+    }
+}
+```
+
+- 액티비티를 만들면 화면을 구성하는 레이아웃이 세트로 만들어진다.
+- xml을 눌러 화면 디자인을 볼 수 있다.
+- 요소를 드래그앤 드랍으로 만들 수 있지만 휴대폰마다 크기가 달라 요소들이 위치가 제멋대로 바뀔 수 있다.
+
+![image](https://github.com/to7485/Web1500/assets/54658614/9e37b7dc-ef89-47d8-a9af-e1b3fc09cce5)
+
+- 오른쪽 split을 누르면 화면을 구성하는 코드를 볼 수 있다.
+
+![image](https://github.com/to7485/Web1500/assets/54658614/4d2e39e1-3ab8-46ff-a794-3423a6e4114d)
+
+- 내용을 바꿔도 자동으로 저장이 된다.
+- 레이아웃은 res -> layout폴더 안에 존재한다.
+- drawable에 이미지를 넣는다.
+- mipmap에 아이콘을 넣는다.
+
+![image](https://github.com/to7485/Web1500/assets/54658614/60aea47b-7c38-4d55-96ff-bc1485c7ffc3)
+
+## 에뮬레이터 생성하기
+- 프로젝트를 진행하면서 확인을 해야 하는데 안드로이드폰이 없으니 에뮬레이터를 활용해야 한다.
+
+- 오른쪽위 핸드폰 모양 누르기
+
+![image](https://github.com/to7485/Web1500/assets/54658614/9a6112ad-44d5-4c4a-9eff-05a017e97f03)
+
+-  Create device
+
+![image](https://github.com/to7485/Web1500/assets/54658614/e689494e-11cf-4a9f-88ea-73f83d0551c8)
+
+- 안드로이드폰 마다 해상도가 다르다보니 기준이 되는 해상도가 필요하다.
+- pixel2 와 같이 1080x1920이 표준으로 잡기에는 괜찮다.
+
+![image](https://github.com/to7485/Web1500/assets/54658614/84c4a523-5086-4f4b-8a80-ed3315edf4f3)
+
+-  next -> R 이미지 다운로드 (에뮬레이터에도 OS가 필요하다)
+
+![image](https://github.com/to7485/Web1500/assets/54658614/60087134-6351-439c-b409-4a96b3b2eb3d)
+
+- 오른쪽 위에 디바이스가 표시되고 ▶ 버튼 누르면 실행됨
+
+![image](https://github.com/to7485/Web1500/assets/54658614/0cbca288-e41c-4280-9cf9-4ed0fa4dc178)
+
