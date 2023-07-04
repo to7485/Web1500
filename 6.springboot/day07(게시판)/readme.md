@@ -824,6 +824,9 @@ public int board_insert(BoardVO vo) {
 }
 ```
 
+![image](https://github.com/to7485/Web1500/assets/54658614/7a7a2566-0f38-45bf-8969-0c8f9e31596c)
+
+
 # 삭제하기
 - 삭제 버튼을 누르면 삭제된것 처럼 보이게 하기
 
