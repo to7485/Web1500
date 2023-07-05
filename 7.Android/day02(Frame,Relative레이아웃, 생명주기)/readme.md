@@ -500,7 +500,25 @@ mipmap 폴더에는 에뮬레이터에서 보여줄 아이콘들이 들어있다
 ![image](https://github.com/to7485/Web1500/assets/54658614/2c9e1c36-b53e-4b16-bd8b-05990cb21815)
 
 ```xml
+   <resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->           AppCompat.Light.DarkActionBar로 수정하기
     <style name="Base.Theme.Ex_0705" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your light theme here. -->
+        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+
+        <!--Status Bar 배경색-->
+        <item name="android:statusBarColor" tools:targetApi="l">#F00</item>
+
+        <!--Status Bar 글자색깔 true 블랙 false 화이트-->
+        <item name="android:windowLightStatusBar">false</item>
+
+        <!-- ActionBar 숨기기 true, 보이기 false-->
+        <item name="windowNoTitle">true</item>
+
+    </style>
+
+    <style name="Theme.Ex_0705" parent="Base.Theme.Ex_0705" />
+</resources>
 ```
 
 
