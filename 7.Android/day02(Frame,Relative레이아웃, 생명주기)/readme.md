@@ -268,7 +268,9 @@ relative레이아웃은 속성을 많이 알고 있어야 유리한 경우가 �
 <ImageView
     android:layout_width="200dp"
     android:layout_height="200dp"
-    android:src="@mipmap/ic_launcher_round"/>
+    android:src="@mipmap/ic_launcher_round"
+    android:layout_centerInParent="true"/>
+    이미지를 가운데로 보내보자 딱히 기준으로 둘 게 없다. 부모를 기준으로 잡아보자.
 ```
 
 경로는 똑같이 src 속성으로 관리한다.<br>
@@ -282,3 +284,223 @@ mipmap 폴더에는 에뮬레이터에서 보여줄 아이콘들이 들어있다
 
 만약 다른 폴더에 이미지가 없고 현재 해상도에 해당하는 폴더에만 아이콘이 있는데<br>
 후진 해상도의 핸드폰으로 작동을 한다면 어쩔수 없이 현재 해상도 폴더에 있는 아이콘을 호출한다.<br>
+
+## Weight 속성
+- weight은 view에 가중치를 주는 속성으로 각각의 컴포넌트들의 크기를 조절해줍니다.
+- 레이아웃 디자인을 할 때 가장 많이 사용되는 속성이라고 해도 과언이 아니다.
+
+## WeightActivity 생성하기
+- manifest 수정하기
+
+## layout_weight.xml 디자인하기
+- weight 속성 같은 경우 방향성이 없는 레이아웃에서는 사용하기 곤란하기 때문에 LinearLayout을 사용하자.
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".WeightActivity">
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="top" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#aaf"
+        android:orientation="horizontal">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="btn1" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:text="btn2" />
+
+        기본테마의 단점 버튼에 마진이 없음
+    </LinearLayout>
+
+</LinearLayout>
+```
+
+버튼 두 개만 가운데로 보내기
+
+```xml
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#aaf"
+    android:orientation="horizontal"
+    android:gravity="center"> -> gravity 속성 사용하기
+```
+
+버튼 두개로 공간을 채우고 싶다.
+
+```xml
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="btn1"
+            android:layout_weight="1"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:text="btn2"
+            android:layout_weight="1"/>
+```
+
+리니어 레이아웃 안에서 weight 속성을 갖고 있는 객체들 끼리 비율을 나눠 갖는다.<br>
+바깥에 리니어 레이아웃을 하나 더만들고 weight속성을 준다.<br>
+
+```xml
+...중략
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:background="#8ac"
+    android:orientation="horizontal">
+
+</LinearLayout>
+
+위에 weight과는 비교 할 수 없다. 같은 선상에 있는 weight과 만 비교할 수 있다.
+
+높이를 match로 잡아버리면 공간을 다 차지하긴 하지만 밑에 요소들이 차지할 자리가 없어진다.
+아래에 요소를 배치할 경우가 있을수도 있기 때문에 weight으로 주게 되면 아래에 요소가 들어갈
+최소한의 자리를 준다.
+
+<Button
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" />
+```
+
+## 액티비티 실습
+- FormActivity 만들기
+
+![image](https://github.com/to7485/Web1500/assets/54658614/82a79e61-d19f-41d3-96c0-2815fdfefba8)
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".FormActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Name :"
+            android:textSize="40dp" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="inputname"
+            android:inputType="text" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Marry :
+    "
+            android:textSize="40dp" />
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="결혼했음" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Gender :
+    "
+            android:textSize="40dp" />
+
+        <RadioGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <RadioButton
+                android:id="@+id/r1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="female" />
+
+            <RadioButton
+                android:id="@+id/r2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="male" />
+        </RadioGroup>
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+
+        <ImageView
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:layout_gravity="center"
+            android:src="@mipmap/ic_launcher_round" />
+    </FrameLayout>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="send"
+        android:background="#f00"/> -> 기본테마가 적용이 되어있어서 색깔이 안바뀐다.
+
+</LinearLayout>
+```
+
+## 테마 변경하기
+- 기본 테마 색깔이 마음에 들지 않아서 변경해보자
+
+![image](https://github.com/to7485/Web1500/assets/54658614/e7a549a4-d0fc-4428-96be-810eb0403a80)
+
+- 테마를 담당하고 있는 코드
+
+![image](https://github.com/to7485/Web1500/assets/54658614/2c9e1c36-b53e-4b16-bd8b-05990cb21815)
+
+```xml
+    <style name="Base.Theme.Ex_0705" parent="Theme.AppCompat.Light.DarkActionBar">
+```
+
+
