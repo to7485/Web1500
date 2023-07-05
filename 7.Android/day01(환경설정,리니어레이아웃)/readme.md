@@ -223,16 +223,16 @@ public class MainActivity extends AppCompatActivity {
 
 ## 레이아웃의 종류
 1. Linear Layout
-  - View들을 수직 또는 수평으로 배치할 수 있는 레이아웃
-  - orientaion 속성을 통해 배치방향을 결정할 수 있다.
+    - View들을 수직 또는 수평으로 배치할 수 있는 레이아웃
+    - orientaion 속성을 통해 배치방향을 결정할 수 있다.
 
 2. Frame Layout
-  - Frame Layout은 여러 개의 View를 중첩으로 배치하고 그 중 하나를 레이아웃의 전면에 표시할 때 사용하는 레이아웃.
+    - Frame Layout은 여러 개의 View를 중첩으로 배치하고 그 중 하나를 레이아웃의 전면에 표시할 때 사용하는 레이아웃.
 
   ![image](https://github.com/to7485/Web1500/assets/54658614/34962352-86b5-49b1-b1d4-68d2c506abcc)
 
 3. Relative Layout
-  - Relative Layout은 자식 View 또는 부모 View 관계에 따라 배치를 적용하는 레이아웃
+    - Relative Layout은 자식 View 또는 부모 View 관계에 따라 배치를 적용하는 레이아웃
 
 
 ## Activity 생성하기
