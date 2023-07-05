@@ -213,10 +213,29 @@ public class MainActivity extends AppCompatActivity {
 
 ![image](https://github.com/to7485/Web1500/assets/54658614/83f16935-21cc-4c25-b770-f42affaa6e96)
 
-# 레이아웃의 종류
-- 가장 바깥쪽을 담당하는 body 태그의 역할을 하는게 레이아웃이다.
-- 레이아웃마다 요소를 배치하고 위치를 정하는게 다 다르다.
-- ConstraintLayout이 디폴트로 되어있는데 가장 안좋은 것 같다. 
+# 레이아웃
+- 안드로이드 앱을 개발하기 위해서는 반드시 화면이 필요하다.
+- 화면에 보이는 모든 구성요소들은 뷰(View)라고 한다.
+- 우리가 흔히 보는 Button, TextBox, Image등은 모두 뷰(View)이며 이러한 구성요소들이 모여 화면을 이룬다.
+- 뷰(View)는 화면 어딘가에 배치가 되어야 하는데 뷰(View)자체로는 자신이 어디에 배치되어야 하는지에 대한 정보가 없다.
+- 뷰(View)를 배치할 수 있는 무언가가 필요하며 그 역할을 하는것이 뷰 그룹(View Group) 또는 뷰 컨테이너(View Container)이다.
+- 안드로이드에서는 View Group을 상속받는 여러가지 Layout클래스를 제공 하고 있다.
+
+## 레이아웃의 종류
+1. Linear Layout
+  - View들을 수직 또는 수평으로 배치할 수 있는 레이아웃
+  - orientaion 속성을 통해 배치방향을 결정할 수 있다.
+
+2. Frame Layout
+  - Frame Layout은 여러 개의 View를 중첩으로 배치하고 그 중 하나를 레이아웃의 전면에 표시할 때 사용하는 레이아웃.
+
+  ![image](https://github.com/to7485/Web1500/assets/54658614/34962352-86b5-49b1-b1d4-68d2c506abcc)
+
+3. Relative Layout
+  - Relative Layout은 자식 View 또는 부모 View 관계에 따라 배치를 적용하는 레이아웃
+
+
+## Activity 생성하기
 
 - 패키지에서 new -> activity -> Empty Activity 생성하기 액티비티도 클래스다
 
@@ -314,13 +333,34 @@ public class MainActivity extends AppCompatActivity {
             android:text="btn2" />
     </LinearLayout>
 
+EditText는 에뮬레이터에서 확인할 때 한글이 입력이 안된다 휴대폰에서 확인할 때는 잘됨
+
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="아무거나 입력해"/>
+        android:hint="아무거나 입력해" /> -> jsp에서 placeholder의 역할
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="비밀번호"
+        android:inputType="textPassword" /> numberPassword 로 작성하면 숫자밖에 작성하지 못함
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="이메일"
+        android:inputType="textEmailAddress" />  이메일 입력하는 부분 클릭하면 키패드에 @가 먼저 보임
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="숫자를 입력하세요"
+        android:inputType="number" /> 숫자밖에 입력하지 못함 소수점있는 실수도 안됨
 
 </LinearLayout>
 ```
 
-![image](https://github.com/to7485/Web1500/assets/54658614/2e843155-fb59-4ed4-9f26-a62760ace65c)
+![image](https://github.com/to7485/Web1500/assets/54658614/a43cabed-2d6a-438d-b2f7-2b335f4d9744)
+
 
