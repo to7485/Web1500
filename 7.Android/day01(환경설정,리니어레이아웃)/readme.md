@@ -239,7 +239,6 @@ public class MainActivity extends AppCompatActivity {
     orientation : vertical -> 수직정렬
                 horizontal -> 수평정렬 -->
 
-    텍스트뷰는 세로와 가로 속성을 반드시 갖는다.
     wrap_contet : 컨텐츠의 길이만큼 공간을 차지하겠다.
     match_parent : 부모의 길이와 똑같은 공간을 차지하겠다.
 
@@ -315,7 +314,13 @@ public class MainActivity extends AppCompatActivity {
             android:text="btn2" />
     </LinearLayout>
 
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="아무거나 입력해"/>
+
 </LinearLayout>
 ```
 
-![image](https://github.com/to7485/Web1500/assets/54658614/431c4ed0-0626-4fa9-9bba-e95a2988bed8)
+![image](https://github.com/to7485/Web1500/assets/54658614/2e843155-fb59-4ed4-9f26-a62760ace65c)
+
