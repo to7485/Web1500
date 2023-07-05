@@ -44,3 +44,241 @@
 
 </manifest>
 ```
+
+# FrameLayout
+- FrameActivity 생성하기
+- manifest.xml에 intent-filter 옮기기
+```xml
+<activity
+    android:name=".FrameActivity"
+    android:exported="true" >
+<intent-filter>
+    <action android:name="android.intent.action.MAIN" />
+    <category android:name="android.intent.category.LAUNCHER" />
+</intent-filter>
+</activity>
+```
+
+## activity_frame.xml 로 이동해서 디자인하기
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="20dp"
+    tools:context=".FrameActivity">
+
+    <TextView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:background="#aaf" />
+
+    <!--프레임 레이아웃에서는 자식 객체가 아무런 속성도 추가하지 않는 다면 무조건 왼쪽 위에 가서 겹친다.-->
+
+    <TextView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_margin="20dp"
+        android:background="#000" />
+
+
+    <TextView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="right"
+        android:background="#f00" />
+
+    <!--나중에 만든 요소가 먼저 만든 요소를 잡아먹는다더 위에 올라온다.
+        완전히 겹칠게 아니라면 마진이라는 속성을 넣어보자
+        html이 아니기 때문에 동시에 margin 20dp 20dp 이렇게줄 수는 없다.
+        팀장님이 오른쪽 끝에 가로 세로 100dp 짜리 네모를 만들라고 했어요.
+        android:layout_marginLeft="310dp" 값이 100을 넘어가 버리는 순간 오차가 생긴다.
+        margin이 아닌 layout_gravity라는 속성을 사용해보자.-->
+
+    <!-- layout_gravitiy : 현재 객체 위치를 통째로 변경하는 속성
+        어떤 휴대폰에서 봐도 오른쪽 끝에 붙어있다.-->
+
+    오른쪽 아래에 있는 네모를 하나 만들어보자
+
+    <TextView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="bottom|right"
+        android:background="#185e5e"
+        android:padding="15dp"
+        android:text="hi"
+        android:textColor="#fff"
+        android:textSize="25dp" />
+
+    <!--최대 두개의 속성을 한 영역에 줄 수 있다.layout_gravity 자체를 두 번 쓰는 것은 불가능하다.-->
+    <!--html에서 padding을 주면 요소의 크기가 실제 크기보다 늘어나지만 안드로이드는 그렇지 않다.-->
+    <!--html에서 margin값이 겹치면 큰 값을 기준으로 사용한다. 안드로이드에서는 두개를 합한 값으로 사용한다.-->
+
+    <TextView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="bottom"
+        android:background="#000"
+        android:gravity="center"
+        android:text="hi"
+        android:textColor="#fff" />
+
+   <!-- gravity는 객체 내부에 있는 요소들의 위치를 변경-->
+
+</FrameLayout>
+```
+
+![image](https://github.com/to7485/Web1500/assets/54658614/f61a1b76-8308-4ab4-8d22-d3115604355d)
+
+## 실습문제
+- 화면가운데에 다음과 같은 요소 만들기
+
+![image](https://github.com/to7485/Web1500/assets/54658614/e9bc98b9-9e3a-4925-9a46-039d70b9b96d)
+
+```xml
+    <TextView
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_gravity="center"
+        android:background="#f00" />
+
+    <TextView
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_gravity="center"
+        android:background="#fff"
+        android:gravity="center"
+        android:text="A"
+        android:textSize="30dp" />
+```
+
+# RelativeLayout
+- 방향성을 가지고 있지는 않다.
+- 위치를 결정할 때 상대적인 방법으로 결정한다.
+- ex) xx를 기준으로 오른쪽에 요소를 두고 싶다.
+- 요소를 배치할 때 기준을 둘 무엇인가가 필요하다.
+
+## RelativeActivity생성하기
+- AndroidManifest.xml 수정하기
+
+```xml
+    <activity
+        android:name=".RelativeActivity"
+        android:exported="true">
+
+        <intent-filter>
+
+            <action android:name="android.intent.action.MAIN" />
+
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+    </activity>
+```
+
+## layout_relative.xml에 디자인하기
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RelativeActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 방향성이 없기 때문에 왼쪽 위에 생성된다.
+        android:text="URL"
+        android:textSize="40dp" />
+
+    <EditText
+        android:layout_width="200dp"
+        android:layout_height="wrap_content" />
+
+    너비를 wrap_content로 잡으면 글씨를 쓰기 전까지 딱 붙어서 보기 좋지 않다.
+
+    relative는 반드시 상대적으로 기준이 되는객체가 반드시 필요합니다.
+    그런데 TextView가 여러개 있을 수 있다.
+    기준이 되는 객체의 존재를 인식할 수 있도록 이름을 붙혀주자. 
+
+</RelativeLayout>
+```
+
+## id만들어주기
+- layout_relative.xml 수정하기
+```xml
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="URL"
+        android:textSize="40dp"
+        android:id="@+id/tv"/> 하나의 레이아웃에서는 id가 중복되게 만들 수 없다.
+
+    <EditText
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/et"/>
+```
+EditText가 tv라고 하는 객체의 오른쪽에 가고싶다고 요청을 할 수 있다.<br>
+아쉽게도 Relative레이아웃에는 layout_gravity 속성이 없다.
+
+layout_toRightOf을 사용한다.
+
+```xml
+<EditText
+    android:layout_width="200dp"
+    android:layout_height="wrap_content"
+    android:id="@+id/et"
+    android:layout_toRightOf="@id/tv"/>
+```
+@+id 는 없는 객체에 새로 이름을 붙힐 때<br>
+@id 는 이미 있는 객체의 이름을 참조할 때 사용한다.<br>
+
+![image](https://github.com/to7485/Web1500/assets/54658614/b6e8c8c7-8e61-46b4-b1b0-1461e9d034e6)
+
+
+### 버튼을 하나 만들어보자 EditText가 끝나는 지점 밑에다 배치를 하려고 한다.
+
+```xml
+<Button
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="ok" 처음에는 그냥 요소가 겹쳐서 생성된다.
+    android:layout_below="@id/et" editText밑에만 있으면 된다고 생각한다.
+    android:layout_alignRight="@id/et"/> 라인을 맞추겠다는 속성
+```
+
+### 버튼을 만들어서 바닥에 배치를 해보자.
+```xml
+<Button
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:text="bottom" />
+```
+화면 밑에 배치를 하고 싶다면 relative 레이아웃은 기준을 잡고 밑으로 보내야 한다.<br>
+EditText나 Button 밑으로 보내면 요소 바로 밑에 붙어버릴 것이다.<br>
+기준을 크게 잡고 부모요소의 바닥과의 라인을 맞출것이다.<br>
+relative레이아웃은 속성을 많이 알고 있어야 유리한 경우가 많다.<br>
+
+### 화면 가운데 이미지 넣기
+```xml
+<ImageView
+    android:layout_width="200dp"
+    android:layout_height="200dp"
+    android:src="@mipmap/ic_launcher_round"/>
+```
+
+경로는 똑같이 src 속성으로 관리한다.<br>
+이미지는 drawable 폴더에 넣고 관리를 하지만 안에 폴더를 하나 더 만들면 인식을 못한다는 단점이 있다.<br>
+
+@mipmap/ic_launcher_round -> 내 해상도에 맞는 아이콘이 알아서 들어온다.<br>
+
+mipmap 폴더에는 에뮬레이터에서 보여줄 아이콘들이 들어있다.<br>
+폴더가 여러개 있는데 해상도 별로 보관이 되어 있다.<br>
+우리가 사용하는 해상도 1080*1920은 xhdpi 정도에 보관이 되고 있다.<br>
+
+만약 다른 폴더에 이미지가 없고 현재 해상도에 해당하는 폴더에만 아이콘이 있는데<br>
+후진 해상도의 핸드폰으로 작동을 한다면 어쩔수 없이 현재 해상도 폴더에 있는 아이콘을 호출한다.<br>
