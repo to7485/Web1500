@@ -228,6 +228,8 @@ btn_reset.setOnClickListener(click);
 ![image](https://github.com/to7485/Web1500/assets/54658614/f85cb615-7849-426e-bb44-082d13168744)
 
 ```java
+onCreate()메서드 밖에서 생성한다.
+
 // 버튼은 두 개인데 감지자는 하나이다. 버튼마다 다른 이벤트를 만드려고 하면 애매하게 되버린다.
 //그렇기 때문에 감지자 안에 switch문을 적어준다.
 View.OnClickListener click = new View.OnClickListener() {
@@ -357,5 +359,148 @@ public class WorkActivity extends AppCompatActivity {
 }
 ```
 
+# 숫자 맞추기
+- 1~4사이의 난수를 발생시킨 후
+- 발생한 난수와 같은 버튼을 클릭하면 '당첨'
+- 그렇지 않으면 '꽝'을 표기하고
+- 다시하기 버튼을 누르면 난수를 새로 발생함여 당첨결과를 바꾼다.
 
+## LotActivity 생성하기
+-layout_lot 디자인하기
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".LotActivity"
+    android:gravity="center">
 
+    <TextView
+        android:id="@+id/txt_result"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Result"
+        android:textSize="20dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1"
+            android:textSize="20dp" />
+
+        <Button
+            android:id="@+id/btn2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2"
+            android:textSize="20dp" />
+
+        <Button
+            android:id="@+id/btn3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="3"
+            android:textSize="20dp" />
+
+        <Button
+            android:id="@+id/btn4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="4"
+            android:textSize="20dp" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_re"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="reStart" />
+
+</LinearLayout>
+```
+
+- LotActivity 코드 작성하기
+
+```java
+package com.korea.ex_0706;
+
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import java.util.Random;
+
+public class LotActivity extends AppCompatActivity {
+
+    Button btn1, btn2, btn3, btn4, btn_re;
+    TextView txt_result;
+
+    int rnd = 0; //난수 저장용
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_lot);
+
+        btn1 = findViewById(R.id.btn1);
+        btn2 = findViewById(R.id.btn2);
+        btn3 = findViewById(R.id.btn3);
+        btn4 = findViewById(R.id.btn4);
+        btn_re = findViewById(R.id.btn_re);
+        txt_result = findViewById(R.id.txt_result);
+
+        setRandom();//난수 생성
+
+        btn1.setOnClickListener(btn_click);
+        btn2.setOnClickListener(btn_click);
+        btn3.setOnClickListener(btn_click);
+        btn4.setOnClickListener(btn_click);
+
+        btn_re.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                txt_result.setText("result");
+                setRandom();
+            }
+        });
+    }//onCreate()
+
+    //버튼 1,2,3,4번이 사용할 이벤트 감지자
+    View.OnClickListener btn_click = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            //클릭된 버튼에 쓰여진 text를 가져오는것이 목적이다.
+            // getText()라고 하는 메서드는 버튼이나 EditText와 같은 자식객체에서만 사용이 가능한 	메서드
+            // view 같은 부모는 쓸 수없다.
+            int str = Integer.parseInt(((Button) view).getText().toString());
+
+            if (str == rnd) {
+                //버튼에 쓰여진 텍스트와 랜덤값이 같다면 당첨
+                txt_result.setText("당첨");
+            } else {
+                txt_result.setText("꽝");
+            }
+        }
+    };
+
+    public void setRandom() {
+        rnd = new Random().nextInt(4) + 1;
+    }
+}
+
+```
