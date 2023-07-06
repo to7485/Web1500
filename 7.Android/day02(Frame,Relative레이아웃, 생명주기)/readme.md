@@ -521,4 +521,114 @@ mipmap 폴더에는 에뮬레이터에서 보여줄 아이콘들이 들어있다
 </resources>
 ```
 
+![image](https://github.com/to7485/Web1500/assets/54658614/f2eff0c1-8c7c-48fe-8e87-c7a0f102b9c1)
 
+# 액티비티의 생명주기
+- 액티비티는 UI와 가장 밀접한 관련을 가지고 있기 때문에 사실상 안드로이드 앱에 있어서 가장 기본이 되는 구성 요소이다.
+- 보통 앱은 하나 이상의 액티비티가 서로 연결된 형태로 구성된다.
+- 액티비티는 생명주기를 갖는다.
+
+Ex)카카오톡을 사용하다가 유튜브 영상을 보기 위해 유튜브 앱을 실행하면 카카오톡 앱 화면은 더이상 보이지 않고 유튜브 앱 화면이 보인다.
+이 때 카카오톡과 유튜브의 액티비티는 각자의 생명주기에 따라 호출되는 함수들이 있다.
+
+## 생명주기 함수
+- 생명주기를 쉽게 이해하려면 실제 화면에 표시 유무를 생각하면 된다.
+- onCreate() : Activity가 생성되면 가장 먼저 호출됨
+    - 최초로 앱을 실행하면 호출된다.
+    - 생명주기 통틀어서 단 한 번만 수행되는 메소드
+    - Activity 최초 실행에 해야하는 작업을 수행하기에 적합함
+    - 화면 Layout 정의, View 생성, Databinding 등은 이곳에 구현함
+
+- onStart() : 이 시점부터 사용자가 액티비티를 볼 수 있다.
+    - Activity가 화면에 표시되기 직전에 호출됨
+    - 화면에 진입할 때마다 실행되어야 하는 작업을 이곳에 구현함
+
+- onResume() : 현재 Activity가 사용자에게 포커스인 되어있는 상태
+    - 현재 Activity가 사용자에게 포커스인 되어있는 상태
+
+- onPause() : 포커스를 잃은 상태가 되면 호출된다.
+    - 액티비티가 실행 중인 상태에서 사용자와 상호작용이 불가능한 상태
+    - 다른 Activity가 호출되기 전에 실행되기 때문에 무거운 작업을 수행하지 않도록 주의해야함
+    - 영구적인 Data는 이곳에 저장
+
+- onStop() : Activity가 다른 Activity에 의해 100% 가려질 때 호출되는 메소드
+    - 홈 키를 누르는 경우, 다른 액티비티로의 이동이 있는 경우가 있음
+    - 이 상태에서 Activity가 호출되면, onRestart() 메소드가 호출됨
+  
+- onDestory() : Activity가 완전히 종료되었을 때 호출되는 메소드
+    - finish(), onBackPressed() 가 호출되면 호출
+    - 메모리부족(프로세스 종료)일때 종료
+    - onStop(), onDestroy() 메소드는 메모리 부족이 발생하면 스킵될 수 있음
+ 
+- onRestart() : onStop()이 호출된 이후에 다시 기존 Activity로 돌아오는 경우에 호출되는 메소드
+    - onRestart()가 호출된 이후 이어서 onStart()가 호출됨
+
+![image](https://github.com/to7485/Web1500/assets/54658614/7ce434f2-b1c4-4198-aecf-cd372dfb11e4)
+
+## LifeCycleActivity 만들기
+```java
+package com.korea.ex_0705;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
+
+public class LifeCycleActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_life_cycle);
+
+        //확인하고 싶은 정보를 눈으로 보고싶다면Log를 사용해야한다.
+        //자동완성으로 하면import가 되지만 직접 작성하면 알트+엔터로import 해줘야 한다.
+        Log.i("MY", "--onCreate--");
+        //tag,msg는 작성하면 자동으로 나오는 것으로 직접 쓸 필요 없다.
+        //실행을 하고 아래logcat을 누르면 여러가지 정보가 나오는데 볼륨을 조절한다던지,
+        //블루투스를 연결한다던지, usb에 연결을 한다든지 하는 모든 정보가 기록이 되는데
+        //우리가 원하는 것만 보려면filter에MY를 입력해보자
+
+    }//맨처음에는 반드시oncreate()라고 하는 함수가 실행이 된다.
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.i("MY", "--onDestroy--");
+    }
+
+    @Override
+    protected
+    void onPause() {
+        super.onPause();
+        Log.i("MY", "--onPause--");
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        //context:화면 제어권자
+        //Toast.makeText(액티비티.this,"재실행", Toast.LENGTH_SHORT).show();
+        Log.i("MY", "--onRestart--");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.i("MY", "--onResume--");
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.i("MY","--onStart--");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.i("MY","--onStop--");
+    }
+}
+```
