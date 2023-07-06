@@ -608,8 +608,6 @@ public class LifeCycleActivity extends AppCompatActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        //context:화면 제어권자
-        //Toast.makeText(액티비티.this,"재실행", Toast.LENGTH_SHORT).show();
         Log.i("MY", "--onRestart--");
     }
 
