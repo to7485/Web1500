@@ -365,8 +365,11 @@ public class WorkActivity extends AppCompatActivity {
 - 그렇지 않으면 '꽝'을 표기하고
 - 다시하기 버튼을 누르면 난수를 새로 발생함여 당첨결과를 바꾼다.
 
+![image](https://github.com/to7485/Web1500/assets/54658614/67d1a80b-8fdc-4b95-97de-b600459b0b6e)
+
+
 ## LotActivity 생성하기
--layout_lot 디자인하기
+- layout_lot 디자인하기
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
