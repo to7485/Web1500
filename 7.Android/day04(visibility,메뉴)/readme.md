@@ -489,3 +489,74 @@ public class PopupMenuActivity extends AppCompatActivity {
     }
 }
 ```
+
+## 메뉴가 왼쪽 위에 나오게 해보자.
+- 레이아웃에 왼쪽 위에 버튼 하나 만들기
+```xml
+<Button
+    android:id="@+id/anchor"
+    android:layout_width="1dp"
+    android:layout_height="1dp"
+    android:visibility="invisible" />
+```
+
+- 버튼을 눌렀을 때 메뉴가 나오기위한 anchor를 방금 만든 버튼으로 설정하면 된다.
+```java
+@Override
+public void onClick(View view) {
+    //팝업메뉴 생성 android.widget 패키지
+    PopupMenu popup = new PopupMenu(PopupMenuActivity.this,anchor);//anchor : 메뉴를 띄워줄 기준객체
+   //PopupMenu() 괄호 안에 ctrl+spacebar를 눌러도 어떤 파라미터가 들어가는 지 알수 없다 ctrl+ p를 눌러서 보자!
+
+    //팝업메뉴에 띄워줄 메뉴xml파일을 등록
+    //inflate() xml을 view 형태로 바꿔주는 메서드
+    //popup.getMenu() -> 메뉴가 들어갈 공간을 만들어주는 메서드
+    getMenuInflater().inflate(R.menu.my_menu, popup.getMenu());
+
+    popup.show();
+}
+```
+
+![image](https://github.com/to7485/Web1500/assets/54658614/5ec3742f-a39d-454d-ba5a-8ec03ebcdf21)
+
+## 이벤트 처리하기
+- 메뉴가 이미 보여진 다음에 이벤트 처리를 하면 작동을 잘 안할수도 있다.
+
+```java
+btn_show.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //팝업메뉴 생성 android.widget 패키지
+                PopupMenu popup = new PopupMenu(PopupMenuActivity.this, anchor);//anchor : 메뉴를 띄워줄 기준객체
+                //PopupMenu() 괄호 안에 ctrl+spacebar를 눌러도 어떤 파라미터가 들어가는 지 알수 없다 ctrl+ p를 눌러서 보자!
+
+                //팝업메뉴에 띄워줄 메뉴xml파일을 등록
+                //inflate() xml을 view 형태로 바꿔주는 메서드
+                //popup.getMenu() -> 메뉴가 들어갈 공간을 만들어주는 메서드
+                getMenuInflater().inflate(R.menu.my_menu, popup.getMenu());
+
+                //팝업메뉴에 클릭 이벤트 감지자 등록
+                popup.setOnMenuItemClickListener(menu_click);
+
+
+                popup.show();
+            }
+        });
+    }//onCreate()
+
+    PopupMenu.OnMenuItemClickListener menu_click = new PopupMenu.OnMenuItemClickListener() {
+        @Override
+        public boolean onMenuItemClick(MenuItem menuItem) {
+            int itemId = menuItem.getItemId();
+            if (itemId == R.id.menu1) {
+                Toast.makeText(PopupMenuActivity.this, "앱 소개 누름", Toast.LENGTH_SHORT).show();
+            } else if (itemId == R.id.menu2) {
+                Toast.makeText(PopupMenuActivity.this, "이메일 누름", Toast.LENGTH_SHORT).show();
+            } else if (itemId == R.id.menu3) {
+                //현재 띄워져 있는 액티비티 한 개를 종료
+                finish();
+            }
+            return true;
+        }
+    };
+```
