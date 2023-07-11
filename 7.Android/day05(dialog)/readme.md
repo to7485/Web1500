@@ -264,6 +264,8 @@ startActivity(intent);
 ```
 
 ## IntentActivity 버튼 등록하기
+
+## 전화거는 화면으로 이동해보기
 ```java
 package com.korea.ex_0711;
 
@@ -313,7 +315,7 @@ public class IntentActivity extends AppCompatActivity {
                 //i.setData(Uri.parse("tel:010-1111-1111"));
                 //uri 라고 하는 걸 파라미터로 받는데 android.net 패키지에 있는 Uri를 써준다.
                 //tel:를 보고 전화번호구나를 판단한다.
-                // formatter 같이 특정한 키워드를 찾아서 분석을 해서 전화받는 화면으로 가야되는지 문자 받는 화면으로 가야되는지 인식을 해준다.
+                //formatter 같이 특정한 키워드를 찾아서 분석을 해서 전화받는 화면으로 가야되는지 문자 받는 화면으로 가야되는지 인식을 해준다.
                 //startActivity(i);//화면 전환을 위한 메서드
 
                 위 코드를 실행해보면 현재 액티비티위에 다이얼액티비티가 얹혀 있는 상태이다.
@@ -331,12 +333,11 @@ public class IntentActivity extends AppCompatActivity {
                 // CALL_PHONE이라는 권한이 등록이 되어야 한다. 권한은 매니패스트에서 등록할 수 있다.
 
                 
+            } else if (id == R.id.btn_sms) {
             } else if (id == R.id.btn_camera) {
             } else if (id == R.id.btn_gallery) {
             } else if (id == R.id.btn_link) {
             } else if (id == R.id.btn_next) {
-            } else if (id == R.id.btn_sms) {
-            } else if (id == R.id.btn_call) {
             }
         }
 
@@ -347,5 +348,183 @@ public class IntentActivity extends AppCompatActivity {
 
 ## Manifest에 권한 추가하기
 ```xml
-<uses-feature android:name="android.permission.CALL_PHONE"  android:required="false"/>
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="false" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
 ```
+- 물론 권한을 쓸수 있다 없다 선택만 가능하고 그대로 실행하면 오류가 난다.
+
+### 한국어로 설정 바꿔보기
+- 앱을 나와 메뉴로 들어가고 settings으로 간다.
+- system -> Languages & input -> Languages 클릭 -> Add a Language -> 한국어
+- 맨 위로 올려주자.
+
+### 권한 허용하기
+- 바탕화면으로 나와 세팅 -> 앱 및 알림 선택 -> 오늘 날짜로 된 프로젝트 클릭 -> 전화 권한 온
+- 앱을 사용하면서 권한이 필요하면 물어볼때가 있다.(카메라에 접근을 허용하겠습니까?, 주소록에 접근허용을 하시겠습니까?)
+
+- 에뮬레이터를 다시 실행해보면 전화 거는 창으로 이동함 물론 실제로 거는건 아님
+
+![image](https://github.com/to7485/Web1500/assets/54658614/5eff6edd-d96c-47bb-b859-bd54a00d91af)
+
+## 메세지를 보내는 화면으로 이동하기
+```java
+else if (id == R.id.btn_sms) {
+    i = new Intent(Intent.ACTION_SENDTO);
+    i.setData(Uri.parse("smsto:010-222-2222"));
+    //smsto라고 써야 문자를 보낸다고 인식을 하고 보내준다.
+
+    //putExtra를 사용하면 내용을 지정해줄 수도 있다
+    //putExtra를 작성하면 키와 밸류로 저장을 해야되는데 킷값은 sms_body로 고정이다.
+    i.putExtra("sms_body","안녕~");
+    startActivity(i);
+}
+```
+- 에뮬레이터 실행하고 확인하기
+- 전송은 되지만 한글로 입력이 안된다. 언어설정을 한글로 바꿨다고 해서 한글로 입력이 되지는 않는걸 볼 수 있다.
+![image](https://github.com/to7485/Web1500/assets/54658614/c26f9737-603a-4859-a59e-3054f40b95aa)
+
+## 카메라 화면으로 이동하기
+```java
+else if (id == R.id.btn_camera) {
+    //내장 카메라로 연결
+    //i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+    //Intent 클래스가 아니라 카메라,동영상 같은 경우 MediaStore라고 하는걸 사용해
+    //내장카메라로 이동한다. 보낼 내용이 따로 없으니 startActivity(i)로 이동하자.
+
+    shift + 드래그 -> 이동 , shitf + 방향키 -> 위 아래 방향 보기
+    wasd 이동 가능
+
+    //startActivity(i);
+
+   //동영상 연결
+    i = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+    startActivity(i);
+
+}
+```
+
+![image](https://github.com/to7485/Web1500/assets/54658614/87cb3973-3d5a-433e-ab29-35fb7550f17b)
+
+## 갤러리로 이동하기
+```java
+else if (id == R.id.btn_gallery) {
+    i = new Intent(Intent.ACTION_GET_CONTENT);
+    i.setType("*/*");//모든 타입을 호출할 때 사용
+    startActivity(i);
+
+
+}
+```
+
+## 링크로 이동하기
+```java
+else if (id == R.id.btn_link) {
+링크를 연결해보자 버튼을 눌렀을 때 네이버로 간다던가,
+구글로 간다던가 아니면 어디 홈페이지로 간다거나 웹페이지로 연결해보자.
+
+    i = new Intent(Intent.ACTION_VIEW);
+    //Action_View가 없어도 동작을 하는데 낮은 버전에서는 없으면 무조건 구글로 가는 버그가 있다.
+    i.setData(Uri.parse("https://www.naver.com"));
+    startActivity(i);
+
+    에뮬레이터로 실행해서 확인을 해보자 크롬으로 확인을 할꺼고 크롬을 항상으로 지정해주자.
+    로그인은 건너뛰기 해도 되고
+    
+    홈페이지로 전환을 하고 싶을 때는 이 방법을 쓰지만 마켓같은 곳으로 들어가기 위해서는 바로 들어가는 방법은 없다.
+    우리 앱좀 평가해주실래요 했는데 예를 누르면 마켓화면으로 가야한다.
+    우리가 마켓에 애플리케이션을 등록을 할 때 패키지 형태로 등록을 한다.
+    마켓페이지로 가고싶다 근데 우리는 마켓에 등록을 하지 않았으니까... 진짜 들어가지지는 않을 것.
+
+    //플레이스토어 전환
+    i = new Intent(Intent.ACTION_VIEW);
+    i.setData(Uri.parse("market://details?id=com.lhj.ex_0718"));
+    startActivity(i);
+
+}
+```
+
+## 우리가 만든 액티비티로 이동하기
+## IntentSubActivity 생성하기
+- 처음부터 Sub화면을 볼것이 아니기 때문에 intent-filter를 옮겨줄 필요가 없다.
+
+## layout_intent_sub 디자인하기
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".IntentSubActivity"
+    android:orientation="vertical">
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="previous"
+        android:id="@+id/btn_prev"/>
+
+</LinearLayout>
+```
+
+## IntentActivity에 코드 추가하기
+```java
+else if (id == R.id.btn_next) {
+    //다른 액티비티로 전환하기   현재 액티비티 ,  이동할 액티비티
+    i = new Intent(IntentActivity.this, IntentSubActivity.class);
+    startActivity(i);
+}
+```
+
+## IntentSubActivity로 이동하기
+- 뒤로가기 버튼을 눌렀을 때 다시 이동하기
+```java
+package com.korea.ex_0711;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+
+public class IntentSubActivity extends AppCompatActivity {
+
+    Button btn_prev;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_intent_sub);
+
+        btn_prev = findViewById(R.id.btn_prev);
+
+        btn_prev.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(IntentSubActivity.this,IntentActivity.class);
+                startActivity(i);
+            }
+        });
+    }
+}
+```
+
+![image](https://github.com/to7485/Web1500/assets/54658614/d40c7134-f196-434b-968b-b56dba0fe317)
+
+- 서브 갔다가 돌아왔다가 서브 갔다가 다시 돌아오면 화면이 꺼지는게 아니라 쌓이는 형태가 된다
+- 뒤로가기를 눌러봤자 맨 위에 화면 하나만 걷어낼 뿐이다
+- 사용자 입장에서는 그냥 맨 처음 화면에서 뒤로가기를 눌렀을 뿐인데 갑자기 서브 화면이 나오면 납득을 못할 것이다.
+
+```java
+ btn_prev.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Intent i = new Intent(IntentSubActivity.this,IntentActivity.class);
+                //startActivity(i);
+                finish();
+            }
+        });
+```
+
