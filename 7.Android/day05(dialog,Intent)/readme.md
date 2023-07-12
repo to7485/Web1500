@@ -527,4 +527,4 @@ public class IntentSubActivity extends AppCompatActivity {
             }
         });
 ```
-
+- 하지만 페이지가 많아지게 되면 finish()만 가지고는 만드는데 한계가 있다.
