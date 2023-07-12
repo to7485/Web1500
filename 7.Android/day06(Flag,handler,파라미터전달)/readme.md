@@ -56,4 +56,287 @@ public void onClick(View view) {
 - 화면을 전환하는 곳에서 의식적으로 플래그를 쓰게되면 전환해야 하는 액티비티가 몇개든 간에 겹치는 상황을 막을 수 있다.
 
 # Handler
+- 새로운 프로젝트를 만들면 자동으로 생성되는 메인 액티비티는 앱이 실행될 때 하나의 프로세스에서 처리된다.
+- 메인 액티비티 내에서 이벤트를 처리하거나 특정 메서드를 정의하여 기능을 구현할 때도 같은 프로세스 안에서 실행된다.
+- 기능들이 순서대로 실행이 될 때는 문제가 없지만, 대기 시간이 길어지는 네트워크 요청 등의 기능을 수행할 때는 화면에 보이는 UI도 멈춤 상태로 있게 되는 문제가 발생할 수 있다.
+- Handler는 안드로이드에서 비동기적 메세지를 처리하기 위해 사용되며 스레드간 통신을 할 수 있도록 하는 방법을 제공한다.
+- 예를들어 스톱워치를 켜고 홈버튼을 눌러서 바탕화면으로 나갔다가 다시 돌아와도 시간은 흐르고 있어야 한다.
+
+## Ex_오늘날짜 프로젝트 생성하기
+- HandlerActivity로 이름 변경하기
+
+## layout_handler 디자인하기
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".HandlerActivity">
+
+    <TextView
+        android:id="@+id/txt_count"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="0"
+        android:textSize="50dp" />
+
+    <Button
+        android:id="@+id/btn_start"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="start" />
+
+    <Button
+        android:id="@+id/btn_stop"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="stop" />
+
+</LinearLayout>
+```
+
+![image](https://github.com/to7485/Web1500/assets/54658614/9c165b7f-8330-4d8c-9477-b407837681ce)
+
+
+- start버튼을 누르면 1초 간격으로 숫자가 증가 하게 할 것이다.
+-  홈버튼을 눌러서 나갔다와도 시간이 흘러갈 수 있도록 만들고
+-  stop을 누르면 시간을 멈추게 만들 것이다.
+
+## HandlerActivity에 객체 등록하기
+```java
+package com.korea.ex_0711;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.os.Bundle;
+import android.os.Handler;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+
+public class HandlerActivity extends AppCompatActivity {
+
+    TextView txt_count;
+    Button btn_start, btn_stop;
+    int count = 0;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_handler);
+
+        txt_count = findViewById(R.id.txt_count);
+        btn_start = findViewById(R.id.btn_start);
+        btn_stop = findViewById(R.id.btn_stop);
+
+        btn_start.setOnClickListener(click);
+        btn_stop.setOnClickListener(click);
+
+        //이벤트 감지자를 밖에다 만드는 이유, 안에다 만들면 더 위에있는 버튼들이 참조를 못하기 때문
+    }//onCreate
+
+    View.OnClickListener click = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            int id = view.getId();
+            if (id == R.id.btn_start) {
+                //백그라운드에서txt_count값을1씩 증가시키는 핸들러 호출
+            } else if (id == R.id.btn_stop) {
+                //핸들러 정지			
+            }
+        }
+    };
+
+    //핸들러 준비
+    //OS패키지에 있는 핸들러 클래스를 import 해야 한다.
+    //duplicate 앞으로 업데이트의 가능성은 없으니까 이걸 대체할 수 있는 다른데 생겼을 수 있거나 
+    //아니면 다른걸 조합해서 이걸 대체할 수 있는지 찾아보세요 라는 것.
+    //줄 지우기 : alt + enter -> inspection -> Disable inspection
+    Handler handler = new Handler(){
+        
+    };
+}
+```
+
+- handleMessage메서드 오버라이딩 하기
+- 핸들러만 썼다고 해서 백그라운드에서 동작을 하는게 아니라 handleMessage가 오버라이딩 되어 있어야한다.
+- 백그라운드에서 코드를 실행하는 영역이기 때문이다.
+
+```java
+Handler handler = new Handler() {
+@Override
+public void handleMessage(@NonNull Message msg) {
+    //백그라운드에서 코드를 실행하는 영역
+    count++;
+    txt_count.setText(count);
+    }
+};
+```
+
+- setText 메서드를 사용하는 곳은 참 많다.(TextView, EditText, Button)
+- setText에 들어가는 파라미터 타입이 한번도 본적이 없는 캐릭터 시퀀스 라고 하는 타입이다.
+- 문자열 형태의 데이터가 들어가면 캐릭터배열로 바꿔서 문제가 없다. 그런데 정수가 들어가면 오류가 난다.
+- count를 문자열로 바꿔주자.
+
+```java
+txt_count.setText(String.valueOf(count));
+```
+
+## HandleMessage메서드 호출하기
+- 만들어 놓은 handler.handleMessage() 이렇게 호출을 하면 백그라운드에서는 동작하지 않고 일반메서드처럼 동작을 한다.
+- 돌아가는 동안에는 클릭도 터치도 아무것도 안된다. 백그라운드에서 돌아가게 호출을 해야한다.
+
+```java
+@Override
+public void onClick(View view) {
+    int id = view.getId();
+    if (id == R.id.btn_start) {
+        //백그라운드에서txt_count값을1씩 증가시키는 핸들러 호출
+
+        //핸들러의 handleMessage()메서드를 호출하는 방법
+        handler.sendEmptyMessage(0);
+
+    } else if (id == R.id.btn_stop) {
+        //핸들러 정지
+    }
+}
+```
+
+- 에뮬레이터를 켜고 실행을 해보면 한번 증가하고 끝나는걸 볼 수 있다.
+- while문을 썼다가는 while문이 도는 동안 아무것도 못할 수 있다.
+- 호출을 했을 때 여러번 실행되게 해야한다.
+
+## handler에 코드 추가하기
+```java
+Handler handler = new Handler() {
+    @Override
+    public void handleMessage(@NonNull Message msg) {
+        //백그라운드에서 코드를 실행하는 영역
+        //handler.sendEmptyMessage() //본인을 다시 실행하는데 1초에 1000번씩 돌아버린다.
+        handler.sendEmptyMessageDelayed(0,1000);
+
+        //1초 쉬고 메시지를 호출하는 코드인데 아래의 코드는 언제 동작하는가?
+        //1초 쉬었다가 메시지를 호출할껀데 1초 쉬는동안 아래 코드를 작동한다.
+
+        //버튼을 연타하면 속도가 점점 빨라진다 핸들러가 쉬지말라는걸로 생각해서 속도가 빨라진다
+        // 그래서 start를 누르면 연타를 하지 못하도록 비활성화 시키는 방법이 있다.
+
+        count++;
+        txt_count.setText(String.valueOf(count));
+    }
+};
+```
+
+## start버튼을 누르면 다시 못누르게 만들자
+```java
+@Override
+  public void onClick(View view) {
+      int id = view.getId();
+      if (id == R.id.btn_start) {
+          //백그라운드에서txt_count값을1씩 증가시키는 핸들러 호출
+
+          //핸들러의 handleMessage()메서드를 호출하는 방법
+          handler.sendEmptyMessage(0);
+
+          //버튼 비활성화
+          btn_start.setEnabled(false);
+      } else if (id == R.id.btn_stop) {
+          //핸들러 정지
+
+          handler.removeMessages(0);
+          //버튼 활성화
+          btn_start.setEnabled(true);
+      }
+  }
+```
+
+- what에 대해서 알아보자
+
+## HandlerWhatActivity 생성하고 xml 디자인하기
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".HandlerWhatActivity">
+
+    <Button
+        android:id="@+id/btn0"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="what 0" />
+
+    <Button
+        android:id="@+id/btn1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="what1" />
+
+</LinearLayout>
+```
+- 위에꺼 누르면 what을 0으로 보내고 아래버튼을 누르면 what 1로 보낼 것이다.
+
+## HandlerWhatActivity 코드 작성하기
+```java
+package com.korea.ex_0711;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
+
+public class HandlerWhatActivity extends AppCompatActivity {
+
+    Button btn0, btn1;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_handler_what);
+
+        btn0 = findViewById(R.id.btn0);
+        btn1 = findViewById(R.id.btn1);
+
+        btn0.setOnClickListener(click);
+        btn1.setOnClickListener(click);
+    }//onCreate
+
+    View.OnClickListener click = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            int id = view.getId();
+            if (id == R.id.btn0) {
+                handler.sendEmptyMessage(0);
+            } else if (id == R.id.btn1) {
+                handler.sendEmptyMessage(1);
+            }
+        }
+    };
+
+    //핸들러
+    Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) { msg가 what이라는걸 가지고 있다.
+            if (msg.what == 0) {
+                Toast.makeText(HandlerWhatActivity.this, "0으로 호출됨", Toast.LENGTH_SHORT).show();
+            } else if (msg.what == 1) {
+                Toast.makeText(HandlerWhatActivity.this, "1으로 호출됨", Toast.LENGTH_SHORT).show();
+            }
+        }
+    };
+
+}
+```
 
