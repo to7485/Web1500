@@ -339,4 +339,500 @@ public class HandlerWhatActivity extends AppCompatActivity {
 
 }
 ```
+# 파라미터 넘기기
+- Intent를 이용해서 액티비티간 이동을 하면서 파라미터를 보내보자
+
+## IntentMainActivity 생성하고 디자인하기
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".IntentMainActivity">
+
+    <EditText
+        android:id="@+id/edit_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="input name" />
+
+    <EditText
+        android:id="@+id/edit_age"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="age"
+        android:inputType="number" />
+
+  
+    <EditText
+        android:id="@+id/edit_tel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="-없이입력"
+        android:inputType="number" />-> 숫자만 입력할 수 있게 하자
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/edit_b_day"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:enabled="false"    -> editText 비활성화, 키보드로 검색 못하게 하자
+            android:hint="1980-01-01" /> -> 사용자가 형식을 안맞춰줄수도 있기 때문에 
+
+        <Button
+            android:id="@+id/btn_date"    -> 달력을 호출할 수 있게 하는 버튼
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="select" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_send"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="send" />
+</LinearLayout>
+```
+- 값을 입력하고 send버튼을 누르면 파라미터를 넘기듯이 정보를 넘겨보자
+
+## IntentMainActivity 코드 작성하기
+```java
+package com.korea.ex_0711;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.os.Bundle;
+import android.widget.Button;
+import android.widget.EditText;
+
+public class IntentMainActivity extends AppCompatActivity {
+
+    EditText edit_name, edit_age, edit_tel, edit_b_day;
+    Button btn_date, btn_send;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_intent_main);
+
+        edit_name = findViewById(R.id.edit_name);
+        edit_age = findViewById(R.id.edit_age);
+        edit_tel = findViewById(R.id.edit_tel);
+        edit_b_day = findViewById(R.id.edit_b_day);
+        btn_date = findViewById(R.id.btn_date);
+        btn_send = findViewById(R.id.btn_send);
+    }
+}
+```
+
+## IntentSubActivity 생성하고 디자인하기
+- 파라미터를 받아줄 레이아웃 생성하기
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".IntentSubActivity">
+
+    <TextView
+        android:id="@+id/txt_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="이름: "
+        android:textSize="30dp" />
+
+    <TextView
+        android:id="@+id/txt_age"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="나이:"
+        android:textSize="30dp" />
+
+    <TextView
+        android:id="@+id/txt_tel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="전화:"
+        android:textSize="30dp" />
+
+    <TextView
+        android:id="@+id/txt_birth"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="생일:"
+        android:textSize="30dp" />
+
+</LinearLayout>
+```
+
+## IntentSubActivity 코드작성하기
+```java
+package com.korea.ex_0711;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+
+public class IntentSubActivity extends AppCompatActivity {
+
+    TextView txt_name, txt_age, txt_tel, txt_birth;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_intent_sub);
+
+        txt_name = findViewById(R.id.txt_name);
+        txt_age = findViewById(R.id.txt_age);
+        txt_tel = findViewById(R.id.txt_tel);
+        txt_birth = findViewById(R.id.txt_birth);
+    }
+}
+```
+
+## IntentMainActivity로 돌아와 이벤트 감지자 만들기
+```java
+package com.korea.ex_0711;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+public class IntentMainActivity extends AppCompatActivity {
+
+    EditText edit_name, edit_age, edit_tel, edit_b_day;
+    Button btn_date, btn_send;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_intent_main);
+
+        edit_name = findViewById(R.id.edit_name);
+        edit_age = findViewById(R.id.edit_age);
+        edit_tel = findViewById(R.id.edit_tel);
+        edit_b_day = findViewById(R.id.edit_b_day);
+        btn_date = findViewById(R.id.btn_date);
+        btn_send = findViewById(R.id.btn_send);
+
+        btn_send.setOnClickListener(send_click);
+    }
+
+    View.OnClickListener send_click = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            //화면전환시 파라미터로 전달할 값들들
+            String name = edit_name.getText().toString();
+            if (name.trim().length() == 0) {
+                Toast.makeText(IntentMainActivity.this, "이름을 입력하세요", Toast.LENGTH_SHORT).show();
+            }
+            String age = edit_age.getText().toString();
+            String tel = edit_tel.getText().toString();
+
+            
+
+        }
+    };
+}
+        
+```
+- 위 name, age, tel을 갖고 서브액티비티로 넘어가야 한다.
+- 액티비티는 new 생성자()를 이용해서 객체로 생성할 수 없다.
+- 생성이 된다고 해도 우리가 만든 서브 액티비티랑은 다른 메모리 영역에 생성된다.
+- 어떤 레이아웃을 참조하고 있는지도 모를뿐더러 어떤객체를 갖고 있는지도 알 방법이 없다.
+
+```java
+
+... 중략
+
+View.OnClickListener send_click = new View.OnClickListener() {
+    @Override
+    public void onClick(View view) {
+        //화면전환시 파라미터로 전달할 값들들
+        String name = edit_name.getText().toString();
+        if (name.trim().length() == 0) {
+            Toast.makeText(IntentMainActivity.this, "이름을 입력하세요", Toast.LENGTH_SHORT).show();
+        }
+        String age = edit_age.getText().toString();
+        String tel = edit_tel.getText().toString();
+
+        Intent i = new Intent(IntentMainActivity.this, IntentSubActivity.class);
+
+        //값 전달을 위해 intent객체에 저장
+        i.putExtra("m_name", name);
+        i.putExtra("m_age", age);
+        i.putExtra("m_tel", tel);
+
+        //화면 전
+        startActivity(i);
+    }
+};
+
+```
+
+## IntentSubActivity에서 파라미터 받아주기
+
+```java
+package com.korea.ex_0711;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+
+public class IntentSubActivity extends AppCompatActivity {
+
+    TextView txt_name, txt_age, txt_tel, txt_birth;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_intent_sub);
+
+        Intent i = getIntent();//main에서 넘어온 intent
+
+        //넘겨받은 intent로부터 저장된 값을 추출
+        String name = i.getStringExtra("m_name");
+        String age = i.getStringExtra("m_age");
+        String tel = i.getStringExtra("m_tel");
+
+        txt_name = findViewById(R.id.txt_name);
+        txt_age = findViewById(R.id.txt_age);
+        txt_tel = findViewById(R.id.txt_tel);
+        txt_birth = findViewById(R.id.txt_birth);
+
+        txt_name.setText("이름: " + name);
+        txt_age.setText("나이: " + age);
+        txt_tel.setText("전화: " + tel);
+    }
+}
+```
+
+- 메인에서 select 버튼을 눌렀을 때 달력이 뜨도록 해보자
+
+## IntentMainActivity에 코드 추가하기
+```java
+package com.korea.ex_0711;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.app.Dialog;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import java.util.Calendar;
+
+public class IntentMainActivity extends AppCompatActivity {
+
+    EditText edit_name, edit_age, edit_tel, edit_b_day;
+    Button btn_date, btn_send;
+///////////////////////////
+    Dialog dialog;
+///////////////////////////
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_intent_main);
+
+        edit_name = findViewById(R.id.edit_name);
+        edit_age = findViewById(R.id.edit_age);
+        edit_tel = findViewById(R.id.edit_tel);
+        edit_b_day = findViewById(R.id.edit_b_day);
+        btn_date = findViewById(R.id.btn_date);
+        btn_send = findViewById(R.id.btn_send);
+
+        btn_send.setOnClickListener(send_click);
+////////////////////////////////////////////////////////
+        btn_date.setOnClickListener(date_click);
+///////////////////////////////////////////////////////
+    }
+
+    View.OnClickListener send_click = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            //화면전환시 파라미터로 전달할 값들들
+            String name = edit_name.getText().toString();
+            if (name.trim().length() == 0) {
+                Toast.makeText(IntentMainActivity.this, "이름을 입력하세요", Toast.LENGTH_SHORT).show();
+            }
+            String age = edit_age.getText().toString();
+            String tel = edit_tel.getText().toString();
+
+            Intent i = new Intent(IntentMainActivity.this, IntentSubActivity.class);
+
+            //값 전달을 위해 intent객체에 저장
+            i.putExtra("m_name", name);
+            i.putExtra("m_age", age);
+            i.putExtra("m_tel", tel);
+
+            //화면 전
+            startActivity(i);
+        }
+    };
+//////////////////////////////////////////////////////////////////////////////
+    View.OnClickListener date_click = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            //달력에 최초로 표기될 오늘 날짜를 구한다.
+            Calendar now = Calendar.getInstance();
+            int y = now.get(Calendar.YEAR);
+            int m = now.get(Calendar.MONTH);
+            실제로는 1월인데 값이 0으로 넘어온다. 12월인 경우 11로 넘어온다.
+            int d = now.get(Calendar.DAY_OF_MONTH)//일
+            날짜는 그냥 day가 아니라 day_of_month로 표시해줘야 한다.
+        }
+    };
+    //달력의 변경사항을 감지하는 이벤트 감지자
+    DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
+        @Override //i가 연도, i1가 월, i2가 일 -> y,m,d로 바꿔주자.
+        public void onDateSet(DatePicker datePicker, int y, int m, int d) {
+
+        }
+    };
+
+
+
+//////////////////////////////////////////////////////////////////////////////
+}
+
+```
+
+- dialog 객체 생성하기
+
+```java
+View.OnClickListener date_click = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            //달력에 최초로 표기될 오늘 날짜를 구한다.
+            Calendar now = Calendar.getInstance();
+            int y = now.get(Calendar.YEAR);
+            int m = now.get(Calendar.MONTH);
+            int d = now.get(Calendar.DAY_OF_MONTH);//일
+                                                                    //감지자      연,월,일
+            dialog = new DatePickerDialog(IntentMainActivity.this,dateSetListener,y,m,d);
+
+            dialog.show();
+
+        }
+    };
+```
+
+- 달력을 켜서 확인하면 오늘 날짜가 나오는데 7월 이라고 나오지만 값은 6으로 저장되어 있다.
+- 나중에 내가 원하는 달로 사용하려면 +1을 해줘야 한다.
+
+```java
+DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
+        @Override //i가 연도, i1가 월, i2가 일 -> y,m,d로 바꿔주자.
+        public void onDateSet(DatePicker datePicker, int y, int m, int d) {
+            //파라미터 값중 월을 의미하는m은	
+            // 1월-> 0 2월 0 -> 1....	
+            // 날짜형식 지정1980-01-01
+            String result = String.format("%d-%02d-%02d",y,m+1,d);
+          	edit_b_day.setText(result);
+        }
+    };
+```
+- 생일도 파라미터로 묶어서 보내기
+
+```java
+String age = edit_age.getText().toString();
+String tel = edit_tel.getText().toString();
+String birth = edit_b_day.getText().toString();
+
+Intent i = new Intent(IntentMainActivity.this, IntentSubActivity.class);
+
+//값 전달을 위해 intent객체에 저장
+i.putExtra("m_name", name);
+i.putExtra("m_age", age);
+i.putExtra("m_tel", tel);
+i.putExtra("m_birth",birth);
+```
+- sub에서 받아주기
+```java
+Intent i = getIntent();//main에서 넘어온 intent
+String name = i.getStringExtra("m_name");
+String age = i.getStringExtra("m_age");
+String tel = i.getStringExtra("m_tel");
+String birth = i.getStringExtra("m_birth");
+
+txt_name = findViewById(R.id.txt_name);
+txt_age = findViewById(R.id.txt_age);
+txt_tel = findViewById(R.id.txt_tel);
+txt_birth = findViewById(R.id.txt_birth);
+
+txt_name.setText("이름: " + name);
+txt_age.setText("나이: " + age);
+txt_tel.setText("전화: " + tel);
+txt_birth.setText("생일: " + birth);
+```
+
+
+- 날짜를 선택하면 바뀌는걸 볼수 있는데 텍스트 색깔이 좀 아쉽다
+- 레아이웃으로 이동해서 날짜 EditText에 textColor를 검은색으로 바꿔주면 날짜를 선택하면 검은색으로 바뀐다.
+
+![image](https://github.com/to7485/Web1500/assets/54658614/7a3274e4-79be-40ac-99f6-45403a004072)
+
+# 핸들러 실습
+- 앱을 하나 켜고 뒤로가기를 눌렀을 때 '뒤로가기를 한번 더 눌러야 종료가 됩니다.' 하고 토스트가 뜬다.
+- 토스트가 떴을 때 3초정도 있다가 다시 누르면 두 번 누른걸로 인정하지 않아서 토스트가 다시 뜬다.
+- 핸들러를 이용해서 만들어보자.
+
+```
+    @Override
+    public void onBackPressed(){
+        //super.onBackPressed() -> super 가 있으면 강제로 종료된다.
+        if(num != 2){
+            finish();
+        } else{
+            Toast.makeText(IntentMainActivity.this,"한번 더 누르면 종료됩니다.",Toast.LENGTH_SHORT).show();
+            //핸들러 호출
+            handler.sendEmptyMessage(0);
+        }
+
+    }
+
+    Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg){
+            //2초 카운팅을 위한 핸들러 현재 num = 2 즉 2초에서 시작을 하고 1초에 1씩 감소하는 핸들러, 감소하다가 0이 되면 else로 들어가서 다시 2로 바꿈
+            handler.sendEmptyMessageDelayed(0,1000);
+            if(num > 0){
+                --num;
+            } else {
+                num = 2;
+                handler.removeMessages(0); // 없으면 2,1,0 2,1,0 계속 반복하게 된다.
+            }
+        }
+    };
+}
+```
+
 
