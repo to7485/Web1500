@@ -712,7 +712,7 @@ public class Parser {
                     } else if(tagName.equals("author")){
                         String author = parser.nextText();
                         vo.setB_author(author);
-                    } else if(tagName.equals("price")){
+                    } else if(tagName.equals("discount")){
                         String price = parser.nextText();
                         vo.setB_price(price);
                         list.add(vo); //마지막 정보인 price까지 찾고난 뒤 list에 저장
@@ -729,5 +729,420 @@ public class Parser {
 }
 
 ```
+
+- connectNaver 메서드만 잘 호출하면 서버로 들어가서 내가 입력한 검색어에 대한 결과를 list에 담아서 빠져나올 수 있다.
+- ArrayList에 담아온 내용들을 ListView에 담아줘야 한다.
+
+## NaverActivity 에 코드 작성하기
+```java
+package com.lhj.ex_naverapi;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.TextView;
+
+import java.util.ArrayList;
+
+import parser.Parser;
+import vo.BookVO;
+
+public class NaverActivity extends AppCompatActivity {
+
+     public static EditText search;
+     ListView myListView;
+     Button search_btn;
+     Parser parser; //connectNaver()메서드 가져오려면 parser객체 있어야함.
+
+    ListView라고 하는걸로 집어넣으려면 어댑터라고 하는 개념이 필요한데 조금 나중에 추가해보도록 하겠다.
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_naver);
+
+        search = findViewById(R.id.search);
+        myListView = findViewById(R.id.myListView);
+        search_btn = findViewById(R.id.search_btn);
+        loading = findViewById(R.id.loading);
+        parser = new Parser();
+
+    }
+}
+```
+
+- 서버에 들어가서 xml파싱 즉 웹에 있는 코드를 자바 형태로 변경해주는 작업, vo에 담고 arraylist에 담아주는 작업을search_btn을 눌렀을 때 진행이 되야되죠.
+
+## parser 객체 아래에 이벤트 감지자 생성
+```java
+search_btn.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View view) {
+정말 쉽게 생각하자면 parser.connectNaver() 호출하면 끝날 것 같죠 옛날 에는 됐었다.
+근데 connectNaver도 메서드이기 때문에 메서드가 완전히 마무리 되야 다음 작업을 할 수 있다.
+그런데 데이터를 가지고 올게 많다거나 하면 로딩이 되는 동안 다른 작업을 아무것도 할 수 없다.
+뒤로가기도 막힘 터치도 안되고 클릭도 안되고 아무것도 안된다.
+    //parser.connectNaver();
+
+백그라운드 쪽에서 데이터 가져오는 동안
+버튼 클릭을 하든 검색어를 바꾸든 니가 하고 싶은 작업을 프론트에서는 할 수 있어야 하기 때문에 막아버렸습니다.
+앞으로 서버 통신을 할 때 백그라운드를 통해서 해야합니다.
+    }
+});
+```
+
+- 외부에 있는 정보를 데이터를 가져와야 하기 때문에 인터넷 접근 허용 권한을 줘야 한다.
+- manifest.xml에 추가하기
+```java
+<!-- 인터넷 사용을 위해 반드시 필요한 권한 -->
+<uses-permission android:name="android.permission.INTERNET" />
+```
+
+## onCreate() 밖에 NaverAsync 클래스 만들기
+```java
+class NaverAsync extends AsyncTask<String, Void, ArrayList<BookVO>>{
+        @Override
+
+        //doInBackground(String... strings) ...의 의미: variable arguments 배열의 개수를 따지지 않고 파라미터로 들어오는
+        //모든 것들을 배열로 만들어 주는 기능을 가능하게 합니다.
+        // *개수의 제한이 없습니다.
+        //Strings[0] -> 홍
+        //Strings[1] -> 길
+        //Strings[2] -> 동
+        protected ArrayList<BookVO> doInBackground(String... strings) {
+           //필수 메서드!!
+           //각종 반복이나 제어등의 백그라운드에서 필요한 처리코드를 담당하는 메서드
+
+           return null;
+        }
+    }
+```
+- AsyncTask : 백그라운드에서의 서버통신을 위해 반드시 필요한 클래스
+- AsyncTask는 세개의 제너릭 타입을 가지고 있다.
+    1. doInBackground의 파라미터 타입
+    2. onProgressUpdate가 오버라이딩 되어 있다면 이 메서드에서 사용할 타입
+    3. doInBackground의 반환형이자, 작업의 최종 결과를 차지하는 onPostExecute()의 파라미터 타입
+
+
+## search_btn 버튼 감지자 내용 채워주기
+```java
+        search_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //서버에 연결(Async클래스의 doInBackgound()메서드를 호출)
+                new NaverAsync().execute("홍","길","동");
+
+                //로딩시작
+                loading.setVisibility(View.VISIBLE);
+
+
+            }
+        });
+```
+- execute()로 doInBackground 메서드가 호출이 되고 doInBackground가 주요 코드들을 실행하고 이게 완료가 되면 그 다음 호출되는 메서드가 있다.
+
+## onPostExecute메서드 추가하기
+- 최종 작업 결과를 받는 메서드
+
+```java
+class NaverAsync extends AsyncTask<String, Void, ArrayList<BookVO>>{
+        @Override
+
+        //doInBackground(String... strings) ...의 의미: variable arguments 배열의 개수를 따지지 않고 파라미터로 들어오는
+        //모든 것들을 배열로 만들어 주는 기능을 가능하게 합니다. *개수의 제한이 없습니다.
+        //Strings[0] -> 홍
+        //Strings[1] -> 길
+        //Strings[2] -> 동
+        protected ArrayList<BookVO> doInBackground(String... strings) {
+            //필수 메서드!!
+            //각종 반복이나 제어등의 백그라운드에서 필요한 처리코드를 담당하는 메서드드
+
+           return parser.connectNaver();
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<BookVO> bookVOS) {
+            //doInBackground에서 return된 최종 작업 결과를 bookVOS가 받게 된다.
+            //Log.i("my",""+bookVOS.size());
+            //에뮬레이터를 켜보고 android를 치고 ok를 눌러보면 logcat에 100이 나온다.
+
+            //반복문을 작성해서 검색어로 책의 제목들을 받아올 수 있다.
+            for(int i = 0; i<bookVOS.size(); i++){
+                Log.i("my" ,""+bookVOS.get(i).getB_title());
+            }
+
+        }
+    }
+```
+- 앱을 실행하면 객체들이 검색되고 앱 화면에서 검색어를 입력받고 ok 버튼을 눌렀을 때 search_btn의 이벤트감지자가 실행이 된다.
+- execute()라는 메서드를 통해 doInBackground가 호출이 되고 뒷단에서 connectNaver()가 수행이 된다.
+- 작업이 정상적으로 완료되면 도서의 정보를 잔뜩 들고있는 arrayList가 반환이 되고 그 반환된 list를 onPostExecute로 보내는거다.
+
+※검색결과가 0으로 나온다면 url이나 발급받은 ID, SECRET을 잘못썼을 가능성이 높다.
+
+![image](https://github.com/to7485/Web1500/assets/54658614/d69d0414-f435-4e72-ad5b-f323a1d032ae)
+
+- 이제 이걸 레이아웃에 담아서 List로 보여줄것이다.
+- 목록화를 가능하게 하기 위해서 어댑터라고 하는 클래스를 만들어보자.
+
+## ViewModelAdapter 클래스 생성하기
+```java
+package com.lhj.ex_naverapi;
+
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import org.w3c.dom.Text;
+
+import java.io.BufferedInputStream;
+import java.net.URL;
+import java.util.ArrayList;
+
+import vo.BookVO;
+
+public class ViewModelAdapter extends ArrayAdapter<BookVO> {
+
+    Context context;
+    int resource;
+    BookVO vo;
+    ArrayList<BookVO> list;
+
+    //기본생성자가 없고 파라미터를 받는 생성자 밖에 없는데 ArrayAdapter에서 마우스 클릭하고 alt+enter 누르고 가장 위에 있는것 만들기.
+    //(원래는 파라미터 두 개 받는데 생성자에 ArrayList<BookVO> list추가하기)
+
+    //외부에서 두가지 정보를 받아온다고 해도 부모(super)에는 두가지 정보만 들어갈 뿐 list는 전달을 할 수 없기 때문에
+    //list까지 부모한테 전달해주는 이 생성자가 ArrayAdapter를 상속받는 클래스가 가지는 가장 기본적인 모양이다.
+
+    public ViewModelAdapter( Context context, int resource, ArrayList<BookVO> list, ListView myListView) {
+        super(context, resource, list);
+        this.context = context;
+        this.resource = resource;
+        this.list = list;
+
+        myListView.setOnItemClickListener( click );
+
+    }//생성자
+}
+```
+
+## NaverActivity 클래스에 내용 추가하기
+```java
+ViewModelAdapter adapter; ViewModelAdapter 객체 준비하기
+
+search_btn.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View view) {
+            //검색을 했다가 다른걸 검색하면 list를 싹 비워야 한다.
+            //java를 검색했다가 android를 검색하면 다른 내용이 나오듯이. 그래서 null을 한번 넣어주자.
+            adapter = null;
+
+        //서버연결(Async클래스의 doInBackground()메서드를 호출)
+        new NaverAsync().execute(); //Async클래스의 doInBackground()메서드를 호출
+    }
+});
+
+... 중략
+
+@Override
+protected void onPostExecute(ArrayList<BookVO> bookVOS) {
+    //doInBackground에서 return된 최종 작업 결과를 bookVOS가 받게 된다.
+    Log.i("my",""+bookVOS.size());
+
+    //bookVOS를 ListView를 그리기 위해 존재하는 adapter클래스에게 넘겨줘야 한다.
+    //방금 우리가 만든 클래스를 객체생성했는데 ViewModelAdapter는 파라미터를 3개 요구한다.
+    adapter = new ViewModelAdapter(NaverActivity.this,R.layout.book_item,bookVOS, myListView);
+    //두번째 파라미터는 우리가 만들어놓은 book_item.xml을 말한다.
+    //그래서 리스트뷰 한칸 디자인 어떻게 하고싶은지 물어보는 것, 도서정보를 갖고 있는 bookVOS를 준다.
+
+    //준비된 어댑터를 ListView에 탑재
+    myListView.setAdapter(adapter);
+
+    //로딩종료
+    loading.setVisibility(View.GONE);
+
+
+}
+
+```
+
+- 준비된 어댑터를 ListView에 탑재하면서 ViewModelAdapter클래스가 getView라는 메서드를 자동으로 호출한다.
+
+## ViewModelAdapter 클래스에 getView메서드 작성하기
+```java
+package com.lhj.ex_naverapi;
+
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import org.w3c.dom.Text;
+
+import java.io.BufferedInputStream;
+import java.net.URL;
+import java.util.ArrayList;
+
+import vo.BookVO;
+
+public class ViewModelAdapter extends ArrayAdapter<BookVO> {
+
+    Context context;
+    int resource;
+    BookVO vo;
+    ArrayList<BookVO> list;
+
+    public ViewModelAdapter( Context context, int resource, ArrayList<BookVO> list, ListView myListView) {
+        super(context, resource, list);
+        this.context = context;
+        this.resource = resource;
+        this.list = list;
+
+        myListView.setOnItemClickListener( click );
+
+    }//생성자
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        //myListView.setAdapter(adapter) 하는 순간 호출되는 메서드(getView())
+        //생성자의 파라미터를 받은 list의 사이즈만큼 getView()메서드가 반복 호출
+
+        //position : 처음 1회전 할 때 포지션은 0 부터 호출이 되서 100번이 돌면 포지션은 99가 된다.
+
+
+        //xml파일을 view 형태로 만들 준비
+        //일반 액티비티에서는 LayoutInflater linf = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICET); 가능하다.
+        //일반클래스에서는 context가 항상 필요하다.
+        LayoutInflater linf = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        //conertView -> boo_item.xml 짝궁이 없는 xml파일을 view 형태로 변경
+        convertView = linf.inflate(resource, null);
+
+        return convertView;
+    }//getView()
+}
+
+```
+
+- 에뮬레이터 실행하고 아무키워드나 검색해보기
+
+![image](https://github.com/to7485/Web1500/assets/54658614/8370da57-24c1-45df-b5dc-241e3b2076c3)
+
+- 제목,저자,가격을 각각의 정보에 맞게 바꿔보자.
+
+## ViewModelAdapter 클래스에 내용 추가하기
+```java
+ @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        //myListView.setAdapter(adapter) 하는 순간 호출되는 메서드(getView())
+        //생성자의 파라미터를 받은 사이즈만큼 getView()메서드가 반복 호출
+
+        //xml파일을 view 형태로 만들 준비
+        LayoutInflater linf = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        //conertView -> boo_item.xml 짝궁이 없는 xml파일을 view 형태로 변경
+        convertView = linf.inflate(resource, null);
+
+        vo = list.get(position);
+        //포지션이 0~99번까지 알아서 반복하기 때문에 반복문을 쓰지 않아도 100개에 대한
+        //내용을 vo에 순차적으로 담을 수 있다.
+
+        TextView title = convertView.findViewById(R.id.book_title);
+        TextView author = convertView.findViewById(R.id.book_author);
+        TextView price = convertView.findViewById(R.id.book_price);
+        ImageView img = convertView.findViewById(R.id.book_img);
+
+        title.setText(vo.getB_title());
+        author.setText(vo.getB_author());
+        price.setText(vo.getB_price() + "원");
+
+        return convertView;
+    }//getView()
+```
+
+- 에뮬레이터 실행해서 내용이 나오는지 확인하기
+- 실행을 해서 검색을 해보면 태그도 같이 나오는걸 확인 할 수 있다.
+- 태그를 지워보는 작업을 해보자.
+- 태그가 나오는 이유는 api가 앱에서만 사용하는게 아닌 웹에서도 사용을 할 수 있기 때문이다.
+- 안드로이드에서는 b태그가 안먹는다. Strign 타입으로 되어있는데 태그를 지우는 방법은 정규식을 이용하면 된다.
+
+## parser 클래스로 수정해주기
+```java
+ while(parserEvent != XmlPullParser.END_DOCUMENT) {//문서의 끝
+                //서버쪽 xml문서의 끝을 만날 때 까지 while문이 만복
+
+                //시작태그의 이름을 가져와 vo에 담을 수 있는 정보라면 vo에 추가
+                if( parserEvent == XmlPullParser.START_TAG){
+                    String tagName = parser.getName();
+///////////////////////////////////////////////////////////////////////////////////////////////
+                    if(tagName.equals("title")) {
+                        vo = new BookVO();
+                        String title = parser.nextText();
+                        //가져온 title에 <b>태그가 들어있는지 검사
+                        //한글자 짜리 태그들을 찾아주면서 닫히는 태그들 까지 감지를 해줄수 있는 정규식
+                        Pattern pattern = Pattern.compile("<.*?>");
+                        Matcher matcher = pattern.matcher(title);
+
+                        if(matcher.find()){
+                            String s_title = matcher.replaceAll("");
+                            vo.setB_title(s_title);
+                        } else {
+                            vo.setB_title(title);
+                        }
+///////////////////////////////////////////////////////////////////////////////////////////////
+                    } else if(tagName.equals("image")) {
+                        String img = parser.nextText();
+                        vo.setB_img(img);
+                    } else if(tagName.equals("author")){
+                        String author = parser.nextText();
+                        vo.setB_author(author);
+                    } else if(tagName.equals("discount")){
+                        String price = parser.nextText();
+                        vo.setB_price(price);
+                        list.add(vo); //마지막 정보인 price까지 찾고난 뒤 list에 저장
+                    }
+                }//if(.START_TAG)
+                parserEvent = parser.next(); //다음요소를 가져올 때 순서대로 가져와야 한다.
+            }//while
+```
+
+- 에뮬레이터를 켜고 검색을 해보면 b태그들이 빠져잇는걸 확인할 수 있다.
+
+
+
 
 
