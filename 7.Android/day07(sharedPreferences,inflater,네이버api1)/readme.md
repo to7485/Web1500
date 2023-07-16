@@ -402,3 +402,342 @@ btn1 = inner.findViewById(R.id.btn1);
 - 버튼이 inner라고 하는 객체 안에 있기 때문에 inner 밑에다가 검색을 해줘야 한다!
 - 누구한테 가져온건지 확실하게 명시를 해줘야 한다.
 - 버쪽 통신을 보면서 사용할 기술중에서 정말 핵심적으로 사용될 기술입니다.
+
+# 네이버 API 사용해보기
+
+## Ex_NaverAPI 프로젝트 생성하기
+- 패키지 이름을 이용해야 api를 사용할 수 있다 나중에 갖다 쓸꺼니 복사해서 잘 갖고 있자.
+- NaverActivity로 이름 바꾸기
+
+## 네이버에 프로젝트 등록하기
+네이버 로그인 -> 아래 네이버 개발자 센터 -> application -> 등록 -> 휴대폰 인증 <br>
+회사이름은 korea로 해도됨 아무거나<br>
+
+![image](https://github.com/to7485/Web1500/assets/54658614/43dc3929-908c-4181-a68e-09b17a2732cc)
+
+- 애플리케이션이름 도서검색을 할거라서 BookSearch 아니면 원하는거
+- 사용 API -> 검색
+- 환경추가 -> 안드로이드 설정
+
+![image](https://github.com/to7485/Web1500/assets/54658614/fae166b7-edae-42e7-8f0a-55aa87ec2238)
+
+- 메모장에 복사해서 갖고 있기.
+
+![image](https://github.com/to7485/Web1500/assets/54658614/1134e63d-7fba-4c66-91a6-ffdedb06905a)
+
+
+- 2만 5천건 검색은 무료인데 공부용으로는 충분함 무한루프문 잘못써서 다 날리는일 없도록 하자.
+- Documents -> 검색 -> 책
+
+![image](https://github.com/to7485/Web1500/assets/54658614/89b588d7-899d-4eb3-9b2d-7fe961b13027)
+
+- 전부다 get 방식으로 요청을 해야 한다. 그리고 json 형태로 받는 것이 아니라 xml 형태로 받을것이다.
+요청 URL 복사하기.
+
+- URL 뒤에 파라미터를 붙혀서 ?query = aaaa 이런식으로 사용할 것이다.
+- display 검색결과 건수 지정 100개씩 보여줄 수 있어서 사용하자!
+- 제목, 이미지, 저자, 가격 정도의 정보만 가져와서 호출하려고 한다.
+- vo에 담아서 arraylist에 담으면 목록을 다 보여줄 수 있다.
+- url이랑 id 비밀번호 3가지 메모장에 저장 잘 해놓기
+
+## activity_naver 디자인하기
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".NaverActivity"
+    android:orientation="vertical">
+
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="input text"
+            android:id="@+id/search"
+            android:imeOptions="actionSearch"/>
+이제 EditText에서 검색을 해서 ok버튼을 누르면 밑에 전화번호부처럼 스크롤 할 수 있는 목록이 나왔으면 좋겠어요 이걸 ListView라고 해요.
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ok"
+            android:id="@+id/search_btn"/>
+    </LinearLayout>
+
+책이 한권만 조회가 될건 아니기 때문에 ListView 라고 하는걸 사용한다.
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/myListView"/>
+
+리스트 뷰는 안에 무언가 들어가는 태그가 아니기 때문에 다이렉트로 닫아도 된다.
+전화번호부나 카카오톡도 그렇고 휴대폰 보면서 리스트로 되어있는건 많이 접하고 잇다.
+리스트마다 모양이 다르다. 리스트 뷰를 사용하면 한칸당 내가 어떻게 디자인을 할지 직접 결정을 해야한다.
+짝궁이 없는 xml을 만들어서 view로 만들어서 한칸으로 붙혀줘야 한다.
+이미지 제목 저자,가격 에 대한 정보를 넣을 것이다. 한칸에 대한 디자인을 해보자
+</LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:background="#70aaaaff"
+        android:gravity="center"
+        android:id="@+id/loading"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+</FrameLayout>
+```
+## layout 폴더에 Layout Resource File만들기
+- book_item, LinearLayout으로 Layout Resource File을 하나 만들어주자
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#aac"
+    android:padding="10dp">
+
+    <ImageView
+        android:layout_width="150dp"
+        android:layout_height="200dp"
+        android:src="@mipmap/ic_launcher_round"
+        android:scaleType="fitXY"
+        android:id="@+id/book_img"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="제목"
+            android:textColor="#00f"
+            android:textSize="20dp"
+            android:id="@+id/book_title"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="저자"
+            android:textColor="#00f"
+            android:id="@+id/book_author"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="가격"
+            android:textColor="#00f"
+            android:id="@+id/book_price"/>
+
+    </LinearLayout>
+
+</LinearLayout>
+```
+
+- book_item.xml은 나중에 객체화가 될것이고 우리가 서버를 통해서 접근했을 때 가져올 목록들(제목,이미지경로,저자,가격)<br>이 네가지를 저장할 수 있는 vo를 만들어야 한다
+
+## java폴더에서 vo 패키지 생성하고 BookVO 클래스 만들기
+- 액티비티 아님
+```java
+package vo;
+
+public class BookVO {
+    //네이버 도서 서버에서 얻어올 정보를 저장할 변수
+    //제목, 저자, 가격, 이미지
+
+    private String b_title,b_author,b_img, b_price;
+
+우클릭 generater -> getter setter
+
+    public String getB_title() {
+        return b_title;
+    }
+
+    public void setB_title(String b_title) {
+        this.b_title = b_title;
+    }
+
+    public String getB_author() {
+        return b_author;
+    }
+
+    public void setB_author(String b_author) {
+        this.b_author = b_author;
+    }
+
+    public String getB_img() {
+        return b_img;
+    }
+
+    public void setB_img(String b_img) {
+        this.b_img = b_img;
+    }
+
+    public String getB_price() {
+        return b_price;
+    }
+
+    public void setB_price(String b_price) {
+        this.b_price = b_price;
+    }
+}
+
+```
+- vo에 저장하고 arrayList에 담아주는 역할을 하는게 dao이다.
+- 안드로이드에서는 서버에서 넘어온 데이터를 안드로이드에 맞게 변경해주는 작업을 파싱이라고 합니다.
+
+## java에 parser패키지 생성하고 Parser클래스 생성하기
+```java
+package parser;
+
+import com.lhj.ex_naverapi.NaverActivity;
+
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserFactory;
+
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import vo.BookVO;
+
+public class Parser {
+    //웹에서 요소 (제목, 저자, 이미지, 가격)를 검색하여 vo에 저장 및 List에 저장
+    BookVO vo;
+    String myQuery= ""; //검색어
+
+    //서버에 연결을 해서 xml파일을 불러오고, 자바로 파싱해서 필요한 요소만 vo에 담고 arrayList에 저장해서 list로 반환을 해주는 작업
+    public ArrayList<BookVO> connectNaver(){
+        ArrayList<BookVO> list = new ArrayList<>();
+
+        try{
+            //검색어(myQuery)를 UTF-8 형태로 인코딩
+
+            myQuery = URLEncoder.encode(NaverActivity.search.getText().toString(),"UTF-8");
+
+            //NaverActivity에 public static EditText search;
+            // 스태틱 변수로 만들고 검색하기 하고 돌아오기
+            //url 집어넣기 대신 어떤걸 검색할건지 파라미터를 보내야 한다.
+```
+
+![image](https://github.com/to7485/Web1500/assets/54658614/9e581d75-1b27-4a68-ae80-3fa273df2fbe)
+
+``` java
+            // = 뒤에 띄어쓰기 하지 않게 조심하기
+            String urlstr = "https://openapi.naver.com/v1/search/book.xml?query="+myQuery+"&display=100";
+
+            //저 경로에 검색어를 가지고 들어가고 들어가면 연결을 하기 위해 커넥션 객체가 필요하다.
+            //url로 접근하면서 id와 secret을 보내줘야 한다.
+            //일단은 서버에 접근하기 위해서 검색어랑 url만 만들어 놓은 상태다.
+
+            //진짜 연결하려면 URL 이라고 하는 클래스가 있어야 한다.
+            ///URL 클래스로 URL을 알면 CONNECTION이라고 하는 객체가 URL을 가지고 연결을 해준다.
+            URL url = new URL(urlstr); -> 연결할 곳이 어딘지 알기 때문에
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            ㄴurl에 대한 정보가 url.openConnection()이 알고 있으니  통로를 열어주겠다
+
+            //발급받은 ID와 Secret을 서버로 전달
+            connection.setRequestProperty("X-Naver-Client-Id","UI_98rUkiVwuN_h1z_Qg");
+            connection.setRequestProperty("X-Naver-Client-Secret","oVAafbTjPt");
+
+            아이디와 비밀번호가 맞다면 connection을 통해서 연결이 될거고 연결이 됐다면
+            받은 자원들은 xml 형식으로 넘어오기 때문에 자바코드로 바꿔주는 작업이 필요하다.
+
+            //위의 URL을 수행하여 받은 자원들을 자바코드로 파싱
+            XmlPullParserFactory factory = XmlPullParserFactory.newInstance(); -> 싱글톤
+
+            //팩토리가 정보를 통채로 불러온오는 객체
+            //pullparser는 item별로 하나씩 데이터를 가지고 올 수 있도록 하는 객체
+
+            XmlPullParser parser = factory.newPullParser();
+
+            //connection 객체가 접속후 가지게 된 내용을 parser가 스트림으로 읽어옵니다.
+            parser.setInput(connection.getInputStream(), null);
+
+            파서가 inputSteam을 통해서 connection 객체가 요청을 하고
+            최종적으로 돌려받은 결과값을 inputStream으로 읽어올 수 있다.
+            null은 encoding타입이라 정의하지 않아도 된다.
+            결론적으로 parser라고 불리는 이 객체가 xml문서 내부에 가상의 커서를 만들어 주게 된다.
+            next 요청해서 태그 안에 내용을 가져올 수 있게 준비하는 역할을 한다.
+
+            //파서 객체를 통해 각 요소별 접근을 하게되고, 태그(요소)내부의 값들을 가져온다.
+            //while문을 돌리면서 더이상 읽어올 책이 없을 때 까지 모든 정보를 다 가져올 것이다.
+            int parserEvent = parser.getEventType();
+
+            while(parserEvent != XmlPullParser.END_DOCUMENT) {//문서의 끝
+                //서버쪽 xml문서의 끝을 만날 때 까지 while문이 만복
+
+                //시작태그의 이름을 가져와 vo에 담을 수 있는 정보라면 vo에 추가
+                if( parserEvent == XmlPullParser.START_TAG){
+                    String tagName = parser.getName();
+
+                    //next로 내려가다가 파싱해야 하는 요소로 접근을 했는
+                    //파싱을 안해놓고 넘어가게 되면 다시 파싱을 할 수 가 없게 된다. 
+```
+
+```java
+                    if(tagName.equals("title")) {
+                        vo = new BookVO();
+                        String title = parser.nextText();
+                        //가져온 title에 <b>태그가 들어있는지 검사
+                        //한글자 짜리 태그들을 찾아주면서 닫히는 태그들 까지 감지를 해줄수 있는 정규식
+                        Pattern pattern = Pattern.compile("<.*?>");
+                        Matcher matcher = pattern.matcher(title);
+
+                        if(matcher.find()){
+                            String s_title = matcher.replaceAll("");
+                            vo.setB_title(s_title);
+                        } else {
+                            vo.setB_title(title);
+                        }
+                    } else if(tagName.equals("image")) {
+                        String img = parser.nextText();
+                        vo.setB_img(img);
+                    } else if(tagName.equals("author")){
+                        String author = parser.nextText();
+                        vo.setB_author(author);
+                    } else if(tagName.equals("price")){
+                        String price = parser.nextText();
+                        vo.setB_price(price);
+                        list.add(vo); //마지막 정보인 price까지 찾고난 뒤 list에 저장
+                    }
+                }//if(.START_TAG)
+                parserEvent = parser.next(); //다음요소를 가져올 때 순서대로 가져와야 한다.
+            }//while
+
+        } catch(Exception e){
+
+        }
+        return list;
+    }
+}
+
+```
+
+
