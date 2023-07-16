@@ -705,17 +705,7 @@ public class Parser {
                     if(tagName.equals("title")) {
                         vo = new BookVO();
                         String title = parser.nextText();
-                        //가져온 title에 <b>태그가 들어있는지 검사
-                        //한글자 짜리 태그들을 찾아주면서 닫히는 태그들 까지 감지를 해줄수 있는 정규식
-                        Pattern pattern = Pattern.compile("<.*?>");
-                        Matcher matcher = pattern.matcher(title);
-
-                        if(matcher.find()){
-                            String s_title = matcher.replaceAll("");
-                            vo.setB_title(s_title);
-                        } else {
-                            vo.setB_title(title);
-                        }
+                        vo.setB_title(title);
                     } else if(tagName.equals("image")) {
                         String img = parser.nextText();
                         vo.setB_img(img);
