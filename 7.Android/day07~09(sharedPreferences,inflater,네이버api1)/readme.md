@@ -1142,7 +1142,526 @@ public class ViewModelAdapter extends ArrayAdapter<BookVO> {
 
 - 에뮬레이터를 켜고 검색을 해보면 b태그들이 빠져잇는걸 확인할 수 있다.
 
+# 이미지 넣기
+- 사실 이미지에 대한 경로도 vo에 저장이 되어있다.
+- 이미지는 텍스트보다 로딩을 하는 시간이 오래 걸린다.
+- url로 접근을 해서 가져와야 하는 상황이기 때문에 이미지를 가지고 오려면 서버통신을 위한 어싱크 클래스가 또 있어야 한다.
+
+## ViewModelAdapter 클래스 코드 추가하기
+```java
+class ImgAsync extends AsyncTask<Void, Void, Bitmap>{
+        Bitmap bm;
+        ImageView img;
+        BookVO vo;
+
+        public ImgAsync(ImageView img, BookVO vo) {
+            this.img = img;
+            this.vo = vo;
+        }
+
+        @Override
+        protected Bitmap doInBackground(Void... voids) {
+            return null;
+        }
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            //비트맵 객체를 이미지뷰로 전환
+            img.setImageBitmap(bitmap);
+        }
+    }
+
+```
+
+## ViewModelAdapter 클래스 코드 수정하기
+- 백그라운드에서 이미지 로드하도록 수정하기
+```java
+price.setText(vo.getB_price() + "원");
+
+////////////////////////////////////////////////////////////////////
+    new ImgAsync(img,vo).execute();//doInBackground() 호출
+////////////////////////////////////////////////////////////////////
+
+    return convertView;
+}//getView()
+```
+
+## ViewModelAdapter 클래스 doInBackground 수정하기
+```java
+@Override
+protected Bitmap doInBackground(Void... voids) {
+    try{
+        //vo가 가지고 있는 vo.getB_img()를 통해
+        //이미지 경로를 따라 들어가자.
+        URL img_url = new URL(vo.getB_img());
+
+        //BufferedInputStream을 통해 이미지를 로드 : 전용공간을 만들어서 데이터를 빠르게 가져올 수 있다.
+        //buffered : InputStream을 도와 더 빨리 데이터를 입력, 출력 하기 위한 스트림
+        BufferedInputStream bis = new BufferedInputStream(img_url.openStream());
+
+img_url을 통해서 얻어온 이미지 경로가 있다. 그러면 inputStream을 통해서 데이터를 읽어올수 있다.
+
+bis가 이미지의 정보를 데이터 단위로 저장을 해놓는다.
+바로 이미지뷰로 넣을수는 없다.
+1바이트 단위의데이터를 이미지형태로 쓸수 있도록 하는 클래스가 bitmap이다.
 
 
+        //bis가 읽어온 데이터를 이미지로 변환하기 위해
+        //bitmap 형태로 변경
+        bm = BitmapFactory.decodeStream(bis);
+
+        bis.close();
+
+    }catch (Exception e) {
 
 
+    }
+    if(bm != null){
+        return bm;
+    }
+    //불러올 이미지가 없을 때 기본이미지로 bitmap 설정
+    Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(),R.drawable.rabbit);
+    return bitmap;
+}
+@Override
+protected void onPostExecute(Bitmap bitmap) {
+    //비트맵 객체를 이미지뷰로 전환
+    img.setImageBitmap(bitmap);
+}
+
+```
+
+# 상세보기
+- 항목을 클릭했을 때 안에 있는 정보들을 다른 activity로 보내서 상세보기 페이지처럼 정리를 해보자.
+
+## SubActivity생성하기
+- 레이아웃으로 이동해 디자인하기
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".SubActivity">
+    <!--그림을 위 가운데에 나오게 해보자-->
+
+    <ImageView
+        android:id="@+id/img"
+        android:layout_width="250dp"
+        android:layout_height="350dp"
+        android:layout_gravity="center"
+        android:src="@drawable/rabbit" />
+    <!--사진이 너무 찌그러져 보이지 않도록 조정하자-->
+
+    <!--밑에 제목이랑 저자 가격 그리고 확인버튼 누르면 다시 첫페이지로 돌아가도록 처리하고 싶어서 TextView를 만들자.-->
+
+    <TextView
+        android:id="@+id/txt_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="제목"
+        android:textSize="30dp" />
+    <!-- 제목이 들어갈 예정입니다.-->
+    <!--화면을 넘어가는 상황도 어느정도 계산하고 만드는 중이다.-->
+
+    <TextView
+        android:id="@+id/txt_author"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="저자"
+        android:textSize="30dp" />
+
+    <TextView
+        android:id="@+id/txt_price"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="가격"
+        android:textSize="30dp" />
+
+   <!-- 버튼을 하나 더 만들어서 확인 이라고 넣어주자-->
+
+    <Button
+        android:id="@+id/btn_ok"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="확인" />
+</LinearLayout>
+```
+
+## SubActivity코드작성하기
+```java
+package com.korea.ex_0716;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+public class SubActivity extends AppCompatActivity {
+
+    ImageView img;
+    TextView txt_title, txt_author, txt_price;
+    Button btn_ok;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_sub);
+
+        img = findViewById(R.id.img);
+        txt_title = findViewById(R.id.txt_title);
+        txt_author = findViewById(R.id.txt_author);
+        txt_price = findViewById(R.id.txt_price);
+        btn_ok = findViewById(R.id.btn_ok);//앞으로 ok 버튼을 누르면 이전화면으로 돌아가도록 지정을 할것이다.
+
+        btn_ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();/* 버튼을 눌렀을 때 이전페이지로 보내기 위해서 finish()를 써주자*/
+            }
+        });
+
+
+    }
+}
+```
+
+## ViewModelAdapter 클래스에 코드 작성하기
+- 어댑터 쪽에서 항목을 눌렀을 때 0번을 눌렀으면 0번에 대한 정보가 서버로 가야 할 것이다.
+- 이벤트 처리를 하려면 리스트뷰가 클릭이 되었다는걸 알아야 한다.
+- 리스트뷰가 클릭되었다는걸 알아야 해서 어댑터가 생성될 때 리스트까지 받고난 다음
+- ListView myListView를 하나 더 파라미터로 받아주자.
+```java
+public ViewModelAdapter( Context context, int resource, ArrayList<BookVO> list, ListView myListView) {
+myListView는 부모에게 넘겨주는게 아니다. 이벤트 처리 하고싶어서 요청을 하고 있는거다. 
+        super(context, resource, list);
+        this.context = context;
+        this.resource = resource;
+        this.list = list;
+우리가 ViewModelAdapter를 호출하고 있는 곳이 네이버액티비티 이다.
+
+    }//생성자
+```
+
+## NaverActivity 클래스 코드 추가하기
+```java
+
+ @Override
+protected void onPostExecute(ArrayList<BookVO> bookVOS) {
+    //doInBackground에서 return된 최종 작업 결과를 bookVOS가 받게 된다.
+
+    //bookVOS를 ListView를 그리기 위해 존재하는 adapter클래스에게 넘겨줘야 한다.
+    adapter = new ViewModelAdapter(NaverActivity.this,R.layout.book_item,bookVOS, myListView);
+
+파라미터가 하나 모자라졌기 때문에 myListView를 담아서 보내주자. 이제 myListView도 가져가봐 하고 보내준다 
+
+    //준비된 어댑터를 ListView에 탑재
+    myListView.setAdapter(adapter);
+
+    //로딩종료
+    loading.setVisibility(View.GONE);
+
+}
+
+ViewModelAdapter에서 받아준 myListVeiw 라고 하는 녀석은 어댑터 클래스에서 이벤트 감지자를 추가할 수 있다.
+```
+
+## ViewModelAdapter 클래스에 이벤트 처리하기
+```java
+    public ViewModelAdapter( Context context, int resource, ArrayList<BookVO> list, ListView myListView) {
+        super(context, resource, list);
+        this.context = context;
+        this.resource = resource;
+        this.list = list;
+
+ //메인에서 넘어온 listView에게 이벤트 감지자 등록
+클릭이라고 해서 onclick리스너는 아니다. item을 클릭했을 때를 감지해야한다.
+        myListView.setOnItemClickListener( click );
+
+    }//생성자
+
+//리스트뷰의 클릭을 감지하는 감지자 생성
+AdapterView.OnItemClickListener click = new AdapterView.OnItemClickListener() {
+int i는 책에 대한 자세한 내용을 보기 위해서 항목을 누를때 맨 위에 걸 클릭하면 i가 0이다
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            String title = list.get(i).getB_title();
+            String author = list.get(i).getB_author();
+            String price = list.get(i).getB_price();
+
+이미지 뷰 같은 경우에는 메인에서 서브로 곧장 넘길 수 있는 방법이 없다.
+비트맵이면 가능 하겠지만 이미지뷰는 불가능 하다.
+이미지 경로를 가지고 넘어간 페이지에서 통신을 한번 더할거다.
+어차피 이미지 경로는 알아야 하기 때문에 추가해주자.
+
+            String img = list.get(i).getB_img();
+
+        //화면전환을 위한 Intent 준비
+Intent에서 context가 필요한데 ViewModelAdapter는 액티비티가 아니기 때문에 쓸수 없다/
+우리가 생성자로 받아놓은 context가 있기 때문에 그걸 사용하면 된다.
+여기가 마치 Naver액티비티인것 처럼 생각하고 사용하자. 목적지는 Sub액티비티
+        Intent intent = new Intent(context,SubActivity.class);
+        intent.putExtra("title",title);
+        intent.putExtra("author",author);
+        intent.putExtra("price",price);
+아쉽게도 putExtra에 담을수 있는 파라미터를 보면 이미지뷰가 없다.
+ 그래서 String 타입으로 경로를 담아서 보내줘야 한다.
+        //이미지를 직접 보내지 못하는 이유 : putExtra에 이미지뷰를 담을 수 없기 때문에
+        intent.putExtra("img",img);
+
+액티비티가 아니라 클래스 이므로 startActivity를 단독으로 사용할 수 없다.
+context.startActivity 라고 작성을 해줘야 한다.
+        context.startActivity(intent);
+    }
+};
+```
+
+## SubActivity에서 파라미터 받아주기
+```java
+Intent i;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_sub);
+
+        //이전페이지에서 넘어온 intent좀 줘봐라
+        //ViewModelAdapter에서 넘어온 정보를 현재 액티비티에서 받아온다.
+
+        i = getIntent();
+        String s_title = i.getStringExtra("title");
+        String s_author = i.getStringExtra("author");
+        String s_price = i.getStringExtra("price");
+        s_img = i.getStringExtra("img");
+
+받아준 파라미터를 TextView에다가 넣어주자.
+
+        txt_title.setText(s_title);
+        txt_author.setText(s_author);
+        txt_price.setText(s_price+" 원");
+
+에뮬레이터를 실행해서 확인을 해보면 정보가 잘 넘어온걸 확인할 수 있다.
+이미지는 빼고... 제목이 진짜 긴 요소를 클릭해보면 제목이 너무 길어
+확인버튼이 짤릴랑 말랑 하거나 진짜 짤리는 수가 있다.. 이거에 대한 해결법을 찾아야 한다.
+
+스크롤을 만들어줄 필요가 있다. 
+```
+## SubActivity의 레이아웃에 코드 수정하기
+```java
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SubActivity"
+    android:orientation="vertical"
+    android:padding="10dp">
+    <!--세로로 화면이 넘칠 때 스크롤을 생성해 주는 객체
+       스크롤 뷰의 직계 자식은 반드시 1개여야 한다.-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+    <ImageView
+        android:layout_width="250dp"
+        android:layout_height="300dp"
+        android:src="@drawable/rabbit"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:id="@+id/img"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="제목"
+        android:textSize="30dp"
+        android:id="@+id/txt_title"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="저자"
+        android:textSize="30dp"
+        android:id="@+id/txt_author"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="가격"
+        android:textSize="30dp"
+        android:id="@+id/txt_price"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="확인"
+        android:id="@+id/btn_ok"/>
+    </LinearLayout>
+
+</ScrollView>
+```
+- 이미지를 통신을 통해서 가져와야 한다.
+- 상세보기 페이지로 넘어갔으니까 거기에 맞는 이미지를 통신을 통해서 가져오자
+
+## SubActivity로 클래스에 코드 추가하기
+- 여기에다가 어댑터에서 했던 것 처럼 이미지의 경로를 알려줘야 한다.
+- 이미지의 경로를 알려줘야 하기 때문에 s_img를 특별대우를 해주자.
+- s_img를 윗부분에다가 Strimg s_img; 로 멤버변수로 만들어주자.
+- Bitmap 객체도 하나만들어주자.
+```java
+Bitmap bm;
+String s_img;
+
+    new ImgAsync().execute(s_img);
+}//onCreate()
+```
+- AsyncTask의 제너릭타입을 의도적으로 String으로 정한 이유가 있다.
+- .execute()를 통해 doInBackground를 호출할 때 이미지 경로를 주고 싶어서.
+- 이미지 경로는 s_img가 가지고 있다 execute()를 호출할 때 같이 보내주자.
+```java
+class ImgAsync extends AsyncTask<String, Void, Bitmap> {
+
+        @Override
+        protected Bitmap doInBackground(String... strings) {
+doInBackground 작업 마무리 되면 밑에 메서드 호출된다.
+            try {
+
+나 url로 모델어댑터에서 했던거랑 똑같이 이미지를 가지고올 경로가 필요한데 나한테좀 주라.
+
+                URL img_url = new URL(strings[0]);
+
+그리고 이미지를 비트맵으로 가지고와보자.
+
+                BufferedInputStream bis = new BufferedInputStream(img_url.openStream());
+
+읽어온 스트림을 비트맵에 맞게 재조합을 하자
+이미지가 정상적으로 불러와졌다면 bm이 널이 아닐 것이다.
+
+                bm = BitmapFactory.decodeStream(bis);
+                bis.close();
+
+            } catch (Exception e) {
+
+            }
+
+이미지를 제대로 가지고 왔는지 확인을 해보자
+
+            if (bm != null) {
+                return bm;
+            }
+
+그렇지 않다면 비어있는 이미지다.
+이미지가 없는 책을 선택했을 때는 기본이미지가 나오게 해야 한다.
+이미지 갖고 올거 없으면 토끼 이미지 가져다 쓸꺼지? 반환해
+
+            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.rabbit);
+            return bitmap;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            img.setImageBitmap(bitmap);
+        }
+    }
+나중에는 '해당 도서는 이미지가 없습니다' 라는 아이콘 하나 만들어서 사용하시면 된다.
+에뮬레이터를 켜서 이미지가 잘 들어갔는지 확인을 해보자
+```
+
+## NaverActivity 수정하기
+- 에뮬레이터 켜고 실행하면 버튼이 돋보기 모양으로 바뀌었지만 눌러도 반응이 없다.
+- 강제로 ok 버튼을 클릭을 해야 한다.
+```java
+//가상키보드에서 검색버튼을 누른경우 실제 ok버튼을 강제로 클릭
+    search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        @Override
+        public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+            if (i == EditorInfo.IME_ACTION_SEARCH) {//search_btn버튼을 강제로 클릭
+                search_btn.performClick();
+            }
+            return true;
+        }
+    });
+}//onCreate()
+```
+- 앱을 처음에 열면 EditText가 처음에 존재하는데 포커스가 자동으로 잡혀있다.
+- 뭔가를 입력할거라고 생각하기 때문에 가상키보드가 강제로 올라온다.
+- 시작부터 올라오는게 좋기도 하지만 입력하려고 터치한 순간 올라왔으면 좋겠다 라는 생각이 들수도 있다.
+- 가상키보드를 강제로 감추는 방법을 알아보자.
+
+## Manifest에 코드 추가하기
+```xml
+<activity
+    android:name=".NaverActivity"
+    android:exported="true"
+    android:windowSoftInputMode="stateHidden">
+```
+## Naver액티비티로 이동하여 코드 수정하기.
+```java
+search_btn.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View view) {
+        adapter = null;        
+        //서버연결(Async클래스의 doInBackground()메서드를 호출)        
+        new NaverAsync().execute(); 
+        //Async클래스의 doInBackground()메서드를 호출
+
+        //검색하면 다시 가상키보드가 내려감
+        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(search.getWindowToken(), 0);
+    }
+});
+```
+
+# 로딩바 띄우기
+- ok버튼을 누르는 시점에 로딩하는 레이아웃을 띄워줄 꺼고 로딩이 끝나는 시점에 숨길 것이다.
+- 로딩이라고 하는 이 이아디를 검색해주자.
+
+```java
+    public static EditText search;
+    ListView myListView;
+    Button search_btn;
+    Parser parser;
+    ViewModelAdapter adapter;
+//////////////////////////////////////
+    LinearLayout loading;//로딩화면을 표시하는 리니어레이아웃
+//////////////////////////////////////
+
+loading = findViewById(R.id.loding);
+
+search_btn.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            //서버에 연결(Async클래스의 doInBackgound()메서드를 호출)
+            new NaverAsync().execute("홍","길","동");
+/////////////////////////////////////////////////////////////////////
+            //로딩시작
+            loading.setVisibility(View.VISIBLE);
+/////////////////////////////////////////////////////////////////////
+검색하면 다시 가상키보드가 내려감
+        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(search.getWindowToken(),0);
+        }
+    });
+
+@Override
+        protected void onPostExecute(ArrayList<BookVO> bookVOS) {
+            //doInBackground에서 return된 최종 작업 결과를 bookVOS가 받게 된다.
+            Log.i("my",""+bookVOS.size());
+            //bookVOS를 ListView를 그리기 위해 존재하는 adapter클래스에게 넘겨줘야 한다.
+            adapter = new ViewModelAdapter(NaverActivity.this,R.layout.book_item,bookVOS, myListView);
+
+            //준비된 어댑터를 ListView에 탑재
+            myListView.setAdapter(adapter);
+//////////////////////////////////////////////////////////////
+            //로딩종료
+            loading.setVisibility(View.GONE);
+/////////////////////////////////////////////////////////////
+
+        }
+```
