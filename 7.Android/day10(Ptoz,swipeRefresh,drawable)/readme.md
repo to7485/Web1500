@@ -379,3 +379,217 @@ public class DrawerLayoutActivity extends AppCompatActivity {
     };
 }
 ```
+
+# 숫자 마술
+- 앱한테 우리가 생각하는 숫자를 맞추게 할것이다.
+
+![image](https://github.com/to7485/Web1500/assets/54658614/6bacb49c-2689-412d-acec-6997c31cf72e)
+
+- 실행화면
+
+![image](https://github.com/to7485/Web1500/assets/54658614/fc19228b-4f87-4e93-a4b9-fdab67709122)
+
+- 결과화면
+- 결과출력후 아래의 두 개 버튼을 '다시하기'로 변경
+![image](https://github.com/to7485/Web1500/assets/54658614/4189fe7a-4893-4621-9bce-7bf31faebdec)
+
+- 첫번째 15개를 보여주고 있으면 yes 없으면 no를 누른다.
+- 두번재 목록을 보여주고 있으면 yes 없으면 no를 누른다.
+- 원리
+
+![image](https://github.com/to7485/Web1500/assets/54658614/30ad2526-ab63-40fe-9030-67ff980c4481)
+
+## MagicActivity생성
+- activity_magic.xml에 내용 추가
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MagicActivity"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#aaaaaa"
+        android:gravity="center"
+        android:text="1 ~ 30사이의 숫자를 생각하세요"
+        android:textSize="15dp" />
+
+    <TextView
+        android:id="@+id/show_num"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="04 05 06 07 12\n13 14 15 20 21\n22 23 28 29 30"
+        android:textSize="30dp" />
+
+    <TextView
+        android:id="@+id/question"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="여기에 생각한 숫자가 있습니까?" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="5dp">
+
+            <Button
+                android:id="@+id/btn_yes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="yes" />
+
+            <Button
+                android:id="@+id/btn_no"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="no"
+                android:layout_marginLeft="5dp"/>
+        </LinearLayout>
+        
+        <Button
+            android:id="@+id/btn_restart"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="다시하기"
+            android:visibility="gone"/>
+    </FrameLayout>
+
+</LinearLayout>
+```
+
+## MagicActivity에 내용 추가
+```java
+package com.korea.ex_0718;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+
+public class MagicActivity extends AppCompatActivity {
+
+    TextView show_num, question;
+    Button btn_yes, btn_no, btn_restart;
+
+    int result = 0;//결과출력 변수
+    int stage = 1;//현재 스테이지
+
+    //값을 바꾸지 못하게 상수로 만들었다.
+    final int YES = 1;
+    final int NO = 0;
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_magic);
+
+        //필요한 객체들 검색
+        show_num = (TextView)findViewById(R.id.show_num);
+        question = (TextView)findViewById(R.id.question);
+
+        btn_yes = (Button)findViewById(R.id.btn_yes);
+        btn_no = (Button)findViewById(R.id.btn_no);
+        btn_restart = (Button)findViewById(R.id.btn_restart);
+
+        //버튼에 이벤트 감지자 등록
+        btn_yes.setOnClickListener(click);
+        btn_no.setOnClickListener(click);
+        btn_restart.setOnClickListener(click);
+    }//onCreate
+
+    View.OnClickListener click = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            int id = view.getId();
+
+            if(id == R.id.btn_yes){
+                showStage(YES); //showStage()호출
+            } else if(id == R.id.btn_no){
+                showStage(NO); //showStage()호출
+            } else if(id == R.id.btn_restart){
+                //현재 액티비티를 재 실행하며 기존 액티비티를 종료
+                Intent i = new Intent(MagicActivity.this, MagicActivity.class);
+                startActivity(i);
+                finish();
+            }
+        }
+    };
+
+    //스테이지 구분 메서드
+    public void showStage(int select){
+        String str="";
+
+        switch(stage){
+            case 1:
+                if(select == YES)//선택버튼이 YES일때만 result에 값을 누적한다.
+                    result += 4;
+
+                //다음스테이지의 문제 출제
+                str = "16 17 18 19 20\n21 22 23 24 25\n26 27 28 29 30";
+                break;
+
+            case 2:
+                if(select == YES)
+                    result += 16;
+
+                str = "01 03 05 07 09\n11 13 15 17 19\n21 23 25 27 29";
+                break;
+
+            case 3:
+                if(select == YES)
+                    result += 1;
+
+                str = "08 09 10 11 12\n13 14 15 24 25\n26 27 28 29 30";
+                break;
+
+            case 4:
+                if(select == YES)
+                    result += 8;
+
+                str = "02 03 06 07 10\n11 14 15 18 19\n22 23 26 27 30";
+                break;
+
+            case 5:
+                if(select == YES)
+                    result += 2;
+
+                //결과가 0이거나 31일 경우
+                if(result == 0 || result == 31)
+                    str = "잘 못 선택한 문항이 있습니다." ;
+                else
+                    str = "당신이 생각한 숫자는\n\" " + result + "\" 	입니다." ;
+
+                //다시하기 버튼 활성화
+                btn_yes.setVisibility(View.INVISIBLE);
+                btn_no.setVisibility(View.INVISIBLE);
+                btn_restart.setVisibility(View.VISIBLE);
+                question.setText("");
+
+                break;
+        }
+
+        show_num.setText(str);
+        stage++;
+    }
+}
+```
+
