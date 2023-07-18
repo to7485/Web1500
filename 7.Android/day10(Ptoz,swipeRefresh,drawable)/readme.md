@@ -391,6 +391,7 @@ public class DrawerLayoutActivity extends AppCompatActivity {
 
 - 결과화면
 - 결과출력후 아래의 두 개 버튼을 '다시하기'로 변경
+
 ![image](https://github.com/to7485/Web1500/assets/54658614/4189fe7a-4893-4621-9bce-7bf31faebdec)
 
 - 첫번째 15개를 보여주고 있으면 yes 없으면 no를 누른다.
