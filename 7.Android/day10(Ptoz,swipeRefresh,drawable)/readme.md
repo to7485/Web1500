@@ -237,5 +237,145 @@ Handler handler = new Handler(){
     }
 };
 ```
+# 앱 서랍 만들기
+- 앱을 눌렀을 때 왼쪽이나 오른쪽 바깥에서 안쪽으로 들어오는 메뉴
+- 당겨서 들어오는 것도 가능하고 버튼을 눌러서 나오게 하는 것도 가능하다.
+- drawerlayout이라고 불리는 서랍기능을 구현해보도록 하자
+- 서랍은 알고 있으면 쓸모가 참 많다.
 
+## DrawerLayoutActivity 생성하기
+- 서랍이 나오기 전 화면이 필요하고 서랍의 레이아웃을 디자인 하기위한 레이아웃이 필요하다.
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".DrawerLayoutActivity">
 
+    <!-- 서랍이 열리기 전에 보여줄 메인 레이아웃-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="메인화면"
+            android:textSize="30dp" />
+
+        <Button
+            android:id="@+id/btn_open"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="서랍열기" />
+    </LinearLayout>
+    <!-- 서랍이 열리기 전에 보여줄 메인 레이아웃-->
+
+    <!--서랍레이아웃을 만들껀다 math로 만들어버리면 꽉 채워 버린다 2/3 정도 차지하게 만들어보자.-->
+
+    <!--서랍 레이아웃-->
+    <LinearLayout
+        android:id="@+id/drawer"
+        android:layout_width="300dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="#8ac"
+        android:orientation="vertical">
+
+       //android:layout_gravity="start" -> 왼쪽에서 오른쪽으로
+	   //android:layout_gravity="end" -> 오른쪽 에서 왼쪽으로
+
+drawerlayout은 겹쳐서 표현을 하기 때문에서랍이 안보여서 잘 만들어져있는지 확인하기 위해서 백그라운드 컬러를 넣어볼 수 있다.
+그런데 미리보기로 확인해보면 프레임레이아웃이나 릴레이티브 레이아웃처럼 겹쳐서 보인다.
+300dp 인것같지도 않다. 드로어 레이아웃 같은 경우 미리보기 화면만 보고 작업하는데는 한계가 있다. 일단 서랍에 걸맞는 디자인을 해보자
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="나는 서랍"
+            android:textSize="30dp" />
+
+        <ImageView
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:layout_gravity="center"
+            android:src="@drawable/rabbit" />
+
+        <Button
+            android:id="@+id/btn_close"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="서랍닫기" />
+        
+    </LinearLayout>
+    <!--서랍 레이아웃-->
+
+</androidx.drawerlayout.widget.DrawerLayout>
+```
+
+![image](https://github.com/to7485/Web1500/assets/54658614/d2286fe9-96d0-4bfb-a17f-de5f3ab40954)
+
+- 지금 레이아웃을 통째로 차지하고 있다.
+- 왼쪽이나 오른쪽으로 좀 몰아야 한다 하지만 안타깝게도 gravity를 사용할 수 가 없다. 그런데 적으면 적용이 된다;;;
+- 에뮬레이터 켜서 작동하는지 확인을 해보자 빈공간에서 왼쪽에서 오른쪽으로 드래그하면 열리고
+- 다시 밀어넣으면 들어가고, 빈공간을 눌러도 들어가고 뒤로가기 버튼을 눌러도 들어간다.
+- 이제 열기 버튼을 눌렀을 때 서랍이 나오고 닫기 버튼을 누르면 서랍을 닫게 만들어보자.
+
+## DrawerLayoutActivity 에 코드 추가하기
+```java
+package com.korea.ex_0718;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
+
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
+
+public class DrawerLayoutActivity extends AppCompatActivity {
+
+    DrawerLayout drawer_layout;
+    Button btn_open, btn_close;
+    //버튼을 눌렀을 때 숨겨져있는 레이아웃이 나와야 하기 때문에 서랍 레이아웃도 등록을 해줘야 한다.
+    LinearLayout drawer;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_drawer_layout);
+
+        drawer_layout = findViewById(R.id.drawer_layout);
+
+        //열기버튼을 눌렀을 때 열리고 닫기버튼을 눌렀을 때 닫는 기능만 만들면 된다.
+        btn_open = findViewById(R.id.btn_open);
+        btn_close = findViewById(R.id.btn_close);
+        drawer = findViewById(R.id.drawer);
+
+        btn_open.setOnClickListener(click);
+        btn_close.setOnClickListener(click);
+
+        //드래그로 서랍을 열지 못하게 할 수 있다!
+        drawer_layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+    }//onCreate
+
+    View.OnClickListener click = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            int id = view.getId();
+            if (id == R.id.btn_open) {
+                drawer_layout.openDrawer(drawer);
+            } else if (id == R.id.btn_close) {
+                //닫고싶은 서랍 지정해서 닫기
+                // drawer_layout.closeDrawer( drawer);
+                // 모든 서랍닫기
+                drawer_layout.closeDrawers();
+            }
+        }
+    };
+}
+```
