@@ -409,24 +409,23 @@ public class DrawerLayoutActivity extends AppCompatActivity {
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MagicActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".MagicActivity">
 
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="#aaaaaa"
-        android:gravity="center"
-        android:text="1 ~ 30사이의 숫자를 생각하세요"
-        android:textSize="15dp" />
+        android:layout_gravity="center"
+        android:text="1~30 사이의 숫자를 생각하세요"
+        android:textSize="25dp" />
 
     <TextView
         android:id="@+id/show_num"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="04 05 06 07 12\n13 14 15 20 21\n22 23 28 29 30"
+        android:text="04 05 06 07 12\n 13 14 15 20 21\n 22 23 28 29 30"
         android:textSize="30dp" />
 
     <TextView
@@ -434,42 +433,42 @@ public class DrawerLayoutActivity extends AppCompatActivity {
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="여기에 생각한 숫자가 있습니까?" />
+        android:text="생각한 숫자가 여기에 있습니까?"
+        android:textSize="25dp" />
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content">
 
         <LinearLayout
+            android:id="@+id/linear"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="5dp">
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/btn_yes"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="yes" />
+                android:text="YES" />
 
             <Button
                 android:id="@+id/btn_no"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
                 android:layout_weight="1"
-                android:text="no"
-                android:layout_marginLeft="5dp"/>
+                android:text="No" />
         </LinearLayout>
-        
+
         <Button
             android:id="@+id/btn_restart"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="다시하기"
-            android:visibility="gone"/>
+            android:visibility="gone" />
     </FrameLayout>
-
 </LinearLayout>
 ```
 
@@ -491,7 +490,7 @@ public class MagicActivity extends AppCompatActivity {
     Button btn_yes, btn_no, btn_restart;
 
     int result = 0;//결과출력 변수
-    int stage = 1;//현재 스테이지
+    int phase = 1;//현재 스테이지
 
     //값을 바꾸지 못하게 상수로 만들었다.
     final int YES = 1;
@@ -523,9 +522,9 @@ public class MagicActivity extends AppCompatActivity {
             int id = view.getId();
 
             if(id == R.id.btn_yes){
-                showStage(YES); //showStage()호출
+                showPahse(YES); //showStage()호출
             } else if(id == R.id.btn_no){
-                showStage(NO); //showStage()호출
+                showPahse(NO); //showStage()호출
             } else if(id == R.id.btn_restart){
                 //현재 액티비티를 재 실행하며 기존 액티비티를 종료
                 Intent i = new Intent(MagicActivity.this, MagicActivity.class);
@@ -536,10 +535,10 @@ public class MagicActivity extends AppCompatActivity {
     };
 
     //스테이지 구분 메서드
-    public void showStage(int select){
+    public void showPahse(int select){
         String str="";
 
-        switch(stage){
+        switch(phase){
             case 1:
                 if(select == YES)//선택버튼이 YES일때만 result에 값을 누적한다.
                     result += 4;
@@ -577,7 +576,7 @@ public class MagicActivity extends AppCompatActivity {
                 if(result == 0 || result == 31)
                     str = "잘 못 선택한 문항이 있습니다." ;
                 else
-                    str = "당신이 생각한 숫자는\n\" " + result + "\" 	입니다." ;
+                    str = "당신이 생각한 숫자는\n\" " + result + "\" 입니다." ;
 
                 //다시하기 버튼 활성화
                 btn_yes.setVisibility(View.INVISIBLE);
@@ -589,7 +588,7 @@ public class MagicActivity extends AppCompatActivity {
         }
 
         show_num.setText(str);
-        stage++;
+        phase++;
     }
 }
 ```
