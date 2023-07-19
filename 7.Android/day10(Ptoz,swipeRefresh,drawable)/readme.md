@@ -503,12 +503,12 @@ public class MagicActivity extends AppCompatActivity {
         setContentView(R.layout.activity_magic);
 
         //필요한 객체들 검색
-        show_num = (TextView)findViewById(R.id.show_num);
-        question = (TextView)findViewById(R.id.question);
+        show_num = (TextView) findViewById(R.id.show_num);
+        question = (TextView) findViewById(R.id.question);
 
-        btn_yes = (Button)findViewById(R.id.btn_yes);
-        btn_no = (Button)findViewById(R.id.btn_no);
-        btn_restart = (Button)findViewById(R.id.btn_restart);
+        btn_yes = (Button) findViewById(R.id.btn_yes);
+        btn_no = (Button) findViewById(R.id.btn_no);
+        btn_restart = (Button) findViewById(R.id.btn_restart);
 
         //버튼에 이벤트 감지자 등록
         btn_yes.setOnClickListener(click);
@@ -521,26 +521,29 @@ public class MagicActivity extends AppCompatActivity {
         public void onClick(View view) {
             int id = view.getId();
 
-            if(id == R.id.btn_yes){
+            if (id == R.id.btn_yes) {
                 showPahse(YES); //showStage()호출
-            } else if(id == R.id.btn_no){
+            } else if (id == R.id.btn_no) {
                 showPahse(NO); //showStage()호출
-            } else if(id == R.id.btn_restart){
-                //현재 액티비티를 재 실행하며 기존 액티비티를 종료
-                Intent i = new Intent(MagicActivity.this, MagicActivity.class);
-                startActivity(i);
-                finish();
+            } else if (id == R.id.btn_restart) {
+                show_num.setText("04 05 06 07 12\n 13 14 15 20 21\n 22 23 28 29 30");
+                phase = 1;
+                result = 0;
+                question.setVisibility(View.VISIBLE);
+                btn_yes.setVisibility(View.VISIBLE);
+                btn_no.setVisibility(View.VISIBLE);
+                btn_restart.setVisibility(View.GONE);
             }
         }
     };
 
     //스테이지 구분 메서드
-    public void showPahse(int select){
-        String str="";
+    public void showPahse(int select) {
+        String str = "";
 
-        switch(phase){
+        switch (phase) {
             case 1:
-                if(select == YES)//선택버튼이 YES일때만 result에 값을 누적한다.
+                if (select == YES)//선택버튼이 YES일때만 result에 값을 누적한다.
                     result += 4;
 
                 //다음스테이지의 문제 출제
@@ -548,35 +551,35 @@ public class MagicActivity extends AppCompatActivity {
                 break;
 
             case 2:
-                if(select == YES)
+                if (select == YES)
                     result += 16;
 
                 str = "01 03 05 07 09\n11 13 15 17 19\n21 23 25 27 29";
                 break;
 
             case 3:
-                if(select == YES)
+                if (select == YES)
                     result += 1;
 
                 str = "08 09 10 11 12\n13 14 15 24 25\n26 27 28 29 30";
                 break;
 
             case 4:
-                if(select == YES)
+                if (select == YES)
                     result += 8;
 
                 str = "02 03 06 07 10\n11 14 15 18 19\n22 23 26 27 30";
                 break;
 
             case 5:
-                if(select == YES)
+                if (select == YES)
                     result += 2;
 
                 //결과가 0이거나 31일 경우
-                if(result == 0 || result == 31)
-                    str = "잘 못 선택한 문항이 있습니다." ;
+                if (result == 0 || result == 31)
+                    str = "잘 못 선택한 문항이 있습니다.";
                 else
-                    str = "당신이 생각한 숫자는\n\" " + result + "\" 입니다." ;
+                    str = "당신이 생각한 숫자는\n\" " + result + "\" 	입니다.";
 
                 //다시하기 버튼 활성화
                 btn_yes.setVisibility(View.INVISIBLE);
