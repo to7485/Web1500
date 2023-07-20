@@ -326,4 +326,265 @@ sqlite는 처음 복사할 때 용량이 많지 않아서 1~2mb를 잡아주면 
     }
 
 ```
+- 에뮬레이터를 켜고 홈버튼을 누르고 설정으로 들어간다. -> 저장용량으로 들어간다.
+- 우리가 데이터베이스라고 하는 폴더를 강제로 만들고 있는 중이다.
+- 내부공유 저장용량 클릭 -> 파일 클릭 -> 내부저장소에 만들어져있는 저장소의 이름들을 볼 수 있다
+- database라는 이름의 폴더가 생성이 되어 있어야 한다.
+- mpath.mkdirs() 때문에 database라는 폴더가 만들어졌다.
+- ouputStream이 정상적으로 작동을 해야 이 안에 myDB.db라는 녀석이 8.19kb의 용량으로 생겨있다.
+- assets폴더에서 휴대폰 내부로 DB를 옮겨 넣은 것이고  이제 우리는 여기로 접근해서 insert,delete,update 같은 작업들을 수행할 것이다.
+- 껏다 켜면 isFirst가 true로 다시 바뀌기 때문에 onCreate()에서 copyAsset을 호출하는데 매번 껏다 켤때마다 isFirst가 true여서 assets에 있는 내용을 다시 복사한다.
+-  내용을 100개를 추가해놔도 다시 김길동,홍길동 두개만 남는다.
+
+## SqliteActivity 액티비티 코드 추가하기
+- 껐다 켯을 때도 isFirst가 false로 유지가 되야 한다. sharedPreference를 사용해보자.
+
+```java
+///////////////////////////////////////
+ SharedPreferences pref;
+///////////////////////////////////////
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_sqlite);
+
+///////////////////////////////////////
+        pref = PreferenceManager.getDefaultSharedPreferences(SqliteActivity.this);
+
+        load();
+        //애플리케이션이 최초에 실행 되었을 때 assets폴더의 DB를 휴대폰 내부저장소에 저장
+        copyAssets();
+        save();
+///////////////////////////////////////
+    }//onCreate();
+
+public void save() {
+    SharedPreferences.Editor edit = pref.edit();
+    edit.putBoolean("save", isFirst); //save라는 이름으로 isFirst를 저장한다.
+    edit.commit();
+    //카피에셋을 실행시키고 저장을 한거니까 isFirst값이 false가 저장이 되어야 한다.
+}
+
+//isFirst의 값을 로드
+public void load() {
+    isFirst = pref.getBoolean("save", true); //저장되어 있는 값이 없다면 기본값은 true로 해라
+
+}
+```
+
+## layout_sqlite.xml 디자인하기
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".SqliteActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+
+        <TextView
+            android:id="@+id/result_txt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="hong/20/010-111-1111\nkim/25/011" /> <!--예시로 보여주고 지우기-->
+
+    </ScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_all"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="전체보기" /> <!--select * from table-->
+
+        <Button
+            android:id="@+id/btn_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1"
+            android:text="검색" /> <!--select * from table where 조건식-->
+
+        <Button
+            android:id="@+id/btn_insert"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1"
+            android:text="추가" /> <!--insert into 테이블 values();-->
+
+        <Button
+            android:id="@+id/btn_del"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1"
+            android:text="삭제" /> <!--delete from 테이블 where 조건-->
+    </LinearLayout>
+    
+    <!--추가할 때 이름과 전화번호 나이를 넣을 EditText-->
+    <EditText
+        android:id="@+id/et_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="input name" />
+
+    <EditText
+        android:id="@+id/et_phone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="input phone" />
+
+    <EditText
+        android:id="@+id/et_age"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="input age"
+        android:inputType="number" />
+</LinearLayout>
+```
+
+## SqliteActivity에 등록하기
+```java
+EditText et_name, et_phone, et_age;
+Button btn_all, btn_search, btn_insert, btn_del;
+TextView result_txt;
+
+    et_name = findViewById(R.id.et_name);
+    et_phone = findViewById(R.id.et_phone);
+    et_age = findViewById(R.id.et_age);
+    result_txt = findViewById(R.id.result_txt);
+    btn_all = findViewById(R.id.btn_all);
+    btn_search = findViewById(R.id.btn_search);
+    btn_insert = findViewById(R.id.btn_insert);
+    btn_del = findViewById(R.id.btn_del);
+    
+    btn_all.setOnClickListener(myClick);
+    btn_search.setOnClickListener(myClick);
+    btn_insert.setOnClickListener(myClick);
+    btn_del.setOnClickListener(myClick);
+   }//onCreate();
+
+View.OnClickListener myClick = new View.OnClickListener() {
+    @Override
+    public void onClick(View view) {
+        int id = view.getId();
+        if(id == R.id.btn_all){
+            //전체조회 
+        } else if(id == R.id.btn_search){
+            //상세조회 
+        }else if(id == R.id.btn_insert){
+            //정보추가
+        }else if(id == R.id.btn_del){
+            //정보삭제
+        }
+    }
+};
+
+```
+
+- DB라고 하면 전체 조회를 할 때 JSP로 치면 resultSet같이 움직일 수 있는 커서가 필요하다.
+- myClick리스터 밑에 추가하기
+```java
+//쿼리문 수행을 위한 메서드
+public void searchQuery(String query){
+    Cursor c = mDatabase.rawQuery(query, null);
+    //지금 DB를 복사만 해놓은 상태이고 실제 어디로 연결해야 되는지 지정이 되어있지 않다
+    //mDatabase를 통해서 rawQuery라는 메서드를 가지고 쿼리문을 요청해야 한다.
+}
+```
+
+- copyAssets()을 통해 복사된 DB를 읽기, mDatabase가 읽어와댜 한다.
+```java
+    //개발자가 완벽히 알맞은 코드나 충돌 가능성이 있는 코드를 사용할 때 사용하는 어노테이션
+    @SuppressLint("WrongConstant")
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_sqlite);
+
+        pref = PreferenceManager.getDefaultSharedPreferences(SqliteActivity.this);
+
+        load();
+        //애플리케이션이 최초에 실행 되었을 때 assets폴더의 DB를 휴대폰 내부저장소에 저장
+        copyAssets();
+        save();
+
+        //openOrCreateDatabase(db명, 데이터베이스모드,쿼리가 호출되는 커서를 선택(커서객체를 만들어 사용할지에 입력 그렇지 않으면 null)
+        //만들어져있는 DB를 열거나 없으면 새로 만들어주는 작업을 해주는 메서드
+        mDatabase = openOrCreateDatabase(
+                Environment.getExternalStorageDirectory()+"/database/myDB.db",
+                SQLiteDatabase.CREATE_IF_NECESSARY, null);
+
+        ... 중략
+
+
+    }//onCreate();
+```
+- 쿼리문 추가하기
+```java
+View.OnClickListener myClick = new View.OnClickListener() {
+    @Override
+    public void onClick(View view) {
+        int id = view.getId();
+        if(id == R.id.btn_all){
+            //전체조회
+            searchQuery("select * from friend");
+        } else if(id == R.id.btn_search){
+            //상세조회
+        }else if(id == R.id.btn_insert){
+            //정보추가
+        }else if(id == R.id.btn_del){
+            //정보삭제
+        }
+    }
+};
+```
+
+- searchQuery()메서드를 통해서 데이터 조회하기
+```java
+public void searchQuery(String query) {
+    Cursor c = mDatabase.rawQuery(query, null);
+    //지금 DB를 복사만 해놓은 상태이고 실제 어디로 연결해야 되는지 지정이 되어있지 않다
+    //mDatabase를 통해서 rawQuery라는 메서드를 가지고 쿼리문을 요청해야 한다.
+
+    //c.getColumnCount() : friend테이블의 컬럼 수(name,phone,age)
+    //컬럼의 수만큼 배열의 공간을 확보하라는 뜻
+    String[] col = new String[c.getColumnCount()];
+    col = c.getColumnNames();
+
+    //col[0] : name
+    // col[1] : phone
+    // col[2] : age
+
+    String[] str = new String[c.getColumnCount()];
+    String result = ""; //최종 결과를 저장해둘 변수
+
+    Log.i("MY", col[0] + "/" + col[1] + "/" + col[2]);
+
+    while (c.moveToNext()) {
+        for (int i = 0; i < col.length; i++) {
+            str[i] = "";
+            str[i] += c.getString(i); //각 컬럼별 실제 데이터
+            result += col[i] + ":" + str[i] + "\n";
+        }//for    result +="\n"; //for문 빠져나와서 엔터값 한번 더주기
+    }//while
+    result_txt.setText(result);
+    //에뮬레이터를 켜고 전체 조회를 누르면 저장해놓은 샘플데이터가 조회된다.
+}
+```
+
+
 
