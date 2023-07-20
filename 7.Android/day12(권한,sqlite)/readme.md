@@ -172,3 +172,158 @@ public class PermissionActivity extends AppCompatActivity {
 - 내장 데이터베이스 사용하려면 우리 휴대폰 내부에 데이터베이스를 복사해서 OUTPUT으로 넣어야 하기 때문에 내부저장소 기록 권한이 꼭 있어야 한다.
 
 ## SqliteActivity 액티비티 생성
+- https://sourceforge.net/projects/sqlitebrowser -> github주소 클릭
+
+![image](https://github.com/to7485/Web1500/assets/54658614/1335b713-d3c1-4731-88f1-1efb715e55ce)
+
+- 아래로 스크롤 하여 윈도우 버전 다운받기
+
+![image](https://github.com/to7485/Web1500/assets/54658614/a30f374a-06dc-4039-9ef9-a9405b8c9d14)
+
+- DB Browser for SQLite - Standard installer for 64-bit Windows 다운로드
+
+![image](https://github.com/to7485/Web1500/assets/54658614/40eb7314-21c5-442f-94a1-739b55146ac3)
+
+- 바로가기 체크박스 체크하고 next -> 설치
+
+![image](https://github.com/to7485/Web1500/assets/54658614/8a38efda-1252-49c7-81a3-7142e5210eaa)
+
+- 새 데이터 베이스 -> myDB.db라고 바탕화면에 저장하기
+
+![image](https://github.com/to7485/Web1500/assets/54658614/b1539b9c-a99e-4cb1-a3f5-ed83ef85d9ab)
+
+- db가 만들어지는데 테이블도 없고 아무것도 없다.
+- 테이블 이름은 friend로 설정하고
+- 추가 눌러서 컬럼을 추가할 수 있다. name,phone,age 세개를 추가해보자
+- text는 varchar2()이고 Integer는 number라고 보면 된다.
+
+![image](https://github.com/to7485/Web1500/assets/54658614/28a792bb-0820-4244-8fef-023d058df9fb)
+
+- 확인을 눌러서 완성을 한다. 데이터 보기를 눌러서 예시 데이터를 넣어주자.
+
+![image](https://github.com/to7485/Web1500/assets/54658614/02c37db1-01e7-44d6-8179-c47e9e18f909)
+
+![image](https://github.com/to7485/Web1500/assets/54658614/435fb8ba-a960-4676-8707-d9f0e7c95f72)
+
+![image](https://github.com/to7485/Web1500/assets/54658614/8b883ccd-568e-491c-81a3-804b4e997e03)
+
+- 두명의 데이터를 추가해보자. 그리고 위에 변경사항 저장하기를 누르자.
+
+![image](https://github.com/to7485/Web1500/assets/54658614/fa8ce51b-6723-47ca-a6bb-355a7ec5aa39)
+
+## build.gradle에 권한 추가하기
+- 수락을 받아야 하는 권한이 아니기 때문에 라이브러리로 띄워줄 필요도 없고 그냥 작성만 해놓으면 된다.
+- outputStream을 쓸 수 있는 권한이기도 하다.
+```xml
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/> 
+로 하게 되는데 내용을 읽어오려면 READ_EXTERNAL_STORAGE 권한이 필요하다.
+<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+```
+
+## DB 저장하기
+- 아무데다 저장할 수 없다. Main -> assets폴더 만들기
+
+![image](https://github.com/to7485/Web1500/assets/54658614/0e029921-19ad-4d6d-a6b4-966983df4cad)
+
+- 아까 만들어놨던 myDB.db 복사해서 넣기
+
+![image](https://github.com/to7485/Web1500/assets/54658614/d9d4a44c-f2ea-4b09-8bb1-8cbdb762fb54)
+
+## SqliteActivity 액티비티 코드 작성하기
+```java
+package com.lhj.ex_0726;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.res.AssetManager;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
+import android.os.Environment;
+
+import java.io.File;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+public class SqliteActivity extends AppCompatActivity {
+
+    //안드로이드에서 기본적으로 제공을 해준다.
+    SQLiteDatabase mDatabase;
+
+    //처음에 한번 복사를 하면 그다음은 복사를 해줄필요 없어서 막아줄 변수를 하나 만든다.
+    boolean isFirst = true;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_sqlite);
+
+        //애플리케이션이 최초에 실행 되었을 때 assets폴더의 DB를 휴대폰 내부저장소에 저장
+        copyAssets();
+    }//onCreate();
+
+    //assets폴더의 DB를 휴대폰 내부장소에 저장 하기 위한 메서드
+    public void copyAssets(){
+
+inputStream으로 읽어서 outputStream으로 휴대폰 내부에 저장을 할 것이다.
+
+        // getAssets() 를 통해 assets 폴더 밑의 file을 불러 올수 있다
+        AssetManager assetManager = getAssets();
+        String[] files = null;
+        String mkdir = "";
+        try {
+            //files[0] --> "images" 보통 images폴더가 숨어있어서 1번으로 해야한다.
+            //files[1] --> "myDB.db" 파일 이름이 문자열로 들어온다.
+            files = assetManager.list("");
+
+            InputStream in = null;
+            OutputStream out = null;
+
+inputStream은 io클래스 이기 때문에 open할 때 ioException이 발생할 수 있기 때문에 try문 안에서 작성을 해주자.
+            //files[1]의 값인 "myDB.db"와 같은 이름의 파일을 찾아서
+            //inputStream으로 읽어온다.
+            in = assetManager.open(files[1]);
+
+            //내부저장소에 폴더 생성
+            //휴대폰 내부(기본) 저장소의 root(최상위) 경로로 접근
+
+sd카드로는 함부로 접근을 하면 안되는게, sd카드가 안들어가는 휴대폰도 있음
+
+            //내부저장소에 폴더 생성
+            //휴대폰 내부(기본)저장소의 root(최상위) 경로로 접근
+            String str = "" + Environment.getExternalStorageDirectory();
+            mkdir = str + "/databse"; //databse라고 하는 이름의 폴더를 생성할 예정
+
+            File mpath = new File(mkdir);
+                if(!mpath.exists()){
+                    isFirst = true;
+                }
+                if(isFirst) {
+                    mpath.mkdirs(); //databse폴더를 실질적으로 생성
+                     //databse이름의 폴더까지 접근해서 myDB.db라는 이름으로 output할 준비해
+                    //root/database/myDB.db
+                    out = new FileOutputStream(mkdir + "/" + files[1]);
+
+sqlite는 처음 복사할 때 용량이 많지 않아서 1~2mb를 잡아주면 되는데 in에서 읽어온걸 기록을 다 할것이다.
+
+                    byte[] buffer = new byte[2048];
+                    int read = 0;
+
+반복문 만들어서 1바이트씩 기록좀 해라 inputStream으로 담아온걸 buffer에 담아서 (한글자씩 읽어서)read한테 준다. 문서의 끝 -1을 만나면 while문이 정지가 된다.
+                    while((read = in.read(buffer))!= -1){
+                    out.write(buffer,0,read);
+                    }
+                    out.close();
+                    in.close();
+
+                    isFirst = false;
+                }
+
+        }catch (Exception e){
+
+
+            }
+        }
+    }
+
+```
+
