@@ -241,7 +241,8 @@ result = ++a >= b || 2 + 7 <= b && 13 - b >= 0 && (a += b) - (b % a) > 10;
 System.out.println(result); 
 
 결과 = true
------------------------------------------------------------------------------------------------------
+```
+```java
 /*
 * 과수원이 있다.
 * 
@@ -263,6 +264,18 @@ System.out.println("하루에 생산되는 과일 수 : " + fruitTotal + "개");
 		
 float average = fruitTotal / 24f; //시간당 평균
 System.out.println("시간당 평균 생산 갯수 : " + average + "개");
+```
+```java
+//상자 하나에는 농구공이 5개 들어갈 수 있습니다.
+		//만일 농구공 23개를 담아야 한다면 필요한 상자의 개수는 몇개인지
+		//구하세요
+		
+		int ball = 31;
+		int box;
+		
+		// N % X == 0 -> N은 X의 배수
+		box = ball % 5 == 0 ? ball/5 : ball/5+1;
+		System.out.println("필요한 상자의 수는 : " + box + "개");
 ```
 
 
