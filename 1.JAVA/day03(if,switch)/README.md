@@ -130,7 +130,27 @@ if(조건식1){
   }
 }
 ```
+```java
+//숫자를 하나 입력받아서
+//해당 숫자가 5의 배수이면서 홀수이면 "5의 배수이면서 홀수입니다."
+//홀수가 아니면 "5의 배수이면서 짝수입니다" 출력
+//5의 배수가 아니면 "5의 배수가 아닙니다" 출력하는 프로그램 작성하기
+Scanner sc = new Scanner(System.in);
 
+System.out.print("정수를 입려하세요 : ");
+int n = sc.nextInt();
+
+if( n % 5 == 0) {
+	if(n % 2 != 0) {
+		System.out.println("5의 배수이면서 홀수입니다.");
+	} else {
+		System.out.println("5의 배수이면서 짝수입니다.");
+	}
+} else {
+	System.out.println("5의 배수가 아닙니다.");
+}
+
+```
 ```java
 int num = 5;
 if(num <=10){
