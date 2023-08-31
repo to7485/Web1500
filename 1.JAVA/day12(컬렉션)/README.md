@@ -139,7 +139,9 @@ class Bingo{
 // Set구조는 arrayList와 같이 get()메서드를 이용하여 특정 인덱스로 접근
 // 할수 없기 때문에, 내용을 순차적으로 얻어오기 위해서는
 // iterator라고 하는 반복자를 이용해야 한다.
-	Iterator<Integer> it = set.iterator(); 
+	ArrayList<Integer> list = new ArrayList<>(set);
+	Collection.shuffle(list);
+	Iterator<Integer> it = list.iterator(); 
 
 for(int i=0; i < board.length; i++) { 
 for(int j=0; j < board[i].length; j++) { 
