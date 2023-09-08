@@ -541,6 +541,80 @@ public class Test extends JFrame {
 ```
 ![image](https://user-images.githubusercontent.com/54658614/223477273-d219a48f-0423-4277-bd0a-0db1127fbde6.png)
 
+## CardLayout
+```java
+package test3;
+
+import java.awt.CardLayout;
+import java.awt.Color;
+import java.awt.event.InputEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+
+public class CardLayoutTest {
+    public static void main(String[] args) {
+        JFrame f = new JFrame("CardLayoutTest");
+        CardLayout card = new CardLayout(10, 10);
+        JPanel cardPanel = new JPanel(); // Create a container for card panels
+        cardPanel.setLayout(card); // Set CardLayout for the container
+
+        JPanel card1 = new JPanel();
+        card1.setBackground(Color.LIGHT_GRAY);
+        JPanel card2 = new JPanel();
+        card2.setBackground(Color.ORANGE);
+        JPanel card3 = new JPanel();
+        card3.setBackground(Color.CYAN);
+
+        cardPanel.add(card1, "1");
+        cardPanel.add(card2, "2");
+        cardPanel.add(card3, "3");
+
+        card1.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getModifiersEx() == InputEvent.BUTTON3_MASK) {
+                    card.previous(cardPanel);
+                } else {
+                    card.next(cardPanel);
+                }
+            }
+        });
+
+        card2.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getModifiersEx() == InputEvent.BUTTON3_MASK) {
+                    card.previous(cardPanel);
+                } else {
+                    card.next(cardPanel);
+                }
+            }
+        });
+
+        card3.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getModifiersEx() == InputEvent.BUTTON3_MASK) {
+                    card.previous(cardPanel);
+                } else {
+                    card.next(cardPanel);
+                }
+            }
+        });
+
+        f.add(cardPanel); // Add the card container to the JFrame
+        f.setBounds(30, 30, 400, 400);
+        f.setVisible(true);
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        card.show(cardPanel, "1"); // Show the initial card
+    }
+}
+
+```
+
 ### JLabel
 - JLabel 클래스는 정보 또는 텍스트를 위한 라벨을 생성한다.
 - JLabel 클래스는 문자열이나 아이콘을 사용하여 객체를 생성한다.
