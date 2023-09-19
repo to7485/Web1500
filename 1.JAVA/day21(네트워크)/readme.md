@@ -1,9 +1,10 @@
-## NetWork
+# NetWork
+- 사용자들이 바로 옆에 있는 장비와 데이터를 주고 받는 작업을 보통 네트워킹(Networking)이라고 한다.
 
 ## InetAddress
-자바에서는 IP주소를 다루기 위한 클래스로 InetAddress를 제공하며 다음과 같은 메서드가 정의되어 있다.
+- 자바에서는 IP주소를 다루기 위한 클래스로 InetAddress를 제공하며 다음과 같은 메서드가 정의되어 있다.
 
-#### InetAddress 메서드 
+### InetAddress 메서드 
 
 |메서드|설명|
 |-----|------|
@@ -18,7 +19,7 @@
 |boolean isMulticaseAddress()|IP주소가 멀티캐스트 주소인지 알려준다.|
 |boolean isLoopbackAddress()|IP주소가 loopback 주소(127.0.0.1)인지 알려준다.|
 
-#### day22/network/Ex1.java
+### day22/network/Ex1.java
 ```java
 package day22.network;
 import java.net.*;
@@ -96,7 +97,7 @@ http://dm.n-mk.kr:80/board/list.html?referer=kim#index1
 ```
 > HTTP프로토콜에서는 80번 포트를 사용하기 때문에 URL에서 포트번호를 생략하는 경우 80번으로 간주한다. 각 프로토콜에 따라 통신에 사용하는 포트번호가 다르며 생략되면 각 프로토콜의 기본 포트가 사용된다.
 
-#### URL의 메서드
+### URL의 메서드
 
 |메서드|설명|
 |-----|------|
@@ -124,7 +125,7 @@ http://dm.n-mk.kr:80/board/list.html?referer=kim#index1
 |String toExternalForm()|URL을 문자열로 변환하여 반환한다.|
 |URI toURI()|URL을 URI로 변환하여 반환한다.|
 
-#### day22/network/Ex2.java
+### day22/network/Ex2.java
 ```
 package day22.network;
 import java.io.IOException;
@@ -224,7 +225,7 @@ url.toURI():http://dm.n-mk.kr:80/board/list.html?referer=kim#index1
 |void setUseCaches(boolean useCaches)|캐시의 사용여부를 설정한다.|
 
 
-#### day22/network/Ex3.java
+### day22/network/Ex3.java
 ```
 package day22.network;
 import java.net.*;
@@ -281,7 +282,7 @@ getURL():https://news.naver.com/main/main.naver?mode=LSD&mid=shm&sid1=105
 getUseCaches():true
 ```
 
-#### day22/network/Ex4.java
+### day22/network/Ex4.java
 ```
 package test;
 
@@ -312,26 +313,26 @@ public class Test{
 
 ```
 
-### http통신과 socket통신의 차이점
+## http통신과 socket통신의 차이점
 
 -단방향 통신인 http통신
-http통신은 Client의 요청(Request)이 있을 때만 서버가 응답(Response)하여 해당 정보를 전송하고 곧바로 연결을 종료하는 방식입니다.<br>
-Client가 요청을 보내는 경우에만 Server가 응답하는 단방향 통신으로 반대로 Server가 Client에게 요청을 보낼수는 없습니다.<br>
+    - http통신은 Client의 요청(Request)이 있을 때만 서버가 응답(Response)하여 해당 정보를 전송하고 곧바로 연결을 종료하는 방식입니다.
+    - Client가 요청을 보내는 경우에만 Server가 응답하는 단방향 통신으로 반대로 Server가 Client에게 요청을 보낼수는 없습니다.
 
 -양방향 통신인 Socket통신
-Server와 Client가 특정 Port를 통해 실시간으로 양방향 통신을 하는 방식입니다.<br>
-Http통신과는 다르게 Server와 Client가 Port를 통해 연결되어 있어서 실시간으로 양방향 통신을 할 수 잇습니다.<br>
-Streaming이나 실시간 채팅, 게임 등과 같이 즉각적으로 정보를 주고받는 경우에 사용됩니다.<br>
+    - Server와 Client가 특정 Port를 통해 실시간으로 양방향 통신을 하는 방식입니다.
+    - Http통신과는 다르게 Server와 Client가 Port를 통해 연결되어 있어서 실시간으로 양방향 통신을 할 수 잇습니다.
+    - Streaming이나 실시간 채팅, 게임 등과 같이 즉각적으로 정보를 주고받는 경우에 사용됩니다.
 
-Socket통신의 규칙
+### Socket통신의 규칙
 1. 먼저 기다리는 측을 Server라고 하며, Server에서는 Port를 열고 Client의 접속을 기다립니다.
 2. 그리고 접속을 하는 측을 Client라고 하며, Server의 IP와 Port에 접속하여 통신이 연결됩니다.
 3. Server와 Client 간의 통신은 Send, Receive의 형태로 주고받습니다.
 4. 그리고 통신이 끝나면 close()로 접속을 끊습니다.
 
-chat 패키지 생성
+## chat 패키지 생성
 
-#### MyServer 클래스 생성
+### MyServer 클래스 생성
 ```
 package chat;
 
@@ -389,17 +390,15 @@ public class MyServer extends Thread{
 }
 ```
 
-MyServer 코드에서는  ServerSocket과 Socket 두가지 소켓을 볼 수 있습니다.<br>
-서버소켓은 말 그대로 서버 프로그램에서 사용하는 소켓으로 ServerSocket 객체를 생성하여 클라이언트가 연결해오는 것을 기다립니다.<br>
-클라이언트가 연결해 올 때 마다 요청은 큐(Request Queue)에 쌓이고, 각각의 클라이언트에 연결해 accept() 함으로써 요청을 큐에서 꺼내고 Socket객체가 리턴됩니다.<br>
+- MyServer 코드에서는  ServerSocket과 Socket 두가지 소켓을 볼 수 있습니다.
+- 서버소켓은 말 그대로 서버 프로그램에서 사용하는 소켓으로 ServerSocket 객체를 생성하여 클라이언트가 연결해오는 것을 기다립니다.
+- 클라이언트가 연결해 올 때 마다 요청은 큐(Request Queue)에 쌓이고, 각각의 클라이언트에 연결해 accept() 함으로써 요청을 큐에서 꺼내고 Socket객체가 리턴됩니다.
+- 이렇게 리턴되는 Socket을 활용하여 클라이언트와 데이터를 주고받으며, 예시와 같은 환경에서는 Socket을 생성한 스레드에 주어서 클라이언트와 데이터를 주고 받습니다.
+- 서버를 열고 클라이언트가 접속하는 프로그램을 만들어보자
 
-이렇게 리턴되는 Socket을 활용하여 클라이언트와 데이터를 주고받으며, 예시와 같은 환경에서는 Socket을 생성한 스레드에 주어서 클라이언트와 데이터를 주고 받습니다.<br>
- 
-서버를 열고 클라이언트가 접속하는 프로그램을 만들어보자<br>
+## message 패키지 생성
 
-message 패키지 생성
-
-#### MyServer 클래스 생성
+### MyServer 클래스 생성
 ```java
 
 package message;
@@ -452,16 +451,8 @@ ServerSocket ss;
 	}
 }
 ```
-버퍼(buffer)
-- 데이터를 한 곳에서 다른 한 곳으로 전송하는 동안 일시적으로 그 데이터를 보관하는
-  임시 메모리영역
-- 입출력 속도 향상을 위해 버퍼 사용(빠른 이유는 아래 사진으로 설명)
-- 버퍼를 이용한 입력( Buffered Reader)
-- 버퍼를 이용한 출력( Buffered Writer)
 
-![image](https://user-images.githubusercontent.com/54658614/226521287-18ecb07a-124b-443c-ae75-4ac5c2a37742.png)
-
-#### MyClient 클래스 생성
+### MyClient 클래스 생성
 ```java
 package message;
 
@@ -514,10 +505,11 @@ public class MyClient {
 
 ```
 
-둘 이상의 클라이언트가 접속하고<br>
-클라이언트 간의 문자전달도 가능한 구조의 서버프로그램을 만들어보자.
+- 둘 이상의 클라이언트가 접속하고 클라이언트 간의 문자전달도 가능한 구조의 서버프로그램을 만들어보자.
 
-#### ChatServer클래스 생성
+## chat패키지 생성
+
+### ChatServer클래스 생성
 ```java
 public class ChatServer extends Thread{
 	ServerSocket ss;
@@ -593,7 +585,7 @@ public class ChatServer extends Thread{
 }
 
 ```
-#### ChatClient 클래스 정의
+### ChatClient 클래스 정의
 ```java
 public class ChatClient extends JFrame implements Runnable{
 
@@ -715,7 +707,7 @@ public class ChatClient extends JFrame implements Runnable{
 	}
 }
 ```
-#### CopyClient클래스 생성하기
+### CopyClient클래스 생성하기
 ```java
 public class CopyClient extends Thread{
 	Socket s;
@@ -762,4 +754,3 @@ public class CopyClient extends Thread{
 	}
 }
 ```
-

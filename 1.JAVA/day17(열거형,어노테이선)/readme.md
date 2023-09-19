@@ -1,4 +1,4 @@
-### 열거형
+# 열거형
 - 열거형은 상수를 가지고 생성되는 객체들을 한곳에 모아둔 하나의 묶음이다.
 - 상수를 사용자가 지정한 이름으로부터 0부터 순차적으로 증가시켜준다.(index값을 가진다)
 - 클래스처럼 보이게 하는 상수
@@ -8,7 +8,7 @@
 
 ex1_Enum 패키지 생성
 
-#### Item enum 생성
+### Item enum 생성
 ![image](https://user-images.githubusercontent.com/54658614/221763228-0f755180-bb54-4e30-853a-acb27ede920e.png)
 ![image](https://user-images.githubusercontent.com/54658614/221763289-9b65b891-2087-4bb3-a2cc-c9a13d6144a2.png)
 

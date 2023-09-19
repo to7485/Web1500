@@ -1,19 +1,16 @@
-## 상속
-api보기 – http://www.oracle.com 접속 – DownLoads마우스 오버 – 왼쪽에 Java for Developers클릭 - 
-우측 탭에 Java Resources 아래 APIs – Java SE7클릭
-상단의 Tree는 계층도이고, 중간에 See Also는 해당 클래스를 상속받는 객체들이다.
-계층도를 보면 Object가 최상위(단군 할아버지)인걸 알 수가 있다.
+# 상속
+- 상속이란 우리가 일반적으로 알고있는 의미와 비슷하다.
+- 부모가 자식에게 무언가를 물려주는 것을 상속이라고 부르는 것처럼, 자바에서도 부모 역할을 하는 클래스가
+- 자식 역할을 하는 클래스에게 클래스 멤버와 메서드를 물려주는것을 상속이라고 한다
+- 상속은 클래스를 재사용하기 때문에 중복을 줄여주고 수정을 최소화하는 특징을 가지고 있다.
+- 상속해주는 클래스를 부모클래스, 상위클래스, 기반클래스 라고한다.
+- 상속받는 클래스를 자식클래스, 하위클래스, 파생클래스 라고한다.
 
-상속이라 함은 부모가 보유하고 있는 재산 중 일부를 자식이 물려받는 것.<br>
-자바라고 하는 프로그래밍 언어에서도 부모자식관계가 존재하고 부모의 재산을 자식이 물려받을수 있도록 설계가 되어 있어요. 상속을 하면서 빼놓을 수 없는 개념인 오버라이드 라고 하는 개념이 있다.<br>
+## ex_inheritance 패키지 생성하기
+- 자바에서 상속을 구현하는 방법은 자식 클래스를 선언할 때, extends라는 키워드를 사용해 상속받을 클래스를 지명한다.
+- 자식 클래스에서 선택받은 클래스는 부모 클래스 역할을 하게 된다.
 
-### 패키지 ex_inheritance
-
-#### 1. extends(상속)<br>
-클래스 상속은 객체의 재사용이라는 장점뿐 아니라, 코드의 간결성을 제공해주는 객체지향 언어의 최고 장점이라 할 수 있다.<br>
-그러므로 잘 정의된 부모클래스(코드 진행하면서 설명)가 있다면 자식 클래스의 작성이 간편해진다는 장점이 있지렁<br>
-
-#### Parent 클래스 정의
+### Parent 클래스 정의
 ```java
 public class Parent {
 	private int money = 2000000000; //부모의 재산
@@ -24,13 +21,11 @@ public class Parent {
 }
 ```
 
-#### Child클래스 정의(Parent를 상속받는다)
+### Child클래스 정의(Parent를 상속받는다)
 
 ```java
 //public class Child{ 현재는 그냥 클래스 이름만 부모 자식인거지 진짜 부모자식은 아님
 public class Child extends Parent{
-
-//상속 : 부모가 가지고 있는 재산의 일부를 자식이 물려받는 것.
 //Child는 Parent클래스의 자식임을 명시하는 extends키워드를 사용한다.
 
 //자바는 단일상속체제로써 하나의 자식이 여러부모를 동시에 상속(extends)받는 것은 불가능
@@ -38,7 +33,7 @@ public class Child extends Parent{
 	String car = "아반떼";	
 }
 ```
-#### ExtendsMain클래스 정의
+### ExtendsMain클래스 정의
 
 ```java
 public class ExtendsMain {
@@ -53,7 +48,7 @@ public class ExtendsMain {
 		System.out.println(c1.money); 
 		System.out.println(c1.str);
     
-    //상속관계라고 할지라도 부모클래스는 자식의 재산을 마음대로 가져다가 		
+    		//상속관계라고 할지라도 부모클래스는 자식의 재산을 마음대로 가져다가 		
 		//사용할 수 없다.
 		Parent p1 = new Parent();
 		System.out.println(p1.money);
@@ -61,7 +56,6 @@ public class ExtendsMain {
    
 		//c1이 Parent와 상속관계라면
 		//instanceof 키워드를 통해서 true값을 얻을 수 있다.
-
 
 		//c1과 Parent 클래스의 주소가 같습니까?
 		if( c1 instancdof Parent) {
@@ -81,15 +75,12 @@ public class ExtendsMain {
 
 
 
-#### 단일 상속 체제
-1) 한명의 자녀가 두명의 부모를 갖는게 불가능 하다.<br>
-2) 언제 어떤 상황이 됐는 상속관계의 꼭대기에는 오브젝트가 있다.<br>
-오브젝트는 모든 타입을 받아들일 수 있는 최상위 객체다.<br>
+### 단일 상속 체제
+1. 한명의 자녀가 두명의 부모를 갖는게 불가능 하다.
+2. 언제 어떤 상황이 됐는 상속관계의 꼭대기에는 오브젝트가 있다.
+3. 오브젝트는 모든 타입을 받아들일 수 있는 최상위 객체다.
 
-
-----------------------------------------------------------------------예제 1
-
-#### Animal클래스 정의
+## Animal클래스 정의
 ```java
 public class Animal {
 
@@ -105,7 +96,7 @@ public class Animal {
 	
 }
 ```
-#### Cat클래스 정의(Animal상속)
+## Cat클래스 정의(Animal상속)
 ```java
 public class Cat extends Animal{
 	//고양이은 눈이 2개, 다리가 4개 이므로
@@ -113,7 +104,7 @@ public class Cat extends Animal{
 	String balance = "균형감각이 좋다.";
 }
 ```
-#### Lion클래스 정의(Animal상속)
+## Lion클래스 정의(Animal상속)
 ```java
 public class Lion extends Animal{
 	//사자도 눈이 2개, 다리가 4개 이므로
@@ -121,13 +112,13 @@ public class Lion extends Animal{
 	String galgi = "탈모걱정 ㄴㄴ";
 }
 ```
-#### Snake클래스 정의(Animal상속)
+## Snake클래스 정의(Animal상속)
 ```java
 public class Snake extends Animal{
 
 	String sensor = "감각이 발달";
 	//오버로드는 메서드의 중복정의
-	//메서드 오버라이딩: ‘메서드의 재정의’의 의미를 가진다.
+	//메서드 오버라이딩: '메서드의 재정의'의 의미를 가진다.
 	//상속관계의 객체에서 부모의 메서드를 자식이 가져와 사용하되
 	//이름은 그대로 두고, 내용한 현재 자식클래스의 사정에 맞도록 재정의 하는 것.
 	//오버라이딩 메서드는 내용을 제외하고는 부모의것과 완전히 동일해야 한다.
@@ -139,7 +130,7 @@ public class Snake extends Animal{
 	
 }
 ```
-#### AnimalMain클래스 정의
+## AnimalMain클래스 정의
 ```java
 public class AnimalMain {
 	public static void main(String[] args) {
@@ -163,8 +154,9 @@ public class AnimalMain {
 		
 	}//main
 ```
+
+## 오버라이딩 예제
 ```java
------------------------------------------------------------------------예제2
 
 //아주 간단한 오버라이딩 예제를 만들어 봅시다.
 	
@@ -222,13 +214,18 @@ public class CalMain {
 	}
 }
 ```
------------------------------------------------------------------------예제 3
-### super()의 활용
+# 상속에서의 생성자
+- 모든 클래스는 생성자를 가진다.
+- 그렇다면, 상속 관계에서 부모 클래스의 생성자와 자식 클래스의 생성자는 어떻게 사용해야 할까?
 
-이전에 이야기 했듯이 super는 부모클래스를 의미한다.<br>
-super()는 부모클래스의 생성자를 호출하는 것. 간단하게 super()를 알아보자.<br>
+## super
+- super 키워드는 부모 클래스로부터 상속받은 필드나 메소드를 자식 클래스에서 참조하는 데 사용하는 참조 변수이다.
+- 부모 클래스의 멤버와 자식 클래스의 멤버 이름이 같을 경우 super 키워드를 사용하여 구별할 수 있다.
 
-#### Parent클래스 정의
+### super()
+- this()가 같은 클래스의 다른 생성자를 호출할 때 사용된다면, super()메서드는 부모 클래스의 생성자를 호출할 때 사용한다.
+
+### Parent클래스 정의
 ```java
 public class Parent {
 	public Parent() {
@@ -238,7 +235,7 @@ public class Parent {
 ```
 ![image](https://user-images.githubusercontent.com/54658614/220525863-1dacfa56-1566-4f61-abf3-95609102dc9f.png)
 
-#### Child클래스 정의
+### Child클래스 정의
 ```java
 public class Child extends Parent{
 
@@ -249,7 +246,11 @@ public class Child extends Parent{
 	}//생성자
 }
 ```
-#### SuperMain클래스 정의
+- 자식 클래스로 객체를 생성하기 위해 기본 생성자가 호출되면, super()라는 메서드를 통해 부모클래스의 기본 생성자를 호출한다.
+- 그렇게 부모 객체를 먼저 생성한 후, 부모 객체를 감싸고 자식 객체를 생성한다.
+- 즉, 자식 객체 안에는 부모 객체가 들어있게 된다.
+
+### SuperMain클래스 정의
 ```java
 public class SuperMain{
 	public static void main(String[] args) {
@@ -257,8 +258,8 @@ public class SuperMain{
 	}//main
 }
 ```
-----------------------------------------------------------------------------
-#### Parent클래스에 코드 추가( 파라미터를 받는 생성자)
+
+### Parent클래스에 코드 추가( 파라미터를 받는 생성자)
 ```java
 public class Parent {
 	public Parent(int n) {
@@ -269,7 +270,7 @@ public class Parent {
 	}
 }
 ```
-#### Child클래스에 코드 추가
+### Child클래스에 코드 추가
 ```java
 public class Child extends Parent{
 	public Child() {
@@ -284,19 +285,16 @@ public class Child extends Parent{
 	}
 }
 ```
-#### SuperMain클래스 주석추가
+### SuperMain클래스 주석추가
 ```java
 public class SuperMain {
 	public static void main(String[] args) {
 		Child ch = new Child();
-		//자식클래스를 생성하면
-		//자식의 생성자가 호출되는데, 여기서는 자식클래스에서 super()로 
-		//부모의 생성자를 먼저 호출했으므로,
-		//부모클래스의 생성자에 먼저 접근하게 된다.
+
 	}
 }
 ```
-#### 상속과 super()를 이용한 문제
+## 상속과 super()를 이용한 문제
 Car 클래스는 gasGauge변수를 갖고 있고, 가스잔여량을 출력하는 함수인 showCurrentGauge()를 갖고 있다.<br>
 
 HybridCar 클래스는 electricGauge변수를 갖고 있고, Car 클래스를 상속하고 생성자를 생성할 때 gasGauge,electricGauge를 파라미터로 받는다.<br>
@@ -312,7 +310,7 @@ main에서 HybridWaterCar 객체를 생성하여 다음과 같은 결과를 출�
 잔여 전기량 : 30<br>
 잔여 물량 : 25<br>
 
-#### Car 클래스 생성
+### Car 클래스 생성
 ```java
 class Car {
 	private int gasolineGauge; // 변수에 private가 붙어 다른 메소드에서 접근X
@@ -326,7 +324,7 @@ class Car {
 	}
 }
 ```
-#### HybridCar 클래스 생성
+### HybridCar 클래스 생성
 ```java
 class HybridCar extends Car	{
 	private int electricGauge;
@@ -342,7 +340,7 @@ class HybridCar extends Car	{
 	}
 }
 ```
-#### HybridWaterCar 클래스 생성
+### HybridWaterCar 클래스 생성
 ```java
 class HybridWaterCar extends HybridCar {
 	private int waterGauge;
@@ -357,7 +355,7 @@ class HybridWaterCar extends HybridCar {
 	}
 }
 ```
-#### CarMain 클래스 생성
+### CarMain 클래스 생성
 ```java
 class Main {
 	public static void main(String[] args) {
@@ -368,53 +366,181 @@ class Main {
 ```
 [출처] [JAVA/자바] 상속 오버라이딩 예제|작성자 하늘달<br>
 
-### Object상속관계
-#### ExtendsEx1클래스 정의
+# 2차 상속
+- 우리는 누군가의 자식이 될 수 있지만 누군가의 부모도 될 수 있듯이,
+- 상속 역시 원한다면 다음 세대에게, 또 다음 세대로 이어질 수 있다.
+- 자바도 마찬가지로 한 번에 상속에서 끝내지 않고 2차,3차 ... N차까지 원하는 만큼 상속을 이어받을 수 있다.
+
+## Car 클래스
 ```java
-public class ExtendsEx1 {
-	// 현재 클래스의 특정 메서드가 어떤때는 String을 인자로 받고,
-	// 어떤때는 int형을 인자로 받는등, 상황에 따라 다른 인자값을 
-	// 받아야 한다면....
-	// 멤버변수를 어떻게 선언해야 할까?
-	// 오버로딩 하는 방법도 있지만 이런 방법도 있다규요
+package test3;
 
-	Object value; //자바 객체의 최상위인 Object형으로 변수생성
-
-	public Object getValue() {
-		return value;
-	}
-
-	public void setValue(Object value) {
-		this.value = value;
+public class Car {
+	public void ride() {
+		System.out.println("달립니다.");
 	}
 }
 ```
-#### ExtendsEx1_Main클래스 정의
+
+## Bus클래스
 ```java
-public class ExtendsEx1_Main {
+package test3;
+
+public class Bus {
+	
+	int peopleNum;
+
+	public Bus(int peopleNum) {
+		this.peopleNum = peopleNum;
+	}
+	
+	public void takePerson() {
+		System.out.println("승객이 버스에 탔습니다.");
+		peopleNum++;
+	}
+}
+```
+
+## SchoolBus클래스
+```java
+package test3;
+
+public class SchoolBus extends Bus {
+
+	public SchoolBus(int peopleNum) {
+		super(peopleNum);
+		// TODO Auto-generated constructor stub
+	}
+	
+	@Override
+	public void takePerson() {
+		super.takePerson();
+		System.out.println("학생들이 자리에 모두 착석하고 출발합니다.");
+	}
+	
+	@Override
+	public void ride() {
+		System.out.println("시속 50km/h로 천천히 달립니다.");
+	}
+	
+}
+```
+
+## CarMain 클래스
+```java
+package test3;
+
+public class CarMain {
 	public static void main(String[] args) {
-
-		ExtendsEx1 v1 = new ExtendsEx1();
-		v1.setValue("TEST");
-		// 인자가 Object이지만 String이 Object를
-		// 상속받았으므로 인자로 가능하다.
-
-		System.out.println(v1.getValue()); // TEST
-
-		//이번에는 정수(int)를 인자로 넣어보자!!
-		ExtendsEx1 v2 = new ExtendsEx1();
-		v2.setValue(100); // AutoBoxing(자동 형변환 : 기본자료형->객체)
-
-		//int i = (Integer)v2.getValue();//Object를 Integer로 형변환 –강제 형변환
-		//예전엔 이렇게 객체로 캐스팅하여 썼어야 했다.↑↑↑↑
-
-		//지금은 이렇게 기본자료형으로 캐스팅해도 사용할수 있도록 바뀐 듯
-		//UnBoxing – 객체 -> 기본자료형
-		int i = (int)v2.getValue();
-		System.out.println(i+1);
+		SchoolBus sb = new SchoolBus(10);
+		sb.takePerson();
+		sb.ride();
 	}
 }
 ```
 
+# final 클래스와 final 메서드
+- final키워드는 상수를 뜻하는 키워드로, 필드 앞에 선언하여 사용한다.
+- 초기화 이후 값을 바꿀 수 없으며 시간이 지나도 처음 정의된 상태가 변하지 않는다는 의미를 가지고 있다.
+- 이 키워드는 메서드와 클래스에도 사용할 수 있다.
 
+## final 클래스
+- 클래스 앞에 final을 추가할 경우, 이 클래스는 상속의 마지막 클래스임을 뜻한다.
+- 어떠한 클래스도 이 클래스의 자식 클래스가 될 수 없고, 자연스럽게 이 클래스는 어떤 클래스의 부모클래스가 될 수 없다.
 
+```java
+package test4;
+
+public final class Parent {
+
+}
+```
+
+```java
+package test4;
+
+public class Child  extends Parent{
+
+}
+```
+
+## final 메서드
+- 메서드 앞에 final을 추가하게 되면 상속은 받더라도, 오버라이딩 할 수 없는 메서드를 뜻한다.
+- 즉, 자식 클래스이더라도 부모 클래스에 final로 선언된 메서드는 자식 클래스에서 오버라이딩 하지 못하고 있는 그대로 사용해야 한다.
+
+### Book클래스
+```java
+package test4;
+
+public class Book {
+	String title;
+	String author;
+	
+	public Book(String title, String author) {
+		this.title = title;
+		this.author = author;
+	}
+	
+	public final void info_title() {
+		System.out.println("책의 제목은 " + title + "입니다.");
+	}
+	
+	public void info_author() {
+		System.out.println("책의 저자는 " + author + "입니다.");
+	}
+}
+```
+
+### Comic클래스
+```java
+package test4;
+
+public class Comic extends Book{
+
+	boolean isColor;
+	
+	public Comic(String title, String author, boolean isColor) {
+		super(title, author);
+		this.isColor = isColor;
+		
+	}
+	
+	//부모클래스에서 final로 선언된 메서드를 오버라이딩 시도하면 에러가 발생한다.
+//	@Override
+//	public void info_title(){
+//		
+//	}
+	
+	@Override
+	public void info_author() {
+		System.out.println("이 만화책의 저자는 " + author+"입니다.");
+	}
+	
+	public void info_color() {
+		if(isColor) {
+			System.out.println("이 만화책은 컬러입니다.");
+		} else {
+			System.out.println("이 만화책은 흑백입니다.");
+		}
+	}
+ 
+}
+
+```
+
+### BookMain
+```java
+package test4;
+
+public class BookMain {
+	public static void main(String[] args) {
+		Comic comicBook = new Comic("주머니 괴물", "미상", true);
+		comicBook.info_title();
+		comicBook.info_author();
+		comicBook.info_color();
+	}
+}
+```
+
+### 생성자에는 final을 추가할 수 없다.
+- 생성자는 접근제한자(public,protected,private)만 추가할 수 있다.

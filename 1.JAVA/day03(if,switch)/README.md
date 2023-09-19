@@ -1,39 +1,55 @@
-## 제어문
-- 프로그램의 흐름을 제어하는 문장
+# 제어문
+- 일반적으로 프로그램에 포함된 실행문은 순차적으로 실행이 된다.
+- 하지만 순차적으로만 실행한다면 프로그램이 매우 길어지거나 표현하기 어려운 상황이 발생할 수 있다.
+- 예를 들어, 어떤 변수에 10을 더하는 명령을 1,000번 수행해야 하는 경우, 순차적으로만 실행하면 실행문을 1,000번 적어야 한다.
+- 또한 선택의 개념을 구현하기가 힘듭니다.
+- 제어문은 실행문의 순서를 변경하는 것으로 조건문과 반복문이 존재합니다.
   - 조건문 : if,switch
   - 반복문 : for,while, do-while
 
-## if문
+## 조건문
+- 조건식에 따라서 프로그램의 흐름을 제어할 수 있는 문법이다.
+- 삼항연산자에서 미리 살펴봤듯이, 조건식의 true 또는 false라는 결과에 따라서 어떤 구문을 실행할지 결정한다.
+
+## 단순 if문
+- 기본형
+
 ```java
 기본형
 if(조건식){
   조건식이 참일 때 실행할 문장.
 }
+
+//만약 실행해야 하는 명령이 하나라면 중괄호를 생략할 수 있다.
+if(조건식)
+  조건식이 참일 때 실행할 문장.
+
+if(조건식)조건식이 참일 때 실행할 문장;
+
 ```
 
-### 단순 if문
+- 조건식에는 논리형으로 결과를 확인할 수 있는 모든 식을 넣을 수 있다.
+- 조건식의 값이 true라면 {}안에 있는 코드를 실행한다.
+
 ```java
-
-int n = 50;
-String str = null; 
-//String은 처음이지? 일단 똑같이 쓰고 쌍따옴표 안에 문자열 넣는거야
-//String의 기본값은 null, String은 기본자료형이 아니라는것만 일러두자.
-		
-if(n == 50){
-    str = "n은 50입니다."; 
+int result = 0;
+if(3 > 2) {
+	result = 3;
 }
-//괄호안의 값이 true일 경우엔 그 아래쪽 연산을 수행
-//괄호안의 값이 false일 경우엔 아래쪽 연산을 수행하지 않음
-//괄호안에는 무조건 true나 false의 결과를 가지는 연산이 들어와야 함
-		
-//위에 결과 보여주고 if추가, n값 51로 변경후 다시 보여주기
-if(n != 50){
-    str = "n은 50이 아닙니다.";
-}		
-System.out.println(str);
+System.out.println(result);
 ```
 
-### if - else문
+```java
+Scanner sc = new Scanner(System.in);
+
+int age = sc.nextInt();
+if(age > 19) {
+	System.out.println("성인입니다.");
+}
+System.out.println("프로그램을 종료합니다.");
+```
+
+## if - else문
 ```java
 기본형
 if(조건식){
@@ -43,49 +59,75 @@ if(조건식){
 }
 ```
 ```java
-if ~ else문 : 
+int num = 5;
 
-int n = 49;
-String str = null;//
-		
+if(num > 4) {
+	System.out.println(num+"은 4보다 큽니다.");
+} else {
+	System.out.println(num+"은 4보다 작습니다.");
+}
+---------------------------------------------------------
+int a = 4;
+int b = 10;
 
-if(++n >= 50){
-    str = "n은 50이상의 수";
+if(a > b) {
+	System.out.println("a가 b보다 큽니다.");
+} else {
+	System.out.println("a가 b보다 작거나 같습니다.");
 }
-else{
-    str = "n은 50미만의 수";
+---------------------------------------------------------
+int x = 10;
+int y = 7;
+int max = 0;
+if(x > y) {
+	max = x;
+} else {
+	max = y;
 }
-		
-System.out.println(str);
+
+System.out.printf("%d 와 %d 중에 큰 수는 %d 입니다.",x,y,max);
 ```
 
-#### 문제
-변수 age에 나이를 대입하고, 30세 이상이면...<br>
-“드실만큼 드셨네요”, 그렇지 않으면 “더 드세요”를 출력하는 if문을 구현 한 후<br>
-마지막으로 “감사합니다”라는 문장을 출력해보자.<br>
+### 문제
+- 키보드에서 나이를 입력받아 age라는 변수에 저장한다.
+- 나이가 20살 이상이면 성인입니다.
+- 나이가 20살 보다 어리면 미성년자 입니다. 출력하기.
 
 ```java
-int age = 30;
+Scanner sc = new Scanner(System.in);
+System.out.print("나이를 입력하세요 : ");
+int age = sc.nextInt();
 
-if(age >= 30){
-	System.out.println("드실만큼 드셨네요ㅋ");
-}else{	
-	System.out.println("좀 더 드셔야겠어요ㅋ");
+if(age > 19) {
+	System.out.println("성인입니다.");
+}else {
+	System.out.println("미성년자입니다.");
 }
-System.out.println("감사합니다.");
 ```
 
-#### 문제2
-위 코드를 삼항연산자로 작성해보세요.
+### 문제2
+- 삼항연산자로 만들었던 X개의 농구공을 담기 위한 박스의 개수 구하기
+- 키보드에서 값을 입력받아 ball 변수에 저장하기
+- 입력받은 공의 개수에 따라 보관에 필요한 박스의 개수를 구하기
+
 ```java
-//if-else문을 배운 순간 삼항연산자는 사용하지 않아도 됨
-//모든 if – else문은 삼항연산자로 바꿀수 있고 반대로도 됨
-//if-else를 썼을 때 보다 코드가 짧아지는 경우가 있어서 알고 있으면 좋다.
-age >= 30 ? “드실만큼 드셨군요” : “더 드셔도...”;
+Scanner sc = new Scanner(System.in);
+System.out.print("공의 개수를 입력하세요 : ");
+int ball = sc.nextInt();
+int box = 0;
+if(ball % 5 == 0) {
+	box = ball /5;
+	System.out.printf("필요한 박스의 개수는 %d개 입니다.",box);
+}else {
+	box = ball /5+1;
+	System.out.printf("필요한 박스의 개수는 %d개 입니다.",box);
+}
 ```
 
-### if - else if
-- 비교해야할 조건이 여러개 있는 경우
+## if - else if
+- 비교해야할 조건이 여러개 있는 경우 사용하는 문법
+- 물론 if문안에 두 개 이상의 조건식과 논리연산자를 사용할 수도 있지만
+- 더욱 코드를 간결하게 하고 가독성을 높이기 위한 방법으로 if - else if문을 구현합니다.
 ```java
 기본형
 if(조건식1){
@@ -96,6 +138,48 @@ if(조건식1){
   조건식1,2가 거짓이고 조건식3이 참일 때 실행할 문장.
 } else {
   위의 조건이 모두 거짓일 때 실행할 문장
+}
+```
+- else - if문의 개수에는 제한이 없습니다.
+- 하지만 너무 많은 else - if문을 사용한다면 프로그램의 실행 속도가 현저히 느려질 수 있기 때문에 다른 방법을 함께 고려해야 한다.
+- if - else if문의 가장 마지막에 작성하는 else블록은 필요없다면 생략이 가능하다.
+
+```java
+int favorite = 7;
+
+if(favorite < 5) {
+	System.out.println("좋아하는 숫자가 5보다 작습니다.");
+}else if(favorite > 5) {
+	System.out.println("좋아하는 숫자는 5보다 큽니다.");
+}else {
+	System.out.println("좋아하는 숫자는 5입니다.");
+}
+```
+```java
+int favorite = 7;
+
+if(favorite > 5) {
+	System.out.println("좋아하는 숫자가 5보다 큽니다.");
+}else if(favorite == 7) {
+	System.out.println("좋아하는 숫자는 7입니다.");
+}
+```
+- elseif에 있는 조건문이 더 정확함에도 불구하고 if문에 있는 조건식이 true가 되버리기 때문에
+- elseif에 있는 조건식은 실행되지 못하고 if-else if문을 빠져나간다.
+- 보다 효율적인 흐름으로 제어하기 위해 if문과 elseif문의 조건문의 위치를 바꿔야 한다.
+
+```java
+Scanner sc = new Scanner(System.in);
+System.out.print("나이를 입력하세요 : ");
+int age = sc.nextInt();
+if(age > 19) {
+	System.out.println("성인입니다.");
+} else if(age > 13) {
+	System.out.println("청소년입니다.");
+} else if(age > 6) {
+	System.out.println("어린이입니다.");
+} else {
+	System.out.println("유아입니다.");
 }
 ```
 
@@ -115,8 +199,7 @@ else if(num >= 60)
 System.out.println("성적은 D입니다.");
 
 else
-System.out.println("성적은 F입니다.");
-		
+System.out.println("성적은 F입니다.");		
 ```
 
 ### if문의 중첩
@@ -130,27 +213,7 @@ if(조건식1){
   }
 }
 ```
-```java
-//숫자를 하나 입력받아서
-//해당 숫자가 5의 배수이면서 홀수이면 "5의 배수이면서 홀수입니다."
-//홀수가 아니면 "5의 배수이면서 짝수입니다" 출력
-//5의 배수가 아니면 "5의 배수가 아닙니다" 출력하는 프로그램 작성하기
-Scanner sc = new Scanner(System.in);
 
-System.out.print("정수를 입려하세요 : ");
-int n = sc.nextInt();
-
-if( n % 5 == 0) {
-	if(n % 2 != 0) {
-		System.out.println("5의 배수이면서 홀수입니다.");
-	} else {
-		System.out.println("5의 배수이면서 짝수입니다.");
-	}
-} else {
-	System.out.println("5의 배수가 아닙니다.");
-}
-
-```
 ```java
 int num = 5;
 if(num <=10){
@@ -161,9 +224,10 @@ if(num <=10){
 ```
 
 ## switch문
-if문과 비슷하지만 if문은 괄호안에 인자값이 true, 혹은 false로 결정되는 조건식이 들어가야 하고<br>
-Switch문은 인자값으로 조건이 아닌 비교할 값이 들어가야 한다.<br>
-특정 값을 바로 찾아 들어가기 때문에 if문에 비해 처리속도가 빠르다.<br>
+- if문과 비슷하지만 if문은 괄호안에 인자값이 true, 혹은 false로 결정되는 조건식이 들어가야 한다.
+- Switch문은 인자값으로 조건이 아닌 비교할 값이 들어가야 한다.
+- 특정 값을 바로 찾아 들어가기 때문에 if문에 비해 처리속도가 빠르다.
+
 ```java
 기본형
 switch(비교값){
@@ -206,7 +270,7 @@ if문은 범위에 따라서 조건을 비교하는데 효과적이고<br>
 switch문은 하나의 값에 따라서 조건을 비교하는데 효과적이다.<br>
 
 ```java
-char c = ‘A’;
+char c = 'A';
 
 switch (c) { //인자로 비교할 값이 들어와야 한다.
 
@@ -269,8 +333,24 @@ break;
 	
 System.out.println(result);
 ```
+## 만약 switch문에 break가 없다면 어떻게 될까?
+```java
+int num = 1;
 
-#### 정수형 변수를 하나 만들고 해당 달이 몇일까지 있는지 switch문을 이용해서 작성하시오.
+switch(num) {
+case 1:
+	System.out.println("num은 1입니다.");
+case 7:
+	System.out.println("num은 7입니다.");
+default:
+	System.out.println("num은 1도 7도 아닙니다.");	
+}
+```
+- 조건에 맞는 case를 시작으로 뒤따라오는 모든 case구문이 실행됩니다.
+- 따라서 개발자는 break; 키워드를 적절하게 이용할 수 있어야 합니다.
+
+### 문제1
+- 정수형 변수를 하나 만들고 해당 달이 몇일까지 있는지 switch문을 이용해서 작성하시오.
 ```java
 int month = 4
 switch(month) {
@@ -287,7 +367,10 @@ case2:
   System.out.println( month + “월은 28일 까지 있습니다.”);
 }
 ```
-#### 두개의 정수형 변수를 초기화 한다 (값은 자유), 그리고 연산자를 담아줄 문자열 변수를 만든다. switch문을 이용하여 정수의 연산을 수행하는 코드를 작성해보자.
+### 문제2
+- 두개의 정수형 변수를 초기화 한다 (값은 자유)
+- 그리고 연산자를 담아줄 문자열 변수를 만든다.
+- switch문을 이용하여 정수의 연산을 수행하는 코드를 작성해보자.
 ```java
 
 실행결과 :
@@ -299,25 +382,25 @@ String op = "*";
 	
 switch (op) {
 
-case "+":	System.out.println(num1 + " + " + num2 + " = " + (num1 + num2));
+case "+":
+	System.out.println(num1 + " + " + num2 + " = " + (num1 + num2));
 //(num1 + num2)괄호로 안묶으면 결과값이 더해지지 않고 문자열로 붙어서 나온다.	
     break;
 
-case "-":	System.out.println(num1 + " - " + num2 + " = " + (num1 – num2));	
+case "-":
+	System.out.println(num1 + " - " + num2 + " = " + (num1 – num2));	
     break;
 	
-case "*":	System.out.println(num1 + " * " + num2 + " = " + (num1 * num2));	
+case "*":
+	System.out.println(num1 + " * " + num2 + " = " + (num1 * num2));	
     break;
 	
-case "/":	System.out.println(num1 + " / " + num2 + " = " + (num1 / num2));	
+case "/":
+	System.out.println(num1 + " / " + num2 + " = " + (num1 / num2));	
     break;
 	
-default:	result = "올바른 연산자가 아닙니다.";	
+default:
+	System.out.println("올바른 연산자가 아닙니다.");
     break;
 }	
 ```
-
-
-
-
-
