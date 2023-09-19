@@ -139,7 +139,7 @@ File > New > Dynamic Web Project
 - \<!-- 로 시작해서 --\>로 마무리 합니다.
 - 주석은 여러줄 입력 할수 있습니다.
 
-```
+```html
 예)
 <!DOCTYPE html>
 <html>
@@ -169,7 +169,7 @@ File > New > Dynamic Web Project
 ![image](https://user-images.githubusercontent.com/54658614/226808086-fb78d205-363b-4f50-a8b3-739b11d256b3.png)
 
 
-```
+```html
 <!DOCTYPE html>
 <html>
   <head>
@@ -198,7 +198,7 @@ File > New > Dynamic Web Project
 	- 예) \<meta charset=’utf-8’\>
 
 	- 또한 초기 페이지 렌더링시에 불러와야 할 외부 링크를 정의합니다.(css, javascript)
-	```
+	```html
 	<link rel="stylesheet" type="text/css" href="style.css">
 	<script src="common.js"></script>
 	```
@@ -220,7 +220,7 @@ File > New > Dynamic Web Project
 
 - HTML 요소는 일반적으로 태그라는 명칭이 익숙할 수 있습니다.
 -  HTML 요소는 일반적으로 시작 태그와 닫힘 태그로 정의가 됩니다. 다만 시작 태그와 닫힘태그가 없는 유일한 태그도 있습니다.
-```
+```html
    (예 - 줄바꿈 태그 <br> 또는 <br />)
    <태그> 내용 </태그>
 ```
@@ -231,47 +231,47 @@ File > New > Dynamic Web Project
 - 특정 태그에서의 속성이나 사전 정의된 속성은 적용된 기능으로서 추가정보를 활용합니다.
 
 - 예) 특정기능으로써 속성 예시 a태그, input 태그, img 태그
-```
+```html
 <a href='https://www.naver.com' target='_blank'>네이버</a>
 <input type='text' name='subject'>
 <img src='이미지 경로'>
 ```
 
 - 예) 추가적인 정보로써 속성 예시
-```
+```html
 <div data-sido='인천광역시'>인천광역시</div>
 ```
 
-#### HTML 속성 예시
+### HTML 속성 예시
 - href  - 이동할 페이지 링크를 지정할 수 있습니다.
-```
+```html
 <a href='https://www.naver.com'>네이버</a>
 ```
 
 s- rc - 이미지 경로를 지정할 수 있습니다.
-```
+```html
 <img src='photo.jpg'>
 ```
 - width, height - 요소의 너비, 높이를 지정합니다.
-```
+```html
 <img src='photo.jpg' width='500' height='600'>
 ```
 
 - alt -이미지 대체 문구(이미지가 노출이 되지 않는 경우에 대체 노출되는 문구)
-```
+```html
 <img src='photo.jpg' alt='배경사진'>
 ```
 
 - style - 요소에 직접 스타일을 지정할 수 있습니다(CSS 인라인 형태)
-```
+```html
 <p style='color: red;'>빨간색 글씨</p>
 ```
 - lang - 웹페이지의 언어를 선언할 수 있습니다. 다만 <html>태그에만 지정할 수 있습니다.
-```
+```html
 <html lang="ko">
 ```
 - title - 툴팁 형태로 노출되는 추가 정보를 지정할 수 있습니다.
-```
+```html
 <p title='툴팁 메세지로 노출됩니다.'>안녕하세요</p>
 ```
 	
@@ -288,7 +288,7 @@ s- rc - 이미지 경로를 지정할 수 있습니다.
 - 헤더는 글의 제목이나 부제목을 표기할 때 사용합니다.
 - 태그는 h1~h6까지 있으며, 숫자가 작을수록 크기가 큽니다.
 
-```
+```html
 <!DOCTYPE html>
 <html>
 	<head>
@@ -322,7 +322,7 @@ s- rc - 이미지 경로를 지정할 수 있습니다.
 - 아래 위 또는 왼쪽 오른쪽에 공백(margin)을 지정할 수 있습니다.
 - 대표적으로 \<div\> 태그는 block-level 요소 입니다.
 - block-level 태그(요소) 
-```
+```html
 <address>
 <article>
 <aside>
@@ -360,7 +360,7 @@ s- rc - 이미지 경로를 지정할 수 있습니다.
 - 공간을 지정할 수 없습니다. 요소 안에 있는 내용만큼의 공간만 차지합니다.
 - 위 아래 공백(margin)을 지정할 수 없으나, 내부 공백(padding)은 지정할 수 있습니다.
 - 대표적으로 \<span\>태그는 inline-level 요소 입니다.
-```
+```html
 <a>
 <abbr>
 <acronym>
@@ -396,13 +396,13 @@ s- rc - 이미지 경로를 지정할 수 있습니다.
 <var>
 ```
 
-#### block, inline 태그 실습
+### block, inline 태그 실습
 
 ### HTML 문단(Paragrahs) 태그
 - 하나의 문단을 표기 표기하는 용도로 사용하며 \<p\>~\</p\> 형태로 사용합니다.
 - 문단을 나누는 용도로 사용하는 태그이므로 \<p\> 태그 전 후로 공백이 추가 됩니다.
 
-```
+```html
 <!DOCTYPE html>
 <html>
 	<head>
@@ -467,8 +467,8 @@ s- rc - 이미지 경로를 지정할 수 있습니다.
  
 
 ### href 속성
-HTML <a>태그는 하이퍼링크를 정의합니다. a 태그에서 가장 중요한 속성(attribute)는 href 이며 페이지를 이동할 링크(URL)을 지정할 수 있습니다.
-```
+- <a>태그는 하이퍼링크를 정의합니다. a 태그에서 가장 중요한 속성(attribute)는 href 이며 페이지를 이동할 링크(URL)을 지정할 수 있습니다.
+```html
 <a href='https://www.naver.com'>네이버</a>
 ```
 
@@ -501,7 +501,7 @@ HTML <a>태그는 하이퍼링크를 정의합니다. a 태그에서 가장 중�
 ### width, height 속성
 - 이미지의 너비와 높이를 지정할 수 있습니다. 다만 이미지의 사이즈는 속성으로 지정하기 보다는 CSS Style로 width, height를 지정하는것이 좋습니다.
 
-```
+```html
 <!DOCTYPE html>
 <html>
 	<head>
@@ -523,8 +523,9 @@ HTML <a>태그는 하이퍼링크를 정의합니다. a 태그에서 가장 중�
 - tr은 데이터의 행 td, 
 - th는 데이터의 열로 생각할 수 있습니다.
 - th는 테이블 헤더로 테이블 각 열을 대표하는 셀
-- 또한 테이블 태그는 thead - 헤더영역, tbody - 본문영역, tfoot - 본문영역으로 구분하여 사용할 수 있습니다. 
-```
+- 또한 테이블 태그는 thead - 헤더영역, tbody - 본문영역, tfoot - 본문영역으로 구분하여 사용할 수 있습니다.
+
+```html
 <!DOCTYPE html>
 	<html>
 		<head>
@@ -579,8 +580,8 @@ HTML <a>태그는 하이퍼링크를 정의합니다. a 태그에서 가장 중�
 		</body>
 	</html>
 ```
-테이블 열 합치기
-```
+- 테이블 열 합치기
+```html
 <!DOCTYPE html>
 	<html>
 		<head>
@@ -603,9 +604,9 @@ HTML <a>태그는 하이퍼링크를 정의합니다. a 태그에서 가장 중�
 		</body>
 	</html>
 ```
-테이블 행 합치기
+- 테이블 행 합치기
 
-```
+```html
 <!DOCTYPE html>
 	<html>
 		<head>
@@ -633,7 +634,7 @@ HTML <a>태그는 하이퍼링크를 정의합니다. a 태그에서 가장 중�
 - 순서없는 리스트(Unordered HTML List)
 - 순서 없는 리스트는 <ul>태그로 시작하며 리스트 항목들은 <li>~</li> 태그를 사용합니다.
 
-```
+```html
 예)
 <ul>
 	<li>홍길동</li>
@@ -662,7 +663,7 @@ HTML <a>태그는 하이퍼링크를 정의합니다. a 태그에서 가장 중�
 	- none - 구분값 없음
 
 - 적용방식
-```
+```html
 <ul style="list-style-type:disc 또는 circle, square, none 중 하나 입력">
 ```
 
@@ -677,13 +678,13 @@ HTML <a>태그는 하이퍼링크를 정의합니다. a 태그에서 가장 중�
 - i - 소문자 로마 숫자 형식으로 표시됩니다.
 
 - 적용방식
-```
+```html
 <ol type="1 또는 A, a, I, i 중 하나 입력">
 ```
 
 - 시작번호 지정할 경우 start="시작번호"로 지정하며 숫자를 변경할 경우 \<li value="변경숫자"\>로 입력합니다.
 
-```
+```html
 예) 
 <!-- ol(Ordered List) : 순위, 게시판 등의 순서목록 -->
 <ol>
@@ -693,8 +694,8 @@ HTML <a>태그는 하이퍼링크를 정의합니다. a 태그에서 가장 중�
 </ol>
 ```
 
-#### 깊이가 있는 리스트
-```
+### 깊이가 있는 리스트
+```html
 <!DOCTYPE html>
 <html>
 	<head>
@@ -734,8 +735,8 @@ HTML <a>태그는 하이퍼링크를 정의합니다. a 태그에서 가장 중�
 	</body>
 </html>
 ```
-#### 깊이가 있는 리스트 실습
-```
+### 깊이가 있는 리스트 실습
+```html
 <!DOCTYPE html>
 <html>
 	<head>
@@ -777,7 +778,7 @@ HTML <a>태그는 하이퍼링크를 정의합니다. a 태그에서 가장 중�
 - 각 행은 \<dt\>~\</dt\>(항목명)
 - \<dd\>~\</dd\>(항목 설명)으로 구성되어 있습니다.
 
-```
+```html
 예)
 <!DOCTYPE html>
 <html>
@@ -802,7 +803,7 @@ HTML <a>태그는 하이퍼링크를 정의합니다. a 태그에서 가장 중�
 - 다른 태그와 다르게 특별한 기능을 갖고 있지는 않지만, 가상의 레이아웃을 설계하는데 쓰이며 주로 CSS와 연동하여 쓰입니다.
 
 #### div 실습
-```
+```html
 <!DOCTYPE html>
 <html>
 	<head>
