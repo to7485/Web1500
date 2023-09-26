@@ -156,6 +156,10 @@ Spring은 아래 그림과 같이 기본 틀을 제공하고 필요한 기능들
 
 ![image](https://user-images.githubusercontent.com/54658614/236692694-aa542227-82db-459a-83bc-20951b036df0.png)
 
+# pom.xml
+- Project Object Model의 약자로 프로젝트의 다양한 정보를 처리하기 위한 객체 모델이다.
+- pom.xml에는 프로젝트 관리 및 빌드에 필요한 환경 설정, 의존성 관리 등의 정보를 기술한다.
+
 ## pom.xml 수정하기
 ```
 <?xml version="1.0" encoding="UTF-8"?>
