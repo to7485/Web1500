@@ -168,10 +168,12 @@ Spring은 아래 그림과 같이 기본 틀을 제공하고 필요한 기능들
 	<packaging>war</packaging>
 	<version>1.0.0-BUILD-SNAPSHOT</version>
 	<properties>
+//////////////////////////////////////////////////////////////////////////////////////////////////////
 		<java-version>11</java-version>
 		<org.springframework-version>5.1.20.RELEASE</org.springframework-version>
 		<org.aspectj-version>1.9.0</org.aspectj-version>
 		<org.slf4j-version>1.7.25</org.slf4j-version>
+//////////////////////////////////////////////////////////////////////////////////////////////////////
 	</properties>
 	<dependencies>
 	
@@ -250,7 +252,7 @@ Spring은 아래 그림과 같이 기본 틀을 제공하고 필요한 기능들
 			<artifactId>javax.inject</artifactId>
 			<version>1</version>
 		</dependency>
-				
+//////////////////////////////////////////////////////////////////////////////////////////////////////				
 		<!-- Servlet -->
 		<dependency>
 			<groupId>javax.servlet</groupId>
@@ -269,7 +271,7 @@ Spring은 아래 그림과 같이 기본 틀을 제공하고 필요한 기능들
 			<artifactId>jstl</artifactId>
 			<version>1.2</version>
 		</dependency>
-	
+//////////////////////////////////////////////////////////////////////////////////////////////////////	
 		<!-- Test -->
 		<dependency>
 			<groupId>junit</groupId>
