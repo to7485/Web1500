@@ -51,11 +51,37 @@ Spring은 아래 그림과 같이 기본 틀을 제공하고 필요한 기능들
 - Maven이란 자바용 프로젝트 관리 도구이이다.
 - Maven은 Apache사에서 만든 빌드툴(build tool)이다
 - pom.xml파일을 통해 정형화된 빌드 시스템으로 프로젝트 관리를 해준다.
+- 필요한 라이브러리를 pom.xml에 정의해 놓으면 내가 사용할 라이브러리뿐만 아니라
+- 해당 라이브러리가 작동하는 데에 필요한 다른 라이브러리들까지 관리하여 네트워크를 통해 자동 다운을 해준다.
 - 프로젝트의 전체적인 라이프 사이클을 관리한다.
 
 ## 빌드
-프로젝트를 위해 작성한 Java코드나 여러 자원들(.xml, .jar, .properties)를 JVM이나 톰캣 같은 WAS가 인식할 수 있는 구조로 패키징 하는 과정 및 결과물이다.<br>
-또 단순히 컴파일 해주는 작업 뿐만 아니라, 테스팅, 검사, 배포까지 일련의 작업들을 통틀어 빌드라고 한다.<br>
+- 프로젝트를 위해 작성한 Java코드나 여러 자원들(.xml, .jar, .properties)를 JVM이나 톰캣 같은 WAS가 인식할 수 있는 구조로 패키징 하는 과정 및 결과물이다.
+- 또 단순히 컴파일 해주는 작업 뿐만 아니라, 테스팅, 검사, 배포까지 일련의 작업들을 통틀어 빌드라고 한다.
+- 빌드 순서는 compile -> test -> package순으로 진행된다.
+- compile은 src/main/java 디렉토리 아래의 모든 소스 코드를 컴파일 하는 과정이다.
+- test는 src/test/java, src/test/resources 테스트 자원 복사 및 테스트 소스를 컴파일 하는 과정이다.
+- packaging단계는 컴파일과 테스트가 완료된 후에 jar, war같은 형태로 압축하는 작업이다.
+
+## Maven의 특징
+- 빌드 과정을 쉽게 만들기
+- 정형화된 빌드 시스템 제공
+- Maven은 Pom과 플러그인 세트를 사용하여 프로젝트를 빌드한다.
+- 양질의 프로젝트 정보 제공
+- 더 나은 개발
+
+## 장점
+- 편리한 의존성 라이브러리
+- 정해진 빌드 방법을 사용하여 협업에서 유리하게 작용
+- 다양한 플러그인을 통해 많은 작업이 자동화됨
+
+
+![image](https://github.com/to7485/Web1500/assets/54658614/657b5d33-676c-4432-9050-46cce1db3f38)
+
+## Maven LifeCycle
+
+![image](https://github.com/to7485/Web1500/assets/54658614/36ac9d2d-2ef5-4f5d-b9d1-346837007274)
+
 
 * * *
 
@@ -160,8 +186,95 @@ Spring은 아래 그림과 같이 기본 틀을 제공하고 필요한 기능들
 - Project Object Model의 약자로 프로젝트의 다양한 정보를 처리하기 위한 객체 모델이다.
 - pom.xml에는 프로젝트 관리 및 빌드에 필요한 환경 설정, 의존성 관리 등의 정보를 기술한다.
 
-## pom.xml 수정하기
+## pom.xml의 최소한의 구성
+```xml
+<project>
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.example</groupId>
+    <artifactId>maven-pom-project</artifactId>
+    <version>1.0-SNAPSHOT</version>
+</project>
 ```
+- project,modelVersion, groupId, artifactId,version은 메이븐이 허용한 최소값이다.
+
+## pom.xml의 기본속성 태그
+```xml
+<project></project>
+```
+- 프로젝트의 정보를 기술한다.
+
+```xml
+<modelVersion>4.0.0</modelVersion>
+```
+- 4.0.0이라고 적혀있는 것은 maven의 pom.xml의 모델 버전이다.
+- Maven 1.x버전들은 3.0.0모델을 사용하였지만 Maven 2.x, Maven 3.x는 4.0.0버전을 사용한다.
+
+```xml
+<groupId>org.example</groupId>
+```
+- 프로젝트를 생성한 그룹명으로 제작사와 회사, 단체 등을 식별하기 위한것이다.
+
+```xml
+<artifactId>maven-pom-project</artifactId>
+```
+- 버전정보를 생략한 jar파일의 이름이다.
+
+```xml
+<version>4.0.0</version>
+```
+- 명시된 그룹의 artifact버전을 표기한다.
+- 숫자와 점으로 이루어진(4.0.0)일반적인 버전 형태를 사용한다.
+
+```xml
+<packaging>jar</packaging>
+```
+- 프로젝트를 어떤 형태로 패키징할지 지정한다.(jar, war, zip등...)
+
+```xml
+<properties>
+	<spring.maven.artifact.version>4.3.16.RELEASE</spring.maven.artifact.version>
+</properties>
+```
+- pom.xml에서 사용하는 속성값들을 정의하고 pom내 어디서든 사용할 수 있다.
+
+```xml
+<dependencies>
+	<dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context-support</artifactId>
+      <version>${spring.maven.artifact.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-core</artifactId>
+      <version>${spring.maven.artifact.version}</version>
+	</dependency>
+</dependencies>
+```
+- \<dependencies\>는 pom.xml 태그중 최상위 속성을 가진 태그중 하나이며, 프로젝트와 의존관계에 있는 라이브러리를 모아서 관리하는 곳이다.
+- 각각의 의존 라이브러리들의 정보는 \<dependency\>태그를 사용하여 작성한다.
+- 참고로 \<dependencies\>태그는 라이브러리들을 모아서 관리하는 곳이기에 \<dependency\>태그를 사용하여 필요한 라이브러리를 기술하면 된다.
+
+```xml
+<dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.12</version>
+      <scope>test</scope>
+</dependency>
+```
+- \<dependency\>태그는 라이브러리의 정보를 기술한다.
+- groupId,artifactId,version은 위에 pom.xml의 기본태그에서 설명한 바와 같다.
+- <scope>태그는 이 라이브러리가 이용되는 범위를 지정하는 것이다.
+
+## Build 수행을 위한 pom.xml태그와 설정
+- 빌드 구성은 pom.xml에서 \<plugin\>설정에 의해 실행된다.
+- \<plugin\> : 빌드에서 사용할 플러그인
+  
+
+
+## pom.xml 수정하기
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
