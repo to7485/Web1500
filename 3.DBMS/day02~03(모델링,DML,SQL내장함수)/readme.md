@@ -170,24 +170,41 @@ CREATE TABLE POT(
 SELECT * POT;
 ```
 
-# DML(Data Manipulation Language) : 데이터 조작어
- 
- -SELECT:조회(검색)
-   -SELECT 컬럼명1,컬럼명2... FROM 테이블명
-   -WHERE 조건식;
+# DML(Data Manipulation Language)
+-  데이터 조작어
+1. SELECT:조회(검색)
+```
+   SELECT 컬럼명1,컬럼명2... FROM 테이블명
+   WHERE 조건식;
+```
+   - 조건절
+   - 원하는 자료를 검색하기 위한 조건절
+   - WHERE 절에서는 결과를 제한하기 위한 조건을 기술할 수 도 있다.
+   - WHERE절은 조회하려는 데이터에 특정 조건을 부여할 목적으로 사용하기 때문에 FROM절 뒤에 오게 된다.
 
--INSERT:추가
-   -INSERT INTO 테이블명(컬럼명1, 컬럼명2...) VALUES(값1,값2...) DEFAULT 쓸 때
-   -INSERT INTO 테이블명 VALUES(값1,값2,....) 무조건 만든 컬럼 개수만큼 값을 넣어야함
+   - WHERE 절의 조건식은 아래 내용으로 구성된다.
+    - 컬럼명(보통 조건식의 좌측에 위치)
+    - 비교 연산자 ( 초과,미만,이상,이하,같다,같지않다,그리고And,또는Or)
+    - 문자,숫자,표현식(보통 조건식의 우측에 위치)
+    - 비교 칼럼명(JOIN 사용시)
 
--UPDATE:수정
-   UPDATE 테이블명<br>
-   SET 기존컬럼명 = 새로운 값<br>
-   WHERE 조건식 조건을 달지 않으면 테이블 전체가 바뀌어 버린다.<br>
+2. INSERT:추가
+   - INSERT INTO 테이블명(컬럼명1, 컬럼명2...) VALUES(값1,값2...) DEFAULT 쓸 때
+   - INSERT INTO 테이블명 VALUES(값1,값2,....) 무조건 만든 컬럼 개수만큼 값을 넣어야함
 
--DELETE:삭제	TRUNCATE는 다 날려버리는건데 DELETE는 1개씩 지운다.
-   DELETE FROM 테이블명	행 1개가 통째로 날아감<br>
-   WHERE 조건식<br>
+3. UPDATE:수정
+```SQL
+   UPDATE 테이블명
+   SET 기존컬럼명 = 새로운 값
+   WHERE 조건식 조건을 달지 않으면 테이블 전체가 바뀌어 버린다.
+```
+
+4. DELETE:삭제 ※TRUNCATE는 다 날려버리는건데 DELETE는 1개씩 지운다.
+    - 행 1개가 통째로 날아간다.
+```SQL
+   DELETE FROM 테이블명
+   WHERE 조건식
+```
 
 ## SELECT
 
