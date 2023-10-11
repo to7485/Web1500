@@ -267,9 +267,15 @@ Select Data Source 창이 뜸 오라클 선택 F2 눌러서 이름 day00로 수�
     - commit, rollback, savepoint
     
 ## DDL(Data Definition Language) : 데이터 정의어
-![image](https://user-images.githubusercontent.com/54658614/215701311-552dc21b-4015-4706-a001-70e59c8b043f.png)
-
-![image](https://user-images.githubusercontent.com/54658614/215701465-b9de4d27-42e2-424b-b1e7-1ef201d29ffb.png)
+- 테이블 조작, 제어 관련 쿼리문
+  1. CREATE : 테이블 생성
+  2. DROP : 테이블 삭제 복구도 안됨. 회사에서 쓰지 말것!
+  3. ALTER : 테이블 수정
+		- 테이블명 수정 :ALTER TABLE [원래이름] RENAME TO [새로운 테이블 명]
+		- 컬럼 추가  :ALTER TABLE [테이블명] ADD([새로운 컬럼명] [컬럼 타입])
+		- 컬럼명 변경 :ALTER TABLE [테이블명] RENAME COLUMN [생성된 컬럼명] TO [새로운 컬럼명]
+		- 컬럼 삭제 :ALTER TABLE [테이블명] DROP COLUMN [생성된 컬럼명]
+  4. TRUNCATE : 테이블 내용 전체 삭제 아~어쩔수 없이 버리다 라는 느낌 이것도 복구 안됨
 
 ## 제약조건
 - 제약조건이란, 테이블에 문제가 되는/ 결함이 있는 데이터가 입력되지 않도록 미리 지정해둔 조건입니다.
@@ -314,12 +320,18 @@ Select Data Source 창이 뜸 오라클 선택 F2 눌러서 이름 day00로 수�
 	<td>CHECK</td>
 	<td colspan="4">설정한 조건식을 만족하는 데이터만 입력가능<br>조건식을 만족하지 않는 데이터는 입력이 거부됨</td>
 </tr>
+<tr>
+	<td>DEFAULT</td>
+ 	<td>아무것도 입력하지 않으면 설정한 기본값이 입력됨</td>
+	<td>중복가능</td>
+	<td>값이 입력되면 기본값은 무시됨</td>
+</tr>
 	
 </table>
 
 
 
-## 테이블 생성해보기
+### 테이블 생성해보기
 
 ```
 CREATE TABLE TBL_MEMBER(
@@ -332,7 +344,8 @@ CREATE TABLE TBL_MEMBER(
 DROP TABLE TBL_MEMBER;
 ```
 ### 자동차 테이블 생성
-제약 조건 : 테이블을 생성할 때 특정 컬럼에 조건을 부여하여 들어오는 데이터를 검사
+- 테이블을 생성하며 제약조건을 같이 줘보자.
+- CONSTRAINT [제약조건이름] [제약조건 종류] (컬럼명)
 ```
 CREATE TABLE TBL_CAR(
 	ID NUMBER,
@@ -344,22 +357,26 @@ CREATE TABLE TBL_CAR(
 ```
 
 ### 테이블 삭제
-```
+- DROP TABLE 테이블명;
+```SQL
 DROP TABLE TBL_CAR;
 ```
 ### 제약 조건 삭제
-```
+- ALTER TABLE 테이블명 DROP CONSTRAINT 제약조건명;
+```SQL
 ALTER TABLE TBL_CAR DROP CONSTRAINT CAR_PK;
 ```
 ### 제약 조건 추가
-```
+- 테이블이 이미 생성된 뒤 제약조건 추가를 해보자
+- ALTER TABLE 테이블명 ADD CONSTRAINT [제약조건명] [제약조건 종류](컬럼명);
+```SQL
 ALTER TABLE TBL_CAR ADD CONSTRAINT CAR_PK PRIMARY KEY(ID);
 SELECT * FROM TBL_CAR;	
 ```
 
 ### 동물테이블 생성
 
-```
+```SQL
 CREATE TABLE TBL_ANIMAL(
 	ID NUMBER PRIMARY KEY, 
 	--제약조건을 만들어서 PK를 설정하는 법이 있고 이와 같이 간단하게 만드는법도 있다.
@@ -377,16 +394,15 @@ DROP TABLE TBL_ANIMAL;
 만들었으면 확인을 하고 싶은데요 DML이라는걸 쓰는데 아직 안배웠지만 한번 써보도록 할게요.
 SELECT * FROM TBL_ANIMAL;
 ```
-### 제약조건 DEFAULT와 체크
 
-#### 학생 테이블 생성
-
-```
+### 학생 테이블 생성
+- DEFAULT와 CHECK제약조건에 대해서 알아보자
+```SQL
 CREATE TABLE TBL_STUDENT(
 	ID NUMBER,
 	NAME VARCHAR2(100),
 	MAJOR VARCHAR2(100),
-GENDER CHAR(1) DEFAULT 'W' NOT NULL CONSTRAINT BAN_CHAR CHECK(GENDER = 'M' OR GENDER ='W'),
+	GENDER CHAR(1) DEFAULT 'W' NOT NULL CONSTRAINT BAN_CHAR CHECK(GENDER = 'M' OR GENDER ='W'),
 	BIRTH DATE CONSTRAINT BAN_DATE CHECK(BIRTH >= TO_DATE('1980-01-01','YYYY-MM-DD')),
 	CONSTRAINT STD_PK PRIMARY KEY(ID)
 );
