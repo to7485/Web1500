@@ -283,10 +283,6 @@ Select Data Source 창이 뜸 오라클 선택 F2 눌러서 이름 day00로 수�
 
 ※ 이미 데이터가 포함되어 있는 상황에서 제약조건을 함부로 바꾸기 어려우므로 사전에 테이블 설계를 잘 해두는 편이 좋다.
 
-### kEY
-
-![image](https://user-images.githubusercontent.com/54658614/230701666-581c4ce7-8cc5-46cf-8d1e-2574b468db81.png)
-
 <table>
 <tr>
 	 <th>제약조건</th>	
@@ -330,20 +326,14 @@ Select Data Source 창이 뜸 오라클 선택 F2 눌러서 이름 day00로 수�
 </table>
 
 
-
-### 테이블 생성해보기
-
+## TBL_MEMBER 테이블 생성해보기
 ```
 CREATE TABLE TBL_MEMBER(
 	NAME VARCHAR2(500),
 	AGE NUMBER
 );
 ```
-### TBL_MEMBER 삭제
-```
-DROP TABLE TBL_MEMBER;
-```
-### 자동차 테이블 생성
+## CAR 테이블 생성
 - 테이블을 생성하며 제약조건을 같이 줘보자.
 - CONSTRAINT [제약조건이름] [제약조건 종류] (컬럼명)
 ```
@@ -356,17 +346,18 @@ CREATE TABLE TBL_CAR(
 );
 ```
 
-### 테이블 삭제
+## 테이블 삭제
 - DROP TABLE 테이블명;
 ```SQL
 DROP TABLE TBL_CAR;
+DROP TABLE TBL_MEMBER;
 ```
-### 제약 조건 삭제
+## 제약 조건 삭제
 - ALTER TABLE 테이블명 DROP CONSTRAINT 제약조건명;
 ```SQL
 ALTER TABLE TBL_CAR DROP CONSTRAINT CAR_PK;
 ```
-### 제약 조건 추가
+## 제약 조건 추가
 - 테이블이 이미 생성된 뒤 제약조건 추가를 해보자
 - ALTER TABLE 테이블명 ADD CONSTRAINT [제약조건명] [제약조건 종류](컬럼명);
 ```SQL
@@ -374,7 +365,7 @@ ALTER TABLE TBL_CAR ADD CONSTRAINT CAR_PK PRIMARY KEY(ID);
 SELECT * FROM TBL_CAR;	
 ```
 
-### 동물테이블 생성
+## TBL_ANIMAL 테이블 생성
 
 ```SQL
 CREATE TABLE TBL_ANIMAL(
@@ -395,7 +386,7 @@ DROP TABLE TBL_ANIMAL;
 SELECT * FROM TBL_ANIMAL;
 ```
 
-### 학생 테이블 생성
+## 학생 테이블 생성
 - DEFAULT와 CHECK제약조건에 대해서 알아보자
 ```SQL
 CREATE TABLE TBL_STUDENT(
@@ -408,18 +399,17 @@ CREATE TABLE TBL_STUDENT(
 );
 ```
 
-### 테이블을 만들 때 조심해야 하는 부분
+## 무결성
+- 데이터의 정확성, 일관성, 유효성이 유지되는 것, 일관된 데이터베이스 상태를 정의하는 규칙을 묵시적으로 또는 명시적으로 정의함
+	- 정확성 : 데이터는 애매하지 않아야 한다. EX)노르스름하다 하면 안된다.
+	- 일관성 : 각 사용자가 일관된 데이터를 볼 수 있도록 해야한다.
+	- 유효성 : 데이터가 실제 존재하는 데이터여야 한다.
+			- 모르겠으면 NULL 이라도 써라 ' ' 따옴표 안을 비워두지 말것
 
-무결성 : 데이터의 정확성, 일관성, 유효성이 유지되는 것<br>
-	- 정확성 : 데이터는 애매하지 않아야 한다. EX)노르스름하다 하면 안된다.<br>
-	- 일관성 : 각 사용자가 일관된 데이터를 볼 수 있도록 해야한다.<br>
-	- 유효성 : 데이터가 실제 존재하는 데이터여야 한다.<br>
-			모르겠으면 NULL 이라도 써라 ' ' 따옴표 안을 비워두지 말것<br>
+1. 개체 무결성 : 모든 테이블이 PK로 선택된 컬럼을 가져야 한다.
+	- PK로 선택된 컬럼은 고유한 값을 가져야 하며, 빈 값, NULL값은 허용하지 않는다.
 
-1. 개체 무결성 : 모든 테이블이 PK로 선택된 컬럼을 가져야 한다.<br>
-PK로 선택된 컬럼은 고유한 값을 가져야 하며, 빈 값, NULL값은 허용하지 않는다.<br>
+2. 참조 무결성 : 두 테이블의 데이터가 항상 일관된 값을 가지도록 유지하는 것
 
-2. 참조 무결성 : 두 테이블의 데이터가 항상 일관된 값을 가지도록 유지하는 것<br>
-
-3. 도메인 무결성 : 컬럼의 타입, NULL값의 허용 등에 대한 사항을 정의하고 올바른 데이터가 입력되었는 지를 확인하는 것 (제약조건을 잘 설정했는가~)<br>
+3. 도메인 무결성 : 컬럼의 타입, NULL값의 허용 등에 대한 사항을 정의하고 올바른 데이터가 입력되었는 지를 확인하는 것 (제약조건을 잘 설정했는가~)
 
