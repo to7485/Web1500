@@ -1,4 +1,176 @@
-## DML(Data Manipulation Language) : 데이터 조작어
+# 모델링
+- 데이터 모델링이란 정보시스템 구축의 대상이 되는 업무 내용을 분석하여 이해하고 약속된 표기법에 의해 표현하는걸 의미한다.
+- 분석된 모델을 가지고 실제 데이터베이스를 생성하여 개발 및 데이터 관리에 사용된다.
+- 특히 데이터를 추상화한 데이터 모델은 데이터베이스의 골격을 이해하고 그 이해를 바탕으로 SQL문장을 기능과 성능적인 측면에서 효율적으로 작성할 수 있기 때문에,
+- 데이터 모델링은 데이터베이스 설계의 핵심 과정이기도 하다.
+
+## 데이터 모델링의 특징
+- 추상화 : 현실세계를 일정한 형식에 맞춰 간략하게 표현해야 합니다.
+- 단순화 : 누구나 쉽게 이해할 수 있도록 제한된 표기법이나 언어를 사용해야 합니다.
+- 명확화 : 명확하게 의미가 해석되어야 하고, 한 가지 의미만을 가져야 합니다.
+
+### 1. 요구사항 분석
+- 업무 파악은 어떠한 업무를 시작하기 전에 해당하는 업무에 대해서 파악하는 단계 이다.
+- 고객과의 의사소통을 통해 고객의 업무 프로세스를 완벽하게 이해하고, 그들의 요구사항을 구체적으로 뽑아내는 과정
+
+### 2. 개념적 데이터 모델링
+- 내가 하고자 하는 일의 데이터 간의 관계를 구상하는 단계 이다.
+- 각 개체들과 그들간의 관계를 발견하고 표현하기 위해 ERD 다이어그램을 생성한다.
+-  피터 첸 표기법(Peter Chen Notation)으로 ERD 다이어그램을 구성한 그림이다.
+-  그리는 방법은 어렵지 않다. 도형이 의미하는 바를 알고 화살표를 통해 관계를 표현하기만 하면 된다.
+-  - 회원, 주문, 상품 3가지를 관리하고자 한다.
+
+![image](https://github.com/to7485/Web1500/assets/54658614/20864b8b-0e9e-48e4-b4e4-c6a2682dd31a)
+
+### 3. 논리적 데이터 모델링
+- 개념적인 데이터 모델이 완성되면, 구체화된 업무 중심의 데이터 모델을 만들어 내야한다.
+- 업무에 대한 Key, 속성, 관계등을 표시하며, 정규화 활동을 수행한다.
+- 정규화는 데이터 모델의 일관성을 확보하고 중복을 제거하여 신뢰성있는 데이터 구조를 얻는데 목적이 있다.
+
+![image](https://user-images.githubusercontent.com/54658614/215704561-7a220819-60e8-44ad-9f1b-cd4e41ecb862.png)
+
+### 4. 물리적 데이터 모델링
+- 최종적으로 데이터를 관리할 데이터 베이스를 선택하고, 선택한 데이터 베이스에 실제 테이블을 만드는 작업을 말한다.
+- 시각적인 구조를 만들었으면 그것을 실제로 SQL 코딩을 통해 완성하는 단계라고 보면 된다
+
+
+```
+USER		
+USER_ID:VARCHAR2(100)		
+--------------------------		
+USER_PW:VHARCHAR2(100)		
+USER_NAME:VHARCHAR2(200)		
+USER_ADDRESS:VHARCHAR2(300)		
+USER_EMAIL:VHARCHAR2(300)		
+USER_BIRTH:DATE
+
+PRODUCT	
+PRODUCT_NUM:NUMBER		
+--------------------------		
+PRODUCT_NAME:VHARCHAR2(300)		
+PRODUCT_PRICE:NUMBER	
+PRODUCT_COUNT:	NUMBER
+	
+ORDER
+ORDER_NUM:NUMBER		
+--------------------------
+ORDER_DATE:DATE
+USER_ID:VARCHAR2(100)
+PRODUCT_NUM:NUMBER
+```
+모델링을 먼저하고 코드를 작성해야 오류를 줄일 수 있다.
+
+```SQL
+CREATE TABLE "USER"(
+	USER_ID VARCHAR2(100) PRIMARY KEY,
+	USER_PW VARCHAR2(100),
+	USER_ADDRESS VARCHAR2(300),
+	USER_EMAIL VARCHAR2(300),
+	USER_BIRTH DATE
+);
+
+CREATE TABLE PRODUCT(
+	PRODUCT_NUM NUMBER PRIMARY KEY,
+	PRODUCT_NAME VARCHAR2(300),
+	PRODUCT_PRICE NUMBER,
+	PRODUCT_COUNT NUMBER
+);
+
+CREATE TABLE "ORDER"(
+	ORDER_NUM NUMBER PRIMARY KEY,
+	ORDER_DATE DATE,
+	USER_ID VARCHAR2(100), --외래키로 참조할 컬럼의 데이터타입과 길이를 반드시 맞춰줘야 합니다.
+	PRODUCT_NUM NUMBER,
+	CONSTRAINT USER_FK FOREIGN KEY(USER_ID) REFERENCES "USER"(USER_ID),
+	CONSTRAINT PRODUCT_FK FOREIGN KEY(PRODUCT_NUM) REFERENCES PRODUCT(PRODUCT_NUM)
+);
+```
+
+## 데이터 모델링 실습
+
+1. 요구사항
+	- 꽃 테이블과 화분 테이블 2개가 필요하고, 꽃을 구매할 때 화분도 같이 구매한다.
+	- 꽃은 이름과 색깔, 가격이 있다.
+	- 화분은 제품 번호, 색깔, 모양, 꽃 이름이 있다.
+
+2. 개념적 설계(개념 모델링)
+
+![image](https://user-images.githubusercontent.com/54658614/215705598-770d8323-f9d6-4ed4-bc2a-1c6d1b585bd1.png)
+
+3. 논리적 설계(논리 모델링)
+ 
+![image](https://user-images.githubusercontent.com/54658614/215705734-398d083b-c9b0-409e-b3f8-21b6274067e2.png)
+
+5. 물리적 설계(물리 모델링)
+
+```
+FOLOWER
+------------------------
+FOWER_NAME:VARCHAR2(200),
+COLOR:VARCHAR2(100),
+PRICE:NUMBER
+---------------------------------------
+CONSTRAINT PRIMARY KEY(FLOWER_NAME)
+---------------------------------------
+
+POT
+------------------------
+POT_ID:VARCHAR2(100),
+POT_COLOR:VARCHAR2(100),
+SHAPE:VARCHAR2(200),
+FLOWER_NAME:VARCHAR2(200),
+---------------------------------------
+CONSTRAINT FOREIGN KEY(FLOWER_NAME) REFERENCES FLOWER(FLOWER_NAME)
+---------------------------------------
+```
+
+```SQL
+/*
+FOLOWER
+------------------------
+FOWER_NAME:VARCHAR2(200),
+COLOR:VARCHAR2(100),
+PRICE:NUMBER
+---------------------------------------
+CONSTRAINT PRIMARY KEY(FLOWER_NAME)
+---------------------------------------
+*/
+
+DROP TABLE FLOWER;
+
+CREATE TABLE FLOWER(
+	FLOWERNAME VARCHAR2(200),
+	FLOWERCOLOR VARCHAR2(100),
+	FLOWERPRICE NUMBER,
+	CONSTRAINT FLOWER_PK PRIMARY KEY(FLOWERNAME)
+);
+
+SELECT * FROM FLOWER;
+ 
+/*
+POT
+------------------------
+POT_ID:VARCHAR2(100),
+POT_COLOR:VARCHAR2(100),
+SHAPE:VARCHAR2(200),
+FLOWER_NAME:VARCHAR2(200),
+---------------------------------------
+CONSTRAINT FOREIGN KEY(FLOWER_NAME) REFERENCES FLOWER(FLOWER_NAME)
+---------------------------------------
+*/
+CREATE TABLE POT(
+	POTID VARCHAR2(100),
+	POTCOLOR VARCHAR2(100),
+	POTSHAPE VARCHAR2(200),
+	NAME VARCHAR2(200),
+	CONSTRAINT POT_PK PRIMARY KEY(POTID),
+	CONSTRAINT POT_FK FOREIGN KEY(NAME) REFERENCES FLOWER(FLOWERNAME)
+);
+
+SELECT * POT;
+```
+
+# DML(Data Manipulation Language) : 데이터 조작어
  
  -SELECT:조회(검색)
    -SELECT 컬럼명1,컬럼명2... FROM 테이블명
