@@ -426,4 +426,31 @@ System.out.println("시간당 평균 생산 갯수 : " + average + "개");
 int ball = 23;
 int box = ball % 5 == 0 ? ball/5 : ball/5 + 1;
 System.out.println("필요한 상자의 수 : " + box);
+-------------------------------------------------------------------------------------------------------
+//국어,영어,수학에 대한 점수를 키보드를 이용해 정수로 입력받고
+//1. 세 과목에 대한 합계 출력하기
+//2. 평균 출력하기 (합계/3.0)
+
+//세 과목의 점수와 평균을 가지고 합격 여부를 처리하는데
+//세 과목의 점수가 각각 40점 이상이면서 평균이 60점 이상일때 합격
+//아니면 불합격
+
+Scanner sc = new Scanner(System.in);
+		
+System.out.print("국어 : ");
+int kor = sc.nextInt();
+System.out.print("영어 : ");
+int eng = sc.nextInt();
+System.out.print("수학 : ");
+int math = sc.nextInt();
+
+int total = kor + eng + math;
+double avg = ((total) / 3.0);
+
+System.out.println(total);
+System.out.println(avg);
+
+String result = (kor >= 40 && eng >= 40 && math >= 40 && avg >= 40) ? "합격" : "불합격"; 
+System.out.println(result);
 ```
+
