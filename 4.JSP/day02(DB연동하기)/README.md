@@ -29,12 +29,32 @@
 
 <Context>
 	<Resource DB로 접속하기 위한 설정들에 대한 정보
-	        auth="Container" 
+	        auth="Container"
+ 	"Container" 값은 컨테이너(애플리케이션 서버나 서블릿 컨테이너)가 인증을 처리하도록 지시하는 것을 나타냅니다. 
       		name="jdbc/oracle_test"
+	데이터 소스의 이름을 지정합니다. 애플리케이션에서 이 이름을 사용하여 데이터베이스에 연결할 수 있습니다.
+
       		type="javax.sql.DataSource"
+	이 데이터 소스가 javax.sql.DataSource 인터페이스를 구현하는 데이터 소스임을 나타냅니다.
+
       		driverClassName="oracle.jdbc.driver.OracleDriver"
+	Oracle 데이터베이스와 Java 애플리케이션 간의 연결을 제공하는 JDBC 드라이버의 클래스
+	OracleDriver는 Oracle 데이터베이스와 상호작용하고 데이터베이스 연결 및 쿼리 실행을 처리하는 Java 애플리케이션에서 사용된다.
+	Oracle 데이터베이스와의 통신을 담당하며, Java 코드가 Oracle 데이터베이스와 상호작용할 수 있게 해줍니다.
+
       		factory="org.apache.commons.dbcp.BasicDataSourceFactory"
+	클래스는 데이터 소스 객체를 생성하는 역할을 한다.데이터베이스 연결 풀을 설정하고 관리할 수 있으며,
+	이를 통해 애플리케이션에서 데이터베이스 연결을 효율적으로 사용할 수 있다.
+	설정된 데이터베이스 연결 풀은 데이터베이스 연결 요청이 있을 때 연결을 제공하고, 연결을 사용한 후에 다시 풀에 반환한다.
+
       		url="jdbc:oracle:thin:@localhost:1521:xe"
+
+	jdbc:oracle:드라이버타입:[유저이름/패스워드]@호스트이름[:포트번호][서비스네임]
+	JDBC드라이버는 THIN방식과 OCI방식이 있다.
+
+	THIN : 순수하게 자바 패키지(클래스)만으로 바로 DB와 연결, 범용성이 높다. 상대적으로 OCI보다 속도가 느리다.
+	OCI : Oracle Call Interface 특정 운영체제 내에서만 돌아가는 모듈을 통해 DB에 연결한다.
+
       		username="test" password="1111" -> 어떤 계정으로 로그인을 할건지 
       		maxActive="20" maxIdle="10" maxWait="1"/>
           
@@ -42,8 +62,7 @@
           뒤에 DB로 접속할 수 있다. 따라서 미리 10명이 동시에 접속할 수 있도록 준비를 해 두면 대기시간 없이 DB에 효율적으로 접근할 수 있다.
           이를 DBCP(Database Connection Pool)이라고 한다.
           
-          maxWait : 1초동안만 기다림, 1초 지나면 포기 -1은 무한대기
-          
+          maxWait : 1초동안만 기다림, 1초 지나면 포기 -1은 무한대기          
 </Context>
 ```
 현재 계정에 접속해도 테이블이 존재하지 않는다.
