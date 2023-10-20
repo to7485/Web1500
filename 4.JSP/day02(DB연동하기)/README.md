@@ -1,7 +1,8 @@
 # Ex_날짜_DB 프로젝트 생성하기
 
 ## JDBC로 이클립스와 오라클DB 연동하기
-- JDBC(Java DataBase Connectivity)는 자바/JSP 프로그램 내에서 데이터베이스와 관련된 작업을 처리할 수 있도록 도와주는 자바 표준 인터페이스로, 관계형 데이터베이스 시스템에 접근하여 SQL문을 실행하기 위한 자바 API 또는 자바 라이브러리입니다. JDBC API를 사용하면 DBMS 종류에 상관없이 데이터베이스 작업을 처리할 수 있습니다.
+- JDBC(Java DataBase Connectivity)는 자바/JSP 프로그램 내에서 데이터베이스와 관련된 작업을 처리할 수 있도록 도와주는 방법이다.
+- 자바 표준 인터페이스로, 관계형 데이터베이스 시스템에 접근하여 SQL문을 실행하기 위한 자바 API 또는 자 JDBC API를 사용하면 DBMS 종류에 상관없이 데이터베이스 작업을 처리할 수 있습니다.
 - JDBC API는 java.sql.\* 패키지에 의해 구현됩니다.
 - 프로젝트를 생성한 후 WebContent의 META-INF에 context.xml(실행시 최초로 호출되는 설정파일)을, WEB-INF lib폴더에 준비된 4개의 라이브러리를 넣는다.
 
