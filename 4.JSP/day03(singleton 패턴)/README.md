@@ -5,7 +5,9 @@
 ### Ex_날짜_Template 프로젝트 생성하기
 
 ### 싱글톤
-- 어플리케이션이 시작될 때 어떤 클래스가 최초 한번만 메모리를 할당하고(static의 개념) 그 메모리에 인스턴스를 만들어 사용하는 디자인 패턴이다.
+- 객체를 오직 1개만 생성하는 디자인 패턴이다.
+- 싱글톤 패턴을 이용하면, 하나의 객체만을 메모리에 등록해서 여러 스레드가 동시에 해당 객체를 공요하여 사용하게끔 할 수 있으므로
+- 요청이 많은 곳에서 사용하면 성능상 유리한 이점을 가져올 수 있다.
 - DB를 접속할 때 처럼 공통된 객체를 여러개 생성해서 사용해야 하는 상황에 많이 사용된다.
 
 ### jdbc_templ.xml 등록하기
@@ -190,7 +192,7 @@ public class DeptDAO {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		String sql = "";
+		String sql = "select * from dept";
 
 		try {
 			//1.Connection얻어온다
@@ -204,7 +206,9 @@ public class DeptDAO {
 			while (rs.next()) {
 				argType vo = new argType();
 				//현재레코드값=>Vo저장
-
+				vo.setDeptno(rs.setInt("deptno"));
+				vo.setDname(rs.setString("dname"));
+				vo.setLoc(rs.setString("loc"));
 				//ArrayList추가
 				list.add(vo);
 			}
