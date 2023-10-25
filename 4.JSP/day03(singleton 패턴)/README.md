@@ -1,8 +1,8 @@
-## 싱글톤 패턴
+# Singleton Pattern
 - jsp 파일을 생성하고 DB에 접속하려고 할 때마다 객체들을 생성하여 메모리를 점유해야 한다.
 - 코드를 매번 작성해야 하고 비효율적이다.
 
-### Ex_날짜_Template 프로젝트 생성하기
+## Ex_날짜_Template 프로젝트 생성하기
 
 ### 싱글톤
 - 객체를 오직 1개만 생성하는 디자인 패턴이다.
@@ -10,6 +10,107 @@
 - 요청이 많은 곳에서 사용하면 성능상 유리한 이점을 가져올 수 있다.
 - DB를 접속할 때 처럼 공통된 객체를 여러개 생성해서 사용해야 하는 상황에 많이 사용된다.
 
+## Singleton Pattern을 설계하는 6가지 방법
+1. 가장 기본적인 Singleton(Lazy Initalization : 늦은 초기화)
+- 동시성 문제 : 멀티 스레드 환경에서 if문에 두 개이상의 스레드가 동시에 들어가서 실행한다면 객체를 두개이상 만들 수 있음
+```java
+public class BasicSingleton {
+    private static BasicSingleton uniqueInstance;
+
+    public static BasicSingleton getInstance() {
+        if(uniqueInstance == null) {
+            uniqueInstance = new BasicSingleton();
+        }
+        return uniqueInstance;
+    }
+}
+```
+2. 간단한 Synchronized 적용
+- 성능 문제 : 싱글톤을 최초로 생성하는 경우(==null 일때)에만 Lock을 걸면 되는데, 이 코드는 싱글톤 인스턴스를 가져올때 마다 Lock을 건다.
+- Thread-safe 보장됨.
+```java
+public class SynchronizedSingleton {
+    private static SynchronizedSingleton uniqueInstance;
+
+    public static synchronized SynchronizedSingleton getInstance() {
+        if(uniqueInstance == null){
+            uniqueInstance = new SynchronizedSingleton();
+        }
+        return uniqueInstance;
+    }
+}
+```
+3. 클래스 로드 시점에 생성 ( Eager-Initialization : 이른 초기화)
+- 성능 문제 : Eager-Initialization 로 인한 문제.
+- 클라이언트에서 이 싱글톤을 사용하지 않더라도 이 인스턴스가 로드됨.
+```java
+public class EagerInitializationSingleton {
+    private static EagerInitializationSingleton uniqueInstance = new EagerInitializationSingleton();
+
+    private EagerInitializationSingleton(){
+
+    }
+
+    public static EagerInitializationSingleton getInstance() {
+        return uniqueInstance;
+    }
+
+}
+```
+4. Double - Checking - Locking : 동시성 문제와 성능 문제(일부)를 해결(Lazy Initialization : 늦은 초기화)
+- 또다른 성능문제: 이 과정에서 하나의 if문 안에 들어갔을 때, synchronized로 locking 하는 방식.
+- 이는 캐시 관련 문제를 해결하기 위해 사용하는 키워드인데, volatile을 사용함으로써 또 다른 성능 문제를 가져온다.
+- volatile : volatile가 붙은 변수는 CPU의 캐시를 거치지 않고 바로 메인 메모리로 read/write됨.
+```java
+public  class DoubleCheckingLockingSingleton {
+    private volatile static DoubleCheckingLockingSingleton uniqueInstance;
+
+    private DoubleCheckingLockingSingleton(){
+
+    }
+
+    public static DoubleCheckingLockingSingleton getInstance() {
+        if(uniqueInstance == null){
+            synchronized (DoubleCheckingLockingSingleton.class) {
+                if(uniqueInstance == null) {
+                    uniqueInstance = new DoubleCheckingLockingSingleton();
+                }
+            }
+        }
+        return uniqueInstance;
+    }
+}
+```
+5. Enum을 사용한 singleton (Eager-Initialization : 이른 초기화)
+- 리플렉션을 통해 싱글톤을 깨트리는 공격에 안전
+- 직렬화 보장
+- 성능 문제 : Eager-Initialization로 인한 문제와 싱글톤이 Enum 외의 클래스를 상속해야 하는 경우에는 사용할 수 없다.
+```java
+public enum EnumSingleton {
+    uniqueInstance;
+}
+```
+
+6. LazyHolder 기법 (Lazy Initialization : 늦은 초기화)
+- 최근 가장 많이 사용되는 싱글톤 기법으로, 3.클래스 로드 시점에 생성 방법을 개선한 패턴이다.
+- Singleton 클래스에는 LazyHolder 클래스의 변수가 없기 때문에 Singleton 클래스 로딩 시 LazyHolder 클래스를 초기화하지 않음
+- Class를 로딩하고 초기화하는 시점은 thread-safe를 보장
+- holder 안에 선언된 instance가 static이기 때문에 클래스 로딩 시점에 한번만 호출
+```java
+public class LazyHolderSingleton {
+
+    private LazyHolderSingleton() {
+    }
+
+    public static LazyHolderSingleton getInstance() {
+        return LazyHolder.uniqueInstance;
+    }
+
+    private static class LazyHolder {
+        private static final LazyHolderSingleton uniqueInstance = new LazyHolderSingleton();
+    }
+}
+```
 ### jdbc_templ.xml 등록하기
 
 1. windows -> Preferences
@@ -30,7 +131,7 @@
 
 어차피 DB를 사용하기 위한 코드들은 자바로 이루어져 있기 때문에 DBService 클래스를 만들어서 따로 작성해서 사용을 하자
 
-#### DBService 클래스 생성
+### DBService 클래스 생성
 
 ![image](https://user-images.githubusercontent.com/54658614/231941582-61eeaf53-4f55-42ab-8ad2-58edad8478de.png)
 
