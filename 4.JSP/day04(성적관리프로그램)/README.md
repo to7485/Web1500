@@ -668,14 +668,19 @@ public class SjDAO {
 
 ### 정규식 갯수 반복 패턴
 
+|기호|의미|
+|-----|-----|
+|?| 없거나 or 최대 한개만<br>/apple?/|
+|*|없거나 or 있거나 (여러개)<br>/apple*/|
+|+|최소 한개 or 여러개<br>/apple+/|
+|{n}| n개|
+|{Min,}|최소 Min개 이상|
+|{Min,Max}|최소 Min개 이상, 최대 Max개 이하|
 
-
-
-
-
-- 정보를 입력하고 등록버튼을 누르면 목적지로 파라미터가 넘어가게 된다.
 
 ![image](https://user-images.githubusercontent.com/54658614/232209005-99b9d3e5-864c-4ddb-bdf2-f6e54ec425ab.png)
+
+- 정보를 입력하고 등록버튼을 누르면 목적지로 파라미터가 넘어가게 된다.
 
 ### register.jsp 만들기
 
