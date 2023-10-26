@@ -1,9 +1,8 @@
 # Ex_날짜_DB 프로젝트 생성하기
 
+
+
 ## JDBC로 이클립스와 오라클DB 연동하기
-- JDBC(Java DataBase Connectivity)는 자바/JSP 프로그램 내에서 데이터베이스와 관련된 작업을 처리할 수 있도록 도와주는 방법이다.
-- 자바 표준 인터페이스로, 관계형 데이터베이스 시스템에 접근하여 SQL문을 실행하기 위한 자바 API 또는 자 JDBC API를 사용하면 DBMS 종류에 상관없이 데이터베이스 작업을 처리할 수 있습니다.
-- JDBC API는 java.sql.\* 패키지에 의해 구현됩니다.
 - 프로젝트를 생성한 후 WebContent의 META-INF에 context.xml(실행시 최초로 호출되는 설정파일)을, WEB-INF lib폴더에 준비된 4개의 라이브러리를 넣는다.
 
 ![image](https://user-images.githubusercontent.com/54658614/231060513-bec2d76e-3f09-4ccc-844c-5755e70b7e49.png)
@@ -16,6 +15,44 @@
 
 - commons-pool-1.4.jar
   - 데이터베이스와 연결된 커넥션을 미리 만들어 풀(pool)에 저장해 두었다가 필요할 때에 가져다 쓰고 반환하는 기법이다. <br>아파치에서 제공하는 DBCP (DataBase Connection Pool) API를 이용해서 사용할 수 있다.
+
+## ojdbc
+- 데이터베이스와의 통신을 담당하는 인터페이스
+- Oracle Java DataBase Connectivity의 약자
+- Oracle 전용의 jdbc 라이브러리이다.
+- Oracle에서 제공하는 오라클DB를 관리할 수 있도록 해주는 JDBC
+- MS SQL, MySQL등과 같은 데이터베이스에 알맞은 JDBC 드라이버를 구현하여 제공
+- JDBC 드라이버의 구현체를 이용해서 특정 벤더의 데이터베이스에 접근할 수 있다.
+
+## JDBC
+- JDBC(Java Database Connectivity)는 Java 기반 애플리케이션의 데이터를 데이터베이스에 저장 및 업데이트하거나,
+- 데이터베이스에 저장된 데이터를 Java에서 사용할 수 있도록 하는 자바 API이다.
+- Java 애플리케이션에서 데이터베이스에 접근하기 위해 JDBC API를 사용하여 데이터베이스에 연동할 수 있으며,
+- 데이터베이스에서 자료를 쿼리(Query)하거나 업데이트하는 방법을 제공한다.
+- JDBC API는 java.sql.\* 패키지에 의해 구현됩니다.
+
+![image](https://github.com/to7485/Web1500/assets/54658614/0f1b1c16-5983-4b43-bacd-c4daadf167e9)
+
+- Spring Data JDBC, Spring Data JPA 등과 같은 기술이 등장하면서 JDBC API를 직접적으로 사용하는 일은 줄어들었다.
+- 하지만, Spring Data JDBC, Sprind Data JPA와 같은 기술도 데이터베이스와 연동하기 위해 내부적으로 JDBC를 이용하기 때문에 JDBC의 동작 흐름에 대해 알 필요가 있다.
+
+## JDBC의 동작 흐름
+- JDBC는 Java 애플리케이션 내에서 JDBC API를 사용하여 데이터베이스에 접근하는 단순한 구조이다.
+- JDBC API를 사용하기 위해서는 JDBC 드라이버를 먼저 로딩한 후 데이터베이스와 연결하게 된다.
+
+![image](https://github.com/to7485/Web1500/assets/54658614/58e5eadf-5f9a-4cde-85e9-398974a1e938)
+
+## JDBC API 사용 흐름
+- JDBC 드라이버 로딩 : 사용하고자 하는 JDBC 드라이버를 로딩한다. JDBC 드라이버는 DriverManager 클래스를 통해 로딩된다.
+- Connection 객체 생성 : JDBC 드라이버가 정상적으로 로딩되면 DriverManager를 통해 데이터베이스와 연결되는 세션(Session)인 Connection 객체를 생성한다.
+- Statement 객체 생성 : Statement 객체는 작성된 SQL 쿼리문을 실행하기 위한 객체로 정적 SQL 쿼리 문자열을 입력으로 가진다.
+- Query 실행 : 생성된 Statement 객체를 이용하여 입력한 SQL 쿼리를 실행한다.
+- ResultSet 객체로부터 데이터 조회 : 실행된 SQL 쿼리문에 대한 결과 데이터 셋이다.
+- ResultSet, Statement, Connection 객체들의 Close : JDBC API를 통해 사용된 객체들은 생성된 객체들을 사용한 순서의 역순으로 Close 한다.
+
+![image](https://github.com/to7485/Web1500/assets/54658614/0fe74f93-1b26-4781-9918-89056f8c256b)
+
+
 
 ### context.xml
 
