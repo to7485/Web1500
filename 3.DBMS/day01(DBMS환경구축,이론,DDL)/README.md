@@ -144,11 +144,14 @@ util 폴더에 압축을 풀고 사용하면 된다.
 
 ![image](https://user-images.githubusercontent.com/54658614/230539187-6d7a4044-4694-4153-a7d6-a0e90affa78c.png)
 
-빈칸을 다음과 같이 채워넣어주면 된다.
-
+- 빈칸을 다음과 같이 채워넣어주면 된다.
+    - Host : Ip주소
+    - Database : Service Name을 설정해야 하는데 xe라고 적는다.
+    - User name : hr
+    - Password : hr
 ![image](https://user-images.githubusercontent.com/54658614/230539317-eb33e20e-c975-4591-b1c8-9e2c092d87e3.png)
 
-아마 처음 Oracle을 설치했다면 hr 계정이 잠겨있을 것이다.
+- 아마 처음 Oracle을 설치했다면 hr 계정이 잠겨있을 것이다.
 
 
 ## 계정
