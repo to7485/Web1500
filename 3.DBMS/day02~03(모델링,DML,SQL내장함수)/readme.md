@@ -173,35 +173,48 @@ SELECT * POT;
 
 # DML(Data Manipulation Language)
 -  데이터 조작어
-1. SELECT:조회(검색)
-```
+### 1. SELECT
+- 테이블에서 원하는 데이터를 조회할 때 사용하는 키워드
+```SQL
    SELECT 컬럼명1,컬럼명2... FROM 테이블명
    WHERE 조건식;
 ```
-   - 조건절
-   - 원하는 자료를 검색하기 위한 조건절
-   - WHERE 절에서는 결과를 제한하기 위한 조건을 기술할 수 도 있다.
-   - WHERE절은 조회하려는 데이터에 특정 조건을 부여할 목적으로 사용하기 때문에 FROM절 뒤에 오게 된다.
+### 조건절
+- 원하는 자료를 검색하기 위한 조건절
+- WHERE 절에서는 결과를 제한하기 위한 조건을 기술할 수 도 있다.
+- WHERE절은 조회하려는 데이터에 특정 조건을 부여할 목적으로 사용하기 때문에 FROM절 뒤에 오게 된다.
 
-   - WHERE 절의 조건식은 아래 내용으로 구성된다.
-    - 컬럼명(보통 조건식의 좌측에 위치)
-    - 비교 연산자 ( 초과,미만,이상,이하,같다,같지않다,그리고And,또는Or)
-    - 문자,숫자,표현식(보통 조건식의 우측에 위치)
-    - 비교 칼럼명(JOIN 사용시)
+### WHERE 절의 조건식은 아래 내용으로 구성된다.
+- <b>WHERE 조건식</b> 형태로 많이 사용이 된다.<br>
+- 컬럼명(보통 조건식의 좌측에 위치)
+- 비교 연산자 ( 초과,미만,이상,이하,같다,같지않다,그리고And,또는Or)
+    - \> , < : 초과, 미만
+    - \>=, <= : 이상, 이하
+    - = : 같다
+    - < >, !=, ^= : 같지않다.
+    - AND : 두 조건식이 모두 참이면 참
+    - OR : 둘 중 하나라도 참이면 참
+- 문자,숫자,표현식(보통 조건식의 우측에 위치)
+- 비교 칼럼명(JOIN 사용시)
 
-2. INSERT:추가
-   - INSERT INTO 테이블명(컬럼명1, 컬럼명2...) VALUES(값1,값2...) DEFAULT 쓸 때
-   - INSERT INTO 테이블명 VALUES(값1,값2,....) 무조건 만든 컬럼 개수만큼 값을 넣어야함
+### 2. INSERT:추가
+- 테이블에 데이터를 추가할 때 사용하는 키워드
+```SQL
+INSERT INTO 테이블명(컬럼명1, 컬럼명2...) VALUES(값1,값2...) DEFAULT 쓸 때
+INSERT INTO 테이블명 VALUES(값1,값2,....) 무조건 만든 컬럼 개수만큼 값을 넣어야함
+```
 
-3. UPDATE:수정
+### 3. UPDATE
+- 테이블의 내용을 수정할 때 사용하는 키워드
 ```SQL
    UPDATE 테이블명
    SET 기존컬럼명 = 새로운 값
    WHERE 조건식 조건을 달지 않으면 테이블 전체가 바뀌어 버린다.
 ```
 
-4. DELETE:삭제 ※TRUNCATE는 다 날려버리는건데 DELETE는 1개씩 지운다.
-    - 행 1개가 통째로 날아간다.
+### 4. DELETE
+- 삭제 ※TRUNCATE는 다 날려버리는건데 DELETE는 1개씩 지운다.
+- 행 1개가 통째로 날아간다.
 ```SQL
    DELETE FROM 테이블명
    WHERE 조건식
@@ -209,7 +222,7 @@ SELECT * POT;
 
 ## SELECT
 
-```
+```SQL
 예) employees(사원)테이블의 모든 정보를 조회하시오
 
 select * from employees; 
@@ -229,11 +242,8 @@ select first_name, job_id, salary from employees;
 스키마 작성 사원 테이블에서 컬럼이 영어로 되어있기 때문에 뭐라고 되어있는지 한눈에 보기 힘들다 그래서 메모장에다 작성을
 하나 한다. 사원테이블이 갖고 있는 컬럼들이 각각 어떤 정보를 저장하기 위해서 만들어져있는지 컬럼들인지를 한번에 정리를 할거다
 
-나중에 문제를 내드리면 이 스키마를 참고 하면서 작성 해보시면 됩니다
-
 문) 사원테이블에서 사번, 이름,입사일,급여를 검색하시오
 SELECT employee_id, first_name, hire_date, salary FROM employees;
-
 
 컬럼에 없는 정보를 출력하고 싶을 때가 있다
 
@@ -250,25 +260,7 @@ select employee_id, first_name, job_id, salary, commission_pct,
 SELECT comm from employees; 로 별칭으로 조회가 가능해진다.
 ```
 
-### where 절(조건부여)
-- 사용자가 원하는 자원을 검색할때 조건을 통해 결과를 간추릴 수 있다.
-
-#### WHERE 절의 조건식은 아래 내용으로 구성된다.
-- 컬럼명(보통 조건식의 좌측에 위치)
-- 비교 연산자
-- 문자,숫자,표현식(보통 조건식의 우측에 위치)
-- 비교 칼럼명(JOIN 사용시)
-
-#### 조건식 : 참 또는 거짓 둘 중 하나의 결과가 나오는 식
-<b>WHERE 조건식</b> 형태로 많이 사용이 된다.<br>
-- \> , < : 초과, 미만
-- \>=, <= : 이상, 이하
-- = : 같다
-- < >, !=, ^= : 같지않다.
-- AND : 두 조건식이 모두 참이면 참
-- OR : 둘 중 하나라도 참이면 참
-
-```
+```SQL
 예) 사원테이블에서 급여가 10000이상인 사원들의 정보를 사번, 이름, 급여 순으로 출력
 
 select employee_id, first_name, salary from employees where salary >=10000;
@@ -321,6 +313,7 @@ select employee_id, fist_name, job_id, salary
 from employees 
 where salary='2200' or salary = '3200' or salary='5000' or salary='6800';
 ```
+
 ### SQL연산자
 1. BETWEEN : A와 B사이의 값을 조회할 때 사용
 2. IN : OR을 대신해서 사용하는 연산자
@@ -347,15 +340,18 @@ select first_name,job_id,salary from employees where salary in (2200,3200,5000);
 
 예) 직종이 'SA_MAN', 'IT_PROG'가 아닌 모든 사원들의 정보를 출력
 select * from employees where job_id not in('SA_MAN','IT_PROG');
+```
 
---LIKE연산자(유사검색)
--- % : 모든값
--- _ : 하나의 값
-ex)'M%' : M으로 시작하는 모든 값
-ex)'%a' : a로 끝나는 모든 값
-ex)'%a%' : 값의 어디든 a를 포함하고 있는 모든 값
-ex)'M_ _ _ _' : M으로 시작하는 값들 중 전체 길이가 5글자인 값
+## LIKE연산자(유사검색)
+- 쿼리문에 WHERE절에 주로 사용되며 부분적으로 일치하는 속성을 찾을 때 사용뇌다.
+- % : 모든값
+- _ : 하나의 값
 
+ex)'M%' : M으로 시작하는 모든 값<br>
+ex)'%a' : a로 끝나는 모든 값<br>
+ex)'%a%' : 값의 어디든 a를 포함하고 있는 모든 값<br>
+ex)'M_ _ _ _' : M으로 시작하는 값들 중 전체 길이가 5글자인 값<br>
+```
 예)사원테이블에서 사원들의 이름 중 M으로 시작하는 사원의 정보를 사번, 이름, 직종 순으로 출력
 select employee_id, first_name, job_id from employees where first_name LIKE 'M%';
 %는 뒤로는 뭐가 몇글자가 오든 상관 안하겠다는 의미
