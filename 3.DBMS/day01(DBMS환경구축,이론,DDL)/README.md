@@ -253,8 +253,9 @@ Select Data Source 창이 뜸 오라클 선택 F2 눌러서 이름 day00로 수�
 	- 실세계에 존재하는 데이터들을 어떤 형식, 구조, 배치 화면을 통해 사용자에게 보여줄 것인가
 	- 전체 데이터베이스의 한 논리적 부분 -> 서브 스키마
 	- 하나의 데이터베이스에는 여러 개의 외부 스키마가 존재할 수 있다.
-	- 같은 데이터베이스에 대해서도 서로 다른 관점을 정의할 수 있도록 허용
-	- 일반 사용자는 질의어를 이용 DB를 쉽게 사용
+	- 예를들어 '운전면허시험'에 대한 전반적인 정보를 얻고자 할 때, 누구는 '운전면허시험'이라고 검색하고, 누구는 '운전면허증', 누군가는 '운전면허필기시험'이라고 검색할 것이다.
+	- 이것이 외부 스키마는 여러개 존재할 수 있다는 의미이다.
+	- 응용 프로그래머는 C,JAVA등의 언어를 이용해서 DB에 접근한다.
 
 ## 테이블
 - 행과 열로 이루어진 데이터의 집합을 테이블이라고 한다. 엑셀을 켜고 보는 모양과 매우 흡사하다.
@@ -272,8 +273,9 @@ Select Data Source 창이 뜸 오라클 선택 F2 눌러서 이름 day00로 수�
 - 열을 구성하는 값들은 같은 도메인(domain)으로 되어있다. 이 또한 관계형 데이터베이스에서는 속성(attribute)라는 이름으로 불린다.
 - 열의 수를 차수(Degree)라고 한다.
 
-※ 도메인(domain) : 데이터베이스에서 필드에 채워질수 있는 값들의 집합이다.
-- 예를들어 성별을 저장해야 하는데 다른것이 오면 안된다.
+## 도메인(domain) 
+- 하나의 속성이 취할 수 있는 동일한 유형의 데이터 집합을 의미한다.
+- 예를들어 성별을 저장하기로 했으면 남,여에 대한 데이터만 들어올 수 있다.
 
 ## SQL문
 - 원하는 결과를 얻어오기 위해 DB에 요청하는 요청문장(Query문)
@@ -358,9 +360,11 @@ CREATE TABLE TBL_MEMBER(
 	AGE NUMBER
 );
 ```
+
 ## CAR 테이블 생성
 - 테이블을 생성하며 제약조건을 같이 줘보자.
 - CONSTRAINT [제약조건이름] [제약조건 종류] (컬럼명)
+- 
 ```
 CREATE TABLE TBL_CAR(
 	ID NUMBER,
@@ -377,11 +381,13 @@ CREATE TABLE TBL_CAR(
 DROP TABLE TBL_CAR;
 DROP TABLE TBL_MEMBER;
 ```
+
 ## 제약 조건 삭제
 - ALTER TABLE 테이블명 DROP CONSTRAINT 제약조건명;
 ```SQL
 ALTER TABLE TBL_CAR DROP CONSTRAINT CAR_PK;
 ```
+
 ## 제약 조건 추가
 - 테이블이 이미 생성된 뒤 제약조건 추가를 해보자
 - ALTER TABLE 테이블명 ADD CONSTRAINT [제약조건명] [제약조건 종류](컬럼명);
@@ -391,7 +397,6 @@ SELECT * FROM TBL_CAR;
 ```
 
 ## TBL_ANIMAL 테이블 생성
-
 ```SQL
 CREATE TABLE TBL_ANIMAL(
 	ID NUMBER PRIMARY KEY, 
@@ -401,8 +406,9 @@ CREATE TABLE TBL_ANIMAL(
 	AGE NUMBER(3),
 	FEED VARCHAR2(100)
 );
+
 --기존 제약조건 삭제(PK)
-properties > constrains 탭으로 들어가면 제약조건에 이름이 정해져 있다.
+-- properties > constrains 탭으로 들어가면 제약조건에 이름이 정해져 있다.
 ALTER TABLE TBL_ANIMAL DROP CONSTRAINT Name
 --제약조건 추가(PK)
 ALTER TABLE TBL_ANIMAL ADD CONSTRAINT ANIMAL_PK PRIMARY KEY(ID);
@@ -423,6 +429,34 @@ CREATE TABLE TBL_STUDENT(
 	CONSTRAINT STD_PK PRIMARY KEY(ID)
 );
 ```
+- DEFAULT 제약조건은 값을 넣지 않으면 'W'를 기본값으로 설정하겠다는 제약조건이다.
+- NOT NULL은 해당 속성의 값은 NULL이 될 수 없다는 것이다.
+- 그러면 DEFAULT를 지정하면 굳이 NOT NULL을 쓰지 않아도 되는것이 아닌가??
+
+### NOT NULL과 DEFAULT의 차이점
+```SQL
+ex) GENDER CHAR(1) DEFAULT 'W'
+/* QUERY 1*/
+INSERT INTO TBL_STUDENT GENDER VALUES (NULL);
+
+/* QUERY 2*/
+INSERT INTO TBL_STUDENT GENDER VALUES ();
+```
+- 쿼리1은 'NULL'이라는 특정한 값을 받았다고 생각하기 때문에 아무일도 일어나지 않는다.
+- 쿼리2는 아무런 입력도 받지 않았다고 생각하기 때문에 DEFAULT값은 'W'으로 설정된다.
+
+### 1. NOT NULL만 선언한 경우
+a. 해당 컬럼에 아무값도 넣지 않고 INSERT했을 때 : NOT NULL 동작
+b. 해당 컬럼에 NULL값을 넣어 INSERT했을 때 : NOT NULL 동작
+
+### 2. DEFAULT만 선언한 경우
+a. 해당 컬럼에 아무값도 넣지 않고 INSERT했을 때 : DEFAULT 동작
+b. 해당 컬럼에 NULL값을 넣어 INSERT했을 때 : DEFAULT 동작하지 않음
+    - NULL이라는 값이 들어간 것으로 취급하여, DEFAULT값이 들어가지 않는다.
+
+### 3. NOT NULL과 DEFAULT 둘 다 선언한 경우
+a. 해당 컬럼에 아무값도 넣지 않고 INSERT했을 때 : DEFAULT 동작하여 기본값 들어감
+b. 해당 컬럼에 NULL값을 넣어 INSERT했을 때 : NOT NULL 동작
 
 ## 무결성
 - 데이터의 정확성, 일관성, 유효성이 유지되는 것, 일관된 데이터베이스 상태를 정의하는 규칙을 묵시적으로 또는 명시적으로 정의함
