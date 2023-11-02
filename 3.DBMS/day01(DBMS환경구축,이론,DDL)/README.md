@@ -22,7 +22,7 @@
 3. 관계형 데이터베이스(RDBMS)
     - 행(Column)과 열(Rows)을 가지는 표 형식 데이터를 저장하는 형태의 데이터베이스
   
-![image](https://github.com/to7485/Web1500/assets/54658614/24b45211-a1de-4d58-b15a-a94ac2bb7bbe)
+![image](https://github.com/to7485/Web1500/assets/54658614/bd4f8174-f439-4002-b5fb-588008c9ab94)
 
     - SQL을 이용하여 관리 및 접근
     - 관계 대수에서 착안하여 만들어짐
