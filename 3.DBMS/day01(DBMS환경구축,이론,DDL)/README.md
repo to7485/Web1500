@@ -446,17 +446,17 @@ INSERT INTO TBL_STUDENT GENDER VALUES ();
 - 쿼리2는 아무런 입력도 받지 않았다고 생각하기 때문에 DEFAULT값은 'W'으로 설정된다.
 
 ### 1. NOT NULL만 선언한 경우
-a. 해당 컬럼에 아무값도 넣지 않고 INSERT했을 때 : NOT NULL 동작
-b. 해당 컬럼에 NULL값을 넣어 INSERT했을 때 : NOT NULL 동작
+a. 해당 컬럼에 아무값도 넣지 않고 INSERT했을 때 : NOT NULL 동작<br>
+b. 해당 컬럼에 NULL값을 넣어 INSERT했을 때 : NOT NULL 동작<br>
 
 ### 2. DEFAULT만 선언한 경우
-a. 해당 컬럼에 아무값도 넣지 않고 INSERT했을 때 : DEFAULT 동작
-b. 해당 컬럼에 NULL값을 넣어 INSERT했을 때 : DEFAULT 동작하지 않음
+a. 해당 컬럼에 아무값도 넣지 않고 INSERT했을 때 : DEFAULT 동작<br>
+b. 해당 컬럼에 NULL값을 넣어 INSERT했을 때 : DEFAULT 동작하지 않음<br>
     - NULL이라는 값이 들어간 것으로 취급하여, DEFAULT값이 들어가지 않는다.
 
 ### 3. NOT NULL과 DEFAULT 둘 다 선언한 경우
-a. 해당 컬럼에 아무값도 넣지 않고 INSERT했을 때 : DEFAULT 동작하여 기본값 들어감
-b. 해당 컬럼에 NULL값을 넣어 INSERT했을 때 : NOT NULL 동작
+a. 해당 컬럼에 아무값도 넣지 않고 INSERT했을 때 : DEFAULT 동작하여 기본값 들어감<br>
+b. 해당 컬럼에 NULL값을 넣어 INSERT했을 때 : NOT NULL 동작<br>
 
 ## 무결성
 - 데이터의 정확성, 일관성, 유효성이 유지되는 것, 일관된 데이터베이스 상태를 정의하는 규칙을 묵시적으로 또는 명시적으로 정의함
