@@ -188,6 +188,21 @@ win + r 키를 눌러 실행을 켜고 cmd를 입력하여 프롬포트를 연�
 
 ![image](https://user-images.githubusercontent.com/54658614/230539995-5daa712a-9c47-415a-8c71-69f1af30fa0b.png)
 
+### ojdbc
+- 데이터베이스와의 통신을 담당하는 인터페이스
+- Oracle Java DataBase Connectivity의 약자
+- Oracle 전용의 jdbc 라이브러리이다.
+- Oracle에서 제공하는 오라클DB를 관리할 수 있도록 해주는 JDBC
+- MS SQL, MySQL등과 같은 데이터베이스에 알맞은 JDBC 드라이버를 구현하여 제공
+- JDBC 드라이버의 구현체를 이용해서 특정 벤더의 데이터베이스에 접근할 수 있다.
+
+### JDBC
+- JDBC(Java Database Connectivity)는 Java 기반 애플리케이션의 데이터를 데이터베이스에 저장 및 업데이트하거나,
+- 데이터베이스에 저장된 데이터를 Java에서 사용할 수 있도록 하는 자바 API이다.
+- Java 애플리케이션에서 데이터베이스에 접근하기 위해 JDBC API를 사용하여 데이터베이스에 연동할 수 있으며,
+- 데이터베이스에서 자료를 쿼리(Query)하거나 업데이트하는 방법을 제공한다.
+- JDBC API는 java.sql.\* 패키지에 의해 구현됩니다.
+
 ![image](https://user-images.githubusercontent.com/54658614/230540093-c5bf48ed-4662-4a82-8164-4f261564c4bc.png)
 
 ok를 누르면 오라클과 DBeaver의 연결이 완료된다.
