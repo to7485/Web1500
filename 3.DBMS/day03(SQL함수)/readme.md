@@ -301,3 +301,45 @@ SELECT DEPARTMENT_ID, MAX(SALARY) FROM EMPLOYEES GROUP BY DEPARTMENT_ID;
 
 SELECT DEPARTMENT_ID, SUM(SALARY) FROM EMPLOYEES GROUP BY DEPARTMENT_ID ORDER BY SUM(SALARY) DESC;
 ```
+
+## HAVING절
+- Having 절은 Group by로 집계된 값 중 where 절 처럼 특정 조건을 추가한다고 생각 하시면 됩니다.
+- WHERE절과의 다른 점은 HAVING절은 GROUP BY절과 함께 사용해야 하며 집계 함수를 사용하여 조건절을 작성하거나 GROUP BY컬럼만 조건절에 사용할 수 있다.
+```SQL
+예) 각 부서의 급여의 최대값, 최소값, 인원수를 출력하자
+     단, 급여의 최대값이 8000이상인 결과만 보여줄 것.
+select department_id, MAX(salary),MIN(salary),COUNT(*)
+from employees 
+group by department_id
+having MAX(salary)>=8000; -> 그룹함수가 사용된 조건이라면 WHERE 이 아닌 HAVING을 써야한다.
+--WHERE MAX(SALARY) >= 8000;
+
+문제) 각 부서별 인원수가 20명 이상인 부서의 정보를 부서번호, 급여의 합, 급여의 평균, 인원수 순으로 출력
+단, 급여의 평균은 소수점 2자리 반올림
+select department_id, SUM(salary), ROUND(AVG(salary),2) avg,COUNT(*)
+from employees
+having COUNT(*)>=20;
+
+그룹함수만 having에 쓰고 일반 조건은 where에 써야 한다. 일반조건이 having절에 들어가려면 group by에 묶여야 한다.
+
+문제) 부서별, 직종별로 그룹화 하여 결과를 부서번호, 직종, 인원수 순으로 출력, 단, 직종이 'MAN'으로 끝나는 경우만 출력
+sleect department_id,job_id,count(*)
+from employees
+where job_id like '%MAN' -> HAVING으로 해도 값이 나오긴 하지만 일반컬럼이기 때문에 WHERE쓰는게 좋다.
+group by department_id,job_id;
+
+문제)각 부서별 평균 급여를 소수점 한자리까지 버림으로 출력 단, 평균 급여가 10000미만인 그룹만 조회해야 하며
+ 부서번호가 50이하인 부서만 조회 
+select department_id, TRUNC(AVG(salary),1)
+from employees 
+where department_id<=50 
+group by department_id
+having AVG(salary)<10000;
+
+문제) 각 부서별 부서번호, 급여의 합, 평균, 인원수 순으로 출력 단, 급여의 합이 30000이상인 경우만 출력해야 하며, 급여의 평균은 소수점 2자리에서 반올림 하시오.
+select department_id, SUM(salary), ROUND(AVG(salary),2),COUNT(*) 
+from employees 
+group by department_id 
+having SUM(salary)>=30000;
+```
+
