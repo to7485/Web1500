@@ -4,7 +4,7 @@
 
 ## 내장함수의 종류
 - 단일행 함수 : 1개의 행값이 함수에 적용되어 1개의 행을 반환한다.
-- 그룹 함수 : 1개 이상의 행의 값이 함수에 적용되어 1개의 값을 반환한다.
+- 집계 함수 : 1개 이상의 행의 값이 함수에 적용되어 1개의 값을 반환한다.
 
 ## 문자함수
 |함수|기능|
@@ -23,6 +23,7 @@
 |SUBSTR|시작 위치부터 선택 개수만큼 문자를 반환한다.|
 |LENGTH|문자열의 길이를 반환한다.|
 |REPLACE|첫 번째 파라미터로 지정한 문자를 두번째 파라미터로 지정한 문자로 바꿔준다.|
+|CONCAT|입력되는 두 문자열을 연결하여 반환한다.
 
 ```SQL
 -- 지정된 문자 ASCII값을 반환한다.
@@ -76,7 +77,11 @@ select length('john') from dual;
 문) 부서번호가 50번인 사원들의 이름을 출력하되 이름중 'el'을 모두 '**'로 대체하여 출력하시오
 SELECT REPLACE(FIRST_NAME,'el','**') FROM EMPLOYEES WHERE DEPARTMENT_ID = 50;
 
+-- 주어지는 두 문자열을 연결한다.
+SELECT CONCAT('Republic of',' Korea') FROM dual;
 ```
+
+<hr>
 
 ## 숫자함수
 |함수|기능|
@@ -126,6 +131,7 @@ SELECT POWER(2,1),POWER(2,2),POWER(2,3),POWER(2,0) FROM DUAL;
 |MONTHS_BETWEEN|주어진 두 개의 날짜 간격 개월을 반환한다.|
 |NEXT_DAY|주어진 일자가 다음에 나타나는 지정요일(1:일요일 ~ 7:토요일)의 날짜를 반환한다.|
 |LAST_DAY|주어진 일자가 포함된 월의 말일을 반환한다.|
+|TO_DATE('날짜','패턴')| 특정 날짜형식의 문자를 날짜로 변환한다|
 
 ※ 날짜 + 날짜 : 날짜끼리는 더하기가 안됩니다.
 
@@ -165,26 +171,28 @@ select first_name, hire_date,mon from employees where trunc(months_between(sysda
 SELECT EMPLOYEE_ID, FIRST_NAME, HIRE_DATE, add_months(HIRE_DATE, 42) fired FROM EMPLOYEES WHERE EMPLOYEE_ID = 120;
 
 SELECT SYSDATE,
-	NEXT_DAY(SYSDATE-8,'SUN') prev_sunday, --이전 일요일 
-	NEXT_DAY(SYSDATE,'SUN')   next_sunday --다음 일요일 
-FROM DUAL
+	NEXT_DAY(SYSDATE-7,'일요일') prev_sunday, --이전 일요일 
+	NEXT_DAY(SYSDATE,'일요일')   next_sunday --다음 일요일 
+FROM DUAL;
   
 SELECT NEXT_DAY(SYSDATE, 1)        FROM DUAL;
 SELECT NEXT_DAY(SYSDATE, '일요일') FROM DUAL;
 SELECT NEXT_DAY(SYSDATE, '일')     FROM DUAL;
+
+-- 오라클 세팅이 한글이라서 영어로 작성하니 안된다
 SELECT NEXT_DAY(SYSDATE, 'SUNDAY') FROM DUAL;
 SELECT NEXT_DAY(SYSDATE, 'SUN')    FROM DUAL;
 
-SELECT LAST_DAY(TO_DATE('2022-01-17', 'YYYY-MM-DD')) FROM dual
+SELECT LAST_DAY(TO_DATE('2022-01-17', 'YYYY-MM-DD')) FROM dual;
 ```
 
-오라클에서는 문자열을 날짜형 데이터로 형 변환을 하기 위해서 TO_DATE()함수를 사용합니다.
-- TO_DATE('문자열','날짜포맷')
+-- 특정 날짜를 특정 패턴의 문자열 타입으로 바꿔주는 메서드
+-- TO_CHAR('날짜','패턴')
 
-```
-SELECT to_char(sysdate,'yyyy-mm-dd') FROM dual;
-SELECT to_char(sysdate,'yyyy-mm-dd day') FROM dual;
-SELECT to_char(sysdate,'yyyy-mm-dd HH:MI:SS') FROM dual;
+```SQL
+SELECT TO_DATE(sysdate,'yyyy-mm-dd') FROM dual;
+SELECT TO_DATE(sysdate,'yyyy-mm-dd day') FROM dual;
+SELECT TO_DATE(sysdate,'yyyy-mm-dd HH:MI:SS') FROM dual;
 ```
 
 ### 날짜형식 FORMATTING 모델
@@ -203,8 +211,9 @@ SELECT to_char(sysdate,'yyyy-mm-dd HH:MI:SS') FROM dual;
 
 <hr>
 
-## 그룹함수
+## 집계함수
 - 여러 행들에 대한 연산의 결과를 하나의 행으로 반환한다.
+- 집계 함수는 NULL을 체크하지 않는다. 단 COUNT(*)의 경우 NULL도 포함한 값을 반환한다.
 
 |함수|기능|
 |---|------|
@@ -216,8 +225,8 @@ SELECT to_char(sysdate,'yyyy-mm-dd HH:MI:SS') FROM dual;
 |STDDEV|행들의 표준편차를 반환한다.|
 |VARIANCE|행들의 분산을 반환한다.|
 
-```
-**일반적으로 그룹함수와 일반컬럼을 함께 쓸 수 없다.
+```SQL
+-- 일반적으로 그룹함수와 일반컬럼을 함께 쓸 수 없다.
 select count(*), first_name from employees;
 
 예) 사원테이블의 전체 사원수를 출력
@@ -225,6 +234,8 @@ select COUNT(*) FROM EMPLOYEES;
 
 예) 사원테이블에서 보너스를 받는 사원의 수를 출력
 select count(commIssion_pct) from employees;
+
+-- COMMISSION_PCT 속성에 값이 있는 행의 개수만 센다.
 
 문제) 사원테이블에서 직종이 SA_REP인 사원들의 평균급여, 급여최고액, 급여최저액, 급여의 총 합계를 출력하시오.
 select AVG(salary) AVG,MAX(salary) MAX,MIN(salary) MIN,SUM(salary) SUM
