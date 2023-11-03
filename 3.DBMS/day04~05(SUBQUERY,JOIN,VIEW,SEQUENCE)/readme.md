@@ -91,16 +91,24 @@ where salary between (select salary
                                                                    from employees where employee_id = 149);
 ```
 
-## JOIN
-- join이라고 하는 부분인데 서로다른 테이블을 오가면서 데이터를 가지고 오는 형태.
-- join을 하려면 알아야 하는 개념이 기본키, 후보키, 외래키 이런 개념을 알아야 한다.
+# JOIN
+- 데이터를 불러올 때 하나의 테이블만 사용하는 것이 아니라 두 개 이상의 테이블을 합쳐서 필요한 데이터를 추출할 때 사용하는 것이 조인기능이다.
+- JOIN을 사용하려면 두개의 테이블이 적어도 하나의 컬럼을 공유해야 한다.
+- 보통 기본키(PK)와 외래키(FK)값을 이용하여 JOIN을 한다.
 
-### JOIN의 종류
-1. INNER JOIN
+## JOIN의 종류
+### 1. Inner Join
+- 각 테이블에서 조인 조건에 일치되는 데이터만 가져온다.
+- A와 B테이블의 공통된 부분을 의미한다 보통 교집합 이라고 부른다.
+
+```SQL
+테이블명A INNER JOIN 테이블명B ON 조건식
+테이블명A JOIN 테이블명B ON 조건식
+```
 
 ![image](https://user-images.githubusercontent.com/54658614/230700010-b6b1bb7d-ad38-4478-bff7-d029b76c05b1.png)
 
-INNER JOIN은 교집합 연산과 같다. JOIN 하는 컬럼 값이 양쪽 테이블 데이터 집합에서 공통적으로 존재하는<br>
+- INNER JOIN은 교집합 연산과 같다. JOIN 하는 컬럼 값이 양쪽 테이블 데이터 집합에서 공통적으로 존재하는
 데이터만 조인해서 결과 데이터 집합으로 추출
 
 ```
