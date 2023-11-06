@@ -91,6 +91,56 @@ where salary between (select salary
                                                                    from employees where employee_id = 149);
 ```
 
+# CONCATENATION(연결)
+- CONCATENATION(연결) : ||
+
+```SQL
+--EMPLOYEES 테이블에서 사원들의 이름 연결하기
+SELECT FIRST_NAME||' '||LAST_NAME FROM EMPLOYEES;
+
+SELECT * FROM PLAYER
+--OO의 급여는 OO이다.
+SELECT FIRST_NAME||'의 급여는'||SALARY||'이다' FROM EMPLOYEES;
+```
+
+# AS(ALIAS)
+- AS(ALIAS) : 별칭	컬럼이 너무 길다면 별명을 쥐서 대신 사용할 수 있음
+    - SELECT절
+        - AS 뒤에 별칭 작성(대소문자를 구분할 때, 공백문자가 들어갈 때, 특수문자가 들어갈 때는 쌍따옴표에 꼭 감싸야 한다.)
+        - 한칸 띄우고 작성
+    - FROM절 : 한 칸 띄우고 작성
+
+## 별칭의 특징
+- 테이블에 별칭을 줘서 컬럼을 단순, 명확히 할 수 있다.
+- 현재의 SELECT 문장에서만 유효하다.
+- 테이블 별칭은 길이가 30자까지 가능하나 짧을수록 좋다.
+- 테이블 별칭에는 의미가 잇어야 한다.
+- FROM절에 테이블 멸칭 설정시 해당 테이블 별칭은 SELECT문장에서 테이블 이름 대신에 사용한다.
+
+```SQL
+SELECT COUNT(SALARY) AS 갯수,
+       MAX(SALARY) AS 최대값,
+       MIN(SALARY) AS 최소값,
+       SUM(SALARY) AS 합계,
+       AVG(SALARY) AS 평균 FROM EMPLOYEES;
+
+--EMPLOYEES 테이블에서EMPLOYEE_ID를 "사번"으로 FIRST_NAME을 "이름"로, SALARY를 "급여"로 바꿔서 검색
+SELECT EMPLOYEE_ID AS "사번", FIRST_NAME AS "이름", SALARY AS "급여" FROM EMPLOYEES;
+
+두개 이상의 테이블에서 각각의 컬럼을 조회하려고 한다면 어떤테이블에서 온 컬럼인지 확실하게 적어줘야 한다.
+SELECT PLAYER.TEAM_ID, TEAM.TEAM_ID FROM PLAYER, TEAM;
+
+근데 테이블명이 길기 때문에 FROM절에서 별칭을 준다.
+SELECT P.TEAM_ID, T.TEAM_ID FROM PLAYER P , TEAM T;
+
+SELECT * FROM STADIUM;
+SELCT * FROM TEAM;
+
+SELECT T.TEAM_ID "팀 아이디", S.ADDRESS "주소", T.TEL FROM STARDIUM S, TEAM T;
+
+커밋하기 귀찮으니까 다시 오토커밋으로 바꿔주세요.
+```
+
 # JOIN
 - 데이터를 불러올 때 하나의 테이블만 사용하는 것이 아니라 두 개 이상의 테이블을 합쳐서 필요한 데이터를 추출할 때 사용하는 것이 조인기능이다.
 - JOIN을 사용하려면 두개의 테이블이 적어도 하나의 컬럼을 공유해야 한다.
@@ -111,7 +161,7 @@ where salary between (select salary
 - INNER JOIN은 교집합 연산과 같다. JOIN 하는 컬럼 값이 양쪽 테이블 데이터 집합에서 공통적으로 존재하는
 데이터만 조인해서 결과 데이터 집합으로 추출
 
-```
+```SQL
 <사용법>
 SELECT 컬럼명1,컬럼명
 FROM TABLE A (INNER) JOIN TABLE B
@@ -122,13 +172,13 @@ FROM TABLE A , TABLE B
 WHERE TABLEA.조인컬럼 = TABLEB.조인컬럼
 
 ```
-2. LEFT OUTER JOIN
+### 2. LEFT OUTER JOIN
 - 교집합의 연산결과와 차집합의 연산 결과를 합친것과 같다.
 - LEFT OUTER JOIN 왼쪽에 테이블에만 존재하는 데이터만 결과로 추출한다.
 
 ![image](https://user-images.githubusercontent.com/54658614/230700152-a35a75ee-fa7a-4560-8f46-06075f033af4.png)
 
-```
+```SQL
 <사용법>
 
 SELECT 컬럼명1,컬럼명
@@ -136,7 +186,7 @@ FROM TABLE A LEFT OUTER JOIN TABLE B
 ON TABLEA.조인컬럼 = TABLEB.조인컬럼
 
 ```
-3. RIGHT OUTER JOIN
+### 3. RIGHT OUTER JOIN
 - LEFT OUTER JOIN의 반대이다.
 - RIGHT OUTER JOIN 키워드의 오른쪽에 명시된 테이블에만 존재하는 데이터를 추출한다.
 
@@ -144,18 +194,19 @@ ON TABLEA.조인컬럼 = TABLEB.조인컬럼
 
 <사용법>
 
-```
+```SQL
 SELECT 컬럼명1,컬럼명
 FROM TABLE A RIGHT OUTER JOIN TABLE B
 ON TABLEA.조인컬럼 = TABLEB.조인컬럼
 ```
+
 4. FULL OUTER JOIN
 - 합집합 연산 결과와 같다.
 - 양쪽 테이블 데이터 집합에서 공통적으로 존재하는데이터, 한쪽에만 존재하는 데이터 모두 추출한다.
 
 ![image](https://user-images.githubusercontent.com/54658614/230700279-881f5fff-cc77-4f2d-8cfe-1c166f614356.png)
 
-```
+```SQL
 <사용법>
 
 SELECT 컬럼명1,컬럼명
@@ -164,7 +215,7 @@ ON TABLEA.조인컬럼 = TABLEB.조인컬럼
 
 ```
 
-```
+```SQL
 SELECT e.first_name, e.department_id, d.department_name -- -> 조건을 안써주면 그냥 맨위에꺼 가져옴
 from employees e JOIN DEPARTMENTS d
 ON e.department_id = d.department_id; ---> join에는 조건이 없을 수 없다.
@@ -195,12 +246,10 @@ from employees e JOIN departments d ON e.department_id = d.department_id
 JOIN locations l ON d.location_id = l.location_id
 and l.city = 'Seattle';
 ```
-## VIEW
 
-기존의 테이블은 그대로 놔둔 채<br>
-필요한 컬럼들 및 새로운 컬럼을 만든 가상의 테이블.<br>
-실제 데이터가 저장되는 것은 아니지만<br>
-view를 통해서 데이터를 관리할 수 있다.<br>
+# VIEW
+-기존의 테이블은 그대로 놔둔 채필요한 컬럼들 및 새로운 컬럼을 만든 가상의 테이블.
+- 실제 데이터가 저장되는 것은 아니지만 view를 통해서 데이터를 관리할 수 있다.
 
 ### view의 특징
 
@@ -211,14 +260,14 @@ view를 통해서 데이터를 관리할 수 있다.<br>
 
 - 보안성 : 짧게 만들기 때문에 기존의 쿼리는 보이지 않는다.
 
-```
+```SQL
 CREATE VIEW 뷰이름 AS
 (
   쿼리문
 )
 ```
 
-```
+```SQL
 create view MY_EMPL AS
 (
 select employee_id, first_name, salary
