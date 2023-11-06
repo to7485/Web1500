@@ -266,34 +266,3 @@ WHERE E.DEPARTMENT_ID = D.DEPARTMENT_ID
 );
 SELECT * FROM TEST;
 ```
-## SEQUENCE
-- 테이블에 값을 추가할 때 자동으로 순차적인 정수값이 들어가도록 설정해주는 객체
-
-### 시퀀스 생성하기
-```
-시퀀스 생성하기(create sequence 시퀀스명;)
-CREATE SEQUENCE MEMO_SEQ;
-Start with 1 --1부터 카운팅
-INCREMENT BY 1 --1씩 증가
-CACHE 20; -- 미리 20개의 INDEX공간을 확보 20명이 동시에 접속해서 글을 써도 버벅거리지 않게 해준다.
-NOCACHE; -- 1개의 INDEX공간만 확보
-```
-### 메모테이블 만들어보기
-```
-create table memo(
-	idx NUMBER(3) primary key,
-	title VARCHAR2(50) not null,
-	content VARCHAR2(4000),
-	pwd VARCHAR2(20) not null,
-	writer VARCHAR2(100) not null,
-	IP VARCHAR2(20),
-	write_date DATE
-	del_info NUMBER() ----  0, -1, 1
-);
-```
-### MEMO_SEQ를 사용하여 MEMO테이블에 값을 추가
-```
-insert into MEMO values(memo_seq.nextval, '제목1', '내용1', '1111', '홍길동','192.1.1',sysdate );
-
-insert into MEMO values(memo_seq.nextval, '제목2', '내용2', '1111', '홍길동2','192.1.1',sysdate );
-```
