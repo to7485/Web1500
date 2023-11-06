@@ -98,13 +98,12 @@ where salary between (select salary
 --EMPLOYEES 테이블에서 사원들의 이름 연결하기
 SELECT FIRST_NAME||' '||LAST_NAME FROM EMPLOYEES;
 
-SELECT * FROM PLAYER
 --OO의 급여는 OO이다.
 SELECT FIRST_NAME||'의 급여는'||SALARY||'이다' FROM EMPLOYEES;
 ```
 
 # AS(ALIAS)
-- AS(ALIAS) : 별칭	컬럼이 너무 길다면 별명을 쥐서 대신 사용할 수 있음
+- AS(ALIAS) : 별칭(컬럼이 너무 길다면 별명을 쥐서 대신 사용할 수 있음)
     - SELECT절
         - AS 뒤에 별칭 작성(대소문자를 구분할 때, 공백문자가 들어갈 때, 특수문자가 들어갈 때는 쌍따옴표에 꼭 감싸야 한다.)
         - 한칸 띄우고 작성
