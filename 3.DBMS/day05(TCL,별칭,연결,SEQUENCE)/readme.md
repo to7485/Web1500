@@ -17,9 +17,7 @@ WHERE 계좌번호 = A;
 UPDATE 계좌
 SET 잔액 = 10000
 WHERE 계좌번호 = B;
-```
-  
-  
+``` 
 - 일관성(Consistency) : 데이터베이스의 트랜잭션이 제약조건, cascades, triggers를 포함한 정의된 모든 조건에 맞게 데이터 값이 변경됨
     - 트랜잭션 실행 전의 데이터베이스 내용이 잘못되지 않으면 트랜잭션 실행 후에도 데이터베이스 내용이 잘못되면 안됨
 
@@ -65,6 +63,67 @@ ROLLBACK TO 세이브포인트이름;<br>
 UPDATE EMPLOYEES
 SET FIRST_NAME = '이현준'
 WHERE JOB_ID = 'IT_PROG';
+
+SELECT * FROM EMPLOYEES WHERE JOB_ID = 'IT_PROG';
+이름이 전부 바뀐걸 확인하고 잘못 바꿨다고 생각하면 위에 롤백 버튼을 눌러 원래대로 되돌리면 된다.
+
+-- EMPLOYEES 테이블에서 JOB_ID가 'IT_PROG'인 사람들 삭제하기
+DELETE FROM EMPLOYEES
+WHERE JOB_ID = 'IT_PROG';
+
+-- EMPLOYEES 테이블에서 급여가 8000이상인 사람 삭제하기
+DELETE FROM EMPLOYEES
+WHERE SALARY >= 8000;
+```
+
+## CONCATENATION(연결)
+- CONCATENATION(연결) : ||
+
+```SQL
+--EMPLOYEES 테이블에서 사원들의 이름 연결하기
+SELECT FIRST_NAME||' '||LAST_NAME FROM EMPLOYEES;
+
+SELECT * FROM PLAYER
+--OO의 급여는 OO이다.
+SELECT FIRST_NAME||'의 급여는'||SALARY||'이다' FROM EMPLOYEES;
+```
+
+## ALIAS 별칭
+- AS(ALIAS) : 별칭	컬럼이 너무 길다면 별명을 쥐서 대신 사용할 수 있음
+    - SELECT절
+        - AS 뒤에 별칭 작성(대소문자를 구분할 때, 공백문자가 들어갈 때, 특수문자가 들어갈 때는 쌍따옴표에 꼭 감싸야 한다.)
+        - 한칸 띄우고 작성
+    - FROM절 : 한 칸 띄우고 작성
+
+### 별칭의 특징
+- 테이블에 별칭을 줘서 컬럼을 단순, 명확히 할 수 있다.
+- 현재의 SELECT 문장에서만 유효하다.
+- 테이블 별칭은 길이가 30자까지 가능하나 짧을수록 좋다.
+- 테이블 별칭에는 의미가 잇어야 한다.
+- FROM절에 테이블 멸칭 설정시 해당 테이블 별칭은 SELECT문장에서 테이블 이름 대신에 사용한다.
+
+```SQL
+SELECT COUNT(SALARY) AS 갯수,
+       MAX(SALARY) AS 최대값,
+       MIN(SALARY) AS 최소값,
+       SUM(SALARY) AS 합계,
+       AVG(SALARY) AS 평균 FROM EMPLOYEES;
+
+--EMPLOYEES 테이블에서EMPLOYEE_ID를 "사번"으로 FIRST_NAME을 "이름"로, SALARY를 "급여"로 바꿔서 검색
+SELECT EMPLOYEE_ID AS "사번", FIRST_NAME AS "이름", SALARY AS "급여" FROM EMPLOYEES;
+
+두개 이상의 테이블에서 각각의 컬럼을 조회하려고 한다면 어떤테이블에서 온 컬럼인지 확실하게 적어줘야 한다.
+SELECT PLAYER.TEAM_ID, TEAM.TEAM_ID FROM PLAYER, TEAM;
+
+근데 테이블명이 길기 때문에 FROM절에서 별칭을 준다.
+SELECT P.TEAM_ID, T.TEAM_ID FROM PLAYER P , TEAM T;
+
+SELECT * FROM STADIUM;
+SELCT * FROM TEAM;
+
+SELECT T.TEAM_ID "팀 아이디", S.ADDRESS "주소", T.TEL FROM STARDIUM S, TEAM T;
+
+커밋하기 귀찮으니까 다시 오토커밋으로 바꿔주세요.
 ```
 
 
@@ -73,5 +132,35 @@ WHERE JOB_ID = 'IT_PROG';
 
 
 
+## SEQUENCE
+- 테이블에 값을 추가할 때 자동으로 순차적인 정수값이 들어가도록 설정해주는 객체
 
+### 시퀀스 생성하기
+```
+시퀀스 생성하기(create sequence 시퀀스명;)
+CREATE SEQUENCE MEMO_SEQ;
+Start with 1 --1부터 카운팅
+INCREMENT BY 1 --1씩 증가
+CACHE 20; -- 미리 20개의 INDEX공간을 확보 20명이 동시에 접속해서 글을 써도 버벅거리지 않게 해준다.
+NOCACHE; -- 1개의 INDEX공간만 확보
+```
+### 메모테이블 만들어보기
+```
+create table memo(
+	idx NUMBER(3) primary key,
+	title VARCHAR2(50) not null,
+	content VARCHAR2(4000),
+	pwd VARCHAR2(20) not null,
+	writer VARCHAR2(100) not null,
+	IP VARCHAR2(20),
+	write_date DATE
+	del_info NUMBER() ----  0, -1, 1
+);
+```
+### MEMO_SEQ를 사용하여 MEMO테이블에 값을 추가
+```
+insert into MEMO values(memo_seq.nextval, '제목1', '내용1', '1111', '홍길동','192.1.1',sysdate );
+
+insert into MEMO values(memo_seq.nextval, '제목2', '내용2', '1111', '홍길동2','192.1.1',sysdate );
+```
 
