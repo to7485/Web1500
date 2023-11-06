@@ -199,7 +199,7 @@ FROM TABLE A RIGHT OUTER JOIN TABLE B
 ON TABLEA.조인컬럼 = TABLEB.조인컬럼
 ```
 
-4. FULL OUTER JOIN
+### 4. FULL OUTER JOIN
 - 합집합 연산 결과와 같다.
 - 양쪽 테이블 데이터 집합에서 공통적으로 존재하는데이터, 한쪽에만 존재하는 데이터 모두 추출한다.
 
@@ -211,7 +211,6 @@ ON TABLEA.조인컬럼 = TABLEB.조인컬럼
 SELECT 컬럼명1,컬럼명
 FROM TABLE A FULL OUTER JOIN TABLE B
 ON TABLEA.조인컬럼 = TABLEB.조인컬럼
-
 ```
 
 ```SQL
