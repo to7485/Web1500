@@ -8,9 +8,7 @@
 
 ## dao 패키지에 BoardDAO 인터페이스 만들기
 
-![image](https://github.com/to7485/Web1500/assets/54658614/467e3eac-259c-4d53-8549-56c25f04a188)
-
-```
+```JAVA
 package dao;
 
 import java.util.List;
@@ -33,8 +31,9 @@ public interface BoardDAO {
 인터페이스만 가지고는 아무것도 못한다.
 인터페이스를 구현하는 자식클래스를 만들어주자.
 ```
+
 ## dao 패키지에 BoardDAOImpl 클래스 만들기
-```
+```JAVA
 package dao;
 
 import java.util.List;
@@ -81,7 +80,7 @@ public class BoardDAOImpl implements BoardDAO {
 ```
 
 ## service 패키지에 BoardService 인터페이스 만들기
-```
+```JAVA
 package service;
 
 import java.util.List;
@@ -94,7 +93,7 @@ public interface BoardService {
 ```
 
 ## 인터페이스를 구현할 BoardServiceImpl 클래스 만들기
-```
+```JAVA
 package service;
 
 import java.util.List;
@@ -123,7 +122,7 @@ public class BoardServiceImpl implements BoardService {
 
 ## bean 객체를 생성해보자
 - config 패키지에 RootContext.java에 객체 생성하기
-```
+```JAVA
 package config;
 
 import org.springframework.context.annotation.Bean;
@@ -150,7 +149,7 @@ public class RootContext {
 ```
 
 ## BoardController 클래스 생성하기
-```
+```JAVA
 //↓↓↓ 스프링으로 하여금 해당클래스가 Controller라는 것을 인식시키기 위해
 //꼬리표(어노테이션 :프로그램 주석)이 "반드시" 필요하다.
 
