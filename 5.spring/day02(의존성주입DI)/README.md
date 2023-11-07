@@ -176,7 +176,7 @@ public class BoardController {
 
 
 ## config 패키지에 ServletContext.java에 객체 만들기
-```
+```JAVA
 package config;
 
 import org.springframework.context.annotation.Bean;
@@ -221,7 +221,7 @@ public class ServletContext implements WebMvcConfigurer {
 ```
 
 ## BoardController에서 바인딩 및 포워딩해주기
-```
+```JAVA
 package com.korea.test;
 
 import java.util.List;
@@ -254,7 +254,7 @@ public class BoardController {
 ```
 
 ## board_list.jsp에서 과일목록 출력하기
-```
+```JAVA
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
