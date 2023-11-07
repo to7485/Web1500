@@ -194,11 +194,16 @@ SELECT 테이블1.열, 테이블2.열
 FROM 테이블1 
 CROSS JOIN 테이블2;
 ```
+<hr>
 
+### OUTER JOIN
+- OUTER JOIN은 두 테이블에서 '공통된 값을 가지지 않는 행들'도 반환한다.
+- Left Outer join, Right Outer join, Full Outer Join의 종류가 있다.
 
 ### 2. LEFT OUTER JOIN
+- '왼쪽 테이블의 모든 행'과 '오른쪽 테이블에서 왼쪽 테이블과 공통된 값'을 가지고 있는 행들을 반환한다.
 - 교집합의 연산결과와 차집합의 연산 결과를 합친것과 같다.
-- LEFT OUTER JOIN 왼쪽에 테이블에만 존재하는 데이터만 결과로 추출한다.
+- 만약 오른쪽 테이블에서 공통괸 값을 가지고 있는 행이 없다면 NULL값을 반환한다.
 
 ![image](https://user-images.githubusercontent.com/54658614/230700152-a35a75ee-fa7a-4560-8f46-06075f033af4.png)
 
@@ -208,8 +213,8 @@ CROSS JOIN 테이블2;
 SELECT 컬럼명1,컬럼명
 FROM TABLE A LEFT OUTER JOIN TABLE B
 ON TABLEA.조인컬럼 = TABLEB.조인컬럼
-
 ```
+
 ### 3. RIGHT OUTER JOIN
 - LEFT OUTER JOIN의 반대이다.
 - RIGHT OUTER JOIN 키워드의 오른쪽에 명시된 테이블에만 존재하는 데이터를 추출한다.
@@ -224,7 +229,12 @@ FROM TABLE A RIGHT OUTER JOIN TABLE B
 ON TABLEA.조인컬럼 = TABLEB.조인컬럼
 ```
 
+#### LEFT OUTER JOIN과 RIGHT OUTER JOIN중 무엇을 많이 사용할까?
+- 상황에 따라 다르지만 대체로 'LEFT OUTER JOIN'을 더 많이 사용한다.
+- 이는 대부분의 경우 왼쪽 테이블의 데이터를 중심으로 분석하고자 할 때가 많기 때문이다.
+
 ### 4. FULL OUTER JOIN
+- 두 테이블에서 '모든 값'을 반환한다. 만약 공통된 값을 가지고 있지 않는 행이 있다면 NULL값을 반환한다.
 - 합집합 연산 결과와 같다.
 - 양쪽 테이블 데이터 집합에서 공통적으로 존재하는데이터, 한쪽에만 존재하는 데이터 모두 추출한다.
 
@@ -268,7 +278,64 @@ select e.first_name, e.email, e.department_id, d.department_name, d.location_id,
 from employees e JOIN departments d ON e.department_id = d.department_id
 JOIN locations l ON d.location_id = l.location_id
 and l.city = 'Seattle';
+
+예시) 사원 테이블과 부서테이블의 LEFT OUTER JOIN을 이용하여 사원이 어느 부서에 있는지 조회하기
+SELECT e.FIRST_NAME, d.DEPARTMENT_NAME
+FROM employees e
+LEFT OUTER JOIN departments d
+ON e.DEPARTMENT_ID = d.DEPARTMENT_ID;
+
+예시) 사원 테이블과 부서테이블의 RIGHT OUTER JOIN을 이용하여 사원이 어느 부서에 있는지 조회하기
+SELECT e.FIRST_NAME, d.DEPARTMENT_NAME
+FROM employees e
+RIGHT OUTER JOIN departments d
+ON e.DEPARTMENT_ID = d.DEPARTMENT_ID;
+
+예시) 사원 테이블과 부서테이블의 FULL OUTER JOIN을 이용하여 사원이 어느 부서에 있는지 조회하기
+SELECT e.FIRST_NAME, d.DEPARTMENT_NAME
+FROM employees e
+FULL OUTER JOIN departments d
+ON e.DEPARTMENT_ID = d.DEPARTMENT_ID;
 ```
+## 집합연산자
+- JOIN과는 별개로 두개의 테이블을 합치는 방법이 있다.
+
+### 1. UNION
+- 두 개의 테이블에서 '중복을 제거하고 합친 모든 행'을 반환한다.
+
+```SQL
+SELECT 테이블1.컬럼1, 테이블1.컬럼2 FROM 테이블1
+UNION
+SELECT 테이블2.컬럼1, 테이블2.컬럼2 FROM 테이블2
+
+-- EMPLOYEES 테이블과 DEPARTMENT테이블을 UNION한다.
+-- 사원 이름과 부서이름의 모든 값을 가져와서 중복을 제거하고 합친다.
+SELECT employees.FIRST_NAME FROM employees
+UNION
+SELECT departments.DEPARTMENT_NAME FROM departments;
+
+출처: https://adjh54.tistory.com/155 [Contributor9:티스토리]
+```
+
+### 2. UNION ALL
+- 두 개의 테이블에서 '중복을 제거하지 않고 모두 합친 모든 행'을 반환한다.
+
+```SQL
+SELECT 테이블1.컬럼1, 테이블1.컬럼2 FROM 테이블1
+UNION ALL
+SELECT 테이블2.컬럼1, 테이블2.컬럼2 FROM 테이블2
+
+-- EMPLOYEES 테이블과 DEPARTMENT테이블을 UNION ALL한다.
+-- 사원 이름과 부서이름의 모든 값을 가져와서 중복을 포함하여 합친다.
+SELECT employees.FIRST_NAME FROM employees
+UNION ALL
+SELECT departments.DEPARTMENT_NAME FROM departments;
+
+
+출처: https://adjh54.tistory.com/155 [Contributor9:티스토리]
+```
+
+
 
 # VIEW
 -기존의 테이블은 그대로 놔둔 채필요한 컬럼들 및 새로운 컬럼을 만든 가상의 테이블.
