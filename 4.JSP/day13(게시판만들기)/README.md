@@ -1011,7 +1011,7 @@ public void setDel_info(int del_info) {
 		if( !confirm("삭제하시겠습니까?") ) {
 			return;
 		}
-		
+		//var pwd = "${vo.pwd}"; 따옴표로 감싸지 않으면 문자열 비밀번호는 삭제할 수 없다.
 		var pwd = ${vo.pwd}; //원본 비밀번호
 		var c_pwd = document.getElementById("c_pwd").value;
 		
