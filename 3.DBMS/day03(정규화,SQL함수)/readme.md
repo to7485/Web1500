@@ -472,7 +472,8 @@ select Max(salary),MIN(SALARY), FROM EMPLOYEES WHERE DEAPRTMENT_ID = 50;
 ## GROUP BY(그룹화)
 - 특정테이블에서 소그룹을 만들어 결과를 분산시켜 얻고자 할 때
 - GROUP BY : ~별 (예 : 부서별 인원수)
-```
+
+```SQL
 예) 각 부서별 급여의 평균과 총 합을 출력
 
 SELECT DEPARTMENT_ID, COUNT(*), AVG(SALARY), SUM(SALARY) FROM EMPLOYEES GROUP BY DEPARTMENT_ID;
@@ -506,6 +507,7 @@ SELECT DEPARTMENT_ID, SUM(SALARY) FROM EMPLOYEES GROUP BY DEPARTMENT_ID ORDER BY
 ## HAVING절
 - Having 절은 Group by로 집계된 값 중 where 절 처럼 특정 조건을 추가한다고 생각 하시면 됩니다.
 - WHERE절과의 다른 점은 HAVING절은 GROUP BY절과 함께 사용해야 하며 집계 함수를 사용하여 조건절을 작성하거나 GROUP BY컬럼만 조건절에 사용할 수 있다.
+
 ```SQL
 예) 각 부서의 급여의 최대값, 최소값, 인원수를 출력하자
      단, 급여의 최대값이 8000이상인 결과만 보여줄 것.
