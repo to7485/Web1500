@@ -294,7 +294,6 @@ SELECT POWER(2,1),POWER(2,2),POWER(2,3),POWER(2,0) FROM DUAL;
 |MONTHS_BETWEEN|주어진 두 개의 날짜 간격 개월을 반환한다.|
 |NEXT_DAY|주어진 일자가 다음에 나타나는 지정요일(1:일요일 ~ 7:토요일)의 날짜를 반환한다.|
 |LAST_DAY|주어진 일자가 포함된 월의 말일을 반환한다.|
-|TO_DATE('날짜','패턴')| 특정 날짜형식의 문자를 날짜로 변환한다|
 
 ※ 날짜 + 날짜 : 날짜끼리는 더하기가 안됩니다.
 
@@ -345,18 +344,13 @@ SELECT NEXT_DAY(SYSDATE, '일')     FROM DUAL;
 -- 오라클 세팅이 한글이라서 영어로 작성하니 안된다
 SELECT NEXT_DAY(SYSDATE, 'SUNDAY') FROM DUAL;
 SELECT NEXT_DAY(SYSDATE, 'SUN')    FROM DUAL;
-
-SELECT LAST_DAY(TO_DATE('2022-01-17', 'YYYY-MM-DD')) FROM dual;
 ```
-
--- 특정 날짜를 특정 패턴의 문자열 타입으로 바꿔주는 메서드
--- TO_CHAR('날짜','패턴')
-
-```SQL
-SELECT TO_DATE(sysdate,'yyyy-mm-dd') FROM dual;
-SELECT TO_DATE(sysdate,'yyyy-mm-dd day') FROM dual;
-SELECT TO_DATE(sysdate,'yyyy-mm-dd HH:MI:SS') FROM dual;
-```
+## 형변환 함수
+|함수|기능|
+|---|------|
+|TO_CHAR|날짜를 형식에 맞춰 문자열로 변환|
+|TO_DATE|문자열을 형식에 맞춰 날짜형으로 변환|
+|TO_NUMBER|문자를 숫자로 변환(숫자만 있는 문자열은 묵시적으로 숫자로 취급하기에 잘 사용은 안한다.)|
 
 ### 날짜형식 FORMATTING 모델
 |모델|기능|
@@ -371,6 +365,42 @@ SELECT TO_DATE(sysdate,'yyyy-mm-dd HH:MI:SS') FROM dual;
 |HH,HH24|시간|
 |MI|분|
 |SS|초|
+
+```SQL
+--TO_CHAR(날짜,포맷)
+SELECT TO_CHAR(sysdate,'yyyy-mm-dd'), 
+ TO_CHAR(sysdate,'yyyy-mm-dd day'), 
+ TO_CHAR(sysdate,'yyyy-mm-dd HH:MI:SS')
+FROM dual;
+
+--TO_CHAR(숫자,포맷)
+/*
+0 : 숫자, 공백시 0으로 채움
+9 : 숫자
+, : 쉼표 표기
+L : local currency symbol
+*/
+SELECT TO_CHAR(1234567, '9,999,999'), -- '1,234,567' 
+  TO_CHAR(1234567, 'L9,999,999.99'), -- '￦1,234,567.00'
+  TO_CHAR(12, '0999') -- '0012'
+FROM dual;
+
+--TO_DATE
+SELECT TO_DATE('2022.04.11'), -- 22/02/11(날짜형)
+  TO_DATE('04.11.2022', 'MM,DD,YYYY'), --22/02/11(날짜형)
+  TO_DATE('2022.04', 'YYYY.MM'), --22/04/01 : 일 입력 안하면 1일로 변환
+  TO_DATE('11', 'DD') -- 22/04/11 : 년, 월 입력 안하면 해당년 해당월로 변환
+FROM dual;
+
+--TO_NUMBER
+
+
+
+
+
+```
+
+
 
 <hr>
 
