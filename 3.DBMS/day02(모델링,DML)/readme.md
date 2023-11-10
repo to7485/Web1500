@@ -35,7 +35,7 @@
 - 시각적인 구조를 만들었으면 그것을 실제로 SQL 코딩을 통해 완성하는 단계라고 보면 된다
 
 
-```
+```SQL
 USER		
 USER_ID:VARCHAR2(100)		
 --------------------------		
@@ -104,7 +104,7 @@ CREATE TABLE "ORDER"(
 
 5. 물리적 설계(물리 모델링)
 
-```
+```SQL
 FOLOWER
 ------------------------
 FOWER_NAME:VARCHAR2(200),
@@ -185,7 +185,7 @@ SELECT * POT;
 - WHERE절은 조회하려는 데이터에 특정 조건을 부여할 목적으로 사용하기 때문에 FROM절 뒤에 오게 된다.
 
 ### WHERE 절의 조건식은 아래 내용으로 구성된다.
-- <b>WHERE 조건식</b> 형태로 많이 사용이 된다.<br>
+- <b>WHERE 조건식</b> 형태로 많이 사용이 된다.
 - 컬럼명(보통 조건식의 좌측에 위치)
 - 비교 연산자 ( 초과,미만,이상,이하,같다,같지않다,그리고And,또는Or)
     - \> , < : 초과, 미만
@@ -241,12 +241,12 @@ select * from departments;
 
 select first_name, job_id, salary from employees;
 
-정보가 많고 컬럼이 많아도 나한테 필요한것만 골라낼수 있기 때문에 속도가 빠르다 자바로 한다고 생각하면 if-while-반복문
-돌리면서 찾아줘야 되는데 db는 맞는 정보를 찾아서 바로 화면에 뿌려주는 구조이기 때문에 많은양의 데이터를 관리하는데는
-데이터베이스 만한게 없더라
+-- 정보가 많고 컬럼이 많아도 나한테 필요한것만 골라낼수 있기 때문에 속도가 빠르다
+-- 자바로 데이터를 가져오려고 생각하면 if-while-반복문 돌리면서 찾아줘야 한다.
+-- DB는 맞는 정보를 찾아서 바로 화면에 뿌려주는 구조이기 때문에 많은양의 데이터를 관리하는데는 데이터베이스가 경제적이다.
 
-스키마 작성 사원 테이블에서 컬럼이 영어로 되어있기 때문에 뭐라고 되어있는지 한눈에 보기 힘들다 그래서 메모장에다 작성을
-하나 한다. 사원테이블이 갖고 있는 컬럼들이 각각 어떤 정보를 저장하기 위해서 만들어져있는지 컬럼들인지를 한번에 정리를 할거다
+-- 스키마 작성 사원 테이블에서 컬럼이 영어로 되어있기 때문에 뭐라고 되어있는지 한눈에 보기 힘들다.
+-- 메모장에다 사원테이블이 갖고 있는 컬럼들이 각각 어떤 정보를 저장하기 위해서 만들어져있는지 컬럼들인지를 한번에 정리를 하자.
 
 문) 사원테이블에서 사번, 이름,입사일,급여를 검색하시오
 SELECT employee_id, first_name, hire_date, salary FROM employees;
@@ -299,7 +299,7 @@ select employee_id, first_name, hire_date from employees where hire_date='09/21/
 select employee_id, first_name, hire_date from employees where hire_date >='09/21/2005';
 
 
-데이터베이스는 날짜의 크기비교가 가능하다.
+- 데이터베이스는 날짜의 크기비교가 가능하다.
 
 예) 사원테이블에서 06년도에 입사한 사원들의 정보를 사번, 이름, 직종, 입사일 순으로 출력
 
@@ -426,7 +426,7 @@ GENDER를 넣지 않았지만 오류가 나지 않는다 DEFAULT 값으로 여�
 
 ```
 ## DELETE
-```
+```SQL
 --삭제 : 부모와 자식중 자식테이블에서 참조하는 값들을 먼저 삭제해야 한다.
 
 DELETE FROM POT WHERE NAME = '장미';
@@ -434,7 +434,7 @@ DELETE FROM FLOWER WHERE FLOWERNAME = '장미';
 ```
 
 ## UPDATE
-```
+```SQL
 UPDATE POT
 SET POTCOLOR = 'WHITE'
 WHERE NAME = '할미꽃' AND POTSHAPE = '타원형';
@@ -446,7 +446,7 @@ WHERE NAME = '할미꽃' AND POTSHAPE = '타원형';
 - ASC : 오름차순(생략가능)
 - DESC: 내림차순(생략불가)
 
-```
+```SQL
 예) 사원테이블에서 급여를 많이받는 사원순으로 사번, 이름, 급여, 입사일을 출력하시오 단, 급여가 같을 경우
      입사일이 빠른순으로 정렬
 SELECT EMPLOYEE_ID,FIRST_NAME,SALARY,HIRE_DATE FROM EMPLOYEES ORDER BY SALAY DESC, hire_date ASC;
