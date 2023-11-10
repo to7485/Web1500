@@ -218,6 +218,7 @@ SELECT CONCAT('Republic of',' Korea') FROM dual;
 <hr>
 
 ## 숫자함수
+
 |함수|기능|
 |---|------|
 |ABS|절대값을 반환한다.|
@@ -398,6 +399,7 @@ SELECT PLAYER_NAME "선수 이름", NVL(NATION, '등록','미등록') "국가 �
 ```
 ## 순위 함수
 |함수|기능|
+|----|-----|
 |RANK|그룹 내 순위를 계산하여 NUMBER타입으로 순위를 반환<br>중복 순위 계산|
 |DENSE_RANK|그룹 내 순위를 계산하여 NUMBER타입으로 순위를 반환<br>중복 순위 계산 안함|
 
