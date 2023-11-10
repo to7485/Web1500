@@ -352,6 +352,22 @@ Select Data Source 창이 뜸 오라클 선택 F2 눌러서 이름 day00로 수�
 	
 </table>
 
+## NULL 
+- 정의되지 않은 값
+- 빈 값 대신 미정 값을 부여할 때 사용 가능(PK는 불가능, FK는 가능)
+
+### NOT NULL 제약조건
+- 이미 생성된 테이블에 NOT NULL 제약조건을 넣고 싶을 때
+```SQL
+ALTER TABLE 테이블명 MODIFY 컬럼명 NOT NULL;
+```
+
+### 조건식에서 사용하기
+```SQL
+컬럼명 IS NULL : 컬럼 값이 NULL이면 참
+컬럼명 IS NOT NULL : 컬럼 값이 NULL이 아니면 참
+```
+
 
 ## TBL_MEMBER 테이블 생성해보기
 ```
