@@ -362,13 +362,6 @@ Select Data Source 창이 뜸 오라클 선택 F2 눌러서 이름 day00로 수�
 ALTER TABLE 테이블명 MODIFY 컬럼명 NOT NULL;
 ```
 
-### 조건식에서 사용하기
-```SQL
-컬럼명 IS NULL : 컬럼 값이 NULL이면 참
-컬럼명 IS NOT NULL : 컬럼 값이 NULL이 아니면 참
-```
-
-
 ## TBL_MEMBER 테이블 생성해보기
 ```
 CREATE TABLE TBL_MEMBER(
