@@ -371,7 +371,6 @@ FROM dual;
 |NVL| NULL값 대신 다른 값으로 변경 후 검색|
 |NVL2| NULL일 때의 값, NULL이 아닐 때의 값을 각각 설정|
 |NULLIF|두 인자 값을 비교, 같으면 NULL을 반환, 다르면 첫번째 인자 값을 반환|
-|COALESCE|순차적으로 인자 값에 대해서 NULL 체크<br>NULL이 아닌 값 중 가장 처음 순서의 인자 반환<br>NVL을 중첩으로 사용해야 할 경우 편함|
 ```SQL
 NVL(컬럼,치환할 값)
 NVL2(컬럼,NULL이 아닐 때 치환할 값, NULL일 때 치환할 값)
@@ -384,6 +383,18 @@ NULLIF(컬럼1,특정값);
 
 -- 함수의 인자는 동적으로 입력할 수 있다.
 COALESCE(컬럼1,컬럼2,컬럼3...);
+
+--PLAYER 테이블에서 POSITION이 NULL인 선수 검색
+SELECT * FROM PLAYER WHERE "POSITION" IS NULL;
+SELECT * FROM PLAYER WHERE "POSITION" IS NOT NULL;
+
+--PLAYER 테이블에서 POSITION이 NULL이면 '미정'으로 결과 출력하기
+SELECT NVL("POSITION",'미정') FROM PLAYER WHERE "POSITION" IS NULL;
+SELECT PLAYER_NAME “선수 이름”, NVL("POSITION",'미정') 포지션 FROM PLAYER;
+SELECT PLAYER_NAME “선수 이름”, NVL2("POSITION",'확정','미정') AS 포지션 FROM PLAYER;
+
+--PLAYER 테이블에서 NATION이 NULL이 아니면 등록, NULL이면 미등록으로 변경
+SELECT PLAYER_NAME "선수 이름", NVL(NATION, '등록','미등록') "국가 등록 여부" FROM PLAYER;
 ```
 ## 순위 함수
 |함수|기능|
@@ -393,6 +404,9 @@ COALESCE(컬럼1,컬럼2,컬럼3...);
 ```SQL
 RANK() OVER(ORDER BY 컬럼)
 DENSE_RANK() OVER(ORDER BY 컬럼)
+
+SELECT RANK() OVER(ORDER BY SALARY DESC) AS "RANK", FIRST_NAME, SALARY FROM EMPLOYEES;
+SELECT RANK() OVER(ORDER BY SALARY DESC,EMPLOYEE_ID ASC ) AS "RANK", FIRST_NAME, SALARY FROM EMPLOYEES;
 ```
 
 
