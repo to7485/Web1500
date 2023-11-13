@@ -853,7 +853,7 @@ public class RootContext {
 
 # Spring Framework의 구동순서
 
-![SpringFramework구동 순서](image/Spring.png)
+![SpringFramework구동 순서](image/spring.png)
 
 1. 웹 어플리케이션이 실행되면 Tomcat(WAS)에 의해 web.xml이 실행된다.
 
