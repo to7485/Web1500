@@ -76,11 +76,11 @@ Spring은 아래 그림과 같이 기본 틀을 제공하고 필요한 기능들
 - 다양한 플러그인을 통해 많은 작업이 자동화됨
 
 
-![image](https://github.com/to7485/Web1500/assets/54658614/657b5d33-676c-4432-9050-46cce1db3f38)
+![image](image/Maven.png)
 
 ## Maven LifeCycle
 
-![image](https://github.com/to7485/Web1500/assets/54658614/36ac9d2d-2ef5-4f5d-b9d1-346837007274)
+![image](image/MavenLifeCycle.png)
 
 
 * * *
