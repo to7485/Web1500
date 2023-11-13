@@ -433,6 +433,7 @@ Spring은 아래 그림과 같이 기본 틀을 제공하고 필요한 기능들
                     <mainClass>org.test.int1.Main</mainClass>
                 </configuration>
             </plugin>
+///////////////////////////////////////////////////////////////////////////////////
             <plugin>
             	<groupId>org.apache.maven.plugins</groupId>
             	<artifactId>maven-war-plugin</artifactId>
@@ -441,6 +442,7 @@ Spring은 아래 그림과 같이 기본 틀을 제공하고 필요한 기능들
             		<failOnMissingWebXml>false</failOnMissingWebXml>
             	</configuration>
             </plugin>
+////////////////////////////////////////////////////////////////////////////////////
         </plugins>
     </build>
 </project>
