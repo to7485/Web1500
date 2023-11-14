@@ -126,7 +126,7 @@ public class ServletContext implements WebMvcConfigurer {
 
 ```
 ## views폴더 안에 test 폴더 만들기
-
+![image](image/test.png)
 ### 앞으로 현재 컨트롤러가 실행할 jsp의 경로를 지정
 ```java
 package com.korea.mvc;
@@ -154,6 +154,7 @@ public class TestController {
 
 ```
 ### test폴더안에 test.jsp 만들기
+![image](image/test2.png)
 ```java
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
@@ -168,7 +169,9 @@ public class TestController {
 </body>
 </html>
 ```
+
 ### util패키지에 MyPath클래스만들기
+![image](image/MyPath.png)
 ```java
 package util;
 
@@ -186,53 +189,6 @@ public class MyPath {
 }
 
 ```
-### HomeController에 경로 붙혀보기
-```java
-package com.korea.mvc;
-
-import java.text.DateFormat;
-import java.util.Date;
-import java.util.Locale;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-
-import util.MyPath;
-
-/**
- * Handles requests for the application home page.
- */
-@Controller
-public class HomeController {
-	
-	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
-	
-	/**
-	 * Simply selects the home view to render by returning its name.
-	 */
-	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public String home(Locale locale, Model model) {
-		logger.info("Welcome home! The client locale is {}.", locale);
-		
-		Date date = new Date();
-		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
-		
-		String formattedDate = dateFormat.format(date);
-		
-		model.addAttribute("serverTime", formattedDate );
-		
-		return MyPath.HomeClass.VIEW_PATH+"home.jsp";
-	}
-	
-}
-
-```
-
-더이상 실행했을 때 404오류가 나지 않는다.
 
 ### TestController에서 임의의 배열을 바인딩하여 포워딩까지 해보자.
 ```java
@@ -287,7 +243,7 @@ public class TestController {
 </html>
 ```
 
-![image](https://github.com/to7485/Web1500/assets/54658614/6ce25e38-a72c-4f4a-aa38-0b1675b32dbe)
+![image](image/result.png)
 
 ### ip를 받아오려면 어쩔수 없이 request 객체가 필요하다.
 ```java
@@ -636,7 +592,7 @@ public class Context_1_datasource {
 
 2. mybatis
 
-![image](Mybatis2.png)
+![image](image/Mybatis2.png)
 
 ```xml
 <!-- https://mvnrepository.com/artifact/org.mybatis/mybatis -->
@@ -648,7 +604,7 @@ public class Context_1_datasource {
 
 ```
 
-![image](Mybatis3.png)
+![image](image/Mybatis3.png)
 
 ```xml
 <!-- https://mvnrepository.com/artifact/org.mybatis/mybatis-spring -->
