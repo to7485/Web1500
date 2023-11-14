@@ -4,7 +4,7 @@
 ## Ex_날짜_SpringMVC
 - com.korea.mvc
 
-![image](https://github.com/to7485/Web1500/assets/54658614/76f05952-e317-4488-9b5d-85c03e81c4af)
+![image](image/artifactId.png)
 
 프로젝트의 마지막 계층은 구별을 해주는 식별자의 역할도 한다.
 
