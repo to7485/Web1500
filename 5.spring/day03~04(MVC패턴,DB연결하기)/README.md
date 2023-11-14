@@ -9,11 +9,12 @@
 프로젝트의 마지막 계층은 구별을 해주는 식별자의 역할도 한다.
 
 ## pom.xml, config패키지 복사해서 넣기
-- 이외의 xml파일은 제거하기
 
 ![image](image/mvc2.png)
 
-![image](image/mvc.png)
+- 이외의 xml파일은 제거하기
+
+![image](image/mvc1.png)
 
 ## ServletContext의 역할
 - 컨트롤러 객체 생성하기
