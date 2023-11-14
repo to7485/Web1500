@@ -11,7 +11,9 @@
 ## pom.xml, config패키지 복사해서 넣기
 - 이외의 xml파일은 제거하기
 
-![image](https://github.com/to7485/Web1500/assets/54658614/0a4a0f11-c8f7-4fd6-b93a-30f58e4d1d04)
+![image](image/mvc2.png)
+
+![image](image/mvc.png)
 
 ## ServletContext의 역할
 - 컨트롤러 객체 생성하기
