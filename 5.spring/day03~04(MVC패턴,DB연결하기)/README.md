@@ -536,6 +536,7 @@ public class ParamController {
 
 ### mybatis연결을 위한 파일 스터디룸에서 다운받기
 - db연결하는 객체, dao관련 객체를 나눠서 만들어보자
+![image](image/package.png)
 
 ### WebInitializer 코드 수정하기
 - RootContext이름을 f2를 눌러 수정하여 만들어주자.
@@ -575,19 +576,16 @@ public class WebInitializer extends AbstractAnnotationConfigDispatcherServletIni
 }
 
 ```
-사실 깔끔하게 관리하고 싶다면 패키지도 나눠서 관리를 하는것이 좋다.<br>
-
-![image](https://github.com/to7485/Web1500/assets/54658614/29c78c28-f61b-4edc-9418-b978c29317bd)
 
 ### 새로 추가하려는 기능이 있다면 context파일을 새로만들어주면 된다.
 
 ojdbc6.jar 찾아서 톰캣의 lib폴더에 넣기<br>
 
-![image](https://github.com/to7485/Web1500/assets/54658614/d761db4a-30d9-417c-8d02-d08e7ff9e9bf)
+![image](image/ojdbc6)
 
 ### mybatis와 관련된 파일 집어넣기
 
-![image](https://github.com/to7485/Web1500/assets/54658614/772ecd6f-4abc-4dd4-8f38-4e2360007e15)
+![image](image/Mybatis)
 
 ### DB연결을 위한 라이브러리를 Pom.xml에 등록을 해보자.
 - java에서 호환되는것과 Spring에서 호환되는것을 다운받아야 한다.
