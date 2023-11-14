@@ -453,7 +453,7 @@ Spring은 아래 그림과 같이 기본 틀을 제공하고 필요한 기능들
 
 ## home.jsp 수정하기
 - 아마 한글이 깨질것이다 예제파일에는 인코딩 타입이 빠져있다 추가해주자.
-```
+```jsp
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page session="false" %>
@@ -481,7 +481,7 @@ Spring은 아래 그림과 같이 기본 틀을 제공하고 필요한 기능들
 
 ![image](https://user-images.githubusercontent.com/54658614/236735580-1e6a03ec-1464-4f02-8f34-3cd6b62a7ea9.png)
 
-```
+```java
 package com.korea.test;
 
 import java.text.DateFormat;
@@ -528,7 +528,7 @@ public class HomeController {
 ```
 
 ## home.jsp에 코드 추가하고 실행하기
-```
+```jsp
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
@@ -596,7 +596,7 @@ public class HomeController {
 ##  Ex_날짜_SpringArchitecture 프로젝트 생성하기
 
 ## vo패키지에 PersonVO클래스 만들기
-```
+```java
 package vo;
 
 import org.springframework.stereotype.Component;
@@ -616,7 +616,7 @@ public class PersonVO {
 ```
 ## non_spring.jsp 만들기
 - 더이상 서블릿에서 내용을 가져오는게 아니기 때문에 스크립트릿을 사용해보자.
-```
+```jsp
 <%@page import="vo.PersonVO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
@@ -657,7 +657,7 @@ jsp까지는 구조가 복잡한 형태는 아니지만 스프링은 구동되�
 ![image](https://github.com/to7485/Web1500/assets/54658614/98b949ea-8049-4420-8ed6-0333f1084f64)
 
 ## web.xml 역할을 하는 WebInitializer.java 생성하기
-```
+```java
 package config;
 
 
@@ -700,7 +700,7 @@ public class WebInitializer extends AbstractAnnotationConfigDispatcherServletIni
 
 ```
 ## root-context.xml역할을 하는 RootContext.java 생성하기
-```
+```java
 package config;
 
 import org.springframework.context.annotation.Configuration;
@@ -713,7 +713,7 @@ public class RootContext {
 ```
 
 ## servlet-context.xml역할을 하는 ServletContext.java만들기
-```
+```java
 package config;
 
 import org.springframework.context.annotation.Bean;
@@ -749,7 +749,7 @@ public class ServletContext implements WebMvcConfigurer {
 
 
 ## PersonVO 코드 수정하기
-```
+```java
 package vo;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -805,7 +805,7 @@ public class PersonVO {
 ```
 
 ## RootContext.java 에 객체 생성하기
-```
+```java
 package config;
 
 import org.springframework.context.annotation.Bean;
@@ -816,7 +816,7 @@ import org.springframework.context.annotation.Configuration;
 public class RootContext {
 
 
-	이와 같이 객체를 생성하고 객체에 setter메서드에 값을 추가해주는것을 setter injection이라고 한다.<br>
+	//이와 같이 객체를 생성하고 객체에 setter메서드에 값을 추가해주는것을 setter injection이라고 한다.
 	@Bean
 	public PersonVO p1() {
 		PersonVO p1 = new PersonVO();
@@ -826,7 +826,7 @@ public class RootContext {
 		return p1;
 	}
 
-	생성자에 값을 추가해주는것을 constructor injection이라고 한다.
+	//생성자에 값을 추가해주는것을 constructor injection이라고 한다.
 	
 	@Bean
 	public PersonVO p2() {
@@ -841,8 +841,8 @@ public class RootContext {
 
 ![image](https://github.com/to7485/Web1500/assets/54658614/f7d34492-1131-4887-8356-d304a2ca9596)
 
-스프링 bean은 기본이 싱글톤이기 때문에 메모리에 한번만 올린다.<br>
-이제 dao에 싱글톤 코드를 추가할 필요가 없어진다.<br>
+- 스프링 bean은 기본이 싱글톤이기 때문에 메모리에 한번만 올린다.
+- 이제 dao에 싱글톤 코드를 추가할 필요가 없어진다.<br>
 
 
 
