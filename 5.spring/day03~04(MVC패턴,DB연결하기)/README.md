@@ -20,10 +20,7 @@
 - 컨트롤러 객체 생성하기
 - /WEB-INF/views/ 경로안에 jsp파일을 만든다면 .jsp를 안붙혀도 되게 해준다.
 - 이미지,JS파일,CSS파일과 같은 참조 파일들은 webapp/resources폴더에 넣어놓고 사용을 할것이다.<br>(resources가 하나 더있으니 헷갈리지 말것)
-
-![image](https://github.com/to7485/Web1500/assets/54658614/ab92f9ac-85f2-4a09-901d-c575f4b597a5)
-
-```
+```java
 @Configuration
 @EnableWebMvc
 //@ComponentScan("com.korea.test") 자동탐색
@@ -57,7 +54,7 @@ public class ServletContext implements WebMvcConfigurer {
 ```
 
 ## com.korea.mvc에 TestController 클래스 생성하기
-```
+```java
 package com.korea.mvc;
 
 import org.springframework.stereotype.Controller;
