@@ -837,7 +837,7 @@ public class ServletContext implements WebMvcConfigurer {
 ```
 ## dept폴더에 dept_list.jsp 생성하기
 
-![image](https://github.com/to7485/Web1500/assets/54658614/e66968b5-d793-41fc-9e53-d548c97e00d0)
+![image](image/dept.png)
 
 ```
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -868,7 +868,7 @@ public class ServletContext implements WebMvcConfigurer {
 </body>
 </html>
 ```
-![image](https://github.com/to7485/Web1500/assets/54658614/809553d8-5ba6-4e26-8353-7fdbbb3b8a61)
+![image](image/dept_result.png)
 
 
 # 실습 : 고객,사원테이블 조회해보기
