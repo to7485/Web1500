@@ -235,7 +235,7 @@ public class HomeController {
 더이상 실행했을 때 404오류가 나지 않는다.
 
 ### TestController에서 임의의 배열을 바인딩하여 포워딩까지 해보자.
-```
+```java
 package com.korea.mvc;
 
 import org.springframework.stereotype.Controller;
@@ -265,8 +265,8 @@ public class TestController {
 
 ```
 
-## 과일목록 출력하기
-```
+### 과일목록 출력하기
+```java
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -289,8 +289,8 @@ public class TestController {
 
 ![image](https://github.com/to7485/Web1500/assets/54658614/6ce25e38-a72c-4f4a-aa38-0b1675b32dbe)
 
-## ip를 받아오려면 어쩔수 없이 request 객체가 필요하다.
-```
+### ip를 받아오려면 어쩔수 없이 request 객체가 필요하다.
+```java
 	@RequestMapping("/test.do") //내가 url에 test.do를 호출하면
 	public String test(Model model, HttpServletRequest request) { //test()메서드가 실행이 된다.
 		
@@ -304,8 +304,8 @@ public class TestController {
 	}
 }
 ```
-
-```
+### test.jsp에서 ip 출력하기
+```java
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -336,7 +336,7 @@ public class TestController {
 - util패키지 복사해오기
 
 ## vo 패키지에 PersonVO 클래스 만들기
-```
+```java
 package vo;
 
 @Getter
@@ -349,7 +349,7 @@ public class PersonVO {
 
 ```
 ## views 폴더에 insert_form.jsp 만들기
-```
+```java
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -365,7 +365,7 @@ public class PersonVO {
 ```
 
 ## com.korea.param 패키지에 ParamController.java 만들기
-```
+```java
 @Controller
 public class ParamController {
 	value라고 하는 속성은 배열 형식으로 여러 가지 매핑을 줄 수 있다.
@@ -378,7 +378,7 @@ public class ParamController {
 ```
 
 ## insert_form.jsp에 코드 추가하기
-```
+```java
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -446,7 +446,7 @@ public class ParamController {
 ```
 
 ## ParamController.java에서 매핑 잡아주기
-```
+```java
 package com.korea.param;
 
 import java.io.UnsupportedEncodingException;
@@ -507,7 +507,7 @@ public class ParamController {
 
 
 ## views폴더에 insert_result.jsp 만들기
-```
+```java
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -533,9 +533,9 @@ public class ParamController {
 ## Ex_날짜_DB
 - com.korea.db
 - pom.xml, config패키지 복사해오기
-### mybatis연결을 위한 파일 스터디룸에서 다운받기
 
-## db연결하는 객체, dao관련 객체를 나눠서 만들어보자
+### mybatis연결을 위한 파일 스터디룸에서 다운받기
+- db연결하는 객체, dao관련 객체를 나눠서 만들어보자
 
 ### WebInitializer 코드 수정하기
 - RootContext이름을 f2를 눌러 수정하여 만들어주자.
