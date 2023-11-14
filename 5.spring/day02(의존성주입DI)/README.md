@@ -141,8 +141,7 @@ public class RootContext {
 	
 	@Bean
 	public BoardServiceImpl service(BoardDAOImpl dao) {
-		BoardServiceImpl service = new BoardServiceImpl(new BoardDAOImpl());
-		return service;
+		return new BoardServiceImpl(dao);
 	}
 }
 
@@ -158,14 +157,15 @@ public class BoardController {
 	//root-context.xml은 Controller를 제외한 모든 객체를 만든다.
 	//유일하게 컨트롤러만이 servlet-context.xml에서 만들어진다.
 	BoardServiceImpl service;
-	
+
+	//생성자 인젝션을 위한 service객체를 파라미터로 받는 생성자
 	public BoardController(BoardServiceImpl service;) {
 		System.out.println("--BoardController()의 생성자--");
 		this.service = service;
 	}
 
+	//셋터인젝션을 사용하기 위한 셋터메서드 생성
 	public void setService(BoardServiceImpl service) {
-		//셋터인젝션을 사용하기 위한 셋터메서드 생성
 		this.service = service;
 	}
 	
@@ -211,10 +211,19 @@ public class ServletContext implements WebMvcConfigurer {
 		resolver.setSuffix(".jsp");
 		return resolver;
 	}
-	
+
+	//ConstructorInjection
 	@Bean
-	public BoardController boardController() {
-		return new BoardController(new BoardServiceImpl(new BoardDAOImpl()));
+	public TestController testController(BoardServiceImpl service) {
+		return new TestController(service);
+	}
+
+	//setterInjetcion
+	@Bean
+	public TestController testController(BoardServiceImpl service) {
+		TestController testController = new TestController();
+		testController.setService(service);
+		return testController;
 	}
 }
 
