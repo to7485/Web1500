@@ -82,10 +82,10 @@ public class TestController {
 
 실행하면 콘솔에 출력이 잘되는걸 확인할 수 있다.
 
-![image](https://github.com/to7485/Web1500/assets/54658614/6bc98ff0-f660-4310-be14-4c8b2ccb5ab6)
+![image](image/call.png)
 
 ## ServletContex 수정하기
-```
+```java
 package config;
 
 import org.springframework.context.annotation.Bean;
@@ -127,10 +127,8 @@ public class ServletContext implements WebMvcConfigurer {
 ```
 ## views폴더 안에 test 폴더 만들기
 
-![image](https://github.com/to7485/Web1500/assets/54658614/9d6e9208-d973-47f8-8abd-38edaa417501)
-
-## 앞으로 현재 컨트롤러가 실행할 jsp의 경로를 지정
-```
+### 앞으로 현재 컨트롤러가 실행할 jsp의 경로를 지정
+```java
 package com.korea.mvc;
 
 import org.springframework.stereotype.Controller;
@@ -138,22 +136,25 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 public class TestController {
-	
+	///////////////////////////////////////////////////////////////////////
 	public static final String VIEW_PATH = "/WEB-INF/views/test/";
+	///////////////////////////////////////////////////////////////////////
 
 	public TestController() {
 		System.out.println("----TestController의 생성자 호출---");
 	}
-	
+
+	///////////////////////////////////////////////////////////////////////
 	@RequestMapping("/test.do") //내가 url에 test.do를 호출하면
 	public String test() { //test()메서드가 실행이 된다.
 		return VIEW_PATH + "test.jsp"; //WEB-INF/views/에 있는 test.jsp좀 실행해줘라
 	}
+	///////////////////////////////////////////////////////////////////////
 }
 
 ```
-## test폴더안에 test.jsp 만들기
-```
+### test폴더안에 test.jsp 만들기
+```java
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -167,8 +168,8 @@ public class TestController {
 </body>
 </html>
 ```
-## util패키지에 MyPath클래스만들기
-```
+### util패키지에 MyPath클래스만들기
+```java
 package util;
 
 public class MyPath {
@@ -185,8 +186,8 @@ public class MyPath {
 }
 
 ```
-## HomeController에 경로 붙혀보기
-```
+### HomeController에 경로 붙혀보기
+```java
 package com.korea.mvc;
 
 import java.text.DateFormat;
@@ -233,7 +234,7 @@ public class HomeController {
 
 더이상 실행했을 때 404오류가 나지 않는다.
 
-## TestController에서 임의의 배열을 바인딩하여 포워딩까지 해보자.
+### TestController에서 임의의 배열을 바인딩하여 포워딩까지 해보자.
 ```
 package com.korea.mvc;
 
