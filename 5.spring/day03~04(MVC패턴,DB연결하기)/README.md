@@ -536,11 +536,13 @@ public class ParamController {
 
 ### mybatis연결을 위한 파일 스터디룸에서 다운받기
 - db연결하는 객체, dao관련 객체를 나눠서 만들어보자
+
 ![image](image/package.png)
 
 ### WebInitializer 코드 수정하기
 - RootContext이름을 f2를 눌러 수정하여 만들어주자.
-```
+
+```java
 package config;
 
 import mvc.ServletContext;
@@ -579,24 +581,24 @@ public class WebInitializer extends AbstractAnnotationConfigDispatcherServletIni
 
 ### 새로 추가하려는 기능이 있다면 context파일을 새로만들어주면 된다.
 
-ojdbc6.jar 찾아서 톰캣의 lib폴더에 넣기<br>
+- ojdbc6.jar 찾아서 톰캣의 lib폴더에 넣기
 
-![image](image/ojdbc6)
+![image](image/ojdbc6.png)
 
 ### mybatis와 관련된 파일 집어넣기
 
-![image](image/Mybatis)
+![image](image/Mybatis.png)
 
 ### DB연결을 위한 라이브러리를 Pom.xml에 등록을 해보자.
 - java에서 호환되는것과 Spring에서 호환되는것을 다운받아야 한다.
 
 1. dbcp
 
-![image](https://github.com/to7485/Web1500/assets/54658614/c2410d94-d67b-4b08-9d60-fd19b48e61c3)
+![image](image/dbcp.png)
 
 1.4 버전
 
-```
+```xml
 <!-- https://mvnrepository.com/artifact/commons-dbcp/commons-dbcp -->
 <dependency>
     <groupId>commons-dbcp</groupId>
@@ -606,7 +608,7 @@ ojdbc6.jar 찾아서 톰캣의 lib폴더에 넣기<br>
 ```
 
 ### Context_1_dataSource.java 코드 추가하기
-```
+```java
 package context;
 
 import javax.sql.DataSource;
@@ -634,9 +636,9 @@ public class Context_1_datasource {
 
 2. mybatis
 
-![image](https://github.com/to7485/Web1500/assets/54658614/2278eb55-62fa-4ca8-9aaf-5976d0408117)
+![image](Mybatis2.png)
 
-```
+```xml
 <!-- https://mvnrepository.com/artifact/org.mybatis/mybatis -->
 <dependency>
     <groupId>org.mybatis</groupId>
@@ -646,7 +648,9 @@ public class Context_1_datasource {
 
 ```
 
-```
+![image](Mybatis3.png)
+
+```xml
 <!-- https://mvnrepository.com/artifact/org.mybatis/mybatis-spring -->
 <dependency>
     <groupId>org.mybatis</groupId>
@@ -658,7 +662,7 @@ public class Context_1_datasource {
 
 3. spring jdbc
 
-![image](https://github.com/to7485/Web1500/assets/54658614/f2eb5384-eabb-48a4-941e-4c969c4219c5)
+![image](image/spring-jdbc.png)
 
 
 ```
