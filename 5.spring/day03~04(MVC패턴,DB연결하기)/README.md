@@ -873,8 +873,9 @@ public class ServletContext implements WebMvcConfigurer {
 
 
 # 실습 : 고객,사원테이블 조회해보기
+- Ex_날짜_DB 프로젝트 생성하기
 
-## Ex_날짜_DB 프로젝트 생성하기
+## 프로젝트 환경설정 하기
 1. pom.xml 복사하기
 	- Artifact Id, Name은 바꿔주는것이 좋다(오류날 수 있는 변수를 최대한 줄이자)
 
@@ -885,16 +886,12 @@ public class ServletContext implements WebMvcConfigurer {
 ![image](image/resources.png)
 
 3. web.xml,root-context.xml,servlet-context.xml 삭제하기
-
 4. 이름 바꾸기
 	1. mapper 이름 바꾸기(mybatis-config.xml에서 이름 참조하기)
-
 5. Context_3_dao.java의 내용 내가 생성할 DAO코드로 변경
-
 6. ServletContext.java도 우리가 생성할 컨트롤러의 내용으로 변경
 
-* * *
-
+## MVC 설계하기
 1. VO 생성하기
 2. DAO클래스 만들고 Context_3_dao.java에 DAO빈 생성
 3. 2에서 만든 bean객체에 context_2_mybatis.java에서 생성한 sqlSessionBean을 참조시키자
@@ -904,9 +901,9 @@ public class ServletContext implements WebMvcConfigurer {
 7. 컨트롤러에서 url 매핑 지정 후 DAO의 메서드 호출
 8. 컨트롤러에서 DB를 거쳐 포워딩 된 정보를 jsp에서 호출
 
-### 사원테이블을 조회하여 사번, 이름, 부서번호, 급여를 테이블로 출력
+## 사원테이블을 조회하여 사번, 이름, 부서번호, 급여를 테이블로 출력
 
-## vo 패키지에 SawonVO 클래스 만들기
+### vo 패키지에 SawonVO 클래스 만들기
 ```java
 package vo;
 
@@ -923,7 +920,7 @@ public class SawonVO {
 
 ```
 
-## dao 패키지에 SawonDAO 클래스 만들기
+### dao 패키지에 SawonDAO 클래스 만들기
 ```java
 package dao;
 
@@ -942,7 +939,7 @@ public class SawonDAO {
 
 ```
 
-## Context_3_dao클래스에 dao 객체 만들기
+### Context_3_dao클래스에 dao 객체 만들기
 ```java
 package context;
 
@@ -969,7 +966,7 @@ public class Context_3_dao {
 }
 ```
 
-## controller 패키지에 SawonController클래스 생성하기
+### controller 패키지에 SawonController클래스 생성하기
 ```java
 package controller;
 
@@ -988,7 +985,7 @@ public class SawonController {
 }
 ```
 
-## ServletContext클래스에 SawonController객체 만들기
+### ServletContext클래스에 SawonController객체 만들기
 ```
 package mvc;
 
@@ -1038,7 +1035,7 @@ public class ServletContext implements WebMvcConfigurer {
 
 ```
 
-## dao클래스에서 테이블 조회 코드 작성하기
+### dao클래스에서 테이블 조회 코드 작성하기
 ```
 //사원테이블 조회
 public List<SawonVO> selectList(){
@@ -1047,7 +1044,7 @@ public List<SawonVO> selectList(){
 }
 ```
 
-## sawon.xml에 쿼리문 작성하기
+### sawon.xml에 쿼리문 작성하기
 ```
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
@@ -1061,7 +1058,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 </mapper>
 ```
 
-## SawonController에서 리스트 받기
+### SawonController에서 리스트 받기
 ```java
 package controller;
 
@@ -1095,7 +1092,7 @@ public class SawonController {
 
 ```
 
-## /WEB-INF/views/sawon/위치에 sawon.jsp만들기
+### /WEB-INF/views/sawon/위치에 sawon.jsp만들기
 ```
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
