@@ -266,11 +266,11 @@ public class VisitController {
 ```
 ### 실행하면 다음과 같은 결과를 얻을 수 있다.
 
-![image](https://github.com/to7485/Web1500/assets/54658614/cbee2d1c-1a8c-41b8-b0ab-2158a3b1a804)
+![image](image/visit1.png)
 
 ## webapp/resources/css 안에 visit.css 파일 만들기
 
-![image](https://github.com/to7485/Web1500/assets/54658614/bb296b91-4b3d-4f90-9a0f-39da3b58c492)
+![image](image/css.png)
 
 ## jsp에서 css파일 참조하기
 ```
