@@ -621,7 +621,7 @@ public class Context_1_datasource {
 ![image](image/spring-jdbc.png)
 
 
-```
+```xml
 스프링 버전과 동일하게 받지 않으면 실행이 안됨
 <!-- https://mvnrepository.com/artifact/org.springframework/spring-jdbc -->
 <dependency>
@@ -633,7 +633,7 @@ public class Context_1_datasource {
 ```
 
 ### Context_2_mybatis.java
-```
+```java
 package context;
 
 import javax.sql.DataSource;
@@ -698,7 +698,7 @@ public class Context_2_mybatis {
 
 ## dao패키지에 DeptDAO.java 만들기
 
-```
+```java
 package dao;
 
 import java.util.List;
@@ -727,7 +727,7 @@ public class DeptDAO {
 ```
 
 ## Context_3_dao에서 객체 생성하기
-```
+```java
 package context;
 
 import java.sql.Connection;
@@ -756,7 +756,7 @@ public class Context_3_dao {
 ```
 
 ## dept.xml 쿼리문 생성하기
-```
+```xml
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
@@ -771,7 +771,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 ```
 
 ## com.korea.db 패키지에 DeptController 클래스 만들기
-```
+```java
 package com.korea.db;
 
 import java.util.List;
@@ -807,7 +807,7 @@ public class DeptController {
 ```
 
 ## mvc 패키지에 DeptController 객체 생성하기
-```
+```java
 package mvc;
 
 import org.springframework.context.annotation.Bean;
@@ -860,7 +860,7 @@ public class ServletContext implements WebMvcConfigurer {
 
 ![image](image/dept.png)
 
-```
+```java
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -1006,7 +1006,7 @@ public class SawonController {
 ```
 
 ### ServletContext클래스에 SawonController객체 만들기
-```
+```java
 package mvc;
 
 import org.springframework.context.annotation.Bean;
@@ -1056,7 +1056,7 @@ public class ServletContext implements WebMvcConfigurer {
 ```
 
 ### dao클래스에서 테이블 조회 코드 작성하기
-```
+```java
 //사원테이블 조회
 public List<SawonVO> selectList(){
 	List<SawonVO> list = sqlSession.selectList("s.sawon_list");
@@ -1065,7 +1065,7 @@ public List<SawonVO> selectList(){
 ```
 
 ### sawon.xml에 쿼리문 작성하기
-```
+```xml
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
@@ -1113,7 +1113,7 @@ public class SawonController {
 ```
 
 ### /WEB-INF/views/sawon/위치에 sawon.jsp만들기
-```
+```jsp
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     
