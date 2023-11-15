@@ -654,6 +654,8 @@ public class Context_2_mybatis {
 	DataSource ds;
 	
 	//생성자 주입
+	//스프링이 @Configuration 어노테이션이 붙은 클래스의 Bean을 생성할 때
+	//생성자 주입이 지원된다.
 	public Context_2_mybatis(DataSource ds) {
 		this.ds = ds;
 	}
