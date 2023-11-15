@@ -622,11 +622,12 @@ public class Context_1_datasource {
 
 
 ```
+스프링 버전과 동일하게 받지 않으면 실행이 안됨
 <!-- https://mvnrepository.com/artifact/org.springframework/spring-jdbc -->
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-jdbc</artifactId>
-    <version>3.2.2.RELEASE</version>
+    <version>5.1.20.RELEASE</version>
 </dependency>
 
 ```
