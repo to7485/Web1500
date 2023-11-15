@@ -692,7 +692,7 @@ public class Context_2_mybatis {
 	@Bean
 	//함수의 파라미터로 호출하면 기본적으로 생성자 주입으로 주입이 된다.
 	public SqlSessionTemplate sqlSessionBean(SqlSessionFactory factoryBean) {
-		return new SqlSessionTemplate(factoryBean);
+		return new SqlSessionTemplate(factoryBean());
 	}
 }
 
