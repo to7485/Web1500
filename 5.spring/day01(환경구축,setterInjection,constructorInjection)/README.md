@@ -414,6 +414,8 @@ Spring은 아래 그림과 같이 기본 틀을 제공하고 필요한 기능들
                     <downloadJavadocs>true</downloadJavadocs>
                 </configuration>
             </plugin>
+
+///////////////////////////////////////////////////////////////////////////////////
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -426,6 +428,8 @@ Spring은 아래 그림과 같이 기본 틀을 제공하고 필요한 기능들
                     <showDeprecation>true</showDeprecation>
                 </configuration>
             </plugin>
+///////////////////////////////////////////////////////////////////////////////////
+
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
@@ -434,6 +438,7 @@ Spring은 아래 그림과 같이 기본 틀을 제공하고 필요한 기능들
                     <mainClass>org.test.int1.Main</mainClass>
                 </configuration>
             </plugin>
+
 ///////////////////////////////////////////////////////////////////////////////////
             <plugin>
             	<groupId>org.apache.maven.plugins</groupId>
@@ -444,6 +449,7 @@ Spring은 아래 그림과 같이 기본 틀을 제공하고 필요한 기능들
             	</configuration>
             </plugin>
 ////////////////////////////////////////////////////////////////////////////////////
+
         </plugins>
     </build>
 </project>
