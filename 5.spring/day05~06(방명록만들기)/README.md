@@ -391,6 +391,8 @@ public String insert_form() {
 </html>
 ```
 
+![image](image/insert_form.png)
+
 ## VisitController 에서 insert.do 매핑으로 넘어온 파라미터 받아주기
 ```java
 //새 글 작성
@@ -438,7 +440,7 @@ public int insert(VisitVO vo){
 - Ajax를 사용하여 삭제를 해보자.
 - resources 폴더 안에 js폴더를 만들고 RequestHttp.js
 - 
-![image](https://github.com/to7485/Web1500/assets/54658614/fe973743-4c59-4c10-90fd-500abd6c77f6)
+![image](image/js.png)
 
 ## visit_list에서 삭제버튼을 눌렀을 때 Ajax를 사용하여 알림을 줘보자.
 ```
