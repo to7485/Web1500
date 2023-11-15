@@ -715,7 +715,13 @@ public class DeptDAO {
 
 	//SqlSessionTemplate Bean은 DAO Bean에 SqlSession attribute를 사용하여 직접 주입할 수 있다.
 	
-	public void setSqlSession(SqlSession sqlSession) {
+	//Setter Injection
+//	public void setSqlSession(SqlSession sqlSession) {
+//		this.sqlSession = sqlSession;
+//	}
+	
+	//Constructor Injection
+	public DeptDAO(SqlSession sqlSession) {
 		this.sqlSession = sqlSession;
 	}
 	
@@ -748,11 +754,18 @@ import dao.DeptDAO;
 @Configuration
 public class Context_3_dao {
 
+	//Setter Injection
+//	@Bean
+//	public DeptDAO dept_dao(SqlSession sqlSession) {
+//		DeptDAO dept_dao = new DeptDAO();
+//		dept_dao.setSqlSession(sqlSession);
+//		return dept_dao;
+//	}
+	
+	//Constructor Injection
 	@Bean
 	public DeptDAO dept_dao(SqlSession sqlSession) {
-		DeptDAO dept_dao = new DeptDAO();
-		dept_dao.setSqlSession(sqlSession);
-		return dept_dao;
+		return new DeptDAO(sqlSession);
 	}
 }
 ```
@@ -793,9 +806,15 @@ public class DeptController {
 	//dao에 대한 정보가 필요하기 때문에 이미 만들어놓은 정보를 주입해야 한다.
 	DeptDAO dept_dao;
 	
+	//Constructor Injection
 	public DeptController(DeptDAO dept_dao) {
 		this.dept_dao = dept_dao;
 	}
+
+	//Setter Injection
+//	public void setDeptDAO(DeptDAO dept_dao) {
+//		this.dept_dao = dept_dao;
+//	}
 	
 	@RequestMapping(value= {"/","list.do"})
 	public String list(Model model) {
@@ -851,10 +870,19 @@ public class ServletContext implements WebMvcConfigurer {
 //	  resolver.setViewClass(JstlView.class); resolver.setPrefix("/WEB-INF/views/");
 //	  resolver.setSuffix(".jsp"); return resolver; }
 	
+	//Constructor Injection
 	@Bean
 	public DeptController deptController(DeptDAO dept_dao) {
 		return new DeptController(dept_dao);
 	}
+	
+	//Setter Injection
+//	@Bean
+//	public DeptController deptController(DeptDAO dept_dao) {
+//		DeptController deptController = new DeptController();
+//		deptController.setDeptDAO(dept_dao);
+//		return deptController;
+//	}
 }
 
 ```
