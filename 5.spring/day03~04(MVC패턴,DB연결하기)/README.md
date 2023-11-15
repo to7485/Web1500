@@ -485,7 +485,7 @@ public class ParamController {
 ```
 
 # Mybatis연동하기
-
+[Mybatis 공식문서](https://mybatis.org/spring/ko/sqlsession.html#SqlSessionTemplate)
 ## Ex_날짜_DB
 - com.korea.db
 - pom.xml, config패키지 복사해오기
