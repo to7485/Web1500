@@ -877,10 +877,12 @@ public class ServletContext implements WebMvcConfigurer {
 ## Ex_날짜_DB 프로젝트 생성하기
 1. pom.xml 복사하기
 	- Artifact Id, Name은 바꿔주는것이 좋다(오류날 수 있는 변수를 최대한 줄이자)
-![image](https://github.com/to7485/Web1500/assets/54658614/3b3b62ed-a89e-4ea2-81c7-d790762971a6)
 
-2. resources에 있는 패키지 가져오기<br>
-![image](https://github.com/to7485/Web1500/assets/54658614/c11b86d0-488d-465c-9afa-8c239669cbca)
+![image](image/pom.png)
+
+2. resources에 있는 패키지 가져오기
+
+![image](image/resources.png)
 
 3. web.xml,root-context.xml,servlet-context.xml 삭제하기
 
@@ -1125,15 +1127,3 @@ public class SawonController {
 </body>
 </html>
 ```
-
-
-
-
-
-
-
-
-
-
-
-
