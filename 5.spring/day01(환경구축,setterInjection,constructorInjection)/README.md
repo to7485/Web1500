@@ -879,6 +879,9 @@ public class RootContext {
 
 	//이와 같이 객체를 생성하고 객체에 setter메서드에 값을 추가해주는것을 setter injection이라고 한다.
 ```
+- 콘솔에 출력해보기
+
+![image](image/setterInjection.png)
 
 ```java
 	@Bean
@@ -894,19 +897,7 @@ public class RootContext {
 
 실행해서 콘솔에서 출력문 뜨는지 확인하기
 
-![image](https://github.com/to7485/Web1500/assets/54658614/f7d34492-1131-4887-8356-d304a2ca9596)
+![image](image/constructorInjection.png)
 
 - 스프링 bean은 기본이 싱글톤이기 때문에 메모리에 한번만 올린다.
-- 이제 dao에 싱글톤 코드를 추가할 필요가 없어진다.<br>
-
-
-
-실행하여 콘솔에서 값 확인하기
-
-![image](https://github.com/to7485/Web1500/assets/54658614/63bc703e-a577-4e91-8fc8-cf1e7f071fe6)
-
-
-
-
-
-
+- 이제 dao에 싱글톤 코드를 추가할 필요가 없어진다.
