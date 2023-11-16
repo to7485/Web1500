@@ -118,7 +118,7 @@ public class BoardServiceImpl implements BoardService {
 
 ```
 
-![image](https://github.com/to7485/Web1500/assets/54658614/eddf47a4-8c04-4287-a336-5f1d91034078)
+![image](image/service.png)
 
 ## bean 객체를 생성해보자
 - config 패키지에 RootContext.java에 객체 생성하기
