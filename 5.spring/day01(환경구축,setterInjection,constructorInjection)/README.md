@@ -533,6 +533,39 @@ public class HomeController {
 
 ```
 
+# Spring Framework의 구동순서
+
+![SpringFramework구동 순서](image/spring.png)
+
+1. 웹 어플리케이션이 실행되면 Tomcat(WAS)에 의해 web.xml이 실행된다.
+
+2. web.xml에 등록되어있는 ContextLoaderListener생성
+- ContextLoaderListener는 ServletContextListener 인터페이스를 구현하고있으며, ApplicationContext를 생성한다. 
+	- ApplicationContext는 별도의 설정 정보를 참고하고 IoC를 적용하여 빈의 생성, 관계설정 등의 제어 작업을 총괄한다.
+
+3. ContextLoaderListener가 root-context를 로딩
+	- * ContextLoaderListener : 서블릿을 초기화하는 용도로 사용
+
+4. root-contex에 등록되어있는 설정에 따라 Spring Container가 구동
+
+5. 클라이언트로부터 Web Appllication에 요청을 받는다.
+
+6. DispatcherServlet생성
+	- DispatcherServlet : 서블릿 컨테이너의 가장 앞단에서 HTTP 프로토콜로 들어오는 모든 요청을 먼저 받아 적합한 컨트롤러에 위임해주는 프론트 컨트롤러이다.
+	- 프론트 컨트롤러 : 서블릿 컨테이너의 제일 앞에서 서버로 들어오는 클라이언트의 모든 요청을 받아서 처리해주는 컨트롤러
+		- HandlerMapping이 컨트롤러를 찾아주는 기능을 한다. 스프링이 제공하는 Handler Mapping방법은 5가지이다.
+			- BeanNameUrlHandlerMapping : 빈의 이름에 들어있는 URL을 HTTP 요청의 URL과 비교해서 일치하는 빈을 찾아준다. 가장 직관적이고 사용하기 쉬운 핸들러 매핑 전략이다.
+			- ControllerBeanNameHandlerMapping : BeanNameUrlHandlerMapping과 유사하지만 빈 이름을 URL 형태로 짓지 않아도 된다는 것이 차이점이다. 빈 이름 앞에 자동으로 / 이 붙여져 URL에 매핑된다.
+			- ControllerClassNameHandlerMapping : 빈의 클래스 이름을 URL에 매핑해주는 매핑 클래스.<br> 기본적으로 클래스 이름을 모두 사용하지만 클래스 이름이 Controller로 끝날 경우 Controller를 뺀 나머지 이름을 URL에 매핑해준다.
+			- SimpleUrlHandlerMapping : URL과 컨트롤러 매핑정보를 한곳에 모아놓을 수 있는 전략이다.<br> 매핑정보는 SImpleUrlHandlerMapping 빈의 프로퍼티에 넣어준다.<br>디폴트 핸들러 매핑 전략이 아니기도 하고 프로퍼티에 매핑정보를 직접 넣어줘야 하므로 SimpleUrlHandlerMapping 빈을 등록해야 사용할 수 있다.
+			- DefaultAnnotationHandlerMapping : @RequestMapping 어노테이션을 이용해 매핑하는 전략이다. 클래스는 물론 메서드 단위로도 URL을 매핑할 수 있다.
+
+![image](https://github.com/to7485/Web1500/assets/54658614/c110197d-ad20-47ee-81f1-2e1d82e70589)
+
+7. DispatcherServlet이 servlet-context를 로딩
+
+8. 두번째 Spring Container가 구동되며, 응답에 맞는 Controller들이 동작한다.
+
 ## home.jsp에 코드 추가하고 실행하기
 ```jsp
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -653,20 +686,18 @@ public class PersonVO {
 
 ```
 
-![image](https://github.com/to7485/Web1500/assets/54658614/c40e99fb-dc0d-4902-b171-4756adcd2fe7)
+![image](image/person.png)
 
 jsp까지는 구조가 복잡한 형태는 아니지만 스프링은 구동되는 순서가 다르면 이해하기 힘들다<br>
 
 ## config 패키지 생성하기
 - web.xml, root-context.xml, servlet-context.xml 삭제하기
 
-![image](https://github.com/to7485/Web1500/assets/54658614/98b949ea-8049-4420-8ed6-0333f1084f64)
+![image](image/delete.png)
 
 ## web.xml 역할을 하는 WebInitializer.java 생성하기
 ```java
 package config;
-
-
 
 import javax.servlet.Filter;
 
@@ -675,27 +706,42 @@ import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatche
 
 public class WebInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
 
-	// Root WebApplicationContext
+	//AbstractAnnotationConfigDispatcherServletInitializer
+	//스프링에서 제공하는 클래스로 웹 어플리케이션의 초기화를 위한 편리한 방법을 제공한다.
+	//이 클래스를 사용하면 자바 기반 설정 클래스를 이용하여 DispatcherServlet 및 ContextLoaderListener를 등록할 수 있다.
+	//이를 통해 web.xml을 사용하지 않고도 웹 어플리케이션의 초기화를 설정할 수 있다.
+	//해당 클래스를 상속받아 필요한 설정을 오버라이드 하여 사용한다.
+
+	//getRootConfigClasses()
+	//프로젝트의 모델 영역 설정을 담당한다.
+	//데이터베이스 연결풀(DBCP), Mybatis, Mybatis매퍼 등과 같은 로직 설정을 담당하는 메서드
 	@Override
 	protected Class<?>[] getRootConfigClasses() {
 		return new Class[] { RootContext.class };
 	}
 
-	// Servlet WebApplicationContext
+	//getServletConfigClasses
+	//DispatcherServlet이 사용할 설정 클래스를 반환한다.
+	//Spring MVC 웹 영역 설정을 담당한다.
+	//VIEW와 Controller 관련 설정을 담당하는 메서드
 	@Override
 	protected Class<?>[] getServletConfigClasses() {
 		return new Class[] { ServletContext.class };
 	}
 	
-    // DispatcherServlet Mapping
+	//getServletMappings
+	//DispatcherServlet의 URL 패턴을 지정한다.
+	//모든 요청을 처리하도록 "/"로 설정되어있다.
 	@Override
 	protected String[] getServletMappings() {
 		return new String[] { "/" };
 	}
 
-	// filter
+	//filter
+	//Client의 요청이 Servlet에 도달하기 전이나 후에 요청 및 응답 데이터를 변형하거나
+	//추가작업을 수행하는데 사용되는 자바 컴포넌트를 의미한다.
 	@Override
-    protected Filter[] getServletFilters() {
+    	protected Filter[] getServletFilters() {
         CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter();
         characterEncodingFilter.setEncoding("UTF-8");
         characterEncodingFilter.setForceEncoding(true);
@@ -773,8 +819,6 @@ public class PersonVO {
 	private String name,tel;
 	private int age;
 	
-	
-	
 	public PersonVO() {
 		System.out.println("---PersonVO의 기본생성자---");
 	}
@@ -806,8 +850,6 @@ public class PersonVO {
 	
 	
 }
-
-
 ```
 
 ## RootContext.java 에 객체 생성하기
@@ -821,8 +863,11 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RootContext {
 
+	//Bean
+	//Spring에서 Bean은 어플리케이션의 핵심 구성 요소로 사용되는 객체를 말한다.
+	//스프링은 제어의 역전(Inversion of Control, IoC)를 통해 객체의 생명주기와
+	//의존성 관리를 스프링이 담당하게 된다.
 
-	//이와 같이 객체를 생성하고 객체에 setter메서드에 값을 추가해주는것을 setter injection이라고 한다.
 	@Bean
 	public PersonVO p1() {
 		PersonVO p1 = new PersonVO();
@@ -832,13 +877,17 @@ public class RootContext {
 		return p1;
 	}
 
-	//생성자에 값을 추가해주는것을 constructor injection이라고 한다.
-	
+	//이와 같이 객체를 생성하고 객체에 setter메서드에 값을 추가해주는것을 setter injection이라고 한다.
+```
+
+```java
 	@Bean
 	public PersonVO p2() {
 		PersonVO p2 = new PersonVO("이길동","010-2222-2222",40);
 		return p2;
 	}
+
+	//생성자에 값을 추가해주는것을 constructor injection이라고 한다.
 }
 
 ```
@@ -857,36 +906,7 @@ public class RootContext {
 ![image](https://github.com/to7485/Web1500/assets/54658614/63bc703e-a577-4e91-8fc8-cf1e7f071fe6)
 
 
-# Spring Framework의 구동순서
 
-![SpringFramework구동 순서](image/spring.png)
 
-1. 웹 어플리케이션이 실행되면 Tomcat(WAS)에 의해 web.xml이 실행된다.
 
-2. web.xml에 등록되어있는 ContextLoaderListener생성
-- ContextLoaderListener는 ServletContextListener 인터페이스를 구현하고있으며, ApplicationContext를 생성한다. 
-	- ApplicationContext는 별도의 설정 정보를 참고하고 IoC를 적용하여 빈의 생성, 관계설정 등의 제어 작업을 총괄한다.
-
-3. ContextLoaderListener가 root-context를 로딩
-	- * ContextLoaderListener : 서블릿을 초기화하는 용도로 사용
-
-4. root-contex에 등록되어있는 설정에 따라 Spring Container가 구동
-
-5. 클라이언트로부터 Web Appllication에 요청을 받는다.
-
-6. DispatcherServlet생성
-	- DispatcherServlet : 서블릿 컨테이너의 가장 앞단에서 HTTP 프로토콜로 들어오는 모든 요청을 먼저 받아 적합한 컨트롤러에 위임해주는 프론트 컨트롤러이다.
-	- 프론트 컨트롤러 : 서블릿 컨테이너의 제일 앞에서 서버로 들어오는 클라이언트의 모든 요청을 받아서 처리해주는 컨트롤러
-		- HandlerMapping이 컨트롤러를 찾아주는 기능을 한다. 스프링이 제공하는 Handler Mapping방법은 5가지이다.
-			- BeanNameUrlHandlerMapping : 빈의 이름에 들어있는 URL을 HTTP 요청의 URL과 비교해서 일치하는 빈을 찾아준다. 가장 직관적이고 사용하기 쉬운 핸들러 매핑 전략이다.
-			- ControllerBeanNameHandlerMapping : BeanNameUrlHandlerMapping과 유사하지만 빈 이름을 URL 형태로 짓지 않아도 된다는 것이 차이점이다. 빈 이름 앞에 자동으로 / 이 붙여져 URL에 매핑된다.
-			- ControllerClassNameHandlerMapping : 빈의 클래스 이름을 URL에 매핑해주는 매핑 클래스.<br> 기본적으로 클래스 이름을 모두 사용하지만 클래스 이름이 Controller로 끝날 경우 Controller를 뺀 나머지 이름을 URL에 매핑해준다.
-			- SimpleUrlHandlerMapping : URL과 컨트롤러 매핑정보를 한곳에 모아놓을 수 있는 전략이다.<br> 매핑정보는 SImpleUrlHandlerMapping 빈의 프로퍼티에 넣어준다.<br>디폴트 핸들러 매핑 전략이 아니기도 하고 프로퍼티에 매핑정보를 직접 넣어줘야 하므로 SimpleUrlHandlerMapping 빈을 등록해야 사용할 수 있다.
-			- DefaultAnnotationHandlerMapping : @RequestMapping 어노테이션을 이용해 매핑하는 전략이다. 클래스는 물론 메서드 단위로도 URL을 매핑할 수 있다.
-
-![image](https://github.com/to7485/Web1500/assets/54658614/c110197d-ad20-47ee-81f1-2e1d82e70589)
-
-7. DispatcherServlet이 servlet-context를 로딩
-
-8. 두번째 Spring Container가 구동되며, 응답에 맞는 Controller들이 동작한다.
 
