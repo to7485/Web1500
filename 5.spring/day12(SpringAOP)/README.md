@@ -39,6 +39,16 @@
 ## Ex_날짜_AOP 프로젝트 생성
 - pom.xml, resources의 패키지 옮기기
 
+## dependency 추가하기
+```xml
+<!-- https://mvnrepository.com/artifact/org.aspectj/aspectjweaver -->
+<dependency>
+    <groupId>org.aspectj</groupId>
+    <artifactId>aspectjweaver</artifactId>
+    <version>${org.aspectj-version}</version>
+</dependency>
+```
+
 ## resources에 advice패키지 생성후 Advice클래스 생성하기
 
 ```java
