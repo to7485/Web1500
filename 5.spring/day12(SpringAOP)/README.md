@@ -54,11 +54,20 @@ import org.aspectj.lang.annotation.Pointcut;
 //@Aspect : Aspect 클래스를 선언할 때 사용하는 어노테이션
 public class Advice {
 
+	//Pointcut : JoinPoint의 상세한 스펙을 정의한 것. 더욱 구체적으로 Advice가 실행될 지점을 정할 수 있다.
+
+	//* : 반환 타입
+	//excution : 메서드 실행을 나타내는 키워드
+	//dao.*DAO : dao패키지의 DAO로 끝나는 모든 클래스
+	//.* : 모든 메서드
+	//(..) : 메서드의 전달되는인자 ..은 어떤 개수의 인자든지 가능하다. 
+
 	@Pointcut("execution(* dao.*DAO.*(..))")
-  	//Pointcut : JoinPoint의 상세한 스펙을 정의한 것. 더욱 구체적으로 Advice가 실행될 지점을 정할 수 있다.
 	public void myPoint() {}
+
+	//before Advice : 대상 객체의 메서드 호출 전에 공통 기능을 실행
 	
-	@Before("myPoint()") //before Advice : 대상 객체의 메서드 호출 전에 공통 기능을 실행
+	@Before("myPoint()") 
 	//JoinPoint : pointcut이 걸린 위치의 정보를 받는 클래스
 	public void before(JoinPoint jp) {
 		System.out.println("----before:"+jp.getSignature());
@@ -204,7 +213,7 @@ public class ServletContext1 implements WebMvcConfigurer {
 
 ## 실행하여 콘솔 확인하기
 
-![image](https://github.com/to7485/Web1500/assets/54658614/eab2ce37-08d5-4720-9454-ac9b7adbaf62)
+![image](img/aoptest.png)
 
 ## 페이지의 수행시간을 체크해보도록 하자
 ## TestDAO클래스 test()메서드에 코드 추가하기
@@ -279,9 +288,12 @@ public class Advice {
 
 ```
 
+![image](img/aoptest2.png)
+
 
 # 리스트에 사람을 저장하고 출력하는 기능 만들어보기
 - 핵심기능 : 리스트에 추가, 호출
+- 
 ## emp 패키지 생성후 Emp.java 클래스만들기
 ```java
 package xml;
@@ -355,13 +367,18 @@ import org.springframework.context.annotation.Configuration;
 @Aspect
 public class EmpLoggingAspect {
 	
-  //@Before 어노테이션을 사용하며 포인트컷 메소드가 실행되기 전에 충고가 적용된다.
-  //* emp.EmpManager.get*(..) : emp 패키지에 EmpManager클래스의 get으로 시작하는 메서드에 파라미터의 개수는 상관없다는 뜻          
+  	//@Before 어노테이션을 사용하며 포인트컷 메소드가 실행되기 전에 충고가 적용된다.
+  	//* : 반환 타입
+	//excution : 메서드 실행을 나타내는 키워드
+	//emp.EmpManager : emp패키지의 EmpManager클래스
+	//.get* : get으로 시작하는 메서드
+	//(..) : 메서드의 전달되는인자 ..은 어떤 개수의 인자든지 가능하다.
+        
 	@Before("execution(* emp.EmpManager.get*(..))")
 	public void before(JoinPoint joinPoint) {
-  //joinPoint.getSignature() : advice되는 메서드에 대한 정보를 반환
-  //getName() : 이름을 반환
 		System.out.println(">>>>>>>>>> Before Advice : " + joinPoint.getSignature().getName());
+		//joinPoint.getSignature() : advice되는 메서드에 대한 정보를 반환
+ 	 	//getName() : 이름을 반환
 	}
 	
   //@Around 어노테이션을 사용하며 포인트컷 메소드가 실행 되기 전, 리턴 된 후에 충고가 적용된다.
