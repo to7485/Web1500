@@ -371,32 +371,32 @@ public class EmpLoggingAspect {
          
 	@Before("execution(* emp.EmpManager.get*(..))")
 	public void before(JoinPoint joinPoint) {
-  //joinPoint.getSignature() : advice되는 메서드에 대한 정보를 반환
-  //getName() : 이름을 반환
+
 		System.out.println(">>>>>>>>>> Before Advice : " + joinPoint.getSignature().getName());
 	}
 	
-  //@Around 어노테이션을 사용하며 포인트컷 메소드가 실행 되기 전, 리턴 된 후에 충고가 적용된다.
-  //어드바이스 메소드의 첫번째 파라미터는 ProceedingJoinPoint가 되어야 한다. proceed() 메소드를 통해 타겟 클래스의 원래 메소드를 호출
+  	//@Around 어노테이션을 사용하며 포인트컷 메소드가 실행 되기 전, 리턴 된 후에 advice가 적용된다.
+  	//advice method의 첫번째 파라미터는 ProceedingJoinPoint가 되어야 한다.
+	//proceed() 메소드를 통해 타겟 클래스의 원래 메소드를 호출
 	@Around("execution(* emp.EmpManager.get*(..))")
 	public Object around(ProceedingJoinPoint pjp) throws Throwable{
-    //
-		//System.out.println(">>>>>>>>>> Around Advice[전] : " + pjp.getSignature().getName());
+    
+		System.out.println(">>>>>>>>>> Around Advice[전] : " + pjp.getSignature().getName());
 		
 		Object o = pjp.proceed();
 		
-		//System.out.println(">>>>>>>>>> Around Advice[후] : " + pjp.getSignature().getName());
+		System.out.println(">>>>>>>>>> Around Advice[후] : " + pjp.getSignature().getName());
 		return o;
 	}
 	
-  //@AfterReturning 어노테이션을 사용하며 pointcut method가 리턴(정상종료)된 후 advice가 적용된다.
+	//@AfterReturning 어노테이션을 사용하며 pointcut method가 리턴(정상종료)된 후 advice가 적용된다.
 	@AfterReturning(pointcut = "execution(* emp.EmpManager.*(..))", returning = "retVal")
 	public void afterReturning(JoinPoint joinPoint, Object retVal) {
 		System.out.println(">>>>>>>>>>>>> AfterReturning Advice : " + joinPoint.getSignature().getName());
 		System.out.println(">>>>>>>>>>>>> AfterReturning Advice return value is " + retVal);
 	}
 	
-  //@After 어노테이션을 사용한다. 포인트컷 메소드가 실행된 후(정상종료 여부와 관계없이) 충고가 적용된다.
+  	//@After 어노테이션을 사용한다. 포인트컷 메소드가 실행된 후(정상종료 여부와 관계없이) 충고가 적용된다.
 	@After("execution(* emp.EmpManager.get*(..))")
 	public void after(JoinPoint joinPoint) {
 		System.out.println(">>>>>>>>>>>>> After Advice : " + joinPoint.getSignature().getName());
