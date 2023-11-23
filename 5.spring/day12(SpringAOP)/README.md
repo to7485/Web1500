@@ -1,31 +1,27 @@
 # 스프링 AOP
 - Aspect-Oriented Programming(관점지향 프로그래밍)
-
-자바의 객체지향 프로그래밍을 보완하는 개념.<br>
-어플리케이션을 객체지향적으로 모듈화 하여 작성하더라도 다수의 객체들에 분산되어 중복적으로 존재하는 공통관심사가 여전히 존재한다.<br>
-
-![image](https://github.com/to7485/Web1500/assets/54658614/1a3612d1-8713-49d7-a0b0-93f6574437fd)
-
-여러 객체에 공통적으로 적용할 수 있는 기능을 분리해 재사용성을 높여주는 기법<br>
-
-## 특징
 - 공통 기능 구현과 핵심 기능 구현의 분리
+- 반복되는 로직들을 모듈화 하여 필요할 때 호출해서 사용하는 방법
+- 여러 객체에 공통적으로 적용할 수 있는 기능을 분리해 재사용성을 높여주는 기법
+![image](img/aop.png)
+
+## AOP를 코딩하기 위한 개념
 - 핵심 기능에 공통 기능을 삽입하며 다음과 같은 방법이 존재
   - 런타임에 프록시 객체를 생성해서 공통 기능을 삽입
 - 스프링 AOP는 프록시 객체를 자동으로 생성해줌
 - AOP의 공통 기능을 Aspect라 칭하며, 아래와 같은 주요 용어가 존재
   - Target
-    - 어떤 대상에 부가 기능을 부여할 것인가.
+    - 적용할 로직(어떤 대상에 부가 기능을 부여할 것인가.)
   - Advice
-    - 언제,어떤 부가기능? Before, AfterReturning,AfterThrowing, After,Around
+    - 반복 로직의 구현체(언제,어떤 부가기능? Before, AfterReturning,AfterThrowing, After,Around)
   - Joinpoint
     -  Advice를 적용 가능한 지점을 의미(어디에 적용할 것인가? 메서드, 필드, 객체, 생성자 등)
   - Pointcut
-    - 실제 advice가 적용될 지점, SpringAOP에서는 advice가 적용될 메서드를 선정
+    - JoinPoint의 상세한 스펙을 정의한 것. 더욱 구체적으로 Advice가 실행될 지점을 정할 수 있다.
   - Weaving
     - Advice를 핵심 로직 코드에 적용하는 것
   - Aspect
-    - 여러 객체에 공통으로 적용되는 기능
+    - 반복되어 사용되는 로직 (여러 객체에 공통으로 적용되는 기능)
 
 ## 프록시 패턴
 - 컴퓨터 프로그래밍 소프트웨어 디자인 패턴의 하나
@@ -39,6 +35,7 @@
 - After Throwing Advice: 대상 객체의 매서드를 실행하는 도중 익셉션이 발생한 경우에 공통 기능을 실행
 - After Advice: 익셉션 발생 여부에 상관없이 대상 객체의 매서드 실핼 후 공통 기능을 실행
 - Around Advice: 대상 객체의 매서드 실행 전, 후 또는 익셉션 발생 시점에 공통 기능을 실행
+
 ## Ex_날짜_AOP 프로젝트 생성
 - pom.xml, resources의 패키지 옮기기
 
@@ -54,17 +51,20 @@ import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 
 @Aspect
+//@Aspect : Aspect 클래스를 선언할 때 사용하는 어노테이션
 public class Advice {
 
 	@Pointcut("execution(* dao.*DAO.*(..))")
+  	//Pointcut : JoinPoint의 상세한 스펙을 정의한 것. 더욱 구체적으로 Advice가 실행될 지점을 정할 수 있다.
 	public void myPoint() {}
 	
-	@Before("myPoint()")
+	@Before("myPoint()") //before Advice : 대상 객체의 메서드 호출 전에 공통 기능을 실행
+	//JoinPoint : pointcut이 걸린 위치의 정보를 받는 클래스
 	public void before(JoinPoint jp) {
 		System.out.println("----before:"+jp.getSignature());
 	}
 	
-	@After("myPoint()")
+	@After("myPoint()") //- After Advice: Exception 발생 여부에 상관없이 대상 객체의 Method 실행 후 공통 기능을 실행
 	public void after(JoinPoint jp) {
 		System.out.println("---after:"+jp.toLongString());
 	}
@@ -107,15 +107,21 @@ import dao.TestDAO;
 
 @Configuration
 @EnableAspectJAutoProxy
+//어노테이션으로, AspectJ 스타일의 선언적 어스펙트(Aspect)를 지원하도록 활성화한다.
+//AspectJ는 자바용으로 개발된 강력한 어스펙트 지향 프로그래밍(AOP) 프레임워크로 널리 사용된다.
+//이 어노테이션을 사용하여 AspectJ 스타일의 AOP를 활성화하면 스프링은 @Aspect 어노테이션을
+//가진 클래스들을 찾아서 프록시를 생성하고, 해당 어스펙트를 적용한다.
 public class Context_3_dao {
-	
+
+	//dao 객체의 생성
 	@Bean
 	public TestDAO testDAO(SqlSession sqlSession) {
 		TestDAO testDAO = new TestDAO();
 		testDAO.setSqlSession(sqlSession);
 		return testDAO;
 	}
-	
+
+	//Advice 클래스의 객체 생성
 	@Bean
 	public Advice advice() {
 		return new Advice();
@@ -173,14 +179,6 @@ import dao.TestDAO;
 @Configuration
 @EnableWebMvc
 //@ComponentScan("com.korea.auto")
-//어노테이션에도 상속관계가 있다
-/*
- *@Component
- *	ㄴ@Controller
- *	ㄴ@Service
- *	ㄴ@Repository 
- * */
-//컴포넌트의 자식객체가 들어있으면 사실 Controller가 아니어도 만들어 질 수 있다.
 public class ServletContext1 implements WebMvcConfigurer {
 	
 
