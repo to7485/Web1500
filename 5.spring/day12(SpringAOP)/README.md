@@ -68,9 +68,13 @@ public class Advice {
 	//before Advice : 대상 객체의 메서드 호출 전에 공통 기능을 실행
 	
 	@Before("myPoint()") 
-	//JoinPoint : pointcut이 걸린 위치의 정보를 받는 클래스
-	public void before(JoinPoint jp) {
+	public void before(JoinPoint jp) {//	//JoinPoint : pointcut이 걸린 위치의 정보를 받는 클래스
 		System.out.println("----before:"+jp.getSignature());
+		//getSignature() : 현재 JoinPoint에서 실행되는 메서드의 서명(Signature)정보를 반환한다.
+		//서명 정보에는 메서드명, 리턴 타입, 파라미터 타입등이 포함된다.
+		//.getName() : 메서드명
+		//.getReturnType() : 리턴타입
+		//.getParameterTypes() : 파라미터 타입들
 	}
 	
 	@After("myPoint()") //- After Advice: Exception 발생 여부에 상관없이 대상 객체의 Method 실행 후 공통 기능을 실행
@@ -271,7 +275,7 @@ public class Advice {
 		
 		//before()가 호출됐을때의 시간
 		start = System.currentTimeMillis();
-		
+
 		System.out.println("----before:"+jp.getSignature());
 	}
 	
@@ -323,8 +327,8 @@ public class Emp {
 ```
 
 ## 추가와 출력 기능이 있는 EmpManager클래스 생성하기
-```
-package xml;
+```java
+package emp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -348,8 +352,8 @@ public class EmpManager {
 ```
 
 ## EmpLoggingAspect클래스 만들기
-```
-package xml;
+```java
+package emp;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -359,26 +363,17 @@ import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
-import org.aspectj.lang.annotation.Pointcut;
-import org.springframework.context.annotation.Configuration;
-
-
 
 @Aspect
 public class EmpLoggingAspect {
 	
-  	//@Before 어노테이션을 사용하며 포인트컷 메소드가 실행되기 전에 충고가 적용된다.
-  	//* : 반환 타입
-	//excution : 메서드 실행을 나타내는 키워드
-	//emp.EmpManager : emp패키지의 EmpManager클래스
-	//.get* : get으로 시작하는 메서드
-	//(..) : 메서드의 전달되는인자 ..은 어떤 개수의 인자든지 가능하다.
-        
+	//@Before 어노테이션을 사용하며 포인트컷 메소드가 실행되기 전에 충고가 적용된다.
+         
 	@Before("execution(* emp.EmpManager.get*(..))")
 	public void before(JoinPoint joinPoint) {
+  //joinPoint.getSignature() : advice되는 메서드에 대한 정보를 반환
+  //getName() : 이름을 반환
 		System.out.println(">>>>>>>>>> Before Advice : " + joinPoint.getSignature().getName());
-		//joinPoint.getSignature() : advice되는 메서드에 대한 정보를 반환
- 	 	//getName() : 이름을 반환
 	}
 	
   //@Around 어노테이션을 사용하며 포인트컷 메소드가 실행 되기 전, 리턴 된 후에 충고가 적용된다.
@@ -386,15 +381,15 @@ public class EmpLoggingAspect {
 	@Around("execution(* emp.EmpManager.get*(..))")
 	public Object around(ProceedingJoinPoint pjp) throws Throwable{
     //
-		System.out.println(">>>>>>>>>> Around Advice[전] : " + pjp.getSignature().getName());
+		//System.out.println(">>>>>>>>>> Around Advice[전] : " + pjp.getSignature().getName());
 		
 		Object o = pjp.proceed();
 		
-		System.out.println(">>>>>>>>>> Around Advice[후] : " + pjp.getSignature().getName());
+		//System.out.println(">>>>>>>>>> Around Advice[후] : " + pjp.getSignature().getName());
 		return o;
 	}
 	
-  //@AfterReturning 어노테이션을 사용하며 포인트컷 메소드가 리턴(정상종료)된 후 충고가 적용된다.
+  //@AfterReturning 어노테이션을 사용하며 pointcut method가 리턴(정상종료)된 후 advice가 적용된다.
 	@AfterReturning(pointcut = "execution(* emp.EmpManager.*(..))", returning = "retVal")
 	public void afterReturning(JoinPoint joinPoint, Object retVal) {
 		System.out.println(">>>>>>>>>>>>> AfterReturning Advice : " + joinPoint.getSignature().getName());
@@ -402,7 +397,7 @@ public class EmpLoggingAspect {
 	}
 	
   //@After 어노테이션을 사용한다. 포인트컷 메소드가 실행된 후(정상종료 여부와 관계없이) 충고가 적용된다.
-	@After("execution(* xml.EmpManagerImpl.get*(..))")
+	@After("execution(* emp.EmpManager.get*(..))")
 	public void after(JoinPoint joinPoint) {
 		System.out.println(">>>>>>>>>>>>> After Advice : " + joinPoint.getSignature().getName());
 	}
@@ -414,51 +409,40 @@ public class EmpLoggingAspect {
 	}
 	
 }
-
 ```
 
 ## context패키지에 Context_5_AOP 클래스 만들기
 ```
 package context;
 
-import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.After;
-import org.aspectj.lang.annotation.AfterReturning;
-import org.aspectj.lang.annotation.AfterThrowing;
-import org.aspectj.lang.annotation.Around;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
-import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
-import xml.EmpLoggingAspect;
-import xml.EmpManagerImpl;
+import emp.EmpLoggingAspect;
+import emp.EmpManager;
 
 
 
 @Configuration
 @EnableAspectJAutoProxy
-public class Context_5_aop {
+public class Context_5_AOP {
 	
 	@Bean
-	public EmpManagerImpl empManager() {
-		return new EmpManagerImpl();
+	public EmpManager empManager() {
+		return new EmpManager();
 	}
 	
 	@Bean
 	public EmpLoggingAspect loggingAspect() {
 		return new EmpLoggingAspect();
 	}
-	
 }
 
 ```
 
 ## emp 패키지에 EmpTest클래스 만들기
-```
+```java
 package xml;
 
 import java.util.List;
@@ -485,8 +469,9 @@ public class EmpTest {
 
 ```
 
+ctrl+ f11 눌러서 확인하기!
 
-
+![image](img/empaop.png)
 
 
 
