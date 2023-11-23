@@ -1258,7 +1258,7 @@ public String m_insert() {
 			return;
 		}
 
-		f.action = "insert.do";
+		f.action = "member_insert.do";
 		f.submit();
 
 	}//send()			
