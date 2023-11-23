@@ -456,8 +456,16 @@ import context.Context_5_aop;
 
 public class EmpTest {
 	public static void main(String[] args) throws Exception {
+		//AnnotationConfigApplicationContext 클래스는 Spring Framework에서 제공하는 ApplicationContext 인터페이스의 구현 중 하나.
+		//이 클래스는 Java Config 클래스를 사용하여 Spring 애플리케이션 컨텍스트를 설정하는 데 사용된다.
+
+		//AnnotationConfigApplicationContext는 Spring의 ApplicationContext 인터페이스를 구현하여 애플리케이션 컨텍스트를 나타낸다.
+		//Java Config 사용: 주로 Java Config(자바 기반 설정)을 사용하여 Spring Bean을 구성하는 데 사용된다.
+
 		ApplicationContext context = new AnnotationConfigApplicationContext(Context_5_aop.class);
-		EmpManagerImpl manager = (EmpManagerImpl) context.getBean("empManager");
+
+		//empManager라는 이름을 가진 bean을 가져와서 EmpManager타입으로 캐스팅한다.
+		EmpManager manager = (EmpManager) context.getBean("empManager");
 		
 		manager.setEmp(new Emp("1","홍길동"));
 		manager.setEmp(new Emp("2","이종철"));
