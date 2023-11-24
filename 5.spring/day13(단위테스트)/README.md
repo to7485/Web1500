@@ -17,12 +17,7 @@
 ## Ex_날짜_Test 프로젝트 생성
 - pom.xml, resources패키지 옮기기
 
-### DB를 톰캣을 통해서 보지 않고 콘솔에서 보기 위해 ojdbc를 직접 넣어주기
 
-![image](img/ojdbc1.png)
-
-배포할때 ojdbc 라이브러리도 같이 배포하라는 뜻
-![image](img/ojdbc2.png)
 
 ## pom.xml에 spring-test 추가하기
 
@@ -81,6 +76,60 @@ public class Coding {
 }
 
 ```
+
+## src/text/java에 dependency 패키지 만들기
+### DependencyTest클래스만들기
+```java
+package com.korea.test.dependency;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import context.Context_3_dao;
+import dependency.Coding;
+import lombok.extern.log4j.Log4j;
+
+//JUnit 프레임워크의 테스트 실행방법을 확장할 때 사용하는 어노테이션
+//톰캣 대신에 스프링에 접근할 수 있게 해준다.
+@RunWith(SpringJUnit4ClassRunner.class)
+
+//설정 파일을 읽어야 하는데, 이런 설정파일을 로드하는 어노테이션이 ContextConfiguration이다.
+@ContextConfiguration(classes={Context_3_dao.class})
+
+//println 대신에 쓸 로그 객체를 생성합니다.
+@Log4j
+public class DependencyTest {
+	
+	@Autowired
+	private Coding coding;
+
+	//Test에 사용될 메서드임을 알려주는 어노테이션
+	@Test
+	public void check() {
+		log.info("----------------");
+		log.info("coding : " + coding);
+		log.info("computer : " + coding.getComputer());
+		log.info("----------------");
+	}
+	
+
+}
+
+```
+
+ctrl+ f11 누르고 JUnit으로 실행하여 결과보기
+
+![image](img/junit2.png)
+
+### DB를 톰캣을 통해서 보지 않고 콘솔에서 보기 위해 ojdbc를 직접 넣어주기
+
+![image](img/ojdbc1.png)
+
+배포할때 ojdbc 라이브러리도 같이 배포하라는 뜻
+![image](img/ojdbc2.png)
  
  ## src/test/java의 com.korea.test패키지에 DataSourceTests 클래스 만들기
  
@@ -102,14 +151,13 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import context.Context_1_dataSource;
 import lombok.extern.log4j.Log4j;
 
-//JUnit 프레임워크의 테스트 실행방법을 확장할 때 사용하는 어노테이션
-//톰캣 대신에 스프링에 접근할 수 있게 해준다.
+
 @RunWith(SpringJUnit4ClassRunner.class)
 
-//설정 파일을 읽어야 하는데, 이런 설정파일을 로드하는 어노테이션이 ContextConfiguration이다.
+
 @ContextConfiguration(classes={Context_1_dataSource.class})
 
-//로그 객체를 생성합니다.
+
 @Log4j
 public class DataSourceTests {
 
