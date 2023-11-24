@@ -44,6 +44,43 @@
 	<scope>test</scope>
 </dependency>   
  ```
+
+## 의존성 주입 테스트
+- dependency패키지 생성하기
+### Computer 클래스 생성하기
+```java
+package dependency;
+
+import org.springframework.stereotype.Component;
+
+import lombok.Data;
+
+@Component
+@Data
+public class Computer {
+
+	int data;
+}
+
+```
+### Coding클래스 생성하기
+```java
+package dependency;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import lombok.Data;
+
+@Component
+@Data
+public class Coding {
+	
+	@Autowired
+	private final Computer computer;
+}
+
+```
  
  ## src/test/java의 com.korea.test패키지에 DataSourceTests 클래스 만들기
  
