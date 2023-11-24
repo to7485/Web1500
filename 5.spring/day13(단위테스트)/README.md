@@ -93,7 +93,7 @@ public class DataSourceTests {
  
  ### 실행했을 때 콘솔에 db접속과 관련된 정보가 출력된다.
  
- ![image](https://github.com/to7485/Web1500/assets/54658614/d6106c67-e369-4378-be1c-561ff66bad2f)
+ ![image](img/junit1.png)
  
  # 부서 테이블 조회해보기
  
