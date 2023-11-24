@@ -19,14 +19,14 @@
 
 ### DB를 톰캣을 통해서 보지 않고 콘솔에서 보기 위해 ojdbc를 직접 넣어주기
 
-![image](https://github.com/to7485/Web1500/assets/54658614/f02b945d-3315-4aa7-ba01-59797e15c7f7)
+![image](img/ojdbc1.png)
 
 배포할때 ojdbc 라이브러리도 같이 배포하라는 뜻
-![image](https://github.com/to7485/Web1500/assets/54658614/fd335311-e683-4ced-9f90-5ec437f4b61a)
+![image](img/ojdbc2.png)
 
 ## pom.xml에 spring-test 추가하기
 
-![image](https://github.com/to7485/Web1500/assets/54658614/a3fb357a-615c-41d0-8619-f447b4dd17ed)
+![image](img/spring_test.png)
 
 
 ```xml
@@ -35,6 +35,14 @@
     <artifactId>spring-test</artifactId>
     <version>5.1.20.RELEASE</version>
 </dependency>
+
+<!-- Test -->
+<dependency>
+	<groupId>junit</groupId>
+	<artifactId>junit</artifactId>
+	<version>4.12</version>
+	<scope>test</scope>
+</dependency>   
  ```
  
  ## src/test/java의 com.korea.test패키지에 DataSourceTests 클래스 만들기
