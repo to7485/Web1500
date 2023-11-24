@@ -730,6 +730,22 @@ public class WebInitializer extends AbstractAnnotationConfigDispatcherServletIni
 		return new Class[] { RootContext.class };
 	}
 
+	//.class : 클래스 리터럴
+	//클래스 그 차체를 참조하는 구문
+	//예를들어 String.class는 String클래스의  Class객체를 참조한다.
+	//Class stringClass = String.class;
+	//System.out.println(stringClass.getName()); java.lang.String
+
+	//Class 클래스
+	//자바의 리플렉션 API의 일부로 클래스와 인터페이스의 메타데이터에 접근할 수 있게 해준다.
+	//Class객체는 특정 클래스에 대한 정보를 캡슐화하며, 해당클래스의 이름, 슈퍼클래스, 구현한 인터페이스 메서드, 생성자등의 정보를 제공한다.
+
+	//getName(): 클래스의 완전한 이름 (패키지 이름 포함)을 반환합니다.
+	//getSuperclass(): 슈퍼클래스의 Class 객체를 반환합니다.
+	//getMethods(): 클래스의 모든 public 메서드를 반환합니다.
+	//getDeclaredMethods(): 모든 메서드 (public, protected, default, private)를 반환합니다.
+	//getConstructors(): 클래스의 public 생성자를 반환합니다.
+
 	//getServletConfigClasses
 	//DispatcherServlet이 사용할 설정 클래스를 반환한다.
 	//Spring MVC 웹 영역 설정을 담당한다.
