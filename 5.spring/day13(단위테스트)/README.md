@@ -77,6 +77,22 @@ public class Coding {
 
 ```
 
+### Context_3_dao 클래스에 객체 생성하기
+```java
+package context;
+
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+
+
+
+@Configuration
+@ComponentScan("dependency")
+public class Context_3_dao {
+	
+}
+```
+
 ## src/text/java에 dependency 패키지 만들기
 ### DependencyTest클래스만들기
 ```java
