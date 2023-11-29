@@ -336,8 +336,61 @@ element.classList.remove('oldClass'); // 클래스 제거
 var element = document.getElementById('myElement');
 element.style.cssText = 'color: blue; font-size: 18px;'; // 여러 속성을 동시에 변경
 ```
+### js_
+```html
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
 
-#### 이제 body영역에서 작성한 내용을 Script영역까지 가져와보자.
+</head>
+<body>
+	<p id="p_id"> 자바스크립트로 css 바꾸기 연습</p>
+	
+	<script type="text/javascript">
+		var element = document.getElementById("p_id"); 
+		element.style.backgroundColor='lightblue';
+		element.style.color='red';
+		element.style.fontSize = '30px';
+		element.style.border='2px solid black';
+		element.classList.add('newClass');
+		console.log(element.getAttribute('class'))
+
+</script>
+</body>
+</html>
+```
+
+## JavaScript의 이벤트 처리
+1. HTML 속성을 이용한 이벤트 처리
+- 이벤트를 HTML요소에 직접 추가하는 방식이다.
+- 예를들어 'onclick' 속성을 사용하여 클릭 이벤트를 처리할 수 있다.
+```html
+<button onclick="myFunction()">클릭</button>
+
+<script>
+  function myFunction() {
+    alert("버튼이 클릭되었습니다!");
+  }
+</script>
+
+```
+2. DOM 요소에 이벤트 리스너 추가
+- JavaScript를 사용하여 DOM 요소에 이벤트 리스너를 동적으로 추가하는 방식이다.
+- addEventListener 함수를 사용한다.
+```html
+<button id="myButton">클릭</button>
+
+<script>
+  // 요소를 선택하고 이벤트 리스너를 추가
+  document.getElementById("myButton").addEventListener("click", function() {
+    alert("버튼이 클릭되었습니다!");
+  });
+</script>
+```
+
+## 이제 body영역에서 작성한 내용을 Script영역까지 가져와보자.
 - a 태그는 클릭해서 이동하는것은 가능하지만 내용을 가져오는데는 한계가 있다.
 - 자바스크립트와 밀접한 관련이 있는 input 태그는 사용자가 데이터를 입력할 수 있는 입력필드를 정의할 때 사용합니다.
 - input태그의 type속성을 달리함으로써 여러 가지 모양을 나타낼 수 있습니다.
