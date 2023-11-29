@@ -196,11 +196,10 @@ alert(bark()); // undefined - 반환값이 없으므로
 alert(square(5)); // 25 
 function square(x) {  return x * x; }
 ``` 
-#### 이제 body영역에서 작성한 내용을 Script영역까지 가져와보자.
-- a 태그는 클릭해서 이동하는것은 가능하지만 내용을 가져오는데는 한계가 있다.
-- 자바스크립트와 밀접한 관련이 있는 input 태그는 사용자가 데이터를 입력할 수 있는 입력필드를 정의할 때 사용합니다.
-- input태그의 type속성을 달리함으로써 여러 가지 모양을 나타낼 수 있습니다.
-  
+
+
+## HTML 요소의 선택
+
 |속성명|속성값|설명|
 |------|---|---|
 |type|button<br>chcekbox<br>color<br>date<br>datetime-local<br>email<br>file<br>hidden<br>image<br>month<br>number<br>password<br>radio<br>range<br>reset<br>search<br>submit<br>tel<br>text<br>time<br>url<br>week<br>|input 요소가 나타낼 타입을 명시함.|
@@ -208,7 +207,7 @@ function square(x) {  return x * x; }
 - 자바스크립트로 HTML 요소를 제어하려면 그 전에 제어하고자 하는 요소 객체를 먼저 가져와야 합니다.
 - 물론 Document 객체의 DOM 트리를 타고 올라가 요소 객체를 가져오는 방법도 있지만 Document 객체는 이보다 편리하게 요소 객체를 가져올 수 있는 메서드가 마련되어 있습니다.
 
-### HTML 요소의 선택
+
 |메서드|설명|
 |------|---|
 |document.getElementsByTagName(태그이름)|해당 태그 이름의 요소를 모두 선택함.|
@@ -225,7 +224,7 @@ function square(x) {  return x * x; }
 document.getElementById(id 값);
 ```
 
-### 요소 이름으로 노드 가져오기
+### 태그이름으로 노드 가져오기
 - 인수로 넘긴 문자열과 같은 이름을 가진 태그 목록을 가져올 수 있습니다. 인수로는 태그 이름을 넘깁니다.
 - 태그 이름은 대소문자를 구별하지 않습니다.
 - getElementsByTagName 메서드는 반환값이 복수개의 요소 입니다. 이것은 일반적인 HTML 문서에는 이름이 같은 태그가 많이 사용되기 때문입니다. 
@@ -233,7 +232,7 @@ document.getElementById(id 값);
 - 요소 이름 대신 와일드카드(\*)를 지정할 수도 있습니다. 이 경우에는 NodeList에 HTML 문서 안의 모든 요소를 담아서 반환합니다.
 
 ```javascript
-document.getElementsByTagName(요소의 태그 이름);
+document.getElementsByTagName(요소의 태그 이름)[index];
 ```
 
 ### class 속성 값으로 노드 가져오기
@@ -243,8 +242,32 @@ document.getElementsByTagName(요소의 태그 이름);
 - getElementsByClassName 메서드를 사용하면 특정 class  속성 값을 class 속성 값으로 가지는 요소 객체 목록(NodeList)을 가져올 수 있습니다.
 
 ```javascript
-document.getElementsByClassName(class의 이름);
+document.getElementsByClassName(class의 이름)[index];
 ```
+
+### CSS선택자로 노드 가져오기
+```js
+document.querySelector("#태그아이디값");
+document.querySelector(".태그클래스값");
+
+```
+
+## DOM요소 속성 조정
+|메서드|설명|
+|------|---|
+|hasAttribute(속성)|지정한 속성을 가지고 있는지 검사한다.|
+|getAttribute(속성)|속성의 값을 가져온다.|
+|setAttribute(속성명,값)|속성과 속성값을 설정한다.|
+|removeAttribute(속성)|지정한 속성을 제거한다.|
+|hasAttribute(속성)|지정한 속성을 가지고 있는지 검사한다.|
+|.attributes|속성들을 모아서 배열로 반환|
+
+
+
+#### 이제 body영역에서 작성한 내용을 Script영역까지 가져와보자.
+- a 태그는 클릭해서 이동하는것은 가능하지만 내용을 가져오는데는 한계가 있다.
+- 자바스크립트와 밀접한 관련이 있는 input 태그는 사용자가 데이터를 입력할 수 있는 입력필드를 정의할 때 사용합니다.
+- input태그의 type속성을 달리함으로써 여러 가지 모양을 나타낼 수 있습니다.
 
 #### js_function.html 생성하기
 ```
