@@ -91,7 +91,7 @@
 	</body>
 </html>
 ```
- 함수,메서드 -> function 키워드로 작성 
+
 ```
   <!DOCTYPE html>
 <html>
@@ -206,8 +206,17 @@ function square(x) {  return x * x; }
 |------|---|---|
 |type|button<br>chcekbox<br>color<br>date<br>datetime-local<br>email<br>file<br>hidden<br>image<br>month<br>number<br>password<br>radio<br>range<br>reset<br>search<br>submit<br>tel<br>text<br>time<br>url<br>week<br>|input 요소가 나타낼 타입을 명시함.|
 
-자바스크립트로 HTML 요소를 제어하려면 그 전에 제어하고자 하는 요소 객체를 먼저 가져와야 합니다.<br>
-물론 Document 객체의 DOM 트리를 타고 올라가 요소 객체를 가져오는 방법도 있지만 Document 객체는 이보다 편리하게 요소 객체를 가져올 수 있는 메서드가 마련되어 있습니다.<br>
+- 자바스크립트로 HTML 요소를 제어하려면 그 전에 제어하고자 하는 요소 객체를 먼저 가져와야 합니다.
+- 물론 Document 객체의 DOM 트리를 타고 올라가 요소 객체를 가져오는 방법도 있지만 Document 객체는 이보다 편리하게 요소 객체를 가져올 수 있는 메서드가 마련되어 있습니다.
+
+### HTML 요소의 선택
+|메서드|설명|
+|------|---|
+|document.getElementsByTagName(태그이름)|해당 태그 이름의 요소를 모두 선택함.|
+|document.getElementById(아이디)|해당 아이디의 요소를 선택함.|
+|document.getElementsByClassName(클래스이름)|해당 클래스에 속한 요소를 모두 선택함.|
+|document.getElementsByName(name속성값)|해당 name 속성값을 가지는 요소를 모두 선택함.|
+|document.querySelectorAll(선택자)|해당 선택자로 선택되는 요소를 모두 선택함.|
 
 ### id 속성으로 노드 가져오기
 - HTML 문서의 요소에는 id 속성을 지정할 수 있습니다.
