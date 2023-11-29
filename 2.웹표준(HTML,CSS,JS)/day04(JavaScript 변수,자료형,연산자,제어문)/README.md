@@ -4,7 +4,7 @@
 ## html에서 JavaScript를 사용하는법
 - \<script\> ~ \</script\> 를 사용한다.
 
-```
+```html
 <!DOCTYPE html>
 <html>
 	<head>
@@ -43,41 +43,41 @@
 
 ## variable(변수)와 ValueType(자료형)
 - JavaScript에서 변수를 만들 때 앞에다가 따로 명시하지 않습니다.
-```
+```html
 <!DOCTYPE html>
 <html>
 	<head>
 		<meta charset="UTF-8">
 		<title>자바스크립트의 자료형</title>
 		<script type="text/javascript">
-	      //자바스크립트의 자료형
-	      //var,let,const
-	      //var : 같은 이름의 변수가 만들어졌을 때를 감지하지 못한다.
-	      //let : 같은 이름의 변수가 만들어졌을때를 감지한다(mutable) 값을 새롭게 대입은 가능
-	      //const : 일종의 상수와 같은 자료형(immutable) 값 다시 대입 불가능
+		//자바스크립트의 자료형
+		//var,let,const
+		//var : 같은 이름의 변수가 만들어졌을 때를 감지하지 못한다.
+		//let : 같은 이름의 변수가 만들어졌을때를 감지한다(mutable) 값을 새롭게 대입은 가능
+		//const : 일종의 상수와 같은 자료형(immutable) 값 다시 대입 불가능
 				
-		    //각각의 자료형을 나타내는 키워드가 따로 존재하지 않는다.	
-		    let i1 = 10;
-	      let i2 = 20;
+		//각각의 자료형을 나타내는 키워드가 따로 존재하지 않는다.	
+		let i1 = 10;
+		let i2 = 20;
 	    
 
-        var num1 = 100;
-        var num2 = 200;
-        var num3 = "100 + 200 : " + (num1 + num2); //문자열
+	        var num1 = 100;
+	        var num2 = 200;
+	        var num3 = "100 + 200 : " + (num1 + num2); //문자열
      
-	      document.write(num3+"<br>");
-	      
-	      num3 = 50; //다시 정수로 바뀜
+		document.write(num3+"<br>");
+		
+		num3 = 50; //다시 정수로 바뀜
 			
-	      document.write(num3+100);
-	
-	      num3 = 10 / 3;
-	      
-	      document.write("10 / 3 : " + num3 + "<br>");
-	      
-	      //자바스크립트는 문자열과 문자의 구별이 없다.
-	      document.write("안녕하세요<br>");
-	      document.write('안녕하세요<br>');
+		document.write(num3+100);
+		
+		num3 = 10 / 3;
+		
+		document.write("10 / 3 : " + num3 + "<br>");
+		
+		//자바스크립트는 문자열과 문자의 구별이 없다.
+		document.write("안녕하세요<br>");
+		document.write('안녕하세요<br>');
 
 	      </script>
 	</head>
@@ -86,13 +86,80 @@
 	</body>
 </html>
 ```
-#### var, let, const의 차이
-- var : 모든 변수는 앞에 var를 써줌으로 써 초기화 할 수 있다.
-  - 하지만 치명적인 단점이 있다. 같은 이름의 변수가 만들어졌을 때를 감지하지 못한다.
+### var, let, const의 차이
+- 차이에 앞서 스코프와 호이스팅에 대해 알아야 한다.
 
-- let : 재선언 하는것은 불가능하나 값을 다시 대입하는것은 가능하다.
+#### 스코프
+- 식별자(변수명,함수명,클래스명등)의 유효범위를 말한다.
+- 전역에 선언된 전역변수는 하위 모든곳에서 참조가 가능하다.
+- 지역에 선언된 지역변수는 해당 지역과 하위 지역에서만 참조가 가능하다.
+- var은 함수에서만 지역변수가 되는 함수레벨 스코프를 갖고있다.
+```js
+function a() {
+  var variable = 1;
+}
+console.log(variable) // ReferenceError: variable is not defined
 
-- const : 변수의 재선언과 재대입이 모두 불가능하다.
+if (true) {
+  var variable = 1;
+}
+console.log(variable) // 1
+```
+- let과 const는 블록레벨 스코프를 가져 모든 코드블록에서 지역스코프를 가진다.
+```js
+function a() {
+  const constance = 1;
+}
+console.log(constance) // ReferenceError: constance is not defined
+
+if (true) {
+  let string = '';
+}
+console.log(string) // ReferenceError: string is not defined
+```
+
+#### 호이스팅
+- 자바스크립트 엔진은 소스코드를 한 줄씩 읽으며 순차적으로 실행하기 전에 변수 선언을 포함한 모든 선언문을 찾아내어 먼저 실행한다.
+- 마치 함수안의 선언들을 모두 끌어올려 해당 함수 유효 범위 최상단에 선언된 것과 같은 특징을 <b>호이스팅</b>이라고 한다.
+- 모든 식별자(변수, 함수, 클래스등)는 호이스팅이 되어 먼저 선언된다.
+
+##### 변수의 호이스팅
+- 변수는 크게 '변수 선언'과 '값 할당'으로 이루어진다.
+```js
+let a; //변수 선언
+a = 1; //값 할당
+```
+- <b>선언단계</b> : 변수 이름을 등록해서 자바스크립트가 엔진에 의해 변수의 존재를 알린다.
+- <b>초기화 단계</b> : 값을 저장하기 위한 메모리 공간을 확보하고 암묵적으로 undifined를 할당해 초기화한다.
+
+- <b>var</b>로 선언한 변수의 경우 호이스팅 시 undifined로 변수를 초기화까지 해준다.
+```js
+console.log(a); //undifined
+var a;
+```
+- <b>let</b>은 선언단계와 초기화 단계가 분리되어 진행된다.
+- 선언 단계는 런타임 이전에 변수 선언문에서 이루어진다.
+- 초기화 단계는 런타임 이후에 변수 선언문에서 이루어진다.
+```js
+console.log(b); //ReferenceError: Cannot access 'b' before initialization
+let b; //여기서 초기화 단계 실행, b에 undefined를 암묵적으로 할당
+console.lob(b); //undifined
+```
+- <b>const</b>는 선언과 동시에 초기화해야한다.
+- 그렇지 않으면 다른 에러가 출력된다.
+```js
+const c; // SyntaxError: Missing initializer in const declaration
+console.log(c);
+
+//ReferenceError가 아닌 SyntaxError이다. 문법적으로 옳지 않다는 뜻이다.
+
+console.log(c); //ReferenceError: Cannot access 'c' before initialization
+const c = 1;
+```
+- 문법을 지켜서 c가 자바스크립트 엔진에 등록은 됐지만
+- 초기화 단계는 런타임 이후 변수 선언문에서 이루어지기 때문이다.
+- 그러므로 let과 const는 Scope의 시작 위치에서 선언하는게 좋다.
+
 
 ### 변수에 저장할 수 있는 자료형
 - <b>문자형(String)</b> : var 변수 = "사용할 문자나 숫자"; 
