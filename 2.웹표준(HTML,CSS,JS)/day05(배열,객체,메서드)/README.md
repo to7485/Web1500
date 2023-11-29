@@ -262,7 +262,80 @@ document.querySelector(".태그클래스값");
 |hasAttribute(속성)|지정한 속성을 가지고 있는지 검사한다.|
 |.attributes|속성들을 모아서 배열로 반환|
 
+### js_dom.html 생성하기
+```html
+<!DOCTYPE html>
+<html>
+  <body>
+  <input type="text">
+  <script>
+     const input = document.querySelector('input[type=text]');
+     console.log(input);
 
+     if (!input.hasAttribute('value')) {  // value 어트리뷰트가 존재하지 않으면
+       // value 어트리뷰트를 추가하고 값으로 'hello!'를 설정
+       input.setAttribute('value', 'hello!');
+     }
+
+     // value 어트리뷰트 값을 취득
+     console.log(input.getAttribute('value')); // hello!
+
+     // value 어트리뷰트를 제거
+     input.removeAttribute('value');
+
+  </script>
+  </body>
+</html>
+```
+
+## DOM 객체의 스타일 변경하기
+- element.style 객체로 태그의 css를 변경할수도 있다.
+1. 요소의 배경색 변경
+```js
+var element = document.getElementById('myElement');
+element.style.backgroundColor = 'lightblue';
+```
+2. 폰트 색상 변경
+```js
+var element = document.getElementById('myElement');
+element.style.color = 'red';
+```
+3. 폰트 크기 변경
+```js
+var element = document.getElementById('myElement');
+element.style.color = 'red';
+```
+4. 테두리 추가:
+```js
+var element = document.getElementById('myElement');
+element.style.border = '2px solid black';
+```
+5. 요소의 가시성 변경
+```js
+var element = document.getElementById('myElement');
+element.style.display = 'none'; // 숨기기
+// 또는
+element.style.display = 'block'; // 보이기
+```
+6. 요소의 위치 변경
+```js
+var element = document.getElementById('myElement');
+element.style.position = 'relative';
+element.style.left = '50px';
+element.style.top = '20px';
+```
+7. 클래스의 추가/제거
+```js
+var element = document.getElementById('myElement');
+element.classList.add('newClass'); // 클래스 추가
+// 또는
+element.classList.remove('oldClass'); // 클래스 제거
+```
+8. 다중 속성 변경
+```js
+var element = document.getElementById('myElement');
+element.style.cssText = 'color: blue; font-size: 18px;'; // 여러 속성을 동시에 변경
+```
 
 #### 이제 body영역에서 작성한 내용을 Script영역까지 가져와보자.
 - a 태그는 클릭해서 이동하는것은 가능하지만 내용을 가져오는데는 한계가 있다.
