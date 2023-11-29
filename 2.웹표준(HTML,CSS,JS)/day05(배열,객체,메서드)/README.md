@@ -1,5 +1,5 @@
 ## Array(배열)
-```
+```html
 <!DOCTYPE html>
 <html>
 	<head>
@@ -42,7 +42,7 @@
   - 이름 짓는 규칙이 비슷하다.
   
 - 값 : 원시타입(숫자,문자,null,undifined, false, true),객체(객체의 값으로 객체가 들어올 수 있다.)
-```
+```html
 <!DOCTYPE html>
 <html>
 	<head>
@@ -92,7 +92,7 @@
 </html>
 ```
 - 객체 안에 객체나 함수가 들어갈수도 있다.
-```
+```html
   <!DOCTYPE html>
 <html>
 	<head>
@@ -270,7 +270,7 @@ document.querySelector(".태그클래스값");
 - input태그의 type속성을 달리함으로써 여러 가지 모양을 나타낼 수 있습니다.
 
 #### js_function.html 생성하기
-```
+```html
 <!DOCTYPE html>
 <html>
 	<head>
@@ -330,7 +330,7 @@ document.querySelector(".태그클래스값");
 ![image](https://user-images.githubusercontent.com/54658614/229685111-1c71bc5c-c716-4de4-ad0e-c35beafb3da6.png)
 
 ## 구구단 만들기
-```
+```html
 <!DOCTYPE html>
 <html>
 	<head>
@@ -396,7 +396,7 @@ document.querySelector(".태그클래스값");
 ![image](https://user-images.githubusercontent.com/54658614/229685861-d2e09053-76fc-44e9-94a6-28ed1ac7dbbc.png)
 
 ## 계산기 만들기
-```
+```html
 <!DOCTYPE html>
 <html>
 	<head>
@@ -476,7 +476,7 @@ document.querySelector(".태그클래스값");
 
 
 ## 갤러리 만들어보기
-```
+```html
 <!DOCTYPE html>
 <html>
 	<head>
@@ -553,7 +553,7 @@ document.querySelector(".태그클래스값");
 - 그 다음 form 요소 안에 사용자로부터 입력을 받는 input 요소 등의 폼 컨트롤 요소를 배치합니다.
 - 마지막으로 form 요소 안에 데이터를 전송하기 위한 submit 버튼과 데이터 입력을 취소하는 reset 버튼을 배치합니다. 
 
-```
+```html
 <!DOCTYPE html>
 <html>
 	<head>
@@ -653,7 +653,7 @@ document.querySelector(".태그클래스값");
 ![image](https://user-images.githubusercontent.com/54658614/229689463-0f9ad6de-7430-41b7-b729-4620a403f99c.png)
 
 ### form 태그를 검색하는 방법-2
-```
+```html
 !DOCTYPE html>
 <html>
 	<head>
@@ -710,7 +710,7 @@ document.querySelector(".태그클래스값");
 ```
 
 ### form 태그를 검색하는 방법-3
-```
+```html
 		<script type="text/javascript">
 		function check(f){
 			
