@@ -303,7 +303,7 @@ element.style.color = 'red';
 3. 폰트 크기 변경
 ```js
 var element = document.getElementById('myElement');
-element.style.color = 'red';
+element.style.fontSize = '20px';
 ```
 4. 테두리 추가:
 ```js
