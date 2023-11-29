@@ -55,7 +55,7 @@
 			document.write('person.age : ',person.age+"<br>");
 			document.write("<hr>");
       
-     		document.write("person['name'] : ",person['name'],"<br>");
+     			document.write("person['name'] : ",person['name'],"<br>");
 			document.write("person['age'] : ",person['age']+"<br>");
 			document.write("<hr>");
 			
@@ -91,7 +91,7 @@
 	</body>
 </html>
 ```
-
+- 객체 안에 객체나 함수가 들어갈수도 있다.
 ```
   <!DOCTYPE html>
 <html>
@@ -164,8 +164,7 @@ function square(x) {
 square(3); // 9
 ```
 ### 인수
-
-함수는 인수를 여러 개 받을 수 있음
+- 함수는 인수를 여러 개 받을 수 있음
 - 인수가 여러 개라면 인수와 인수를 쉼표(,)로 구분
 ```javascript
 function add(a, b) {   
@@ -189,7 +188,7 @@ alert(bark()); // undefined - 반환값이 없으므로
 - return 문이 실행되지 않은 상태로 마지막 문장이 실행되면, 호출한 코드로 돌아간 후에 
 - undefined가 함수의 반환값이 된다.
 
-### 함수 선언문의 끌어올림
+### 함수 선언문의 호이스팅
 - 자바스크립트 엔진은 변수 선언문과 마찬가지로 함수 선언문을 프로그램의 첫머리로 끌어올림
 - 따라서 함수 선언문은 프로그램 어떤 위치에서도 작성할 수 있다.
 
