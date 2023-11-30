@@ -1,4 +1,4 @@
-## Array(배열)
+# Array(배열)
 ```html
 <!DOCTYPE html>
 <html>
@@ -31,11 +31,11 @@
 	</body>
 </html>
 ```
-## 객체
+# 객체
 - 객체(Object) : 사물
   - 속성,기능으로 이루어져있다.
   
-### 객체 리터럴
+## 객체 리터럴
 - 자바에서는 클래스를 만들고 클래스를 통해서 객체를 만들었지만 자바스크립트에서는 변수처럼 정의가 가능하다.
 - 자바스트립트의 객체는 키(key)와 값(value)으로 구성된 프로퍼티(Property)들의 집합이다.
 - 프로퍼티 : 변수와 거의 비슷한 속성
@@ -132,7 +132,7 @@
 </html>
   
 ```
- ## 함수
+# 함수
 - 일련의 처리를 하나로 모아 언제든 호출할 수 있도록 만들어 놓은것
 - 수학 함수와 비슷
 - 함수의 입력 값을 인수, 함수의 출력 값을 반환값
@@ -143,7 +143,7 @@ function 함수명 (인수) {
    return 출력 반환값
 }
 ```
-### 함수 선언문으로 함수 정의하기
+## 함수 선언문으로 함수 정의하기
 - 함수는 function 키워드를 사용해서 정의
 ```javascript
 function square(x) {    
@@ -158,12 +158,12 @@ function square(x) {
 - return result - 처리 후 반환값 
 - 참조) 함수명 캐멀 표기법
 
-### 함수 호출
+## 함수 호출
 함수를 호출하려면 함수 이름 뒤에 소괄호 인수를 묶어 입력
 ```javascript
 square(3); // 9
 ```
-### 인수
+## 인수
 - 함수는 인수를 여러 개 받을 수 있음
 - 인수가 여러 개라면 인수와 인수를 쉼표(,)로 구분
 ```javascript
@@ -181,7 +181,7 @@ bark(); // 멍멍
 alert(bark()); // undefined - 반환값이 없으므로
 ```
 
-### 함수의 실행흐름
+## 함수의 실행흐름
 - 호출된 코드에 있는 인수가 함수 정의문에 대입된다. 
 - 함수 정의문의 중괄호 안에 작성된 플그램이 순차적으로 실행된다.
 - return 문이 실행되면 호출된 코드로 돌아간다. return 문의 값은 함수의 반환값이 된다.
@@ -196,14 +196,128 @@ alert(bark()); // undefined - 반환값이 없으므로
 alert(square(5)); // 25 
 function square(x) {  return x * x; }
 ``` 
+## 미리 정의된 전역함수
+- 자바스크립트는 사용자의 편의를 위해 다양한 기능의 여러 전역 함수를 미리 정의하여 제공한다.
+- 이러한 전역 함수는 자바스크립트의 어떤 타입의 객체에서도 바로 사용할 수 있다.
+
+### eval()
+- eval()함수는 문자열로 표현된 자바스크립트 코드를 실행하는 함수이다.
+```js
+var x = 10, y = 20;
+var a = eval("x+y"); //30
+var b = eval("y*3"); //60
+document.write(`${a} <br> ${b}`);
+```
+
+### isFinite()
+- isFinite()함수는 전달된 값이 유한한 수인지를 검사하여 그 결과를 반환한다.
+- 만약 인수로 전달된 값이 숫자가 아니라면, 숫자로 변환하여 검사한다.
+```html
+
+isFinite(123)
+isFinite(123e100)
+isFinite(0)
+isFinite(true)
+isFinite(false)
+isFinite(null)
+isFinite("123")
+isFinite("")
+isFinite("문자열")
+isFinite(undefined)
+isFinite(NaN)
+
+```
+
+### isNaN()
+- isNaN() 함수는 전달된 값이 NaN인지를 검사하여 그 결과를 반환합니다.
+- 만약 인수로 전달된 값이 숫자가 아니라면, 숫자로 강제 변환하여 검사합니다.
+```js
+isNaN(123);       // false
+isNaN(123e100);   // false
+isNaN(0);         // false
+isNaN(true);      // false
+isNaN(false);     // false
+isNaN(null);      // false
+isNaN("123");     // false
+isNaN("");        // false
+
+isNaN("문자열");  // true
+isNaN(undefined); // true
+isNaN(NaN);       // true
+```
+### parseFloat(), parseInt()
+- arseFloat() 함수는 문자열을 파싱하여 부동 소수점 수(floating point number)로 반환합니다.
+- parseInt() 함수는 문자열을 파싱하여 정수로 반환합니다.
+```js
+parseFloat("123");        // 123
+parseFloat("123.000");    // 123
+parseFloat("123.456");    // 123.456
+parseFloat("12 34 56");   // 12
+parseFloat(" 123 ");      // 123
+parseFloat("123 초콜릿"); // 123
+parseFloat("초콜릿 123"); // NaN
+
+-----------------------------------------------------------
+parseInt("123");        // 123
+parseInt("123.000");    // 123
+parseInt("123.456");    // 123
+parseInt("12 34 56");   // 12
+parseInt(" 123 ");      // 123
+parseInt("123 초콜릿"); // 123
+parseInt("초콜릿 123"); // NaN
+
+//두번째 인수로 특정 진법을 전달하면, 해당 진법에 맞는 정수로 반환한다.
+//전달받은 문자열의 시작이 "0x"로 시작하면, parseInt()함수는 해당 문자열을 16진수로 인식한다.
+parseInt("10", 10);     // 10
+parseInt("10", 8);      // 8
+parseInt("10", 16);     // 16
+parseInt("0x10");       // 16
+```
+
+### encodeURI(),encodeURIComponent()
+- encodeURI() 함수는 URI에서 주소를 표시하는 특수문자를 제외하고, 모든 문자를 이스케이프 시퀀스(escape sequences) 처리하여 부호화합니다.
+- encodeURIComponent() 함수는 URI에서 encodeURI() 함수에서 부호화하지 않은 모든 문자까지 포함하여 이스케이프 시퀀스 처리합니다.
+
+```js
+var uri = "http://google.com/search.php?name=홍길동&city=서울";
+var enc1 = encodeURI(uri);
+var enc2 = encodeURIComponent(uri);
+document.write(enc1 + "<br>" + enc2);
+```
+
+### Number()
+- Number() 함수는 전달받은 객체의 값을 숫자로 반환합니다.
+```js
+Number("123");        // 123
+Number("123.000");    // 123
+Number("123.456");    // 123.456
+Number("12 34 56");   // NaN
+Number("123 초콜릿"); // NaN
+
+Number(true);         // 1
+Number(false);        // 0
+Number(new Date());   // 현재 날짜에 해당하는 숫자를 반환함.
+Number(null);         // 0
+```
+
+### String()
+- String() 함수는 전달받은 객체의 값을 문자열로 반환합니다.
+```js
+String(123);        // 123
+String(123.456);    // 123.456
+String("123");      // 123
+String(new Date()); // 현재 날짜에 해당하는 문자열을 반환함.
+String(null);       // null
+
+String(true);       // true
+String(false);      // false
+String(Boolean(1)); // true
+String(Boolean(0)); // false
+```
 
 
-## HTML 요소의 선택
 
-|속성명|속성값|설명|
-|------|---|---|
-|type|button<br>chcekbox<br>color<br>date<br>datetime-local<br>email<br>file<br>hidden<br>image<br>month<br>number<br>password<br>radio<br>range<br>reset<br>search<br>submit<br>tel<br>text<br>time<br>url<br>week<br>|input 요소가 나타낼 타입을 명시함.|
-
+# HTML 요소의 선택
 - 자바스크립트로 HTML 요소를 제어하려면 그 전에 제어하고자 하는 요소 객체를 먼저 가져와야 합니다.
 - 물론 Document 객체의 DOM 트리를 타고 올라가 요소 객체를 가져오는 방법도 있지만 Document 객체는 이보다 편리하게 요소 객체를 가져올 수 있는 메서드가 마련되어 있습니다.
 
@@ -336,7 +450,7 @@ element.classList.remove('oldClass'); // 클래스 제거
 var element = document.getElementById('myElement');
 element.style.cssText = 'color: blue; font-size: 18px;'; // 여러 속성을 동시에 변경
 ```
-### js_
+### js_style.html
 ```html
 <!DOCTYPE html>
 <html>
@@ -363,17 +477,31 @@ element.style.cssText = 'color: blue; font-size: 18px;'; // 여러 속성을 동
 ```
 
 ## JavaScript의 이벤트 처리
+### 이벤트(event)란?
+- 이벤트란 웹 브라우저가 알려주는 HTML요소에 대한 사건의 발생을 의미한다.
+- 웹 페이지에 사용된 자바스크립트는 이렇게 발생한 이벤트에 반응하여 특정 동작을 수행할 수 있다.
+- 따라서 클라이언트 측 자바스크립트를 비동기식 이벤트 중심의 프로그래밍 모델이라고 한다.
+
+
 1. HTML 속성을 이용한 이벤트 처리
 - 이벤트를 HTML요소에 직접 추가하는 방식이다.
 - 예를들어 'onclick' 속성을 사용하여 클릭 이벤트를 처리할 수 있다.
 ```html
-<button onclick="myFunction()">클릭</button>
-
-<script>
-  function myFunction() {
-    alert("버튼이 클릭되었습니다!");
-  }
-</script>
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Insert title here</title>
+		<script>
+		  function myFunction() {
+		    alert("버튼이 클릭되었습니다!");
+		  }
+		</script>
+	</head>
+	<body>
+		<button onclick="myFunction()">클릭</button>
+	</body>
+</html>
 
 ```
 2. DOM 요소에 이벤트 리스너 추가
@@ -395,7 +523,14 @@ element.style.cssText = 'color: blue; font-size: 18px;'; // 여러 속성을 동
 - 자바스크립트와 밀접한 관련이 있는 input 태그는 사용자가 데이터를 입력할 수 있는 입력필드를 정의할 때 사용합니다.
 - input태그의 type속성을 달리함으로써 여러 가지 모양을 나타낼 수 있습니다.
 
-#### js_function.html 생성하기
+
+|속성명|속성값|설명|
+|------|---|---|
+|type|button<br>chcekbox<br>color<br>date<br>datetime-local<br>
+email<br>file<br>hidden<br>image<br>month<br>number<br>password<br>radio<br>range<br>reset<br>search<br>submit<br>tel<br>text<br>time<br>url<br>week<br>|input 요소가 나타낼 타입을 명시함.|
+
+
+### js_function.html 생성하기
 ```html
 <!DOCTYPE html>
 <html>
