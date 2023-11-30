@@ -32,16 +32,37 @@
 </html>
 ```
 # 객체
-- 객체(Object) : 사물
-  - 속성,기능으로 이루어져있다.
+- 실생활에서 우리가 신식할 수 있는 사물로 이해할 수 있다.
+- 자바스크립트의 기본타입(data type)은 객체(object)이다.
+- 객체란 키(key)와 값(value)로 구성된 프로퍼티(property)의 정렬되지 않은 집합이다.
+- 프로퍼티의 값으로 함수가 올 수도 있는데, 이러한 프로퍼티를 메서드(method)라고 한다.
+
+## 객체의 생성
+- 자바스크립트에서 객체를 생성하는 방법은 세가지가 있습니다.
   
-## 객체 리터럴
+### 1.객체 리터럴
 - 자바에서는 클래스를 만들고 클래스를 통해서 객체를 만들었지만 자바스크립트에서는 변수처럼 정의가 가능하다.
-- 자바스트립트의 객체는 키(key)와 값(value)으로 구성된 프로퍼티(Property)들의 집합이다.
-- 프로퍼티 : 변수와 거의 비슷한 속성
+- 키(key) : 변수와 거의 비슷한 속성
   - 이름 짓는 규칙이 비슷하다.
-  
-- 값 : 원시타입(숫자,문자,null,undifined, false, true),객체(객체의 값으로 객체가 들어올 수 있다.)
+- 값(value) : 원시타입(숫자,문자,null,undifined, false, true),객체(객체의 값으로 객체가 들어올 수 있다.)
+
+```js
+var 객체이름 = {
+    프로퍼티1이름 : 프로퍼티1의값,
+    프로퍼티2이름 : 프로퍼티2의값,
+    ...
+};
+
+var kitty = {
+	name: "나비",
+	family: "코리안 숏 헤어",
+	age: 1,
+	weight: 0.1
+};
+
+document.write("우리 집 새끼 고양이의 이름은 " + kitty.name + "이고, 종은 " + kitty.family + "입니다.");
+```
+#### js_object.html 생성하기
 ```html
 <!DOCTYPE html>
 <html>
@@ -50,12 +71,12 @@
 		<title>Insert title here</title>
 		<script type="text/javascript">
 			var person = { name : "홍길동", age: 30};
-		      //객체를 출력하는법
+			//객체를 출력하는법
 			document.write('person.name : ',person.name+"<br>");
 			document.write('person.age : ',person.age+"<br>");
 			document.write("<hr>");
-      
-     			document.write("person['name'] : ",person['name'],"<br>");
+			
+			document.write("person['name'] : ",person['name'],"<br>");
 			document.write("person['age'] : ",person['age']+"<br>");
 			document.write("<hr>");
 			
@@ -65,73 +86,162 @@
 			document.write("<hr>");
 			
 			//객체에서 속성 삭제하기
-			delete person.rank2;
+			//delete 연산자를 사용하면 object의 property를 삭제할 수 있다.
+			//이때 피연산자는 property의 key여야 한다.
+			delete person.bt;
 			document.write('bt : ' + person['bt']+"<br>");
 			document.write("<hr>");
 			
 			//속성이 객체에 속해있는지 확인하는법 : in -> 결과는 true , false로 반환
 			document.write('name in person : '+('name' in person));
 			document.write("<hr>");
-			
+
+
+			//for-in문을 사용하면 객체(배열 포함)에 포함된 모든 프로퍼티에 대해 루프를 수행할 수 있다.
+			//i에 객체의 프로퍼티 이름이 반환된다. 단, 순서는 보장되지 않는다.
 			for(i in person){
 				document.write(`${i} = ${person[i]}<br>`);
 			}
 			document.write("<hr>");
+			
 			//새로운 객체에 기존 객체를 참조 시킬수 있다. 주소값을 복사해오기 때문에 person의 속성값을 변경하면 같이 바뀐다.
 			var person2 = person;
 			
 			person.age = 40;
 			
 			document.write('person2.age : ',person2.age); //결과 40
-			
-		</script>
-	</head>
-	<body>
-	
-	</body>
-</html>
-```
-- 객체 안에 객체나 함수가 들어갈수도 있다.
-```html
-  <!DOCTYPE html>
-<html>
-	<head>
-		<meta charset="UTF-8">
-		<title>Insert title here</title>
-		<script type="text/javascript">
-    
-      //객체 안에 객체가 들어갈 수 있다.
-      var circle = {
-          center : {x : 1.0, y: 2.0},
-	radius : 2.5
-			}
-      document.write("<hr>");
 
-      document.write('circle.center.x : ',circle.center.x,' circle.center.y : ',circle.center.y+"<br>");
-      document.write('circle.radius : ',circle.radius+"<br>");
-      document.write("<hr>");
-		
-		
-	//객체 안에 함수가 들어갈 수 있다.
-	var person = {
-			name : "홍길동",
-			age : 30,
-			getInfo : function(){
-				document.write('이름 : ',this.name,"<br>",'나이 : ',this.age,"<br>");
-			}
-	};
+			//객체 안에 객체가 들어갈 수 있다.
+			var circle = {
+			  center : {x : 1.0, y: 2.0},
+			radius : 2.5
+					}
+			document.write("<hr>");
 			
+			document.write('circle.center.x : ',circle.center.x,' circle.center.y : ',circle.center.y+"<br>");
+			document.write('circle.radius : ',circle.radius+"<br>");
+			document.write("<hr>");
+				
+				
+			//객체 안에 함수가 들어갈 수 있다.
+			var person = {
+					name : "홍길동",
+					age : 30,
+					getInfo : function(){
+						document.write('이름 : ',this.name,"<br>",'나이 : ',this.age,"<br>");
+					}
+			};
+							
+			//함수의 호출
+			person.getInfo();
 			
-	//함수의 호출
-	person.getInfo();
 		</script>
 	</head>
 	<body>
 	
 	</body>
 </html>
-  
 ```
+### 2.생성자를 이용한 객체의 생성
+- 자바스크립트는 prototype 기반 객체지향 프로그래밍 언어이다.
+- 따라서 자바스크립트의 동작 원리를 이해하기 위해서는 prototype의 개념을 이해해야 한다.
+- prototype기반 객체지향 프로그래밍 언어는 클래스 없이(Class-less)도 객체를 생성할 수 있다.
+- 메서드를 생성자 처럼 사용하여 새롭게 생성되는 객체를 초기화 하는 역할을 한다.
+
+### 상속
+- 자바스크립트에서는 현재 존재하고 있는 객체를 프로토타입으로 사용하여, 해당 객체를 복제하여 재사용하는 것을 상속이라고 한다.
+
+### prototype
+- 자바스크립트의 모든 객체는 자신의 부모 역할을 담당하는 객체와 연결되어 있다.
+- 이것은 마치 객체 지향의 상속 개념과 같이 부모 객체의 property 또는 method를 상속받아 사용할 수 있게 한다.
+- 이러한 부모 객체들을 Prototype객체 또는 줄여서 Prototype이라고 한다.
+
+```js
+var student = {
+  name: 'Lee',
+  score: 90
+};
+
+// student에는 hasOwnProperty 메소드가 없지만 아래 구문은 동작한다.
+console.log(student.hasOwnProperty('name')); // true
+
+//console.dir() : 요소를 트리구조로 출력
+//js객체의 전체 구조를 보려고 할때 유용하다.
+console.dir(student);
+```
+
+![image](image/printout_student_obj_from_chrome.png)
+
+#### 2.1 Object 생성자 함수
+- new 연산자와 Object생성자 함수를 호출하여 빈 객체를 생성할 수 있다.
+- 빈 객체 생성 후 프로퍼티 또는 메서드를 추가하여 객체를 완성하는 방법이다.
+
+```js
+// 빈 객체의 생성
+var person = new Object();
+// 프로퍼티 추가
+person.name = 'Lee';
+person.gender = 'male';
+person.sayHello = function () {
+  console.log('Hi! My name is ' + this.name);
+};
+
+console.log(typeof person); // object
+console.log(person); // {name: "Lee", gender: "male", sayHello: ƒ}
+
+person.sayHello(); // Hi! My name is Lee
+```
+
+#### 2.2 생성자 함수
+- 객체 리터럴과 Object 생성자 함수 방식으로 객체를 생성하는 것은 property 값만 다른 여러 개의 객체를 생성할 때 불편하다.
+- 동일한 프로퍼티를 갖는 객체임에도 불구하고 매번 같은 프로퍼티를 기술해야 한다.
+- 생성자 함수를 사용하면 마치 객체를 사용하기 위한 클래스 처럼 사용하여 프로퍼티가 동일한 여러 객체를 간편하게 생성할 수 있다.
+```js
+// 생성자 함수
+function Person(name, gender) {
+  this.name = name;
+  this.gender = gender;
+  this.sayHello = function(){
+    console.log('Hi! My name is ' + this.name);
+  };
+}
+
+// 인스턴스의 생성
+var person1 = new Person('Lee', 'male');
+var person2 = new Person('Kim', 'female');
+
+console.log('person1: ', typeof person1);
+console.log('person2: ', typeof person2);
+console.log('person1: ', person1);
+console.log('person2: ', person2);
+
+person1.sayHello();
+person2.sayHello();
+```
+- 생성자 함수의 이름은 일반적으로 대문자로 시작한다.(메서드 중에서 생성자라는것을 인식하는데 도움이 된다.)
+- property 또는 methodName 앞에 쓴 this는 생성자 함수가 생성할 instance를 가리킨다.
+- this에 binding되어있는 property와 method는 기본적으로 public 이므로 외부에서 참조 가능하다.
+- constructorMethod 내에서 선언된 일반 변수는 private이 되어 외부에서 참조가 불가능하다.
+
+```js
+function Person(name, gender) {
+  var married = true;         // private
+  this.name = name;           // public
+  this.gender = gender;       // public
+  this.sayHello = function(){ // public
+    console.log('Hi! My name is ' + this.name);
+  };
+}
+
+var person = new Person('Lee', 'male');
+
+console.log(typeof person); // object
+console.log(person); // Person { name: 'Lee', gender: 'male', sayHello: [Function] }
+
+console.log(person.gender);  // 'male'
+console.log(person.married); // undefined
+```
+
 # 함수
 - 일련의 처리를 하나로 모아 언제든 호출할 수 있도록 만들어 놓은것
 - 수학 함수와 비슷
