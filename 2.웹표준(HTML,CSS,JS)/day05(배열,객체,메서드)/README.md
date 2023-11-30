@@ -592,8 +592,47 @@ element.style.cssText = 'color: blue; font-size: 18px;'; // 여러 속성을 동
 - 웹 페이지에 사용된 자바스크립트는 이렇게 발생한 이벤트에 반응하여 특정 동작을 수행할 수 있다.
 - 따라서 클라이언트 측 자바스크립트를 비동기식 이벤트 중심의 프로그래밍 모델이라고 한다.
 
+### 마우스 이벤트
+|이벤트|설명|
+|----|----|
+|click|요소에 마우스 클릭했을 때 이벤트가 발생|
+|dbclick|요소에 마우스를 더블클릭했을 때 이벤트가 발생|
+|mouseover|요소에 마우스를 오버했을 때 이벤트가 발생|
+|mouseout|요소에 마우스를 아웃했을 때 이벤트가 발생|
+|mousedown|요소에 마우스를 눌렀을 때 이벤트가 발생|
+|mouseup|요소에 마우스를 떼었을 때 이벤트가 발생|
+|mousemove|요소에 마우스를 움직였을 때 이벤트가 발생|
+|contextmenu|context menu(마우스 오른쪽 버튼을 눌렀을 때 나오는 메뉴)가 나오기 번에 이벤트 발생|
 
-1. HTML 속성을 이용한 이벤트 처리
+### 키 이벤트
+|이벤트|설명|
+|----|----|
+|keydown|키를 눌렀을 때 이벤트가 발생|
+|keyup|키를 떼었을 때 이벤트가 발생|
+|keypress|키를 누른 상태에서 이벤트가 발생|
+
+### 폼 이벤트
+|이벤트|설명|
+|----|----|
+|focus|요소에 포커스가 이동되었을 때 이벤트 발생|
+|blur|요소에 포커스가 벗어났을 때 이벤트 발생|
+|change|요소에 값이 변경되었을 때 이벤트 발생|
+|submit|submit 버튼을 눌렀을 때 이벤트 발생|
+|reset|reset 버튼을 눌렀을 때 이벤트 발생|
+|select|input이나 textarea 요소 안의 텍스트를 드래그하여 선택했을 때 이벤트 발생|
+
+### 로드 및 기타 이벤트
+|이벤트|설명|
+|----|----|
+|load|페이지의 로딩이 완료되었을 때 이벤트 발생|
+|abort|이미지의 로딩이 중단되었을 때 이벤트 발생|
+|unload|페이지가 다른 곳으로 이동될 때 이벤트 발생|
+|resize|요소의 사이즈가 변경되었을 때 이벤트 발생|
+|scroll|스크롤바가 움직였을 때 이벤트 발생|
+
+
+
+### 1. HTML 속성을 이용한 이벤트 처리
 - 이벤트를 HTML요소에 직접 추가하는 방식이다.
 - 예를들어 'onclick' 속성을 사용하여 클릭 이벤트를 처리할 수 있다.
 ```html
@@ -614,7 +653,31 @@ element.style.cssText = 'color: blue; font-size: 18px;'; // 여러 속성을 동
 </html>
 
 ```
-2. DOM 요소에 이벤트 리스너 추가
+
+### 2. 프로퍼티 방식
+- 프로퍼티 리스너 방식은 이벤트 대상에 해당하는 객체의 프로퍼티로 이벤트를 등록하는 방식이다.
+- 1번 방식에 비해 HTML과 JavaScript를 분리할 수 있다는 점에서 선호되는 방식이지만 추천하지는 않는다.
+- 프로퍼티 방식은 이벤트에 오직 하나의 이벤트 핸들러만을 바인딩할 수 있다.
+```html
+<button class="btn">Click me</button>
+<script>
+    const btn = document.querySelector('.btn');
+
+    // 이벤트 핸들러 프로퍼티 방식은 이벤트에 하나의 이벤트 핸들러만을 바인딩할 수 있다
+    // 첫번째 바인딩된 이벤트 핸들러 => 실행되지 않는다.
+    btn.onclick = function() {
+        alert('① Button clicked 1');
+    };
+
+    // 두번째 바인딩된 이벤트 핸들러
+    btn.onclick = function() {
+        alert('① Button clicked 2'); // << 실행결과 
+    };
+</script>
+```
+
+
+### 3. DOM 요소에 이벤트 리스너 추가
 - JavaScript를 사용하여 DOM 요소에 이벤트 리스너를 동적으로 추가하는 방식이다.
 - addEventListener 함수를 사용한다.
 ```html
@@ -625,6 +688,28 @@ element.style.cssText = 'color: blue; font-size: 18px;'; // 여러 속성을 동
   document.getElementById("myButton").addEventListener("click", function() {
     alert("버튼이 클릭되었습니다!");
   });
+</script>
+```
+
+```html
+<input type="button" id="target1" value="button1" />
+<input type="button" id="target2" value="button2" />
+
+<script>
+    var t1 = document.getElementById('target1');
+    var t2 = document.getElementById('target2');
+    function btn_listener(event){
+        switch(event.target.id){
+            case 'target1':
+                alert(1);
+                break;
+            case 'target2':
+                alert(2);
+                break;
+        }
+    }
+    t1.addEventListener('click', btn_listener); // btn_listener()가 아니다.
+    t2.addEventListener('click', "btn_listener()"); // btn_listener()를 쓰려면 문자열로 감싼다.
 </script>
 ```
 
