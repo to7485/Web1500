@@ -51,7 +51,7 @@
 다른 DBMS도 금방 습득할 수 있다.
 
 ## 오라클 DBMS 설치
-https://www.oracle.com/index.html
+https://www.oracle.com/database/technologies/xe-prior-release-downloads.html
 
 - 돋보기 버튼 누르고  XE Prior Release Archive 입력하고 검색하기
 - XE Prior Release Archive 클릭하기
