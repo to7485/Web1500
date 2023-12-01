@@ -508,7 +508,9 @@ SELECT DEPARTMENT_ID, SUM(SALARY) FROM EMPLOYEES GROUP BY DEPARTMENT_ID ORDER BY
 
 ## HAVING절
 - Having 절은 Group by로 집계된 값 중 where 절 처럼 특정 조건을 추가한다고 생각 하시면 됩니다.
-- WHERE절과의 다른 점은 HAVING절은 GROUP BY절과 함께 사용해야 하며 집계 함수를 사용하여 조건절을 작성하거나 GROUP BY컬럼만 조건절에 사용할 수 있다.
+
+### WHERE절과 HAVING절의 차이점
+- HAVING절은 GROUP BY절과 함께 사용해야 하며 집계 함수를 사용하여 조건절을 작성하거나 GROUP BY컬럼만 조건절에 사용할 수 있다.
 
 ```SQL
 예) 각 부서의 급여의 최대값, 최소값, 인원수를 출력하자
