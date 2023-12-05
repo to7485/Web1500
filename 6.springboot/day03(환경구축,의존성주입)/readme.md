@@ -179,8 +179,9 @@ spring java reconcile -> yes
 ## 필드주입
 
 ### dependency 패키지 생성하기
-
-![image](https://github.com/to7485/Web1500/assets/54658614/40d6be53-dd87-46cd-b352-7eef35a28485)
+- main 파일이 들어있는 패키지 안에 생성해야 한다.
+- 
+![image](image/dependency.png)
 
 ### Computer.java 클래스 생성하기
 - 코딩을 하기 위해선 컴퓨터가 필요하다
@@ -212,8 +213,9 @@ public class Coding {
 ```
 
 ### src/test/java 에 단위테스트용 패키지 만들기
+- 여기서도 테스트용 main클래스가 있는 패키지 아래에 만든다.
+![image](image/dependendy2.png)
 
-![image](https://github.com/to7485/Web1500/assets/54658614/550de46e-905c-4078-b8f5-45bf2491c20b)
 
 ### dependency 패키지 아래 ComputerTest 클래스 생성하기
 ```java
@@ -234,7 +236,6 @@ public class ComputerTest {
 		log.info(coding.getComputer().toString()); //당연히 객체를 메모리에 올리지 않았기 때문에 null이 나올 것이다.
 	}
 }
-
 ```
 ### @SpringBootTest
 - 스프링부트는 해당 어노테이션을 통해 스프링부트 프로젝트 테스트에 필요한 모든 의존성을 제공한다.
@@ -242,6 +243,13 @@ public class ComputerTest {
 - 해당 어노테이션을 사용시 Junit 버전에 따라 유의할 사항이 있다.
 - Junit4 사용시 @SpringBootTest 기능은 반드시 JUnit의 SpringJUnit4ClassRunner 클래스를 상속 받는 @RunWith(SpringRynnver.class)와 함께 사용해야 한다.
 - Junit5 사용시에는 해당 어노테이션은 명시할 필요없다.
+
+### 결과
+- NullPointerException이 뜬다.
+- Spring이 만들어준 객체가 아니기 때문이다.
+
+![image](image/Nullpointer.png)
+
 
 ### Coding클래스에 코드 추가하기
 - 그렇기 때문에 의존성 주입을 해줘야 한다.
@@ -279,11 +287,7 @@ public class Computer {
 
 	int ram;
 }
-
 ```
-
-- 하지만 다시 실행하면 null이 뜨는걸 볼 수 있다.
-- Coding coding = new Coding(); 코드는 우리가 직접 메모리에 할당해준 객체이기 때문에 스프링에서 인식을 하지 못한다.
 
 ### dependency 패키지 아래 ComputerTest 클래스 생성하기
 ```java
@@ -302,9 +306,7 @@ public class ComputerTest {
 	
 	@Test
 	public void computerTest() {
-		
-		//log.info는 자동으로 toString()메서드를 붙혀주지 않기 때문에 직접 붙혀야 한다.
-		log.info(coding.getComputer().toString()); //당연히 객체를 메모리에 올리지 않았기 때문에 null이 나올 것이다.
+		log.info(coding.getComputer().toString());
 	}
 }
 
@@ -322,7 +324,10 @@ public class ComputerTest {
 - 의존성 주입이 되지 않으면 객체가 생성되지 않으므로 **NullPointerException**을 방어
 - 스프링부트에서는 생성자 주입을 하는걸 권장한다.
 
-※순환참조 : A 클래스가 B 클래스의 Bean 을 주입받고, B 클래스가 A 클래스의 Bean 을 주입받는 상황처럼 서로 순환되어 참조할 경우 발생하는 문제를 의미한다.
+### ※순환참조
+- 빈(Bean)간의 서로 참조 관계가 순환되어 발생하는 상황을 의미한다.
+- 이는 빈 간의 의존성이 서로 꼬이는 상태로, 애필리케이션이 시작될 때 스프링이 빈을 초괴화 하는 과정에서 문제를 일으킬수 있다.
+- 예)A 클래스가 B 클래스의 Bean 을 주입받고, B 클래스가 A 클래스의 Bean 을 주입받는 상황처럼 서로 순환되어 참조할 경우 발생하는 문제를 의미한다.
 
 ### Coding 클래스 수정하기
 ```java
