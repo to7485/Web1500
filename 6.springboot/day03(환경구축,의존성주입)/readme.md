@@ -220,7 +220,7 @@ public class Coding {
 
 ### src/test/java 에 단위테스트용 패키지 만들기
 - 여기서도 테스트용 main클래스가 있는 패키지 아래에 만든다.
-![image](image/dependendy2.png)
+![image](image/dependency2.png)
 
 
 ### dependency 패키지 아래 ComputerTest 클래스 생성하기
