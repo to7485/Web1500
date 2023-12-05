@@ -236,6 +236,12 @@ public class ComputerTest {
 }
 
 ```
+### @SpringBootTest
+- 스프링부트는 해당 어노테이션을 통해 스프링부트 프로젝트 테스트에 필요한 모든 의존성을 제공한다.
+- 통합 테스트를 제공하는 기본적인 스프링부트 테스트 어노테이션이다.
+- 해당 어노테이션을 사용시 Junit 버전에 따라 유의할 사항이 있다.
+- Junit4 사용시 @SpringBootTest 기능은 반드시 JUnit의 SpringJUnit4ClassRunner 클래스를 상속 받는 @RunWith(SpringRynnver.class)와 함께 사용해야 한다.
+- Junit5 사용시에는 해당 어노테이션은 명시할 필요없다.
 
 ### Coding클래스에 코드 추가하기
 - 그렇기 때문에 의존성 주입을 해줘야 한다.
