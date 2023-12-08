@@ -274,9 +274,9 @@ Spring은 아래 그림과 같이 기본 틀을 제공하고 필요한 기능들
 	</dependency>
 </dependencies>
 ```
-- **\<dependencies\>**는 pom.xml 태그중 최상위 속성을 가진 태그중 하나이며, 프로젝트와 의존관계에 있는 라이브러리를 모아서 관리하는 곳이다.
-- 각각의 의존 라이브러리들의 정보는 **\<dependency\>**태그를 사용하여 작성한다.
-- 참고로 **\<dependencies\>**태그는 라이브러리들을 모아서 관리하는 곳이기에 **\<dependency\>**태그를 사용하여 필요한 라이브러리를 기술하면 된다.
+- \<dependencies\>는 pom.xml 태그중 최상위 속성을 가진 태그중 하나이며, 프로젝트와 의존관계에 있는 라이브러리를 모아서 관리하는 곳이다.
+- 각각의 의존 라이브러리들의 정보는 \<dependency\>태그를 사용하여 작성한다.
+- 참고로 \<dependencies\>태그는 라이브러리들을 모아서 관리하는 곳이기에 \<dependency\>태그를 사용하여 필요한 라이브러리를 기술하면 된다.
 
 ```xml
 <dependency>
@@ -286,9 +286,9 @@ Spring은 아래 그림과 같이 기본 틀을 제공하고 필요한 기능들
       <scope>test</scope>
 </dependency>
 ```
-- **\<dependency\>**태그는 라이브러리의 정보를 기술한다.
+- \<dependency\>태그는 라이브러리의 정보를 기술한다.
 - groupId,artifactId,version은 위에 pom.xml의 기본태그에서 설명한 바와 같다.
-- **<scope>**태그는 이 라이브러리가 이용되는 범위를 지정하는 것이다.
+- <scope>태그는 이 라이브러리가 이용되는 범위를 지정하는 것이다.
 
 ## Build 수행을 위한 pom.xml태그와 설정
 - 빌드 구성은 pom.xml에서 \<plugin\>설정에 의해 실행된다.
