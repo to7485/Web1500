@@ -140,6 +140,8 @@ public class HelloServlet extends HttpServlet{
 ```
 ![image](image/servlet.png)
 
+![image](image/servlet1.png)
+
 httpServletRequest에서 제공되는 주요 메서드
 |메서드|설명|
 |-----|-----|
