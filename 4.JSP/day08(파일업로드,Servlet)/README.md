@@ -98,6 +98,48 @@ httpServlet에서 제공되는 주요 메서드
 |void doget()|html의 form의 메서드가 get일때 호출되는 메서드|
 |void doPost()|html에서 form의 메서드가 post일때 호출되는 메서드|
 
+### HelloServlet 클래스 생성하기
+```java
+package com.korea.test3;
+
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServlet;
+
+@web("/hello")
+public class HelloServlet extends HttpServlet{
+	
+	@Override
+	public void init() throws ServletException {
+		//서블릿이 초기화 될 때 호출되는 메서드
+		//1. 서블릿의 초기화 하는 역할
+		System.out.println("[HelloServlet] init() is called");
+	}
+	
+	@Override
+	public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException {
+		// 1. 입력
+		// 2. 처리
+		// 3. 출력
+		System.out.println("[HelloServlet] service() is called");
+	}
+
+	@Override
+	public void destroy() {
+		//3. 뒷정리 - 서블릿이 메모리에서 제거될 때 서블릿 컨테이너에 의해서 자동 호
+		System.out.println("[HelloServlet] destory() is called");
+	
+	}
+
+	
+	
+}
+```
+![image](image/servlet.png)
+
 httpServletRequest에서 제공되는 주요 메서드
 |메서드|설명|
 |-----|-----|
