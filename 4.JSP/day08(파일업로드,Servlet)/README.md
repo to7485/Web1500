@@ -100,14 +100,8 @@ WEB-INF -> lib 폴더에 넣어주자
 |pageContext|javax.servlet.jsp.PageContext|JSP페이지 constext정보를 제공|
 |exception|java.lang.Throwable|예외가 발생했을 때 생성되는 예외 객체|
 
-### Servlet을 만들면 반드시 해야 하는 작업
-- 서블릿의 주요 클래스와 메서드
-    - HttpServlet : 서블릿을 만들기 위해 반드시 상속해야할 필수 클래스
-    - HttpServletRequest : 클라이언트가 데이터를 입력하거나 클라이언트의 정보에 대한 요청 값을 가지고 있는 클래스
-    - HttpServletResponse : 클라이언트가 요청한 정보를 처리하고 다시 응답하기 위한 정보를 담고 있는 클래스
-    - HttpSession : 클라이언트가 세션의 정보를 저장하고 세션 기능을 유지하기 위해 제공되는 
 
-httpServlet에서 제공되는 주요 메서드
+### httpServlet에서 제공되는 주요 메서드
 |메서드|설명|
 |-----|-----|
 |void init()|서블릿의 객체가 생성 될 때 호출되는 메서드|
@@ -161,7 +155,7 @@ public class HelloServlet extends HttpServlet{
 
 ![image](image/servlet1.png)
 
-httpServletRequest에서 제공되는 주요 메서드
+### httpServletRequest에서 제공되는 주요 메서드
 |메서드|설명|
 |-----|-----|
 |String getParameter(name)|name에 할당된 값을 반환하며 지정된 파라미터 값이 없으면 null 값을 반환|
@@ -169,7 +163,7 @@ httpServletRequest에서 제공되는 주요 메서드
 |Enumeration getParameterNames()|요청에 사용된 모든 파라미터 이름을 java.util.Enumeration 타입으로 반환|
 |void setCharacterEncoding(env)|post방식으로 요청된 문자열의 character encoding을 설정|
 
-httpServletResponse에서 제공되는 주요 메서드
+### httpServletResponse에서 제공되는 주요 메서드
 |메서드|설명|
 |-----|-----|
 |void setHeader(name, value)|응답에 포함될 Header를 설정합니다.|
@@ -177,7 +171,7 @@ httpServletResponse에서 제공되는 주요 메서드
 |String getCharacterEncoding()|응답 페이지의 문자 인코딩 Type을 반환|
 |void sendRedirect()|지정된 URL로 요청을 재전송|
 
-httpSession에서 제공되는 주요 메서드
+### httpSession에서 제공되는 주요 메서드
 |메서드|설명|
 |-----|-----|
 |String getId()|해당 세션의 세션 ID를 반환|
