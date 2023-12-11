@@ -79,8 +79,26 @@ WEB-INF -> lib 폴더에 넣어주자
 - 그래서 JAVA언어로 되어있고, .java가 확장자이다.
 - 서블릿(Servlet)은 JAVA 코드를 작성하고 나서 실행하면 클래스파일(.class)을 만들게 된다.
 - 서블릿의 단점은 JAVA코드가 한줄만 변경되어도 다시 처음부터 실행해야 한다.
+- 서블릿은 기본적으로 SingletonPattern을 사용하기 때문에
+- 하나의 객체를 사용하고 매번 객체를 생성하지 않는다.
 
 [출처] Servlet/JSP :: Servlet(서블릿)이란? JSP란? |작성자 Showshine
+
+### JSP의 기본 객체
+- 생성없이 사용할 수 있는 객체
+- service() 메서드의 local variable로 선언
+
+|기본객체 | 타입|설명|
+|-----|-----|----|
+|request|javax.servlet.http.HttpServletRequest|요청 정보가 담겨있는 객체|
+|response|javax.servlet.http.HttpServletResponse|요청에 응답을 작성할 때 사용|
+|session|javax.servlet.HttpSession|HTTP session을 구현한 객체. 세션 정보 저장에 사용|
+|out|javax.servlet.jsp.JspWriter|응답에 포함될 내용을 출력할 때 사용|
+|application|javax.servlet.ServletContext|Web Application 전체에서 공유하는 객체|
+|config|javax.servlet.ServletConfig|JSP 페이지에 대한 설정 정보가 담긴 객체|
+|page|java.lang.Object|JSP페이지 객체 자신|
+|pageContext|javax.servlet.jsp.PageContext|JSP페이지 constext정보를 제공|
+|exception|java.lang.Throwable|예외가 발생했을 때 생성되는 예외 객체|
 
 ### Servlet을 만들면 반드시 해야 하는 작업
 - 서블릿의 주요 클래스와 메서드
@@ -109,7 +127,8 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServlet;
 
-@web("/hello")
+@webServlet("/hello")
+//HttpServlet : 서블릿을 만들기 위해 반드시 상속해야할 필수 클래스
 public class HelloServlet extends HttpServlet{
 	
 	@Override
