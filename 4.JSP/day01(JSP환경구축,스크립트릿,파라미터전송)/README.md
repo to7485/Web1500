@@ -250,6 +250,8 @@ JSTL 태그<br>일반적으로 웹 애플리케이션에서 쉽게 접할 수 �
 </body>
 </html>
 ```
+![image](image/jsp1.png)
+
 - JSP에도 BODY부분이 있기 때문에 웹으로 출력이 될텐데 바로 출력이 될 수는 없다.
 - 중간에 SERVLET이라는 클래스를 거친다.
 
@@ -276,10 +278,12 @@ JSTL 태그<br>일반적으로 웹 애플리케이션에서 쉽게 접할 수 �
 
 [출처] Servlet/JSP :: Servlet(서블릿)이란? JSP란? |작성자 Showshine
 
-
 ![image](https://user-images.githubusercontent.com/54658614/231054942-f29baabf-1500-48cb-96f4-7898dc4814b6.png)
 
 출처 : Servlet Architecture (출처 : https://www.geeksforgeeks.org/servlet-architecture/ )
+
+### 컴파일된 파일의 위치
+- work\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\work\Catalina\localhost\Test\org\apache\jsp
 
 ### test2.jsp 만들기
 - jsp는 어떻게 사용을 해야할까?
