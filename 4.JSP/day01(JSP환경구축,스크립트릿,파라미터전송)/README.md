@@ -109,7 +109,7 @@ Web > JSP Files
 ### 프로젝트 생성하기
 
 File > New > Dynamic Web Project
-
+ 
 ![image](https://user-images.githubusercontent.com/54658614/226806476-d4e2ac7b-6a97-4e18-bf8f-51284c78b41f.png)
 
 톰캣, 모듈버전(3.1로 잡혀있는지) 확인 후 finish
@@ -118,26 +118,27 @@ File > New > Dynamic Web Project
 
 ## JSP의 작동 원리
 1. Client가 web browser로 JSP페이지를 요청한다.
-2. jsp 컨테이너가 jsp 파일을 Servlet파일(.java)로 변환
+2. jsp 컨테이너(HttpJspBase)가 jsp 파일을 Servlet파일(.java)로 변환
 	- jsp 컨테이너 : jsp를 Servlet으로 변환하는 프로그램
 	- jsp 컨테이너 역시 서블릿으로 구현된 프로그램
-3. 그리고 Servlet파일(.java)은 컴파일 된 후 클래스파일(.class)로 변환
+3. 예) hello.jsp -> hello_jsp.java -> hello_jsp.class 로 컴파일 된다.
 4. 요청한 Client에 html파일 형태로 응답
 
-## Servlet (Server + let)
-- 클라이언트의 요청을 처리하고, 그 결과를 다시 반환해주는 Servlet클래스의 구현 규칙을 지킨 자바 웹 프로그래밍 기술
-- 예를 들어, 어떠한 사용자가 로그인을 하려고 할 때. 사용자는 아이디와 비밀번호를 입력하고, 로그인 버튼을 누를것이다.
-- 그때 서버는 클라이언트의 아이디와 비밀번호를 확인하고, 다음 페이지를 띄워주어야 하는데, 이러한 역할을 수행하는
-- 것이 바로 서블릿(Servlet)이다. 그래서 서블릿은 자바로 구현 된 *CGI라고 흔히 말합니다.
+## Servlet
+- 서블릿은 서블릿 클래스로부터 만들어진 객체를 의미한다.
+- 하지만 모든 서블릿 객체를 서블릿이라고는 하지 않는다. 웹 서버(톰캣)가 서블릿 클래스를 가지고 서블릿 객체를 만들고
+- 그 객체를 초기화해서 웹 서비스를 할 수 있는 상태로 만드는 작업을 거친것을 서블릿이라고 할 수 있다.
 
-### Servlet의 특징
-- 클라이언트의 요청에 대해 동적으로 작동하는 웹 어플리케이션 컴포넌트
-- html을 사용하여 요청에 응답한다.
-- Java Thread를 이용하여 동작한다.
-- MVC 패턴에서 Controller로 이용된다.
-- HTTP 프로토콜 서비스를 지원하는 javax.servlet.http.HttpServlet 클래스를 상속받는다.
-- UDP보다 처리 속도가 느리다.
-- HTML 변경 시 Servlet을 재컴파일해야 하는 단점이 있다.
+## Servlet의 역사
+- 자바(JAVA) 언어를 개발한 Sun에서 웹 개발을 위해 만들었다.
+- 그래서 JAVA언어로 되어있고, .java가 확장자이다.
+- 서블릿(Servlet)은 JAVA 코드를 작성하고 나서 실행하면 클래스파일(.class)을 만들게 된다.
+- 서블릿의 단점은 JAVA코드가 한줄만 변경되어도 다시 처음부터 실행해야 한다.
+- 서블릿은 기본적으로 SingletonPattern을 사용하기 때문에
+- 하나의 객체를 사용하고 매번 객체를 생성하지 않는다.
+
+[출처] Servlet/JSP :: Servlet(서블릿)이란? JSP란? |작성자 Showshine
+
 
 ![image](https://user-images.githubusercontent.com/54658614/231054942-f29baabf-1500-48cb-96f4-7898dc4814b6.png)
 
