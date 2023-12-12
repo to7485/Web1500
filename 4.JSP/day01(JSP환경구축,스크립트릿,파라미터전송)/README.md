@@ -263,24 +263,84 @@ JSTL 태그<br>일반적으로 웹 애플리케이션에서 쉽게 접할 수 �
 3. 예) hello.jsp -> hello_jsp.java -> hello_jsp.class 로 컴파일 된다.
 4. 요청한 Client에 html파일 형태로 응답
 
-## Servlet
-- 서블릿은 서블릿 클래스로부터 만들어진 객체를 의미한다.
-- 하지만 모든 서블릿 객체를 서블릿이라고는 하지 않는다. 웹 서버(톰캣)가 서블릿 클래스를 가지고 서블릿 객체를 만들고
-- 그 객체를 초기화해서 웹 서비스를 할 수 있는 상태로 만드는 작업을 거친것을 서블릿이라고 할 수 있다.
-
 ## Servlet의 역사
 - 자바(JAVA) 언어를 개발한 Sun에서 웹 개발을 위해 만들었다.
 - 그래서 JAVA언어로 되어있고, .java가 확장자이다.
 - 서블릿(Servlet)은 JAVA 코드를 작성하고 나서 실행하면 클래스파일(.class)을 만들게 된다.
 - 서블릿의 단점은 JAVA코드가 한줄만 변경되어도 다시 처음부터 실행해야 한다.
-- 서블릿은 기본적으로 SingletonPattern을 사용하기 때문에
-- 하나의 객체를 사용하고 매번 객체를 생성하지 않는다.
 
 [출처] Servlet/JSP :: Servlet(서블릿)이란? JSP란? |작성자 Showshine
 
 ![image](https://user-images.githubusercontent.com/54658614/231054942-f29baabf-1500-48cb-96f4-7898dc4814b6.png)
 
 출처 : Servlet Architecture (출처 : https://www.geeksforgeeks.org/servlet-architecture/ )
+
+### HttpJspBase
+- HttpJspBase클래스는 HttpServlet을 상속받고 있다. 이는 JSP가 Servlet으로 처리되기 위한 기능을 상속받을 수 있다.
+- JSP는 Servlet으로 실행될 때 필요한 환경을 설정하고 실행을 지원한다.
+```java
+/**
+ * This is the super class of all JSP-generated servlets.
+ *
+ * @author Anil K. Vijendran
+ */
+public abstract class HttpJspBase extends HttpServlet implements HttpJspPage {
+
+    private static final long serialVersionUID = 1L;
+
+    protected HttpJspBase() {
+    }
+
+    @Override
+    public final void init(ServletConfig config)
+        throws ServletException
+    {
+        super.init(config);
+        jspInit();
+        _jspInit();
+    }
+
+    @Override
+    public String getServletInfo() {
+        return Localizer.getMessage("jsp.engine.info", Constants.SPEC_VERSION);
+    }
+
+    @Override
+    public final void destroy() {
+        jspDestroy();
+        _jspDestroy();
+    }
+
+    /**
+     * Entry point into service.
+     */
+    @Override
+    public final void service(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException
+    {
+        _jspService(request, response);
+    }
+
+    @Override
+    public void jspInit() {
+    }
+
+    public void _jspInit() {
+    }
+
+    @Override
+    public void jspDestroy() {
+    }
+
+    protected void _jspDestroy() {
+    }
+
+    @Override
+    public abstract void _jspService(HttpServletRequest request,
+                                     HttpServletResponse response)
+        throws ServletException, IOException;
+}
+```
 
 ### 컴파일된 파일의 위치
 - work\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\work\Catalina\localhost\Test\org\apache\jsp
