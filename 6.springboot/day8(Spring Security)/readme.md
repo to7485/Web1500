@@ -21,7 +21,8 @@
 - SecurityFilterChain에는 여러 개의 Security Filter들이 있는데 대표적으로UsernamePasswrodAuthenticationFilter를 살펴보자
 
 ### UsernamePasswrodAuthenticationFilter
-- Form Login 기반에서 Username과 Password를 확인하여 인증한다.
+- Http요청에서 사용자 이름/비밀번호를 추출하여 인증객체를 준비한다.
+- 인증은 Spring Security Framework 내에서 인증된 사용자 정보를 저장하는 핵심 표준입니다.
 - 인증이 필요한 URL 요청이 들어왔을 때 인증이 되지 않았다면 로그인 페이지를 반환한다.
 
 ### SecurityContextHolder
@@ -130,6 +131,38 @@ public class HomeController {
 ### Security 설정 클래스 생성
 - src/main/java 패키지에 SecurityConfig.java 클래스 생성하기
 
+#### SecurityConfig메서드
+- 필터체인을 등록하기 위한 filterChain(HttpSecurity http) 메서드를 보면 매개변수에 여러 메서드를 달아서 최종적으로 build한 것을 리턴한다.
+- HttpSecurity를 build하기 전에 해주는 다양한 메서드에 대해서 알아보자.
+
+#### csrf()
+- csrf공격에 대한 설정을 하는 메서드
+- session을 사용하지 않는다면 csrf에 대해 안전하기 때문에 보통은 disable을 해둔다.
+```java
+.csrf((csrf) -> csrf.disable());
+```
+
+#### authorizeHttpRequests()
+- http요청에 대한 인증을 주로 다룬다.
+```java
+.authorizeHttpRequests((httpRequest) -> {
+		httpRequest.requestMatchers("somePath").authenticated();
+
+		httpRequest.requestMatchers("somePath").hasAnyRole("ADMIN", "MANAGER");
+
+		httpRequest.requestMatchers("somePath").hasRole("ADMIN");
+
+		httpRequest.anyRequest().permitAll();
+})
+```
+  - .requestMatchers(String) : 매개변수로 path를 넣어준다. 해당 경로에 대한 요청에 대해서 다룬다.
+  - .authenticated() : 일단 인증만 되어있으면 해당 path 요청을 마음대로 할 수 있다.
+  - .hasAnyRole(String, String...) : 매개변수로 권한이름을 넣어준다. 갯수는 상관없다. 해당 권한들 중 하나라도 가진 사람들만 이 요청을 할 수 있다.
+    - 보통은 ROLEADMIN 이런식으로 권한을 나눠주는데, Spring Security에서 이 메서드를 사용하면 자동으로 매개변수의 앞에 ‘ROLE’ 키워드를 붙여준다. 때문에 앞에 ‘ROLE_’을 붙이면 안 된다.
+  - .hasRole(String) : 매개변수로 권한이름을 넣어준다. 딱 하나만 적는다. 해당 권한을 가지고 있는 사람들만 이 요청을 할 수 있다.
+  - .anyRequest() : requestMatchers()에 적힌 path들을 제외하고 나머지 모든 경로에 대해서 다룬다.
+    - .permitAll() : 아무런 권한이 없어도 전부 요청을 사용할 수 있다.
+
 ```java
 package com.example.security;
 
@@ -148,10 +181,17 @@ public class SecurityConfig {
 
     @Bean
     protected SecurityFilterChain configure(HttpSecurity http) throws Exception {
+
+        //.csrf((csrf) -> csrf.disable())
+        //csrf 공격에 대한 옵션은 꺼둔다.
         http.csrf((csrf) -> csrf.disable())
+
+                //특정 URL에 대한 권한 설정
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers("/admin").hasRole("ADMIN")
                         .anyRequest().authenticated())
+
+                //권한이 필요한 요청은 해당 url로 리다이렉트
                 .formLogin(Customizer.withDefaults());
         		
        return http.build();
