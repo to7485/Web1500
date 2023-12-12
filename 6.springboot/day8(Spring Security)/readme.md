@@ -10,8 +10,10 @@
 ## Spring Security 주요 컴포넌트
 ### Filter
 - 톰캣과 같은 웹 컨테이너에서 관리되는 서블릿의 기술이다.
-- Client 요총이 전달되기 전후의 URL 패턴에 맞는 요청에 필터링을 해준다.
-- Spring Security는 요청이 들어오면 Filter를 chain 형태로 묶어놓는 형태인 Servlet FilterChain을 자동으로 구성한 후 거치게 한다.
+- Client는 Application으로 요청을 전송하고, 컨테이너는 Servlet과 여러 Filter로 구성된 FilterChain을 만들어 요청 URL path 기반으로 HttpServletRequest를 처리한다.
+- SpringMVC어플리케이션에서의 Servlet은 DispatcherServlet이다.
+
+![image](image/filterchain.png)
 
 ### SecurityFilterChain
 - Spring의 보안 Filter를 결정하는데 사용되는 Filter이다.
