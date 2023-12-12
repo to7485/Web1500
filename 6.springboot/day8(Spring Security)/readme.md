@@ -54,3 +54,121 @@
 
 ![image](image/loginPage.png)
 
+### application.yml 파일 생성하기
+- id,password,권한을 정의해보자.
+```xml
+#Spring Security 설정
+spring:
+  security:
+    user:
+      name: user
+      password: password
+      roles:
+      - USER
+```
+
+### HomeContorller 생성하기
+- com.korea.security.controller 패키지 생성하고 클래스 만들기
+
+![image](image/homecontroller.png)
+
+```java
+package com.example.security.controller;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+
+@Controller
+public class HomeController {
+
+    @GetMapping("/")
+    public String home() {
+        return "index";
+    }
+
+    @GetMapping("/admin")
+    public String admin() {
+        return "admin";
+    }
+}
+```
+
+### templates에 html파일 생성하기
+![image](image/templates.png)
+
+- index.html
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Spring Security Demo</title>
+</head>
+<body>
+    <h1>Welcome to the Home Page!</h1>
+    <p>You have successfully logged in.</p>
+</body>
+</html>
+```
+- admin.html
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Spring Security Demo - Admin</title>
+</head>
+<body>
+    <h1>Welcome to the Admin Page!</h1>
+    <p>You have successfully logged in as an admin.</p>
+</body>
+</html>
+```
+### Security 설정 클래스 생성
+- src/main/java 패키지에 SecurityConfig.java 클래스 생성하기
+
+```java
+package com.example.security;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.web.SecurityFilterChain;
+
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig {
+
+    @Bean
+    protected SecurityFilterChain configure(HttpSecurity http) throws Exception {
+        http.csrf().disable();
+        http.authorizeRequests()
+        		.requestMatchers("/admin").hasRole("ADMIN")
+                .anyRequest().authenticated()
+                .and()
+            .formLogin();
+       return http.build();
+    }
+
+    @Autowired
+    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+        auth
+            .inMemoryAuthentication()
+                .withUser("user").password("{noop}password").roles("USER")
+                .and()
+                .withUser("admin").password("{noop}password").roles("ADMIN");
+    }
+}
+```
+
+### 실행하여 결과 확인하기
+
+![image](image/login.png)
+
+- 우리가 설정한 아이디와 패스워드로 로그인을 하면 index.html로 이동하게 된다
+
+![image](image/index.png)
