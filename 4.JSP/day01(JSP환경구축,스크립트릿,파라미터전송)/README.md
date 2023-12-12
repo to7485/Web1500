@@ -116,35 +116,7 @@ File > New > Dynamic Web Project
 
 ![image](https://user-images.githubusercontent.com/54658614/226806619-cd77fd30-19cf-4371-807e-3981021559f0.png)
 
-## JSP의 작동 원리
-1. Client가 web browser로 JSP페이지를 요청한다.
-2. jsp 컨테이너(HttpJspBase)가 jsp 파일을 Servlet파일(.java)로 변환
-	- jsp 컨테이너 : jsp를 Servlet으로 변환하는 프로그램
-	- jsp 컨테이너 역시 서블릿으로 구현된 프로그램
-3. 예) hello.jsp -> hello_jsp.java -> hello_jsp.class 로 컴파일 된다.
-4. 요청한 Client에 html파일 형태로 응답
-
-## Servlet
-- 서블릿은 서블릿 클래스로부터 만들어진 객체를 의미한다.
-- 하지만 모든 서블릿 객체를 서블릿이라고는 하지 않는다. 웹 서버(톰캣)가 서블릿 클래스를 가지고 서블릿 객체를 만들고
-- 그 객체를 초기화해서 웹 서비스를 할 수 있는 상태로 만드는 작업을 거친것을 서블릿이라고 할 수 있다.
-
-## Servlet의 역사
-- 자바(JAVA) 언어를 개발한 Sun에서 웹 개발을 위해 만들었다.
-- 그래서 JAVA언어로 되어있고, .java가 확장자이다.
-- 서블릿(Servlet)은 JAVA 코드를 작성하고 나서 실행하면 클래스파일(.class)을 만들게 된다.
-- 서블릿의 단점은 JAVA코드가 한줄만 변경되어도 다시 처음부터 실행해야 한다.
-- 서블릿은 기본적으로 SingletonPattern을 사용하기 때문에
-- 하나의 객체를 사용하고 매번 객체를 생성하지 않는다.
-
-[출처] Servlet/JSP :: Servlet(서블릿)이란? JSP란? |작성자 Showshine
-
-
-![image](https://user-images.githubusercontent.com/54658614/231054942-f29baabf-1500-48cb-96f4-7898dc4814b6.png)
-
-출처 : Servlet Architecture (출처 : https://www.geeksforgeeks.org/servlet-architecture/ )
-
-#### 구조
+## 구조
 - WebContent에서 HTML파일이 아닌 JSP파일을 만든다.
 
 ![image](https://user-images.githubusercontent.com/54658614/230703065-42ef6943-1e5a-4176-9a52-c54664c3706a.png)
@@ -193,19 +165,19 @@ HTML과는 별로 차이점이 없어보인다.
 #### page 디렉티브 태그의 속성
 |속성|설명|기본값|
 |----|-------|----|
-|language|현재 JSP 페이지가 사용할 프로그래밍 언어를 설정합니다.<br><%@ page language=“java” %>|java|
-|contentType|현재 JSP 페이지가 생성할 문서의 콘텐츠 유형을 설정합니다.<br>(text/html, text/xml , text/plain)<br><%@ page contentType=“text/html%><br>constentType은 문자열 세트를 설정 할 수 있음<br><%@ page contentType=“text/html; charset=utf-8” %>|text/html|
-|pageEncoding|현재 JSP 페이지의 문자 인코딩을 설정합니다.<br><%@ page pageEncoding=“ISO-8859-1” %><br>contentType 속성의 문자열 세트로도 설정 할 수 있음<br><%@ page contentType=“text/html; charset=ISO-8859-1” %>|ISO-8859-1|
-|import|현재 JSP 페이지가 사용할 자바 클래스를 설정합니다.<br><%@ page import=“java.io.*” %><br><%@ page import=“java.io.*, java.lang.*” %><br><%@ page import=“java.io.*” %><br><%@ page import=“java.lang.*” %>||
-|session|현재 JSP 페이지의 세션 사용여부를 설정합니다.<br><%@ page session=“true” %>|true|
-|buffer|현재 JSP 페이지의 출력 버퍼의 크기를 설정합니다.<br>속성값을 none으로 설정하면 출력 버퍼를 채우지 않고 웹 브라우저로 직접 전송<br> <%@ page buffer=“none” %><br>출력 버퍼 크기를 32KB로 설정 : <% page buffer=“32KB” %>|8KB|
-|autoFlush|자동으로 출력 버퍼를 비우는 것을 제어<br><%@ page autoFlush=“true” %>|true|
-|isThreadSafe|현재 JSP 페이지의 멀티스레드 허용 여부를 설정합니다.<br>true – JSP 페이지에 대해 수신된 여러 요청이 동시에 처리<br>false – JSP 페이지에 대한 요청이 순차적으로 처리<br><%@ page isThreadSafe=“true” %>|true|
-|info|현재 JSP 페이지에 대한 설명을 설정합니다.(서블릿 인터페이스 getServletInfo() 메서드 사용)<br><%@ page info=“Home Page JSP” %>||
-|errorPage|현재 JSP 페이지에 오류가 발생했을 때 보여줄 오류페이지를 설정합니다.<br><%@ page errorPage=“MyErrorPage.jsp” %>||
-|isErrorPage|현재 JSP 페이지가 오류 페이지인지 여부를 설정합니다.<br>true로 설정하면 내장 객체인 exception 변수를 사용할 수 있습니다.<br><%@ page isErrorPage=“true” %>|false|
-|isELIgnored|현재 JSP 페이지의 표현언어(EL) 지원 여부를 설정합니다.<br><%@ isELIgnored=“true” %>|false|
-|isScriptingEnabled|현재 JSP 페이지의 스크립트 태그(선언문, 스크립틀릿, 표현문) 사용 여부를 설정합니다.<br><%@ page isScriptingEnabled=“false” %>||
+|language|현재 JSP 페이지가 사용할 프로그래밍 언어를 설정합니다.<br><%@ page language="java" %>|java|
+|contentType|현재 JSP 페이지가 생성할 문서의 콘텐츠 유형을 설정합니다.<br>(text/html, text/xml , text/plain)<br><%@ page contentType="text/html%><br>constentType은 문자열 세트를 설정 할 수 있음<br><%@ page contentType="text/html; charset=utf-8" %>|text/html|
+|pageEncoding|현재 JSP 페이지의 문자 인코딩을 설정합니다.<br><%@ page pageEncoding="ISO-8859-1" %><br>contentType 속성의 문자열 세트로도 설정 할 수 있음<br><%@ page contentType="text/html; charset=ISO-8859-1" %>|ISO-8859-1|
+|import|현재 JSP 페이지가 사용할 자바 클래스를 설정합니다.<br><%@ page import="java.io.*" %><br><%@ page import="java.io.*, java.lang.*" %><br><%@ page import="java.io.*" %><br><%@ page import="java.lang.*" %>||
+|session|현재 JSP 페이지의 세션 사용여부를 설정합니다.<br><%@ page session="true" %>|true|
+|buffer|현재 JSP 페이지의 출력 버퍼의 크기를 설정합니다.<br>속성값을 none으로 설정하면 출력 버퍼를 채우지 않고 웹 브라우저로 직접 전송<br> <%@ page buffer="none" %><br>출력 버퍼 크기를 32KB로 설정 : <% page buffer="32KB" %>|8KB|
+|autoFlush|자동으로 출력 버퍼를 비우는 것을 제어<br><%@ page autoFlush="true" %>|true|
+|isThreadSafe|현재 JSP 페이지의 멀티스레드 허용 여부를 설정합니다.<br>true – JSP 페이지에 대해 수신된 여러 요청이 동시에 처리<br>false – JSP 페이지에 대한 요청이 순차적으로 처리<br><%@ page isThreadSafe="true" %>|true|
+|info|현재 JSP 페이지에 대한 설명을 설정합니다.(서블릿 인터페이스 getServletInfo() 메서드 사용)<br><%@ page info="Home Page JSP" %>||
+|errorPage|현재 JSP 페이지에 오류가 발생했을 때 보여줄 오류페이지를 설정합니다.<br><%@ page errorPage="MyErrorPage.jsp" %>||
+|isErrorPage|현재 JSP 페이지가 오류 페이지인지 여부를 설정합니다.<br>true로 설정하면 내장 객체인 exception 변수를 사용할 수 있습니다.<br><%@ page isErrorPage="true" %>|false|
+|isELIgnored|현재 JSP 페이지의 표현언어(EL) 지원 여부를 설정합니다.<br><%@ isELIgnored="true" %>|false|
+|isScriptingEnabled|현재 JSP 페이지의 스크립트 태그(선언문, 스크립틀릿, 표현문) 사용 여부를 설정합니다.<br><%@ page isScriptingEnabled="false" %>||
 
 ### include 디렉티브 태그의 기능과 사용법
 - JSP 페이지의 특정 영역에 외부 파일의 내용을 포함하는 태그
@@ -214,16 +186,16 @@ HTML과는 별로 차이점이 없어보인다.
 - include 디렉티브 태그는 서블릿 프로그램으로 번역될 때 현재 JSP 페이지와 설정된 다른 외부 파일의 내용이 병합되어 번역됩니다.
 
 ```
-<% include file=“파일명” %>
+<% include file="파일명" %>
 ```
 
 #### include 디렉티브 태그 사용 예
 ```
 <html>
 <body>
-<%@ include file=“header.jsp” %>
+<%@ include file="header.jsp" %>
 Today is : <%= java.util.Calendar.getInstance().getTime() %>
-<%@ include file=“footer.jsp” %>
+<%@ include file="footer.jsp" %>
 </body>
 </html>
 ```
@@ -231,7 +203,7 @@ Today is : <%= java.util.Calendar.getInstance().getTime() %>
 ### taglib 디렉티브 태그의 기능과 사용법
 taglib 디렉티브 태그는 현재 JSP 페이지에 표현언어, JSTL, 사용자 정의 태그(custom tag)등 태그 라이브러리를 설정하는 태그입니다.
 ```
-<% taglib prefix=“태그 식별자” uri=“경로” %>
+<% taglib prefix="태그 식별자" uri="경로" %>
 ```
 - uri 속성은 사용자가 정의한 태그의 설정 정보를 가진 경로 주소
 - prefix 속성은 uri에 설정한, 사용자가 정의한 태그를 식별하기 위한 고유 이름입니다. 해당 JSP 페이지 내에서 uri 속성값을 그대로 사용하면 복잡하므로 prefix 속성 값이 대신 식별할 수 있게 해주는 것 
@@ -239,7 +211,7 @@ taglib 디렉티브 태그는 현재 JSP 페이지에 표현언어, JSTL, 사용
 
 JSTL 태그<br>일반적으로 웹 애플리케이션에서 쉽게 접할 수 있는 것은 JSTL 태그 라이브러리입니다. 유용한 JSP 태그의 모음인 JSTL은 자주 사용되는 핵심 기능을 제공합니다. 반복문, 조건문과 같은 논리적 구조 작업. XML 문서 조작, 국제화 태그 조작, SQL 조작 수행을 위한 태그 등을 지원합니다.<br><br>STL을 사용하려면 WebContent/WEB-INF/lib/ 태그 디렉터리의 위치에 jstl.jar 라이브러리 파일이 있어야 합니다. 이 파일은 Apache Standard Taglib 페이지에서 다운로드할 수 있습니다.
 
-#### first.jsp
+### first.jsp
 
 ```jsp
 기본적으로 갖고 있어야 하는 정보들이 기입이 되어있다. 
@@ -278,14 +250,38 @@ JSTL 태그<br>일반적으로 웹 애플리케이션에서 쉽게 접할 수 �
 </body>
 </html>
 ```
-JSP에도 BODY부분이 있기 때문에 웹으로 출력이 될텐데 바로 출력이 될 수는 없다.
-중간에 SERVLET이라는 클래스를 거친다.
+- JSP에도 BODY부분이 있기 때문에 웹으로 출력이 될텐데 바로 출력이 될 수는 없다.
+- 중간에 SERVLET이라는 클래스를 거친다.
 
-![image](https://user-images.githubusercontent.com/54658614/230704173-f9cdfc41-4e32-463f-bf1a-d835d011de45.png)
+## JSP의 작동 원리
+1. Client가 web browser로 JSP페이지를 요청한다.
+2. jsp 컨테이너(HttpJspBase)가 jsp 파일을 Servlet파일(.java)로 변환
+	- jsp 컨테이너 : jsp를 Servlet으로 변환하는 프로그램
+	- jsp 컨테이너 역시 서블릿으로 구현된 프로그램
+3. 예) hello.jsp -> hello_jsp.java -> hello_jsp.class 로 컴파일 된다.
+4. 요청한 Client에 html파일 형태로 응답
 
-JSP는 SERVLET이 가지고 있는 객체를 가져다가 사용할 수 있다.
+## Servlet
+- 서블릿은 서블릿 클래스로부터 만들어진 객체를 의미한다.
+- 하지만 모든 서블릿 객체를 서블릿이라고는 하지 않는다. 웹 서버(톰캣)가 서블릿 클래스를 가지고 서블릿 객체를 만들고
+- 그 객체를 초기화해서 웹 서비스를 할 수 있는 상태로 만드는 작업을 거친것을 서블릿이라고 할 수 있다.
 
-#### test2.jsp 만들기
+## Servlet의 역사
+- 자바(JAVA) 언어를 개발한 Sun에서 웹 개발을 위해 만들었다.
+- 그래서 JAVA언어로 되어있고, .java가 확장자이다.
+- 서블릿(Servlet)은 JAVA 코드를 작성하고 나서 실행하면 클래스파일(.class)을 만들게 된다.
+- 서블릿의 단점은 JAVA코드가 한줄만 변경되어도 다시 처음부터 실행해야 한다.
+- 서블릿은 기본적으로 SingletonPattern을 사용하기 때문에
+- 하나의 객체를 사용하고 매번 객체를 생성하지 않는다.
+
+[출처] Servlet/JSP :: Servlet(서블릿)이란? JSP란? |작성자 Showshine
+
+
+![image](https://user-images.githubusercontent.com/54658614/231054942-f29baabf-1500-48cb-96f4-7898dc4814b6.png)
+
+출처 : Servlet Architecture (출처 : https://www.geeksforgeeks.org/servlet-architecture/ )
+
+### test2.jsp 만들기
 - jsp는 어떻게 사용을 해야할까?
 - 만약 DB에서 정보가 넘어왔다면 어떻게 처리해야할까??
 ```jsp
