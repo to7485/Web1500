@@ -37,16 +37,23 @@ ${RESULT}   // 애트리뷰트 이름
 - 서블릿과 JSP 기술에서 사용할 수 있는 setAttribute, getAttribute, removeAttribute 메서드는 4세트가 있고 그래서 애트리뷰트 종류도 네가지 입니다.
 - JSP 페이지에서는 이런 메서드를 호출할 떄 각각 pageContext, request, session, application 내장 객체를 사용합니다.
 
-#### JSP/서블릿 기술에서 사용되는 네 종류의 애트리뷰트
+### 4대 영역객체
 
-|애트리뷰트의 종류|호출할 때 사용하는 내장 변수|메서드의 소속|
-|-----|-----|-------|
-|page 애트리뷰트|pageContext 내장 객체|javax.servlet.jsp.JspContext 클래스|
-|request 애트리뷰트|request 내장 객체|javax.servlet.ServletRequest 인터페이스|
-|session 애트리뷰트|session 내장 객체|javax.servlet.http.HttpSession 인터페이스|
-|application 애트리뷰트|application 내장 객체|javax.servlet.ServletContextg 인터페이스|
+|기본 객체|유효 범위|설명|
+|-----|-------|-----|
+|pageContext|1개 JSP페이지|JSP페이지의 시작부터 끝까지. 해당 JSP 내부에서만 접근가능. 페이지당 1개|
+|request|1+개 JSP페이지|요청의 시작부터 응답까지. 다른 JSP로 전달 가능. 요청마다 1개|
+|session|n개 JSP페이지|session의 시작부터 종료까지(로그인~로그아웃).클라이언트마다 1개|
+|application|context 전체|Web Application의 시작부터 종료까지. context내부 어디서나 접근 가능. 모든 클라이언트가 공유. context마다 1개|
 
-#### EL 식 안에 있는 데이터 이름이 해석되는 순서
+|속성 관련 메서드|설명|
+|---------|------|
+|void setAttribute(String name, Object value) | 지정된 값(value)을 지정된 속성 이름(name)으로 저장|
+|Object getAttribue(String name)|저장된 이름(name)으로 저장된 속성의 값을 반환|
+|void removeAttribute(String name)|지정된 이름(name)의 속성을 삭제|
+|Enumeration getAttributeNames()|기본 객체에 저장된 모든 속성의 이름을 반환|
+
+### EL 식 안에 있는 데이터 이름이 해석되는 순서
 page 애트리뷰트 -> request 애트리뷰트 -> session 애트리뷰트 -> application 애트리뷰트
 
 - 그런데 어떤 경우에는 이 순서에 상관없이 특정한 종류의 애트리뷰트를 꼭 집어서 출력하고 싶을 때도 있을 것입니다.
@@ -58,21 +65,6 @@ page 애트리뷰트 -> request 애트리뷰트 -> session 애트리뷰트 -> ap
 	
 - 위 EL 식에서 사용된 pageScope, requestScope, sessionScope, applicationScope라는 이름은 익스프레션 언어의 내장 객체 이름입니다.
 
-#### 익스프레션 언어의 내장 객체
-
-|내장 객체 이름|표현하는 데이터|객체의 타입|
-|-----|---------|----|
-|pageScope|page 애트리뷰트의 집합|Map|
-|requestScope|request 애트리뷰트의 집합|Map|
-|sessionScope|session 애트리뷰트의 집합|Map|
-|applicationScope|application 애트리뷰트의 집합|Map|
-|param|웹 브라우저로부터 입력된 데이터의 집합|Map|
-|paramValues|웹 브라우저로부터 입력된 데이터의 집합<br>(똑같은 이름의 데이터가 여럿일 때 사용)|Map|
-|header|HTTP 요청 메세지에 있는 HTTP 헤더의 집합|Map|
-|headerValues|HTTP 요청 메시지에 있는 HTTP 헤더의 집합<br>(똑같은 이름의 HTTP 헤더가 여럿일 때 사용)|Map|
-|cookie|웹 브라우저로부터 전송된 쿠키의 집합|Map|
-|initParam|웹 애플리케이션의 초기화 파라미터의 집합|Map|
-|pageContext|JSP 페이지의 환경 정보의 집합|PageContext|
 
 #### param 내장객체
 - param은 웹브라우저에서 \<form\> 요소를 통해 입력된 데이터를 가져올 때 사용하는 내장 객체 입니다. 이 객체의 사용방법은 2가지 입니다.
