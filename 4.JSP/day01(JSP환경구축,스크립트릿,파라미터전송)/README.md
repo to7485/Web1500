@@ -123,7 +123,8 @@ File > New > Dynamic Web Project
 
 HTML과는 별로 차이점이 없어보인다.
 
-## 스크립트 태그의 종류
+## 스크립트 태그
+### 스크립트 태그의 종류
 
 |스크립트 태그|형식|설명|
 |----|---|----------|
@@ -138,6 +139,7 @@ HTML과는 별로 차이점이 없어보인다.
 - 선언문 태그로 선언된 변수는 서블릿 프로그램으로 번역될 때 클래스 수준의 멤버 변수가 되므로 전역 변수로 사용됩니다.
 - 선언문 태그로 선언된 메서드는 전역변수처럼 전역 메서드로 사용됩니다.
 
+### declaration01.jsp
 ```jsp
 <body>
 	<%!int data = 50;%>
@@ -146,6 +148,108 @@ HTML과는 별로 차이점이 없어보인다.
 	%>
 </body>
 ```
+### declaration01.jsp
+```jsp
+<html>
+<head>
+<title>Scripting Tag</title>
+</head>
+<body>
+	<%!int sum(int a, int b) {
+		return a + b;
+	}%>
+	<%
+		out.println("2 + 3 = " + sum(2, 3));
+	%>
+</body>
+</html>
+```
+
+### 스크립트릿(scriptlet)
+- 문법(각 행이 세미콜론으로 끝나야 한다.)
+```jsp
+<% 자바 코드; %>
+```
+- 스크립트릿 태그에 작성된 태그에 작성된 자바코드는 서블릿 프로그램으로 변환될 때 _jspService()메서드 내부에 복사된다.
+- _jspService()메서드 내부에 복사되므로 지역변수가 되어 이 태그에 선언된 변수는 스크립트릿 태그 내에서만 사용할 수 있다.
+
+
+|선언문태그|스크립트릿태그|
+|---------|-------------|
+|변수뿐만아니라 메서드를 선언할 수 있다.|스크립트릿 태그는 메서드 없이 변수만을 선언할 수 있다.|
+|서블릿 프로그램으로 변환될 때 _jspService() 메서드 외부에 배치된다|서블릿 프로그램으로 변환될 때 _jspService()메서드 내부에 배치된다.|
+
+### scriptlet01.jsp
+```jsp
+<html>
+<head>
+<title>Scripting Tag</title>
+</head>
+<body>
+	<% 
+		int a = 2;
+		int b = 3;
+		int sum = a + b;
+		out.println("2 + 3 = " + sum);
+	%>
+</body>
+</html>
+```
+
+### scriptlet02.jsp
+```jsp
+<html>
+<head>
+<title>Scripting tag</title>
+</head>
+<body>
+	<%
+		for (int i = 0; i <= 10; i++) {
+			if (i % 2 == 0)
+				out.println(i + "<br>");
+		}
+	%>
+</body>
+</html>
+```
+
+### 표현문(expression)
+- <%= 와 %>를 사용하여 웹브라우저에 출력할 부분을 표현합니다.
+- 표현문 태그는 스크립트릿 태그에서 사용할 수 없으므로 이 경우에는 out.print()메서드를 사용해야 한다.
+
+```jsp
+<%=자바 코드%>     각 행을 세미콜론으로 종료할 수 없음
+```
+
+### expression01.jsp
+```jsp
+<html>
+<head>
+<title>Scripting Tag</title>
+</head>
+<body>
+	<p> Today's date: <%=new java.util.Date()%></p>
+</body>
+</html>
+```
+
+### expression02.jsp
+```jsp
+<html>
+<head>
+<title>Scripting Tag</title>
+</head>
+<body>
+	<%
+		int a = 10;
+		int b = 20;
+		int c = 30;
+	%>
+	<%=a + b + c%>
+</body>
+</html>
+```
+## 디랙티브 태그
 
 ### 디렉티브 태그의 종류
 |디렉티브 태그| 형식|설명|
@@ -161,13 +265,18 @@ HTML과는 별로 차이점이 없어보인다.
 - 하나의 page 디렉티브 태그에 하나 또는 여러 개의 속성을 설정할 수 있습니다. 또는 여러 개의 속성마다 개별적으로 page 디렉티브 태그를 선언할 수 있습니다.
 - import 속성을 제외한 속성은 JSP 페이지에 한 번씩만 설정할 수 있습니다.
 
+```jsp
+<%@ page 속성1=“값” [속성2=“값2” .. ] %>    
+<%과 @사이에 공백이 없어야 함
+```
+
 #### page 디렉티브 태그의 속성
 |속성|설명|기본값|
 |----|-------|----|
 |language|현재 JSP 페이지가 사용할 프로그래밍 언어를 설정합니다.<br><%@ page language="java" %>|java|
-|contentType|현재 JSP 페이지가 생성할 문서의 콘텐츠 유형을 설정합니다.<br>(text/html, text/xml , text/plain)<br><%@ page contentType="text/html%><br>constentType은 문자열 세트를 설정 할 수 있음<br><%@ page contentType="text/html; charset=utf-8" %>|text/html|
+|**contentType**|현재 JSP 페이지가 생성할 문서의 콘텐츠 유형을 설정합니다.<br>(text/html, text/xml , text/plain)<br><%@ page contentType="text/html%><br>constentType은 문자열 세트를 설정 할 수 있음<br><%@ page contentType="text/html; charset=utf-8" %>|text/html|
 |pageEncoding|현재 JSP 페이지의 문자 인코딩을 설정합니다.<br><%@ page pageEncoding="ISO-8859-1" %><br>contentType 속성의 문자열 세트로도 설정 할 수 있음<br><%@ page contentType="text/html; charset=ISO-8859-1" %>|ISO-8859-1|
-|import|현재 JSP 페이지가 사용할 자바 클래스를 설정합니다.<br><%@ page import="java.io.*" %><br><%@ page import="java.io.*, java.lang.*" %><br><%@ page import="java.io.*" %><br><%@ page import="java.lang.*" %>||
+|**import**|현재 JSP 페이지가 사용할 자바 클래스를 설정합니다.<br><%@ page import="java.io.*" %><br><%@ page import="java.io.*, java.lang.*" %><br><%@ page import="java.io.*" %><br><%@ page import="java.lang.*" %>||
 |session|현재 JSP 페이지의 세션 사용여부를 설정합니다.<br><%@ page session="true" %>|true|
 |buffer|현재 JSP 페이지의 출력 버퍼의 크기를 설정합니다.<br>속성값을 none으로 설정하면 출력 버퍼를 채우지 않고 웹 브라우저로 직접 전송<br> <%@ page buffer="none" %><br>출력 버퍼 크기를 32KB로 설정 : <% page buffer="32KB" %>|8KB|
 |autoFlush|자동으로 출력 버퍼를 비우는 것을 제어<br><%@ page autoFlush="true" %>|true|
@@ -198,6 +307,43 @@ Today is : <%= java.util.Calendar.getInstance().getTime() %>
 </body>
 </html>
 ```
+
+### include01.jsp
+```jsp
+<%@ page contentType="text/html; charset=utf-8"%>
+<html>
+<head>
+<title>Directives Tag</title>
+</head>
+<body>
+	<%@ include file="include01_header.jsp"%>
+	<p>방문해 주셔서 감사합니다.</p>
+	<%@ include file="include01_footer.jsp"%>
+</body>
+</html>
+```
+
+### include01_header.jsp
+```jsp
+<%@ page contentType="text/html; charset=utf-8"%>
+<%!
+	int pageCount = 0;
+	void addCount() {
+		pageCount++;
+	}
+%>
+<%
+	addCount();
+%>
+<p>	이 사이트 방문은	<%=pageCount%>번째 입니다.</p>
+
+```
+
+### include02_footer.jsp
+```jsp
+Copyright MySite.com
+```
+
 
 ### taglib 디렉티브 태그의 기능과 사용법
 taglib 디렉티브 태그는 현재 JSP 페이지에 표현언어, JSTL, 사용자 정의 태그(custom tag)등 태그 라이브러리를 설정하는 태그입니다.
