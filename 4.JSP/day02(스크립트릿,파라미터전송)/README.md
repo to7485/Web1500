@@ -290,17 +290,7 @@ taglib 디렉티브 태그는 현재 JSP 페이지에 표현언어, JSTL, 사용
 3. 예) hello.jsp -> hello_jsp.java -> hello_jsp.class 로 컴파일 된다.
 4. 요청한 Client에 html파일 형태로 응답
 
-## Servlet의 역사
-- 자바(JAVA) 언어를 개발한 Sun에서 웹 개발을 위해 만들었다.
-- 그래서 JAVA언어로 되어있고, .java가 확장자이다.
-- 서블릿(Servlet)은 JAVA 코드를 작성하고 나서 실행하면 클래스파일(.class)을 만들게 된다.
-- 서블릿의 단점은 JAVA코드가 한줄만 변경되어도 다시 처음부터 실행해야 한다.
 
-[출처] Servlet/JSP :: Servlet(서블릿)이란? JSP란? |작성자 Showshine
-
-![image](https://user-images.githubusercontent.com/54658614/231054942-f29baabf-1500-48cb-96f4-7898dc4814b6.png)
-
-출처 : Servlet Architecture (출처 : https://www.geeksforgeeks.org/servlet-architecture/ )
 
 ### HttpJspBase
 - HttpJspBase클래스는 HttpServlet을 상속받고 있다. 이는 JSP가 Servlet으로 처리되기 위한 기능을 상속받을 수 있다.
