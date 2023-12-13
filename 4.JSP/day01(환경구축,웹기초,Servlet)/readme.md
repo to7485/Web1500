@@ -116,7 +116,58 @@ File > New > Dynamic Web Project
 
 ![image](https://user-images.githubusercontent.com/54658614/226806619-cd77fd30-19cf-4371-807e-3981021559f0.png)
 
-## 구조
+## JSP 프로젝트 폴더 구조
+
+![image](image/webcontent.png)
+
+- **webapp** : HTML(.html), JSP, Javascript(.js), CSS(.css) 및 이미지와 같은 파일들이 위치한다. 해당 위치에 놓이는 파일들은 웹 애플리케이션이 배치 될 떄 그대로 옮겨진다.
+
+- **WEB-INF** : 웹 애플리케이션의 설정 파일들이 해당 디렉토리 아래에 포함된다. WEB-INF 내에 있는 파일들은 클라이언트에서 요청할 수 없다. 따라서 html, js와 같은 정적 자원은 바로 읽을 수 없다.
+
+- **WEB-INF/lib** : 애플리케이션 실행에 필요한 라이브러리 즉, jar 파일들을 모아두는 디렉토리이다. jar은 자바 아카이브 파일이란 의미로 java + ARchive의 합성어로 jar로 사용된다.
+
+
 - WebContent에서 HTML파일이 아닌 JSP파일을 만든다.
 
 ![image](https://user-images.githubusercontent.com/54658614/230703065-42ef6943-1e5a-4176-9a52-c54664c3706a.png)
+
+<hr>
+
+# 웹 기초
+
+## request와 response의 이해
+- 서버는 클라이언트가 있기 때문에 동작을 한다. 서버로 요청(request)를 보내고, 서버에서는 요청의 내용을 읽고 처리한 뒤 클라이언트에 응답(response)을 보냅니다.
+- 따라서 서버에는 요청을 받는 부분과 응답을 보내는 부분이 있어야 한다. request와 response은 이벤트 방식이라고 생각할 수 있다.
+
+## HTTP
+- HTTP는 HTML문서와 같은 리소스를 가져올 수 있도록 해주는 프로토콜(protocol)이다.
+- HTTP는 웹에서 이루어지는 모든 데이터 교환의 기초이며, 클라이언트-서버 프로토콜이기도 하다.
+- 클라이언트와 서버들은 개별적인 베세지 교환에 의해 통신한다. 보통 브라우저인 클라이언트에 의해 전송되는 메세지를 요청(request)라고 부르며, 서버에서 응답으로 전송되는 메세지를 응답(response)라고 부른다.
+
+## 헤더(Header)
+- HTTP헤더는 클라이언트와 서버가 요청 또는 응답으로 부가적인 정보를 전송할 수 있도록 해준다.
+- HTTP헤더는 대소문자를 구분하지 않는 이름과 콜론':' 다음에 오는 값으로 이루어져있다. 값 앞에 붙은 빈 문자열은 무시된다.
+
+### 일반 헤더(General header)
+- request와 response모두에 적용되지만 body에서 최종적으로 전송되는 데이터와는 관련이 없는 헤더
+
+### 요청 헤더(Request header)
+- 패치될 resource나 클라이언트 자체에 대한 자세한 정보를 포함하는 헤더
+
+### 응답 헤더(Response header)
+- 위치 또는 서버 자체에 대한 정보(이름,버전 등)와 같이 응답에 대한 부가적인 정보를 갖는 헤더
+
+### 엔티티 헤더(Entity header)
+- 컨텐츠 길이나 MIME 타입과 같이 엔티티 바디에 대한 정보를 포함하는 헤더
+
+![image](image/http_protocol.png)
+
+- request와 response는 모두 header와 body를 가지고 있다.
+- header는 request또는 response에 대한 정보를 가지고 있는곳
+- body는 server와 client간에 주고받을 실제 데이터를 담아두는 공간이다.
+- 개발자 도구의 Network탭에서 요청 중 하나를 클릭해보면 더 상세하게 request와 response을 살펴볼수 있다.
+
+![image](image/headers.png)
+
+- General은 공통 헤더이고, Request Headers는 요청 헤더, Response Headers는 응답헤더이다.
+- Request Payload가 요청의 본문이다. 응답의 본문은 Preview나 Response탭에서 확인할 수 있다.
