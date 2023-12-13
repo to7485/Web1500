@@ -266,7 +266,7 @@ HTML과는 별로 차이점이 없어보인다.
 - import 속성을 제외한 속성은 JSP 페이지에 한 번씩만 설정할 수 있습니다.
 
 ```jsp
-<%@ page 속성1=“값” [속성2=“값2” .. ] %>    
+<%@ page 속성1="값" [속성2="값2" .. ] %>    
 <%과 @사이에 공백이 없어야 함
 ```
 
@@ -339,22 +339,25 @@ Today is : <%= java.util.Calendar.getInstance().getTime() %>
 
 ```
 
-### include02_footer.jsp
+### include01_footer.jsp
 ```jsp
 Copyright MySite.com
 ```
 
 
 ### taglib 디렉티브 태그의 기능과 사용법
-taglib 디렉티브 태그는 현재 JSP 페이지에 표현언어, JSTL, 사용자 정의 태그(custom tag)등 태그 라이브러리를 설정하는 태그입니다.
-```
+taglib 디렉티브 태그는 현재 JSP 페이지에 표현언어, JSTL, 사용자 정의 태그(custom tag)등 태그 라이브러리를 설정하는 태그이다.
+
+```jsp
 <% taglib prefix="태그 식별자" uri="경로" %>
 ```
-- uri 속성은 사용자가 정의한 태그의 설정 정보를 가진 경로 주소
-- prefix 속성은 uri에 설정한, 사용자가 정의한 태그를 식별하기 위한 고유 이름입니다. 해당 JSP 페이지 내에서 uri 속성값을 그대로 사용하면 복잡하므로 prefix 속성 값이 대신 식별할 수 있게 해주는 것 
-- uri 속성 값은 JSP 컨테이너에 사용자가 정의한 태그 라이브러리의 위치를 알려줍니다.
 
-JSTL 태그<br>일반적으로 웹 애플리케이션에서 쉽게 접할 수 있는 것은 JSTL 태그 라이브러리입니다. 유용한 JSP 태그의 모음인 JSTL은 자주 사용되는 핵심 기능을 제공합니다. 반복문, 조건문과 같은 논리적 구조 작업. XML 문서 조작, 국제화 태그 조작, SQL 조작 수행을 위한 태그 등을 지원합니다.<br><br>STL을 사용하려면 WebContent/WEB-INF/lib/ 태그 디렉터리의 위치에 jstl.jar 라이브러리 파일이 있어야 합니다. 이 파일은 Apache Standard Taglib 페이지에서 다운로드할 수 있습니다.
+- uri 속성은 사용자가 정의한 태그의 설정 정보를 가진 경로 주소
+- prefix 속성은 uri에 설정한, 사용자가 정의한 태그를 식별하기 위한 고유 이름이다.
+- 해당 JSP 페이지 내에서 uri 속성값을 그대로 사용하면 복잡하므로 prefix 속성 값이 대신 식별할 수 있게 해주는 것 
+- uri 속성 값은 JSP 컨테이너에 사용자가 정의한 태그 라이브러리의 위치를 알려준다.
+
+>JSTL 태그<br>일반적으로 웹 애플리케이션에서 쉽게 접할 수 있는 것은 JSTL 태그 라이브러리이다. 유용한 JSP 태그의 모음인 JSTL은 자주 사용되는 핵심 기능을 제공한다. 반복문, 조건문과 같은 논리적 구조 작업. XML 문서 조작, 국제화 태그 조작, SQL 조작 수행을 위한 태그 등을 지원한다.<br><br>STL을 사용하려면 WebContent/WEB-INF/lib/ 태그 디렉터리의 위치에 jstl.jar 라이브러리 파일이 있어야 합니다. 이 파일은 Apache Standard Taglib 페이지에서 다운로드할 수 있다.
 
 ### first.jsp
 
