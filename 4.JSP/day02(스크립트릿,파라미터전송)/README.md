@@ -290,8 +290,6 @@ taglib 디렉티브 태그는 현재 JSP 페이지에 표현언어, JSTL, 사용
 3. 예) hello.jsp -> hello_jsp.java -> hello_jsp.class 로 컴파일 된다.
 4. 요청한 Client에 html파일 형태로 응답
 
-
-
 ### HttpJspBase
 - HttpJspBase클래스는 HttpServlet을 상속받고 있다. 이는 JSP가 Servlet으로 처리되기 위한 기능을 상속받을 수 있다.
 - JSP는 Servlet으로 실행될 때 필요한 환경을 설정하고 실행을 지원한다.
@@ -362,7 +360,7 @@ public abstract class HttpJspBase extends HttpServlet implements HttpJspPage {
 ### 컴파일된 파일의 위치
 - work\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\work\Catalina\localhost\Test\org\apache\jsp
 
-### test2.jsp 만들기
+### parameter.jsp 만들기
 - jsp는 어떻게 사용을 해야할까?
 - 만약 DB에서 정보가 넘어왔다면 어떻게 처리해야할까??
 ```jsp
