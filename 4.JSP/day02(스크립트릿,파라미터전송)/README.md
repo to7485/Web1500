@@ -366,9 +366,9 @@ public abstract class HttpJspBase extends HttpServlet implements HttpJspPage {
 |기본객체 | 타입|설명|
 |-----|-----|----|
 |<b>request</b>|javax.servlet.http.HttpServletRequest|요청 정보가 담겨있는 객체|
-|response|javax.servlet.http.HttpServletResponse|요청에 응답을 작성할 때 사용|
-|session|javax.servlet.HttpSession|HTTP session을 구현한 객체. 세션 정보 저장에 사용|
-|out|javax.servlet.jsp.JspWriter|응답에 포함될 내용을 출력할 때 사용|
+|<b>response</b>|javax.servlet.http.HttpServletResponse|요청에 응답을 작성할 때 사용|
+|<b>session</b>|javax.servlet.HttpSession|HTTP session을 구현한 객체. 세션 정보 저장에 사용|
+|<b>out</b>|javax.servlet.jsp.JspWriter|응답에 포함될 내용을 출력할 때 사용|
 |application|javax.servlet.ServletContext|Web Application 전체에서 공유하는 객체|
 |config|javax.servlet.ServletConfig|JSP 페이지에 대한 설정 정보가 담긴 객체|
 |page|java.lang.Object|JSP페이지 객체 자신|
