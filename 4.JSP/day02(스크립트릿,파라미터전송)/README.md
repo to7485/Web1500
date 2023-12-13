@@ -172,12 +172,12 @@ HTML과는 별로 차이점이 없어보인다.
 - include 디렉티브 태그는 JSP 페이지 어디에서든 선언할 수 있습니다.
 - include 디렉티브 태그는 서블릿 프로그램으로 번역될 때 현재 JSP 페이지와 설정된 다른 외부 파일의 내용이 병합되어 번역됩니다.
 
-```
+```jsp
 <% include file="파일명" %>
 ```
 
 #### include 디렉티브 태그 사용 예
-```
+```jsp
 <html>
 <body>
 <%@ include file="header.jsp" %>

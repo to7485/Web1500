@@ -209,3 +209,45 @@ File > New > Dynamic Web Project
 - 즉 서블릿은 서블릿 클래스로부터 만들어진 객체이다.
 - 하지만 모든 서블릿 객체가 서블릿이라고 할 수는 없다. 웹 컨테이너(톰캣)는 서블릿 클래스를 가지고 서블릿 객체를 만든 다음에 그 객체를 초기화 하여 웹 서비스를 할 수 있는 상태로 만드는데 이런 작업을 거친 서블릿 객체만 서블릿이라고 할 수 있다.
 
+### HelloServlet 클래스 생성하기
+```java
+package com.korea.test3;
+
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServlet;
+
+@webServlet("/hello")
+//HttpServlet : 서블릿을 만들기 위해 반드시 상속해야할 필수 클래스
+public class HelloServlet extends HttpServlet{
+	
+	@Override
+	public void init() throws ServletException {
+		//서블릿이 초기화 될 때 호출되는 메서드
+		//1. 서블릿의 초기화 하는 역할
+		System.out.println("[HelloServlet] init() is called");
+	}
+	
+	@Override
+	public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException {
+		// 1. 입력
+		// 2. 처리
+		// 3. 출력
+		System.out.println("[HelloServlet] service() is called");
+	}
+
+	@Override
+	public void destroy() {
+		//3. 뒷정리 - 서블릿이 메모리에서 제거될 때 서블릿 컨테이너에 의해서 자동 호
+		System.out.println("[HelloServlet] destory() is called");
+	
+	}
+}
+```
+
+![image](image/servlet.png)
+
+![image](image/servlet1.png)
