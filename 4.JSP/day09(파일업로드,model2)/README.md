@@ -70,31 +70,7 @@ WEB-INF -> lib 폴더에 넣어주자
 
 필요없는 JSP가 늘어나기 때문에 JAVA클래스와 비슷한 Servlet을 만들자.
 
-### JSP의 기본 객체
-- 생성없이 사용할 수 있는 객체
-- service() 메서드의 local variable로 선언
 
-|기본객체 | 타입|설명|
-|-----|-----|----|
-|request|javax.servlet.http.HttpServletRequest|요청 정보가 담겨있는 객체|
-|response|javax.servlet.http.HttpServletResponse|요청에 응답을 작성할 때 사용|
-|session|javax.servlet.HttpSession|HTTP session을 구현한 객체. 세션 정보 저장에 사용|
-|out|javax.servlet.jsp.JspWriter|응답에 포함될 내용을 출력할 때 사용|
-|application|javax.servlet.ServletContext|Web Application 전체에서 공유하는 객체|
-|config|javax.servlet.ServletConfig|JSP 페이지에 대한 설정 정보가 담긴 객체|
-|page|java.lang.Object|JSP페이지 객체 자신|
-|pageContext|javax.servlet.jsp.PageContext|JSP페이지 constext정보를 제공|
-|exception|java.lang.Throwable|예외가 발생했을 때 생성되는 예외 객체|
-
-
-### httpServlet에서 제공되는 주요 메서드
-|메서드|설명|
-|-----|-----|
-|void init()|서블릿의 객체가 생성 될 때 호출되는 메서드|
-|void destroy()|서블릿의 객체가 메모리에서 사라질 때 호출되는 메서드|
-|void service(request,respons)|서블릿의 요청이 있을 때 호출되는 메서드|
-|void doget()|html의 form의 메서드가 get일때 호출되는 메서드|
-|void doPost()|html에서 form의 메서드가 post일때 호출되는 메서드|
 
 ### httpServletRequest에서 제공되는 주요 메서드
 |메서드|설명|

@@ -251,3 +251,6 @@ public class HelloServlet extends HttpServlet{
 ![image](image/servlet.png)
 
 ![image](image/servlet1.png)
+
+- 서블릿은 기본적으로 singleton pattern을 따른다.
+- 한개의 객체를 만들어놓고 재활용을 한다.
