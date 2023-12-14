@@ -226,6 +226,46 @@ File > New > Dynamic Web Project
 
 ![image](image/servlet2.png)
 
+- 상속/구현 관계를 알아야 하는 이유는 Servlet클래스를 작성하면서 이런 클래스의 API 규격서를 찾아봐야 할 경우가 종종 있기 때문입니다.
+- 이 클래스의 인터페이스는 JDK의 표준 라이브러리가 아니라 J2EE(Java Platform Enterprise Edition)라는 확장 라이브러리에 속한다.
+
+### 서블릿 클래스 작성하기
+- 서블릿 클래스는 javax.servlet.http.HttpServlet클래스를 상속받도록 만들어야 한다.
+- 서블릿 클래스는 public으로 만들어야 한다.
+- 웹 컨테이너(톰캣)가 서블릿 객체를 만들 때 이 접근 권한이 필요하기 때문이다.
+
+```java
+public class TestServlet extends HttpServlet{
+
+}
+```
+- 서블릿 안에 doGet() 또는 doPost() 를 선언해야 한다. 이 두 메서드는 javax.servlet.HttpServletRequest와 javax.servlet.http.HttpServletResponse 타입의 매개변수를 받아야 한다.
+
+```java
+public class TestServlet extends HttpServlet{
+	public void doGet(HttpServletRequest request, HttpServletResponse response) throws Exception{
+		....
+	}
+}
+```
+- 특정 HTTP요청(GET,POST)을 처리하는 메서드 (doGet(),doPost() 등)를 알아서 호출하는 service() 메서드를 사용해도 된다.
+
+### HttpServlet 클래스의 메서드
+|함수|설명|
+|---|----|
+|<b>void init()</b>|서블릿이 처음에 요청을 처리하기 전에 호출되며, 서블릿 초기화 작업을 수행한다.|
+|void doGet(ServletRequest req, ServletResponse res)|클라이언트로 부터 GET 요청을 받았을 때 호출|
+|void doPost(ServletRequest req, ServletResponse res)|클라이언트로 부터 POST 요청을 받았을 때 호출|
+|void doPut(ServletRequest req, ServletResponse res)|클라이언트로부터 PUT요청을 받았을 때 호출|
+|void doDelete(ServletRequest req, ServletResponse res)|클라이언트로부터 DELETE요청을 받았을 때 호출|
+|void doHead(ServletRequest req, ServletResponse res)|클라이언트로부터 HEAD요청을 받았을 때 호출|
+|void doOptions(ServletRequest req, ServletResponse res)|클라이언트로부터 OPTIONS 요청을 받았을 때 호출|
+|void Trace(ServletRequest req, ServletResponse res)|클라이언트로부터 TRACE 요청을 받았을 때 호출|
+|<b>void service(ServletRequest req, ServletResponse res)</b>|이 메서드는 각 요청에 대해 호출되며, 실제 서블릿이 요청하는 로직을 구현한다|
+|<b>void destroy()</b>|이 메서드는 서블릿이 종료될 때 호출되며, 서블릿이 사용한 자원을 정리하고 마무리 작업을 수행한다.|
+|getServletInfo()|이 메서드는 서블릿에 대한 정보를 반환한다.<br>일반적으로 서블릿의 버전, 작성자 등에 대한 정보를 제공하는 데 사용된다.|
+
+
 ### HelloServlet 클래스 생성하기
 ```java
 package com.korea.test3;
@@ -299,5 +339,11 @@ public class HelloServlet extends HttpServlet{
 		out.println("</body>");
 		out.println("</html>");
 	}
-
 ```
+
+### service()메서드가 request,response 객체를 받는 원리
+
+![image](image/HttpServlet.png)
+
+- 클라이언트에서 요청이 들어오면 톰캣이 HttpServletRequest, HttpServletResponse 객체를 생성한다.
+- service() 메서드의 매개변수로 사용한다.
