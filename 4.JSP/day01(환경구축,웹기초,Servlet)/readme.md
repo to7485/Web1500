@@ -118,7 +118,7 @@ File > New > Dynamic Web Project
 
 ## JSP 프로젝트 폴더 구조
 
-![image](image/webcontent.png)
+![image](image/project.png)
 
 - **webapp** : HTML(.html), JSP, Javascript(.js), CSS(.css) 및 이미지와 같은 파일들이 위치한다. 해당 위치에 놓이는 파일들은 웹 애플리케이션이 배치 될 떄 그대로 옮겨진다.
 
@@ -127,9 +127,9 @@ File > New > Dynamic Web Project
 - **WEB-INF/lib** : 애플리케이션 실행에 필요한 라이브러리 즉, jar 파일들을 모아두는 디렉토리이다. jar은 자바 아카이브 파일이란 의미로 java + ARchive의 합성어로 jar로 사용된다.
 
 
-- WebContent에서 HTML파일이 아닌 JSP파일을 만든다.
+- webapp에서 HTML파일이 아닌 JSP파일을 만든다.
 
-![image](https://user-images.githubusercontent.com/54658614/230703065-42ef6943-1e5a-4176-9a52-c54664c3706a.png)
+![image](image/makeJsp.png)
 
 <hr>
 
