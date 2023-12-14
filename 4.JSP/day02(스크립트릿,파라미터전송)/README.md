@@ -1,6 +1,7 @@
+# JSP
+- JavaServerPages의 약자로 HTML코드에서 JAVA코드를 사용하여 동적인 웹페이지(Dynamic Web Page)를 생성하는 라이브러리이다.
+- 
 
-
-HTML과는 별로 차이점이 없어보인다.
 
 ## 스크립트 태그
 ### 스크립트 태그의 종류

@@ -189,10 +189,14 @@ File > New > Dynamic Web Project
 
 # 서블릿(Servlet)
 - Servlet이란 자바를 기반으로 하는 웹 어플리케이션 프로그래밍 기술이다.
+- Servlet기술을 발전시킨것이 후에 배우게될 스프링이다.
+- 스프링은 실제로 Servlet을 이용하여 동작하기도 한다.
+- 자바 클래스 형태로 웹 애플리케이션을 작성하는데 그래서 .java가 확장자이다.
+- Java를 기반으로 HTML을 첨가해서 사용할 수 있다.
 
 ## Servlet의 역사
 - 자바(JAVA) 언어를 개발한 Sun에서 웹 개발을 위해 만들었다.
-- 그래서 자바 클래스 형태로 웹 애플리케이션을 작성하는데 그래서 .java가 확장자이다.
+
 - 그렇게 작성된 클래스를 서블릿 클래스라고 한다.
 - 서블릿(Servlet)은 JAVA 코드를 작성하고 나서 실행하면 클래스파일(.class)을 만들게 된다.
 - 서블릿의 단점은 JAVA코드가 한줄만 변경되어도 다시 처음부터 실행해야 한다.
@@ -207,7 +211,20 @@ File > New > Dynamic Web Project
 - 서블릿 기술에서 웹 어플리케이션을 구현하기 위해 작성해야 하는 코드는 'Servlet class'입니다.
 - 이 클래스는 클래스 상태 그대로 실행되는 것이 아니라 '서블릿'으로 만들어진 다음에 실행이된다.
 - 즉 서블릿은 서블릿 클래스로부터 만들어진 객체이다.
-- 하지만 모든 서블릿 객체가 서블릿이라고 할 수는 없다. 웹 컨테이너(톰캣)는 서블릿 클래스를 가지고 서블릿 객체를 만든 다음에 그 객체를 초기화 하여 웹 서비스를 할 수 있는 상태로 만드는데 이런 작업을 거친 서블릿 객체만 서블릿이라고 할 수 있다.
+- 하지만 모든 서블릿 객체가 서블릿이라고 할 수는 없다. 
+- 웹 컨테이너(톰캣)는 서블릿 클래스를 가지고 서블릿 객체를 만든 다음에 그 객체를 초기화 하여 웹 서비스를 할 수 있는 상태로 만드는데 이런 작업을 거친 서블릿 객체만 서블릿이라고 할 수 있다.
+
+## Servlet 클래스 실습
+### 서블릿 클래스를 작성할 때 지켜야할 규칙
+- Servlet class는 javax.servlet.http.HttpServlet 클래스를 상속하도록 만들어야 한다.
+- doGet() 또는 doPost() 메서드 안에 웹 브라우저로부터 요청이 왔을 때 해야 할 일을 기술해야 합니다.
+- HTML문서는 doGet, doPost() 의 두번째 파라미터를 이용해서 출력해야 한다.
+
+#### javax.servlet.HttpServlet클래스
+- javax.servlet.Servlet interface를 implements 한 클래스이다.
+- 이 클래스는 Servlet 인터페이스를 직접 구현하는 것이 아니라, 상위 클래스인 GenericServlet클래스를 통해 간접적으로 구현한다.
+
+![image](image/servlet2.png)
 
 ### HelloServlet 클래스 생성하기
 ```java
@@ -220,7 +237,9 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServlet;
 
+//@webServlet : mapping을 해주면 해당 주소가 브라우저에서 입력될 때 톰캣이 찾아서 실행해준다.
 @webServlet("/hello")
+
 //HttpServlet : 서블릿을 만들기 위해 반드시 상속해야할 필수 클래스
 public class HelloServlet extends HttpServlet{
 	
@@ -253,4 +272,32 @@ public class HelloServlet extends HttpServlet{
 ![image](image/servlet1.png)
 
 - 서블릿은 기본적으로 singleton pattern을 따른다.
+- 최초에 요청이 들어왔을 때 서블릿객체가 없으면 클래스를 로딩하고 객체를 생성한다.
+- init()메서들 통해 초기화를 한다.
+- service()메서드가 실행되고 응답을 한다.
+- 하지만 서블릿 객체가 이미 있다면 그 객체를 재활용한다.
 - 한개의 객체를 만들어놓고 재활용을 한다.
+
+### service() 메서드에 코드 추가하기
+```java
+@Override
+	public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException {
+		// 1. 입력
+		// 2. 처리
+		// 3. 출력
+		System.out.println("[HelloServlet] service() is called");
+
+		int total = 0;
+		for(int i = 1; i < 101; i++)
+			total += i;
+		
+		response.setContentType("text/html; charset=utf-8");
+		PrintWriter out = response.getWriter();
+		out.println("<html>");
+		out.println("<body>");
+		out.printf("1부터 100까지 합은 = %d", total);
+		out.println("</body>");
+		out.println("</html>");
+	}
+
+```
