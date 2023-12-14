@@ -1,10 +1,16 @@
 # JSP
 - JavaServerPages의 약자로 HTML코드에서 JAVA코드를 사용하여 동적인 웹페이지(Dynamic Web Page)를 생성하는 라이브러리이다.
-- 
+- JSP가 하나의 Java클래스이기 때문에 모든 Java라이브러리를 끌어다 쓸 수 있다.
 
+## JSP와 Servlet의 차이점
+|||장점|단점|형식|
+|---|---|----|----|
+|Servlet|복잡한 로직 구현에 적합함|Java코드 중심의 화면 작성 작업과 수정이 어려움| Java코드(주) + HTML코드|
+|JSP|HTML코드 중심 -> 화면작성 작업, 수정용이|소스보기로 소스가 공개되어 중요정보에 부적합|HTML코드(주) + Java코드|
 
-## 스크립트 태그
-### 스크립트 태그의 종류
+## JSP에서 Java코드를 넣는 방법
+
+## 스크립트 태그의 종류
 
 |스크립트 태그|형식|설명|
 |----|---|----------|
@@ -93,6 +99,60 @@
 </html>
 ```
 
+### JSP 내장객체
+- 내장객체란 스크립트릿(<% %>)안에서만 사용할 수 있는 객체로, 개발자가 별도로 생성하지 않아도 JSP에서 바로 생성할 수 있는 객체이다.
+- 컨테이너(톰캣)가 JSP를 Servlet으로 변환할 때 자동으로 객체가 생성된다.
+- service() 메서드의 local variable로 선언
+
+|기본객체 | 타입|설명|
+|-----|-----|----|
+|<b>request</b>|javax.servlet.http.HttpServletRequest|요청 정보가 담겨있는 객체|
+|<b>response</b>|javax.servlet.http.HttpServletResponse|요청에 응답을 작성할 때 사용|
+|<b>session</b>|javax.servlet.HttpSession|HTTP session을 구현한 객체. 세션 정보 저장에 사용|
+|<b>out</b>|javax.servlet.jsp.JspWriter|응답에 포함될 내용을 출력할 때 사용|
+|application|javax.servlet.ServletContext|Web Application 전체에서 공유하는 객체|
+|config|javax.servlet.ServletConfig|JSP 페이지에 대한 설정 정보가 담긴 객체|
+|page|java.lang.Object|JSP페이지 객체 자신|
+|pageContext|javax.servlet.jsp.PageContext|JSP페이지 constext정보를 제공|
+|exception|java.lang.Throwable|예외가 발생했을 때 생성되는 예외 객체|
+
+### scriptlet03.jsp
+```jsp
+<%@page import="java.util.Locale"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    
+<%	String ip = request.getRemoteAddr();
+	String userAgent = request.getHeader("User-Agent");
+	String method = request.getMethod();
+	Locale clientLocale = request.getLocale();
+	String language = clientLocale.getLanguage();
+	String country = clientLocale.getCountry();
+	
+	out.println("ip : " + ip + "<br>");
+	out.println("<hr>");
+	out.println("User Agent : " + userAgent + "<br>");
+	out.println("<hr>");
+	out.println("Method : " + method + "<br>");
+	out.println("<hr>");
+	out.println("language : " + language + "<br>");
+	out.println("<hr>");
+	out.println("country : " + country + "<br>");
+	out.println("<hr>");
+%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+</body>
+</html>
+```
+
+
 ### 표현문(expression)
 - <%= 와 %>를 사용하여 웹브라우저에 출력할 부분을 표현합니다.
 - 표현문 태그는 스크립트릿 태그에서 사용할 수 없으므로 이 경우에는 out.print()메서드를 사용해야 한다.
@@ -162,7 +222,7 @@
 |autoFlush|자동으로 출력 버퍼를 비우는 것을 제어<br><%@ page autoFlush="true" %>|true|
 |isThreadSafe|현재 JSP 페이지의 멀티스레드 허용 여부를 설정합니다.<br>true – JSP 페이지에 대해 수신된 여러 요청이 동시에 처리<br>false – JSP 페이지에 대한 요청이 순차적으로 처리<br><%@ page isThreadSafe="true" %>|true|
 |info|현재 JSP 페이지에 대한 설명을 설정합니다.(서블릿 인터페이스 getServletInfo() 메서드 사용)<br><%@ page info="Home Page JSP" %>||
-|errorPage|현재 JSP 페이지에 오류가 발생했을 때 보여줄 오류페이지를 설정합니다.<br><%@ page errorPage="MyErrorPage.jsp" %>||
+|**errorPage**|현재 JSP 페이지에 오류가 발생했을 때 보여줄 오류페이지를 설정합니다.<br><%@ page errorPage="MyErrorPage.jsp" %>||
 |isErrorPage|현재 JSP 페이지가 오류 페이지인지 여부를 설정합니다.<br>true로 설정하면 내장 객체인 exception 변수를 사용할 수 있습니다.<br><%@ page isErrorPage="true" %>|false|
 |isELIgnored|현재 JSP 페이지의 표현언어(EL) 지원 여부를 설정합니다.<br><%@ isELIgnored="true" %>|false|
 |isScriptingEnabled|현재 JSP 페이지의 스크립트 태그(선언문, 스크립틀릿, 표현문) 사용 여부를 설정합니다.<br><%@ page isScriptingEnabled="false" %>||
@@ -239,10 +299,11 @@ taglib 디렉티브 태그는 현재 JSP 페이지에 표현언어, JSTL, 사용
 
 >JSTL 태그<br>일반적으로 웹 애플리케이션에서 쉽게 접할 수 있는 것은 JSTL 태그 라이브러리이다. 유용한 JSP 태그의 모음인 JSTL은 자주 사용되는 핵심 기능을 제공한다. 반복문, 조건문과 같은 논리적 구조 작업. XML 문서 조작, 국제화 태그 조작, SQL 조작 수행을 위한 태그 등을 지원한다.<br><br>STL을 사용하려면 WebContent/WEB-INF/lib/ 태그 디렉터리의 위치에 jstl.jar 라이브러리 파일이 있어야 합니다. 이 파일은 Apache Standard Taglib 페이지에서 다운로드할 수 있다.
 
-### first.jsp
+### hellojsp.jsp
 
 ```jsp
 기본적으로 갖고 있어야 하는 정보들이 기입이 되어있다. 
+
 <%@page import="java.util.Random"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
@@ -254,6 +315,7 @@ taglib 디렉티브 태그는 현재 JSP 페이지에 표현언어, JSTL, 사용
 	//스크립트릿(Scriptlet) : jsp에서 자바코드를 사용하기 위해 지정하는 영역
 	//request(요청처리객체),response(응답처리객체) 등의 객체는
 	//Servlet클래스가 가진 객체이다.
+
 	//jsp가 servlet으로 변환되는 과정에서 service()메서드의 지역변수로
 	//선언되므로 jsp에서 따로 선언하지 않고 사용할 수 있는 것이다.
 	
@@ -262,6 +324,10 @@ taglib 디렉티브 태그는 현재 JSP 페이지에 표현언어, JSTL, 사용
 	//난수만들기
 	Random rnd = new Random();//헤더파일에 Random클래스에 import 필수
 	int num = rnd.nextInt(5) + 1;
+
+	int a = 10;
+	int b = 7;
+	int c = 30;
 %>
     
 <!DOCTYPE html>
@@ -281,9 +347,6 @@ taglib 디렉티브 태그는 현재 JSP 페이지에 표현언어, JSTL, 사용
 </html>
 ```
 ![image](image/jsp1.png)
-
-- JSP에도 BODY부분이 있기 때문에 웹으로 출력이 될텐데 바로 출력이 될 수는 없다.
-- 중간에 SERVLET이라는 클래스를 거친다.
 
 ## JSP의 작동 원리
 1. Client가 web browser로 JSP페이지를 요청한다.
@@ -359,22 +422,6 @@ public abstract class HttpJspBase extends HttpServlet implements HttpJspPage {
         throws ServletException, IOException;
 }
 ```
-
-### JSP의 기본 객체
-- 생성없이 사용할 수 있는 객체
-- service() 메서드의 local variable로 선언
-
-|기본객체 | 타입|설명|
-|-----|-----|----|
-|<b>request</b>|javax.servlet.http.HttpServletRequest|요청 정보가 담겨있는 객체|
-|<b>response</b>|javax.servlet.http.HttpServletResponse|요청에 응답을 작성할 때 사용|
-|<b>session</b>|javax.servlet.HttpSession|HTTP session을 구현한 객체. 세션 정보 저장에 사용|
-|<b>out</b>|javax.servlet.jsp.JspWriter|응답에 포함될 내용을 출력할 때 사용|
-|application|javax.servlet.ServletContext|Web Application 전체에서 공유하는 객체|
-|config|javax.servlet.ServletConfig|JSP 페이지에 대한 설정 정보가 담긴 객체|
-|page|java.lang.Object|JSP페이지 객체 자신|
-|pageContext|javax.servlet.jsp.PageContext|JSP페이지 constext정보를 제공|
-|exception|java.lang.Throwable|예외가 발생했을 때 생성되는 예외 객체|
 
 ### 컴파일된 파일의 위치
 - work\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\work\Catalina\localhost\Test\org\apache\jsp
@@ -556,6 +603,8 @@ public final class hello_jsp extends org.apache.jasper.runtime.HttpJspBase
 }
 
 ```
+
+## 다른 페이지로 데이터 전송하기
 
 ### parameter.jsp 만들기
 - jsp는 어떻게 사용을 해야할까?

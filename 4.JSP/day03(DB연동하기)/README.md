@@ -1,7 +1,5 @@
 # Ex_날짜_DB 프로젝트 생성하기
 
-
-
 ## JDBC로 이클립스와 오라클DB 연동하기
 - 프로젝트를 생성한 후 WebContent의 META-INF에 context.xml(실행시 최초로 호출되는 설정파일)을, WEB-INF lib폴더에 준비된 4개의 라이브러리를 넣는다.
 

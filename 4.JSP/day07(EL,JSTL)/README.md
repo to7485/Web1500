@@ -34,7 +34,7 @@ ${RESULT + 101}
 ${RESULT}   // 애트리뷰트 이름 
 ```
 
-- 서블릿과 JSP 기술에서 사용할 수 있는 setAttribute, getAttribute, removeAttribute 메서드는 4세트가 있고 그래서 애트리뷰트 종류도 네가지 입니다.
+- 서블릿과 JSP 기술에서 사용할 수 있는 setAttribute, getAttribute, removeAttribute 메서드는 4세트가 있고 그래서 영역객체의 종류도 네가지 입니다.
 - JSP 페이지에서는 이런 메서드를 호출할 떄 각각 pageContext, request, session, application 내장 객체를 사용합니다.
 
 ### 4대 영역객체
@@ -46,22 +46,22 @@ ${RESULT}   // 애트리뷰트 이름
 |session|n개 JSP페이지|session의 시작부터 종료까지(로그인~로그아웃).클라이언트마다 1개|
 |application|context 전체|Web Application의 시작부터 종료까지. context내부 어디서나 접근 가능. 모든 클라이언트가 공유. context마다 1개|
 
-|속성 관련 메서드|설명|
+|객체 관련 메서드|설명|
 |---------|------|
-|void setAttribute(String name, Object value) | 지정된 값(value)을 지정된 속성 이름(name)으로 저장|
-|Object getAttribue(String name)|저장된 이름(name)으로 저장된 속성의 값을 반환|
-|void removeAttribute(String name)|지정된 이름(name)의 속성을 삭제|
-|Enumeration getAttributeNames()|기본 객체에 저장된 모든 속성의 이름을 반환|
+|void setAttribute(String name, Object value) | 지정된 값(value)을 지정된 이름(name)으로 저장|
+|Object getAttribue(String name)|저장된 이름(name)으로 저장된 값(value)을 반환|
+|void removeAttribute(String name)|지정된 이름(name)의 값(value)을 삭제|
+|Enumeration getAttributeNames()|해당 영역객체에 저장된 모든 값(value)의 이름(name)을 반환|
 
 ### EL 식 안에 있는 데이터 이름이 해석되는 순서
-page 애트리뷰트 -> request 애트리뷰트 -> session 애트리뷰트 -> application 애트리뷰트
+page 영역 -> request 영역 -> session 영역 -> application 영역
 
-- 그런데 어떤 경우에는 이 순서에 상관없이 특정한 종류의 애트리뷰트를 꼭 집어서 출력하고 싶을 때도 있을 것입니다.
+- 그런데 어떤 경우에는 이 순서에 상관없이 특정한 종류의 영역을 꼭 집어서 출력하고 싶을 때도 있을 것입니다.
 - 그럴 때는 데이터 이름 앞에 그 데이터 영역에 해당하는 pageScope, requestScope, sessionScope, applicationScope라는 단어를 다음과 같이 표시하시면 됩니다.
-	- ${pageScope.SUM} : page 애트리뷰트임을 표시
-	- ${requestScope.RESULT} : request 애트리뷰트임을 표시
-	- ${sessionScope.CART} : session 애트리뷰트임을 표시
-	- ${applicationScope.DB_NAME} : application 애트리뷰트임을 표시 
+	- ${pageScope.SUM} : page 영역을 표시
+	- ${requestScope.RESULT} : request 영역을 표시
+	- ${sessionScope.CART} : session 영역을 표시
+	- ${applicationScope.DB_NAME} : application 영역을 표시 
 	
 - 위 EL 식에서 사용된 pageScope, requestScope, sessionScope, applicationScope라는 이름은 익스프레션 언어의 내장 객체 이름입니다.
 
