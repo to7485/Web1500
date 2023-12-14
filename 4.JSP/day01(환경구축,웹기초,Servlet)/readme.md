@@ -265,6 +265,13 @@ public class TestServlet extends HttpServlet{
 |<b>void destroy()</b>|이 메서드는 서블릿이 종료될 때 호출되며, 서블릿이 사용한 자원을 정리하고 마무리 작업을 수행한다.|
 |getServletInfo()|이 메서드는 서블릿에 대한 정보를 반환한다.<br>일반적으로 서블릿의 버전, 작성자 등에 대한 정보를 제공하는 데 사용된다.|
 
+### request,response 객체를 받는 원리
+
+![image](image/HttpServlet.png)
+
+- 클라이언트에서 요청이 들어오면 톰캣이 HttpServletRequest, HttpServletResponse 객체를 생성한다.
+- service() 메서드의 매개변수로 사용한다.
+
 
 ### HelloServlet 클래스 생성하기
 ```java
@@ -319,6 +326,7 @@ public class HelloServlet extends HttpServlet{
 - 한개의 객체를 만들어놓고 재활용을 한다.
 
 ### service() 메서드에 코드 추가하기
+
 ```java
 @Override
 	public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException {
@@ -340,10 +348,10 @@ public class HelloServlet extends HttpServlet{
 		out.println("</html>");
 	}
 ```
-
-### service()메서드가 request,response 객체를 받는 원리
-
-![image](image/HttpServlet.png)
-
-- 클라이언트에서 요청이 들어오면 톰캣이 HttpServletRequest, HttpServletResponse 객체를 생성한다.
-- service() 메서드의 매개변수로 사용한다.
+- 클라이언트로부터 Servlet으로 요청이 들어오면 request를 파악한 후 response를 전달한다.
+- Servlet으로 들어온 요청 텍스트(HTML)형태로 응답을 보내려면 출력 스트림을 얻어내야 한다.
+- response의 getWriter()메서드를 호출하였다.
+- getWriter()는 java.io의 PrinterWriter클래스 타입을 반환한다.
+- ### PrintWriter
+  - int,float,double,String 또는 Object와 같은 모든 형태의 데이터를 콘솔이나 Java파일에 텍스트 형식으로 쓰는데 사용되는 클래스
+- getWriter() 메서드를 통해 응답으로 내보낼 출력 스트림을 얻어낸 후 print("HTML 태그")형태로 작성하여 스트림에 텍스트를 기록한다.
