@@ -59,60 +59,6 @@
 </body>
 </html>
 ```
-
-### JSP 내장객체
-- 내장객체란 스크립트릿(<% %>)안에서만 사용할 수 있는 객체로, 개발자가 별도로 생성하지 않아도 JSP에서 바로 생성할 수 있는 객체이다.
-- 컨테이너(톰캣)가 JSP를 Servlet으로 변환할 때 자동으로 객체가 생성된다.
-- service() 메서드의 local variable로 선언
-
-|기본객체 | 타입|설명|
-|-----|-----|----|
-|<b>request</b>|javax.servlet.http.HttpServletRequest|요청 정보가 담겨있는 객체|
-|<b>response</b>|javax.servlet.http.HttpServletResponse|요청에 응답을 작성할 때 사용|
-|<b>session</b>|javax.servlet.HttpSession|HTTP session을 구현한 객체. 세션 정보 저장에 사용|
-|<b>out</b>|javax.servlet.jsp.JspWriter|응답에 포함될 내용을 출력할 때 사용|
-|application|javax.servlet.ServletContext|Web Application 전체에서 공유하는 객체|
-|config|javax.servlet.ServletConfig|JSP 페이지에 대한 설정 정보가 담긴 객체|
-|page|java.lang.Object|JSP페이지 객체 자신|
-|pageContext|javax.servlet.jsp.PageContext|JSP페이지 constext정보를 제공|
-|exception|java.lang.Throwable|예외가 발생했을 때 생성되는 예외 객체|
-
-### scriptlet03.jsp
-```jsp
-<%@page import="java.util.Locale"%>
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-    
-<%	String ip = request.getRemoteAddr();
-	String userAgent = request.getHeader("User-Agent");
-	String method = request.getMethod();
-	Locale clientLocale = request.getLocale();
-	String language = clientLocale.getLanguage();
-	String country = clientLocale.getCountry();
-	
-	out.println("ip : " + ip + "<br>");
-	out.println("<hr>");
-	out.println("User Agent : " + userAgent + "<br>");
-	out.println("<hr>");
-	out.println("Method : " + method + "<br>");
-	out.println("<hr>");
-	out.println("language : " + language + "<br>");
-	out.println("<hr>");
-	out.println("country : " + country + "<br>");
-	out.println("<hr>");
-%>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
-
-</body>
-</html>
-```
-
 ### 선언문(declaration)
 - 선언문(declaration)태그는 변수나 메서드 등을 선언하는 태그
 - 선언문 태그에 선언된 변수와 메서드는 서블릿 프로그램으로 번역될 때 _jspService() 메서드 외부에 배치되므로 JSP 페이지의 임의의 위치에서 선언할 수 있습니다.
@@ -340,7 +286,7 @@ taglib 디렉티브 태그는 현재 JSP 페이지에 표현언어, JSTL, 사용
 - include 액션 태그는 include 디렉티브 태그처럼 JSP 페이지의 특정 영역에 외부 파일의 내용을 포함하는 태그
 - JSP 페이지에 포함할 수 있는 외부파일은 HTML, JSP, 서블릿 페이지 등입니다.
 ```
-<jsp:include page=“파일명” flush=“false” />
+<jsp:include page="파일명" flush="false" />
 ```
 - flush 속성 값은 설정한 외부 파일로 제어가 이동할 때 현재 JSP 페이지가 지금까지 출력 버퍼에 저장한 결과를 처리합니다. 기본 값은 false이고, true로 설정하면 외부 파일로 제어가 이동할 때 현재 JSP 페이지가 지금까지 출력 버퍼에 저장된 내용을 웹 브라우저에 출력하고 출력 버퍼를 비웁니다.
 - include 액션 태그는 forward 액션 태그처럼 외부 파일을 포함한다는 점이 비슷하지만 포함된 외부 파일이 실행된 후 현재 JSP 페이지로 제어를 반환한다는 것이 가장 큰 차이점
@@ -382,6 +328,290 @@ taglib 디렉티브 태그는 현재 JSP 페이지에 표현언어, JSTL, 사용
 <body>
 	<p>오늘의 날짜 및 시각</p>
 	<p><%=(new java.util.Date()).toLocaleString()%></p>
+</body>
+</html>
+```
+
+### JSP 내장객체
+- 내장객체란 스크립트릿(<% %>)안에서만 사용할 수 있는 객체로, 개발자가 별도로 생성하지 않아도 JSP에서 바로 생성할 수 있는 객체이다.
+- 컨테이너(톰캣)가 JSP를 Servlet으로 변환할 때 자동으로 객체가 생성된다.
+- JSP페이지에 별도로 import문 없이 자유롭게 사용할 수 있다.
+- service() 메서드의 local variable로 선언
+
+|기본객체 | 타입|설명|
+|-----|-----|----|
+|<b>request</b>|javax.servlet.http.HttpServletRequest|요청 정보가 담겨있는 객체|
+|<b>response</b>|javax.servlet.http.HttpServletResponse|요청에 응답을 작성할 때 사용|
+|<b>session</b>|javax.servlet.HttpSession|HTTP session을 구현한 객체. 세션 정보 저장에 사용|
+|<b>out</b>|javax.servlet.jsp.JspWriter|응답에 포함될 내용을 출력할 때 사용|
+|application|javax.servlet.ServletContext|Web Application 전체에서 공유하는 객체|
+|config|javax.servlet.ServletConfig|JSP 페이지에 대한 설정 정보가 담긴 객체|
+|page|java.lang.Object|JSP페이지 객체 자신|
+|pageContext|javax.servlet.jsp.PageContext|JSP페이지 constext정보를 제공|
+|exception|java.lang.Throwable|예외가 발생했을 때 생성되는 예외 객체|
+
+### request 내장 객체의 기능과 사용법
+- JSP 페이지에서 가장 많이 사용되는 기본 내장 객체
+- 웹 브라우저에서 서버의 JSP페이지로 전달하는 정보를 저장
+- JSP컨테이너는 웹브라우저에서 서버로 전달되는 정보를 처리하기 위해 javax.servlet.http.HttpServletRequest 객체 타입의 request 내장객체를 사용
+
+### 요청 파라미터 관련 메서드 종류 
+
+|요청파라미터 관련 메서드|반환유형|설명|
+|-------|-----|--------|
+|getParameter(String name)|String|요청 파라미터 이름이 name인 값을 전달받습니다. 요청 파라미터 값이 없으면 null 값을 반환합니다.|
+|getParameterValues(String name)|String[]|모든 요청 파라미터 이름이 name인 값을 배열 형태로 전달받습니다. 요청 파라미터 값이 없으면 null 값을 반환합니다.|
+|getParameterNames()|java.util.Enumeration|모든 요청 파라미터의 이름과 값을 Enumeration 객체 타입으로 전달받습니다.|
+|getParameterMap()|java.util.Map|모든 요청 파라미터 이름과 값을 Map 객체 타입으로 전달받습니다.|
+
+### request01.jsp
+```jsp
+<%@ page contentType="text/html; charset=utf-8"%>
+<html>
+<head>
+<title>Implicit Objects</title>
+</head>
+<body>
+	<form action="request01_process.jsp" method="post">
+		<p>	아 이 디 : <input type="text" name="id">
+		<p>	비밀번호 : <input type="text" name="passwd">
+		<p>	<input type="submit" value="전송" />
+	</form>
+</body>
+</html>
+```
+### request01_process.jsp
+```jsp
+<%@ page contentType="text/html; charset=utf-8"%>
+<html>
+<head>
+<title>Implicit Objects</title>
+</head>
+<body>
+	<%
+		request.setCharacterEncoding("utf-8");
+		String userid = request.getParameter("id");
+		String password = request.getParameter("passwd");
+	%>
+	<p>	아이디 : <%=userid%>
+	<p>	비밀번호 : <%=password%>
+</body>
+</html>
+```
+
+#### 요청 HTTP 헤더 관련 메서드
+|요청HTTP헤더 관련 메서드|반환유형|설명|
+|-------|-----|--------|
+|getHeader(String name)|String|설정한 name의 헤더 값을 가져옵니다.|
+|getHeaders(String name)|Enumeration|설정한 name의 헤더 목록 값을 가져옵니다.|
+|getHeaderNames()|Enumeration|모든 헤더 이름을 가져옵니다.|
+|getIntHeader(String name)|int|설정한 name의 헤더 값을 정수로 가져옵니다.|
+|getDateHeader(String name)|long|설정한 name의 헤더 값을 시간 값으로 가져옵니다.|
+|getCookies()|javax.servlet.http.Cookie|모든 쿠키 값을 가져옵니다.|
+
+### request02.jsp
+```jsp
+<%@ page import="java.util.Enumeration" %>
+<html>
+<body>
+<%
+	Enumeration<String> en = request.getHeaderNames();
+	while(en.hasMoreElements()) {
+		String headerName = en.nextElement();
+		String headerValue = request.getHeader(headerName);
+		out.println(headerName + " : " + headerValue + "<br>");
+	}
+%>
+</body>
+</html>
+```
+
+#### 웹브라우저/서버 관련 메서드
+|웹브라우저/서버 관련 메서드|반환유형|설명|
+|-------|-----|--------|
+|getRemoteAddr()|String|웹브라우저의 IP 주소를 가져옵니다.|
+|getContentLength()|long|웹브라우저의 요청 파라미터 길이를 가져옵니다.|
+|getCharacterEncoding()|String|웹브라우저의 문자 인코딩을 가져옵니다.|
+|getContentType()|String|웹브라우저의 콘텐츠 유형을 가져옵니다.|
+|getProtocol()|String|웹브라우저의 요청 프로토콜을 가져옵니다.|
+|getMethod()|String|웹브라우저의 HTTP요청 메서드(GET, POST)를 가져옵니다.|
+|getRequestURI()|String|웹브라우저가 요청한 URI 경로를 가져옵니다.|
+|getContextPath()|String|현재 JSP 페이지의 웹 애플리케이션 콘텍스트 경로를 가져옵니다.|
+|getServerName()|String|서버 이름을 가져옵니다.|
+|getServerPort()|int|실행 중인 서버 포트 번호를 가져옵니다.|
+|getQueryString()|String|웹브라우저의 전체 요청 파라미터 문자열[물음표(?) 다음 URL에 할당된 문자열]을 가져옵니다.|
+
+### request03.jsp
+```jsp
+<%@ page contentType="text/html; charset=utf-8" %>
+<html>
+<body>
+	클라이언트 IP : <%=request.getRemoteAddr()%><br>
+	요청 정보 길이 : <%=request.getContentLength()%><br>
+	요청 정보 인코딩 : <%=request.getCharacterEncoding() %><br>
+	요청 정보 콘텐츠 유형 : <%=request.getContentType() %><br>
+	요청 정보 프로토콜 : <%=request.getProtocol() %><br>
+	요청 정보 전송방식 : <%=request.getMethod() %><br>
+	요청 URI : <%=request.getRequestURI() %><br>
+	콘텍스트 경로 : <%=request.getContextPath() %><br>
+	서버 이름 : <%=request.getServerName() %><br>
+	서버 포트 : <%=request.getServerPort() %><br>
+        쿼리문 : <%=request.getQueryString() %>
+</body>
+</html>
+```
+
+### response 내장 객체의 기능과 사용법 
+- response 내장 객체는 사용자의 요청을 처리한 결과를 서버에서 웹 브라우저로 전달하는 정보를 저장
+- 서버는 응답 헤어와 요청 처리 결과 데이터를 웹 브라우저로 보냅니다.
+- JSP 컨테이너는 서버에서 웹 브라우저로 응답하는 정보를 처리하기 위해 javax.servlet.http.HttpServletResponse 객체 타입의 response 내장 객체를 사용
+
+### 페이지 이동 관련 메서드
+|페이지 이동 관련 메서드|반환유형|설명|
+|------|-----|--------|
+|sendRedirect(String url)|void|설정한 URL 페이지로 강제 이동합니다.|
+
+### 페이지 이동 방법
+- 포워드(forward) 방식<br>
+현재 JSP 페이지에서 이동할 URL 로 요청 정보를 그대로 전달하므로 사용자가 최초로 요청한 정보가 이동된 URL에서도 유효합니다. 그러나 이동된 URL이 웹브라우저의 주소 창에 나타나지 않고 처음 요청한 URL이 나타나기 때문에 이동 여부를 사용자가 알 수 없습니다.<br>
+**<jsp:forward page="이동할 페이지" />**
+
+
+- 리다이렉트(redirect) 방식<br>
+처음 요청받은 현재 JSP 페이지로부터 이동할 URL을 웹브라우저로 반환합니다. 이때 웹 브라우저에서는 새로운 요청을 생성하여 이동할 URL에 다시 요청을 전송하므로 처음 보낸 요청 정보가 이동된 URL에서는 유효하지 않습니다. 즉, 클라이언트가 새로 페이지를 요청한 것과 같은 방식으로 페이지가 이동합니다. 따라서 이동된 URL이 웹 브라우저의 주소창에 보이는 것입니다.<br>
+**response.sendRedirect("이동할 페이지")**
+
+### response01.jsp
+```jsp
+<%@ page contentType="text/html; charset=utf-8"%>
+<html>
+<head>
+<title>Implicit Objects</title>
+</head>
+<body>
+	<form action="response01_process.jsp" method="post">
+		<p>	아 이 디 : <input type="text" name="id">
+		<p>	비밀번호 : <input type="text" name="passwd">
+		<p>	<input type="submit" value="전송">
+	</form>
+</body>
+</html>
+```
+
+### response01_process.jsp
+```jsp
+<%@ page contentType="text/html; charset=utf-8"%>
+<html>
+<head>
+<title>Implicit Objects</title>
+</head>
+<body>
+	<%
+		request.setCharacterEncoding("utf-8");
+		String userid = request.getParameter("id");
+		String password = request.getParameter("passwd");
+
+		if (userid.equals("관리자") && password.equals("1234")) {
+			response.sendRedirect("response01_success.jsp");
+		} else {
+			response.sendRedirect("response01_failed.jsp");
+		}
+	%>
+</body>
+</html>
+```
+
+#### day04/response01_success.jsp
+```jsp
+<%@ page contentType="text/html; charset=utf-8"%>
+<html>
+<head>
+<title>Implicit Objects</title>
+</head>
+<body>
+	로그인을 성공했습니다!!
+</body>
+</html>
+```
+
+#### day04/response01_failed.jsp
+```jsp
+<%@ page contentType="text/html; charset=utf-8"%>
+<html>
+<head>
+<title>Implicit Objects</title>
+</head>
+<body>
+	<p>로그인을 실패했습니다.
+	<p><a href="./response01.jsp"> 로그인가기</a>
+</body>
+</html>
+```
+
+### 응답 HTTP 헤더 관련 메서드
+- 응답 HTTP 헤더 관련 메서드는 서버가 웹 브라우저에 응답하는 정보에 헤더를 추가하는 기능을 제공
+- 헤더 정보에는 주로 서버에 대한 정보가 저장되어 있습니다.
+
+|응답 HTTP 헤더 관련 메서드|반환유형|설명|
+|-------|-----|--------|
+|addCookie(Cookie cookie)|void|쿠키를 추가합니다.|
+|addDateHeader(String name, long date)|void|설정한 헤더 이름 name에 날짜/시간을 추가합니다.|
+|addHeader(String name String value)|void|설정한 헤더 이름 name에 value를 추가합니다.|
+|addIntHeader(String name, int value)|void|설정한 헤더 이름 name에 정수 값 value를 추가|
+|setDateHeader(String name, long date)|void|설정한 헤더 이름 name에 날짜/시간을 설정|
+|setHeader(String name, String value)|void|설정한 헤더 이름 name에 문자열 값 value 설정|
+|setIntHeader(String name, int value)|void|설정한 헤더 이름 name에 정수 값 value를 설정|
+|containsHeader(String name)|boolean|설정한 헤더 이름 name이 HTTP 헤더에 포함되었는지 여부를 확인|
+|getHeader(String name)|String|설정한 헤더 이름 name 값을 가져옵니다.|
+
+### response02.jsp
+```jsp
+<%@ page contentType="text/html; charset=utf-8" %>
+<html>
+<body>
+	이 페이지는 5초마다 새로고침 됩니다.<br>
+	<%
+		response.setIntHeader("Refresh", 5);
+	%>
+	<%=java.util.Calendar.getInstance().getTime()%>
+</body>
+</html>
+```
+
+### 응답 콘텐츠 관련 메서드 
+|응답 콘텐츠 관련 메서드|반환유형|설명|
+|-------|-----|--------|
+|setContentType(String type)|void|웹브라우저에 응답할 MIME 유형을 설정합니다.|
+|getContentType()|String|웹브라우저에 응답할 MIME 유형을 가져옵니다.|
+|setCharacterEncoding(String charset)|void|웹브라우저에 응답할 문자 인코딩을 설정합니다.|
+|getCharacterEncoding()|String|웹브라우저에 응답할 문자 인코딩을 가져옵니다.|
+|sendError(int status_code, String message)|void|웹브아루저에 응답할 오류(코드 및 오류메세지)를 설정|
+|setStatus(int statuscode)|void|웹브라우저에 응답할 HTTP 코드를 설정합니다.|
+
+### response03.jsp
+```jsp
+<%@ page contentType="text/html; charset=utf-8" %>
+<html>
+<body>
+	<%
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("text/html; charset=utf-8");
+	%>
+	문자 인코딩 : <%=response.getCharacterEncoding()%><br>
+	콘텐츠 유형 : <%=response.getContentType()%>
+</body>
+</html>
+```
+
+
+#### day04/response03.jsp
+```
+<%@ page contentType="text/html; charset=utf-8"%>
+<html>
+<body>
+	<%
+		response.sendError(404, "요청 페이지를 찾을 수 없습니다.");
+	%>
 </body>
 </html>
 ```
@@ -762,11 +992,9 @@ public final class hello_jsp extends org.apache.jasper.runtime.HttpJspBase
 
 <%-- jsp주석(보안성이 좋다) : jsp주석은 컴파일시에 자바코드로 전환되지 않는다. --%>
 
-<!-- 
-jsp를 실행한 후 웹페이지에서 우측클릭 -> 소스보기를 통해서 확인해보면 두 주석의 차이점을 알 수 있다. 그러므로 id:a123 / pwd:asdf 와 같이 html주석에 중요한 정보를 담아놓으면 안된다 -->
-
-
-
+<!-- jsp를 실행한 후 웹페이지에서 우측클릭
+소스보기를 통해서 확인해보면 두 주석의 차이점을 알 수 있다.
+그러므로 id:a123 / pwd:asdf 와 같이 html주석에 중요한 정보를 담아놓으면 안된다 -->
 <body>
 
 	구구단
