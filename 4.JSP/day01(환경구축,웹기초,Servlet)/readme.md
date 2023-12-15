@@ -352,6 +352,7 @@ public class HelloServlet extends HttpServlet{
 - Servlet으로 들어온 요청 텍스트(HTML)형태로 응답을 보내려면 출력 스트림을 얻어내야 한다.
 - response의 getWriter()메서드를 호출하였다.
 - getWriter()는 java.io의 PrinterWriter클래스 타입을 반환한다.
+
 - ### PrintWriter
   - int,float,double,String 또는 Object와 같은 모든 형태의 데이터를 콘솔이나 Java파일에 텍스트 형식으로 쓰는데 사용되는 클래스
 - getWriter() 메서드를 통해 응답으로 내보낼 출력 스트림을 얻어낸 후 print("HTML 태그")형태로 작성하여 스트림에 텍스트를 기록한다.
