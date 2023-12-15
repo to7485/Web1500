@@ -426,7 +426,7 @@ taglib 디렉티브 태그는 현재 JSP 페이지에 표현언어, JSTL, 사용
 </html>
 ```
 
-#### 웹브라우저/서버 관련 메서드
+### 웹브라우저/서버 관련 메서드
 |웹브라우저/서버 관련 메서드|반환유형|설명|
 |-------|-----|--------|
 |getRemoteAddr()|String|웹브라우저의 IP 주소를 가져옵니다.|
@@ -583,7 +583,7 @@ taglib 디렉티브 태그는 현재 JSP 페이지에 표현언어, JSTL, 사용
 |-------|-----|--------|
 |setContentType(String type)|void|웹브라우저에 응답할 MIME 유형을 설정합니다.|
 |getContentType()|String|웹브라우저에 응답할 MIME 유형을 가져옵니다.|
-|setCharacterEncoding(String charset)|void|웹브라우저에 응답할 문자 인코딩을 설정합니다.|
+|**setCharacterEncoding(String charset)**|void|웹브라우저에 응답할 문자 인코딩을 설정합니다.|
 |getCharacterEncoding()|String|웹브라우저에 응답할 문자 인코딩을 가져옵니다.|
 |sendError(int status_code, String message)|void|웹브아루저에 응답할 오류(코드 및 오류메세지)를 설정|
 |setStatus(int statuscode)|void|웹브라우저에 응답할 HTTP 코드를 설정합니다.|
@@ -604,8 +604,8 @@ taglib 디렉티브 태그는 현재 JSP 페이지에 표현언어, JSTL, 사용
 ```
 
 
-#### day04/response03.jsp
-```
+#### response03.jsp
+```jsp
 <%@ page contentType="text/html; charset=utf-8"%>
 <html>
 <body>
@@ -615,6 +615,75 @@ taglib 디렉티브 태그는 현재 JSP 페이지에 표현언어, JSTL, 사용
 </body>
 </html>
 ```
+
+### out 내장 객체 메서드의 종류
+
+|out 내장 객체 메서드|반환유형|설명|
+|-------|-----|---------|
+|**print(String str)**|void|설정된 str 값을 웹브라우저에 출력합니다.|
+|**println(String str)**|void|설정된 str 값을 웹 브라우저에 출력합니다. 이때 줄바꿈(\r\n 또는 \n)이 적용됩니다.|
+|newLine()|void|줄바꿈(\r\n 또는 \n)을 출력합니다.|
+|getBufferSize()|int|현재 출력 버퍼의 크기를 가져옵니다.|
+|getRemaining()|int|현재 남아 있는 출력 버퍼의 크기를 가져옵니다.|
+|clear()|void|현재 출력 버퍼에 저장되어 있는 내용을 웹브라우저에 전송하지 않고 비웁니다. 만약 버퍼가 이미 플러쉬되었다면 IOException이 발생합니다.|
+|clearBuffer()|void|현재 출력 버퍼에 저장되어 있는 내용을 웹브라우저에 전송하지 않고 비웁니다. 만약 버퍼가 이미 플러쉬되었다면 IOException이 발생하지 않습니다.|
+|flush()|void|현재 출력 버퍼에 저장되어 있는 내용을 웹브라우저에 전송하고 비웁니다.|
+|isAutoFlush()|boolean|출력버퍼가 채워졌을 때의 처리를 결정합니다. 자동으로 플러쉬하는 경우 true를 반환하고, 그렇지 않은 경우 false를 반환|
+
+
+
+### out01.jsp
+```jsp
+<%@ page contentType="text/html; charset=utf-8"%>
+<html>
+<head>
+<title>Implicit Objects</title>
+</head>
+<body>
+	<%
+		out.println("오늘의 날짜 및 시각 " + "<br>");		
+		out.println(java.util.Calendar.getInstance().getTime());
+	%>
+</body>
+</html>
+```
+
+### out02.jsp
+```jsp
+<%@ page contentType="text/html; charset=utf-8"%>
+<html>
+<head>
+<title>Implicit Objects</title>
+</head>
+<body>
+	<form action="out02_process.jsp" method="post">
+		<p> 아 이 디 : <input type="text" name="id">
+		<p>	비밀번호 : <input type="text" name="passwd">
+		<p>	<input type="submit" value="전송" />
+	</form>
+</body>
+</html>
+```
+
+### out02_process.jsp
+```jsp
+<%@ page contentType="text/html; charset=utf-8"%>
+<html>
+<head>
+<title>Implicit Objects</title>
+</head>
+<body>
+	<%
+		request.setCharacterEncoding("utf-8");
+		String userid = request.getParameter("id");
+		String password = request.getParameter("passwd");
+	%>
+	<p>	아 이 디 : <% out.println(userid); %>
+	<p>	비밀번호 : <% out.println(password); %>	
+</body>
+</html>
+```
+
 
 ### hellojsp.jsp
 
