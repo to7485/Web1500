@@ -10,6 +10,9 @@
 
 - commons-dbcp-1.2.1.jar 
   - Database connection pooling 서비스 제공  데이타소스를 org.apache.commons.dbcp.BasicDataSource를 사용
+  - dbcp를 사용하지 않았을 때의 문제점
+    - 매번 Connection을 열고 닫는 시간적 비용 발생
+    - 서비스 성능에 좋지 않다.
 
 - commons-pool-1.4.jar
   - 데이터베이스와 연결된 커넥션을 미리 만들어 풀(pool)에 저장해 두었다가 필요할 때에 가져다 쓰고 반환하는 기법이다. <br>아파치에서 제공하는 DBCP (DataBase Connection Pool) API를 이용해서 사용할 수 있다.
@@ -276,7 +279,7 @@ public class DeptVO {
 ![image](https://user-images.githubusercontent.com/54658614/231361772-5c6e984b-f293-4fb8-9c5c-b578719be408.png)
 
 
-```
+```jsp
 <%@page import="vo.DeptVO"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.sql.ResultSet"%>
