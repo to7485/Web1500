@@ -990,47 +990,12 @@ public final class hello_jsp extends org.apache.jasper.runtime.HttpJspBase
 
 ```
 
-## 다른 페이지로 데이터 전송하기
-
-### parameter.jsp 만들기
-- jsp는 어떻게 사용을 해야할까?
-- 만약 DB에서 정보가 넘어왔다면 어떻게 처리해야할까??
-```jsp
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-    
-<%
-	//DB에서 다섯개의 과일목록을 가지고 왔다고 가정
-	String[] fruit = {"사과","배","참외","토마토","복숭아"};
-%>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
-	<ul>
-		<li><%= fruit[0] %></li>
-		<li><%= fruit[1] %></li>
-		<li><%= fruit[2] %></li>
-		<li><%= fruit[3] %></li>
-		<li><%= fruit[4] %></li> 이렇게 작성을 하면 나중에 6개의 과일이 넘어오면 처리하기가 힘들다.
-    
-    <%for(int i = 0; i<fruit.length;i++){ %>
-		<li><%= fruit[i] %></li>
-		<%} %>
-    
-	</ul>
-
-</body>
-</html>
-```
-
 ### 테이블을 사용하여 구구단 출력하기
 
 ![image](https://user-images.githubusercontent.com/54658614/230828122-122aa577-0c41-4af9-8845-d1dd3319d8f4.png)
 
+
+- <%-- jsp주석(보안성이 좋다) : jsp주석은 컴파일시에 자바코드로 전환되지 않는다. --%>
 
 ```jsp
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -1059,7 +1024,7 @@ public final class hello_jsp extends org.apache.jasper.runtime.HttpJspBase
 <!-- 주석 -->
 <!-- html주석(그대로 노출되어 보안성이 떨어짐) : html주석은 컴파일시에 자바코드로 전환된다.-->
 
-<%-- jsp주석(보안성이 좋다) : jsp주석은 컴파일시에 자바코드로 전환되지 않는다. --%>
+
 
 <!-- jsp를 실행한 후 웹페이지에서 우측클릭
 소스보기를 통해서 확인해보면 두 주석의 차이점을 알 수 있다.
@@ -1069,8 +1034,7 @@ public final class hello_jsp extends org.apache.jasper.runtime.HttpJspBase
 	구구단
 
   테이블 안에서 자바코드를 사용해야 하기 때문에 스크립트릿이 바디 안에 있어야 된다.
-  for문은 자바코드이기 때문에 스크립트릿을 잘 사용하고 어느 부분은 html 태그이니까 스크립트릿으로 묶으면 안되는 판단을 할 줄 알아야 한다. 
-  스크립트릿은 db연결하고 할 때 여러가지 필요한 메서드를 하나에 모아서 릿으로 하고 거기서 개념설명을 한다음에 그게 어떤식으로 클래스로 2개 3개 나눠지는 설명할거다.
+  for문은 자바코드이기 때문에 스크립트릿을 사용해야 하고, html 부분은 스크립트릿에 묶이면 안된다.
 	<table border="1">
 			<% for(int i = 1; i <= 9; i++ ){%>
 			<tr>
@@ -1102,8 +1066,54 @@ DB를 연동하고 사람의 정보를 db에서 가져왔다고 가정하면 결
 
 ![image](https://user-images.githubusercontent.com/54658614/230829218-5a20d2be-3ef3-4386-a65d-fa63d03feb24.png)
 
-#### test.jsp
+### PersonVO 클래스 생성
+
+```java
+package vo;
+
+public class PersonVO {
+	//VO : ValueObject – DB에서 넘어온 row의 정보를 저장하기 위한 클래스 개념
+
+	//VO클래스에서 만드는 변수명은 실제 DB의 컬럼명과 똑같은 이름으로 만들어 주는 것이 	//좋다
+	private String name; //이름
+	private int age; //나이
+	private String tel; //전화번호
+
+	
+	public PersonVO() {
+		
+
+	}
+	
+	public PersonVO( String name, int age, String tel) {
+		this.name = name;
+		this.age = age;
+		this.tel = tel;
+	}
+	
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public int getAge() {
+		return age;
+	}
+	public void setAge(int age) {
+		this.age = age;
+	}
+	public String getTel() {
+		return tel;
+	}
+	public void setTel(String tel) {
+		this.tel = tel;
+	}
+}
 ```
+
+### test.jsp
+```jsp
 <%@page import="java.util.List"%>
 <%@page import="vo.PersonVO"%>
 <%@page import="java.util.ArrayList"%>
@@ -1115,12 +1125,8 @@ DB를 연동하고 사람의 정보를 db에서 가져왔다고 가정하면 결
 
 <% 
 	//준비해놓은 VO객체를 ArrayList에 적재한다.
-	ArrayList<PersonVO> pList = new ArrayList<>(); 
-ArrayList는 어차피 List 인터페이스의 구현 클래스 이기 때문에 부모로 시작해서 자식객체를 만드는게 더 빠르다고 함
-	List<PersonVO> pList = new ArrayList<>(); 가 더 효율적이라고 함
+	List<PersonVO> pList = new ArrayList<>();
 
-	//DB에서 두명의 유저 정보를 가지고 와서 pList에 저장했다고 가정
-	
 	pList.add(new PersonVO( "홍길동", 20, "011-123-4567" ));
 	pList.add(new PersonVO( "김길동", 40, "010-456-1234" ));
 	pList.add(new PersonVO( "박길동", 27, "012-111-2222" ));
@@ -1168,51 +1174,7 @@ ArrayList는 어차피 List 인터페이스의 구현 클래스 이기 때문에
 
 ![image](https://user-images.githubusercontent.com/54658614/230829447-57c8e230-ad39-4e1e-ae8f-e35c2370ae53.png)
 
-#### PersonVO 클래스 생성
 
-```java
-package vo;
-
-public class PersonVO {
-	//VO : ValueObject – DB에서 넘어온 row의 정보를 저장하기 위한 클래스 개념
-
-	//VO클래스에서 만드는 변수명은 실제 DB의 컬럼명과 똑같은 이름으로 만들어 주는 것이 	//좋다
-	private String name; //이름
-	private int age; //나이
-	private String tel; //전화번호
-
-	
-	public PersonVO() {
-		
-
-	}
-	
-	public PersonVO( String name, int age, String tel) {
-		this.name = name;
-		this.age = age;
-		this.tel = tel;
-	}
-	
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public int getAge() {
-		return age;
-	}
-	public void setAge(int age) {
-		this.age = age;
-	}
-	public String getTel() {
-		return tel;
-	}
-	public void setTel(String tel) {
-		this.tel = tel;
-	}
-}
-```
 #### jsp_input.jsp 생성
 
 ![image](https://user-images.githubusercontent.com/54658614/230830605-9ff370d9-eafa-4efb-a53d-dd7526cef5ea.png)
@@ -1269,7 +1231,7 @@ public class PersonVO {
 </head>
 
 <body>
-	<form action="">
+	<form>
 	
 		이름:<input name="m_name"><br> 
 		나이:<input name="age"><br>
@@ -1292,14 +1254,6 @@ input태그에 적어준 값을 적어서 test_param.jsp로 보내주자
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <%	
-	//JSP내장객체 : 보이진 않지만 JSP가 실행되면 존재하는 객체
-	//이것들은 Servlet을 만들게 되면 service메서드에 존재하는 객체들이다.
-	
-	//request(요청처리객체)
-	//response(응답처리객체)
-
-	//ex01_jsp_input.jsp에서 넘겨준 세 개의 파라미터를 수신해보자
-	//text_param.jsp?m_name=a&age=10&tel=010;
 
 	String t_name = request.getParameter("m_name");
 	int age = Integer.parseInt(request.getParameter("age"));
@@ -1328,7 +1282,7 @@ input태그에 적어준 값을 적어서 test_param.jsp로 보내주자
 		
 		<tr>
 			<th>이름</th>
-			<td><%= name %></td> <%-- <% out.print(name) %> --%>
+			<td><%= name %></td>
 		<tr>
 		
 		<tr>
