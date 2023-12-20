@@ -190,7 +190,7 @@ public class ServletContext1 implements WebMvcConfigurer {
 # Thymeleaf 알아보기
 - 타임리프 템플릿(*.html)은 HTML과 유사해서 편집 후 내용 확인이 쉽다.
 
-1. <b>th:*</b>
+## 1. <b>th:*</b>
 - th:* 속성은 타임리프 전용 속성이며, 브라우저는 이를 무시한다.
 
 ### 설정
@@ -202,7 +202,7 @@ public class ServletContext1 implements WebMvcConfigurer {
 - Thymeleaf의 th속성을 사용하기 위해 선언된 네임스페이스이다.
 - 순수 HTML로만 이루어진 페이지인 경우 선언하지 않아도 된다.
 
-2. **th:text / th:utext**
+## 2. **th:text / th:utext**
 - JSP의 EL표현식인 ${}와 마찬가지로 ${}표현식을 사용해서 컨트롤러에서 전달받은 데이터에 접근할 수 있다.
 - th:text는 ${...}을 해석해서 태그의 텍스트 노드
 ```html
@@ -222,9 +222,7 @@ th:utext는 태그의  <, >를 &lt; &gt;로 바꾸지 않고 그대로 출력해
 <span th:utext="${'<i>Hyeonjun,Lee</i>'}">Hyeonjun, Lee</span> 실제 태그로 나온다.
 ```
 
-## 제어문
-
-1. **th:if="${}"**,**th:unless="${}"**
+## 3. **th:if="${}"**,**th:unless="${}"**
 	- JAVA의 조건문에 해당하는 속성이다. 각각 if와 else를 뜻한다.
 ```html
 조건에 맞을 때 렌더링 한다.
@@ -239,7 +237,7 @@ th:utext는 태그의  <, >를 &lt; &gt;로 바꾸지 않고 그대로 출력해
 
 ```
 	
-1. **th:switch**, **th:case**
+## 4. **th:switch**, **th:case**
 	- JAVA의 switch-case문과 동일하다.
 	- switch case문으로 제어할 태그를 th:block으로 설정하고 그 안에 코드를 작성한다.
 	- 다음은 nuserNum이라는 변수의 값이 1이거나 2일때 동작하는 예제이다.
@@ -261,7 +259,7 @@ th:utext는 태그의  <, >를 &lt; &gt;로 바꾸지 않고 그대로 출력해
 </div>
 ```
 
-3. **th:each="변수 : ${list}"**
+## 5. **th:each="변수 : ${list}"**
 	- JSP의 JSTL에서 <c:foreach> 그리고 JAVA의 반복문 중 for문을 뜻한다.
 	- ${list}에 받아온 것을 변수로 하나씩 가져온다는 뜻으로 변수는 이름을 마음대로 지정할 수 있다.
 
@@ -324,6 +322,16 @@ th:utext는 태그의  <, >를 &lt; &gt;로 바꾸지 않고 그대로 출력해
 	</select>
 </body>
 </html>
+```
+
+## 6. **th:attr**와**th:attrappend**, **th:attrprepend**
+- th:attr은 속성의 값을 설정하는데 사용
+
+```html
+<img src="images/dummy.png" th:attr="src=@{images/cat.png}"/>
+
+<!-- 결과 -->
+<img src="images/cat.png">
 ```
 
 ---
