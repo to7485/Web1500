@@ -324,7 +324,38 @@ th:utext는 태그의  <, >를 &lt; &gt;로 바꾸지 않고 그대로 출력해
 </html>
 ```
 
-## 6. **th:attr**와**th:attrappend**, **th:attrprepend**
+## 6. th:object
+
+### controller에 코드 작성하기
+```java
+	@RequestMapping("/ex05")
+	public String test(Model model) {
+		model.addAttribute("user",new UserDTO("Gil-dong",40));
+		
+		return "/WEB-INF/views/ex05.html";
+	}
+```
+
+### ex05.html
+```html
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body th:object="${user}">
+        <h1>회원정보 출력 예제</h1>
+        <div>
+            이름 : <span th:text="*{name}"></span>
+        </div>
+        <div>
+            나이 : <span th:text="*{age}"></span>
+    </body>
+</html>
+```
+
+## 7. **th:attr**와**th:attrappend**, **th:attrprepend**
 - th:attr은 속성의 값을 설정하는데 사용
 
 ```html
@@ -332,9 +363,235 @@ th:utext는 태그의  <, >를 &lt; &gt;로 바꾸지 않고 그대로 출력해
 
 <!-- 결과 -->
 <img src="images/cat.png">
+
+<!-- 대부분의 속성은 th:속성이름도 가능하다. -->
+<img src="images/dummy.png" th:src="@{/images/cat.png}">
+```
+```html
+<!-- th:attrappend : 속성을 뒤에 추가 -->
+<input type="button" value="Go" calss="btn" th:attrappend="class=${''+style}"/>
+
+<!-- 결과 -->
+<input type="button" value="Go" class="btn new-style">
 ```
 
+## 8. @{...}
+- 타임리프에서 URL을 표현할 때 사용하는 표현식이다.
+- @{/...} : 절대 경로 (root경로를 알아서 붙혀준다)
+- @{...} : 상대경로
+
+```html
+<a href="boardList.html" th:href="@{/board/list}">
+
+<!-- 결과 -->
+<a href="/ch2/board/list">
+```
+- Query parameter와 Path variable을 포함한 URL도 쉽게 만들 수 있다.
+
+```html
+<!-- Query parameter -->
+<a href="board.html" th:href="@{/board/read(bno=${bno}, type='L')}">
+
+<a href="/ch2/board/read?bno=123&type='L'">
+
+<!-- Path variable -->
+<a href="board.html" th:href="@{/board/{bno}/read(bno=${bno})}">
+
+<a href="/ch2/123/read">
+```
+
+### ex05.html
+```html
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<a href="board.html" th:href="@{/board/list(bno=${bno},type='L')}"></a>
+</body>
+</html>
+```
+![iamge](image/pageSource.png)
+
+## 9. 주석
+- <!-- --> : HTML 주석. 주석 내 부분은 타임리프가 처리 안함
+- <!--/*  */--> : paser-level 주석. parser가 처리할 때 무시. 에러가 있어도 OK
+- <!--/*/ /*/--> : prototype-only 주석. html에서는 주석이지만 처리되면 주석이 아님
+
+```html
+	<!--  <span th:text="${list}"></span> -->
+	<!--/*  <span th:text="${list}"></span> */-->
+	<!--/*/  <span th:text="${list}"></span> /*/-->
+
+<!--/*/ <th:block th:each="opt : ${list}"> /*/-->
+	<input type="checkbox" th:value="${opt}">[[${opt}]]</br>
+<!--/*/ </th:block> /*/-->
+```
+
+## 10. 자바스크립트 인라이닝
+- [[${...}]]를 자바스크립트에 맞게 적절히 변환해주는 편리한 기능
+```html
+<script>
+    var firstName = [[${firstName}]]
+    var lastName = /*[[${lastname}]]*/ "testName"
+    var arr = [[${list}]]
+    var userObj = [[${user}]]
+<script>
+
+<script>
+    var firstName = Hyeonjun
+    var lastName = /*Lee*/ "testName"
+    var arr = [aaa,bbb,ccc,ddd,eee,fff]
+    var userObj = com.korea.leaf.User@6adf734d
+</script>
+```
+- 인라인 추가
+
+```html
+<script th:inline="javascript">
+    var firstName = [[${firstName}]]
+    var lastName = /*[[${lastname}]]*/ "testName"
+    var arr = [[${list}]]
+    var userObj = [[${user}]]
+<script>
+
+<script>
+    var firstName = "Hyeonjun"
+    var lastName = "Lee"
+    var arr = ["aaa","bbb","ccc","ddd","eee","fff"]
+    var userObj = {"name":"Gil-dong","age":40}
+</script>
+```
+
+### controller에 Mapping 잡아주기
+```java
+	@RequestMapping("/ex07")
+	public String ex07(Model model) {
+		model.addAttribute("firstName", "Hyeonjun");
+		model.addAttribute("lastName","lee");
+		model.addAttribute("list",Arrays.asList("aaa","bbb","ccc","ddd","eee"));
+		model.addAttribute("user", new UserDTO("Gil-dong",40));
+		return "/WEB-INF/views/ex07.html";
+	}
+```
+
+### UserDTO.java 생성하기
+```java
+package dto;
+
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
+@Data
+public class UserDTO {
+	private final String name;
+	private final int age;
+	
+}
+```
+
+### ex07.html
+```html
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<script type="text/javascript" th:inline="javascript">
+		var firstName = [[${firstName}]]
+		var lastName = /* [[${lastName}]] */ "testName";
+		var arr = [[${list}]];
+		var userObj = [[${user}]]
+	</script>
+</body>
+</html>
+```
+![image](image/inline.png)
+
+- th:inline="javascript" 넣기
+```html
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<script type="text/javascript" th:inline="javascript">
+		var firstName = [[${firstName}]]
+		var lastName = /* [[${lastName}]] */ "testName";
+		var arr = [[${list}]];
+		var userObj = [[${user}]]
+	</script>
+</body>
+</html>
+```
+![image](image/inlineAfter.png)
+
+
+## 11. 유틸리티 객체
+- 유용한 메서드를 제공하는 객체들. 변환 & 형식화를 쉽게 해준다.
+- 문자열 & 숫자 : #strings, #numbers
+- 날짜 & 시간 : #dates, #calendars, #temporals
+- 배열 & 컬렉션 : #arrays, #lists, #sets, #maps
+- 기타
+  - #urls : URI/URL의 escape/unescape처리
+  - #conversions : 스프링의 변환기능 지원
+  - #messages : 자바의 메세지 형식화 국제화 지원
+  - #objects : null확인 기능 제공
+  - #bools : boolean연산(and, or)기능 제공
+
 ---
+
+## 12. 기본객체
+- 서블릿의 기본객체(request,session,application등)에 접근하는 방법을 제공한다.
+
+### controller에 코드 작성하기
+```java
+	@RequestMapping("/ex08")
+	public String test(Model model, HttpServletRequest request) {
+		request.setAttribute("year", 2023);
+		
+		HttpSession session = request.getSession();
+		session.setAttribute("id", "asdf");
+		
+		ServletContext application = session.getServletContext();
+		application.setAttribute("email", "service@korea.com");
+		
+		return "/WEB-INF/views/ex08.html";
+	}
+```
+
+### ex08.html
+```html
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<h1 th:text="|year : ${year}|"></h1>
+	<h1 th:text="|id : ${session.id}|"></h1>
+	<h1 th:text="|email : ${application.email}|"></h1>
+
+	<hr>
+	<h1 th:text="${#request.getAttribute('year')}"></h1>
+	<h1 th:text="${#session.getAttribute('id')}"></h1>
+	<h1 th:text="${#servletContext.getAttribute('email')}"></h1>
+</body>
+</html>
+```
+<hr>
+
+# 구 자료
 
 ## 기본 기능
 - 타임리프는 크게 변수식, 페이지식, 링크 식의 세 가지 식과 선택 변수 식을 제공한다.
@@ -347,31 +604,7 @@ th:utext는 태그의  <, >를 &lt; &gt;로 바꾸지 않고 그대로 출력해
 
 <br>
 
-
-
-
-<br>
-
-1. **th:href="@{}"**
-
-```html
- <a th:href="@{/boardListPage?currentPageNum={page}}"></a>
-```
-- <a>태그의 href 속성과 동일하다.
-- 괄호안에 클릭시 이동하고자 하는 url을 입력하면 된다.
-	
-- 링크의 일부를 식으로 변경하고 싶다면 경로에 {변수}를 사용할 수 있다. 
-
-```html
-<a href="#" th:href="@{/members/{memId}(memId=${mem.id})}"></a>
-```
-
-- 위 코드에서 링크 식의 {memId}는 경로 변수이다. 경로 변수 memId에 넣을 값을 뒤에 붙인 괄호 안에 지정한다. 위 코드에서 뒤에 붙인 (memId\=${memId})는 경로 변수 memId의 값으로 ${mem.id}를 사용한다는 것을 뜻한다.
-	
-	
-<br>
-	
-3. **th:with="${}"**
+1. **th:with="${}"**
 ```html
 <div th:with="userId=${number}" th:text="${usesrId}">
 ```
@@ -379,14 +612,6 @@ th:utext는 태그의  <, >를 &lt; &gt;로 바꾸지 않고 그대로 출력해
 
 <br>
 	
-4. **th:value="${}"**
-```html
-<input type="text" id="userId" th:value="${userId} + '의 이름은 ${userName}"/>
-```
-- input의 value에 값을 삽입할 때 사용한다.
-- 여러개의 값을 넣을땐 + 기호를 사용한다.
-
----
 	
 ## 타임리프 식 객체
 - 타임리프는 식에서 사용할 수 있는 객체를 제공한다. 이 식 객체를 이용하면 문자열 처리나 날짜 형식 변환 등의 작업을 할 수 있다. "#객체명"을 사용해서 식 객체를 사용한다. 
@@ -395,15 +620,6 @@ th:utext는 태그의  <, >를 &lt; &gt;로 바꾸지 않고 그대로 출력해
 ```
 <span th:text="${#dates.format(date, 'yyyy-MM-dd')}">date</span>
 ```
-
-- 각 식 객체는 기능이나 속성을 제공한다. dates 식 객체의 경우 format을 비롯해 날짜 형식 포맷팅을 위한 다양한 기능을 제공한다. 
-
-### 타임리프가 제공하는 주요 식 객체
-
-- #strings : 문자열 비교, 문자열 추출 등 String 타입을 위한 기능 제공
-- #numbers : 포맷팅 등 숫자 타입을 위한 기능 제공
-- #dates, #calendars, #temporals : Date타입과 Calendar 타입, LocalDateTIme 타입을 위한 기능 제공
-- #lists, #sets, #maps : List, Set, Map을 위한 기능 제공
 	
 ## Form태그
 ```html
