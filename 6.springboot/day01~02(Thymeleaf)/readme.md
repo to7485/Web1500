@@ -73,7 +73,8 @@ https://www.thymeleaf.org/ecosystem.html
 - 스프링 MVC에서 타임리프는 뷰 영역에 해당한다. 스프링 MVC의 구성 요소에 대해 설명할 때 뷰 영역과 관련된 구성 요소는 ViewResolver와 View였다. 타임리프는 thymeleaf-spring5 모듈을 제공하는데 이 모듈에 타임리프 연동을 위한 ViewResolver와 View 구현 클래스가 존재한다. 스프링 MVC에서 타임리프가 제공하는 ViewResolver를 사용하도록 설정하면 결과를 타임리프 템플릿을 이용해서 생성할 수 있다.
 
 - 스프링 MVC와 타임리프를 연동하려면 먼저 타임리프의 스프링 연동 모듈을 의존에 추가해야 한다. 다음의 세 가지(thymeleaf-spring5, thymeleaf-extras-java8time, thymeleaf-layout-dialect) 의존 설정을 추가한다.
-```
+
+```xml
 <!-- thymeleaf-spring5 스프링 MVC에서 Thymeleaf를 View로 사용하기 위한 기능을 제공 -->
 <dependency>
 	<groupId>org.thymeleaf</groupId>
@@ -186,9 +187,13 @@ public class ServletContext1 implements WebMvcConfigurer {
 
 ```
 
-# Thymeleaf 기본문법
+# Thymeleaf 알아보기
+- 타임리프 템플릿(*.html)은 HTML과 유사해서 편집 후 내용 확인이 쉽다.
 
-## 설정
+1. <b>th:*</b>
+- th:* 속성은 타임리프 전용 속성이며, 브라우저는 이를 무시한다.
+
+### 설정
 - **xmlns:th=""**
 
 ```html
@@ -196,6 +201,130 @@ public class ServletContext1 implements WebMvcConfigurer {
 ```
 - Thymeleaf의 th속성을 사용하기 위해 선언된 네임스페이스이다.
 - 순수 HTML로만 이루어진 페이지인 경우 선언하지 않아도 된다.
+
+2. **th:text / th:utext**
+- JSP의 EL표현식인 ${}와 마찬가지로 ${}표현식을 사용해서 컨트롤러에서 전달받은 데이터에 접근할 수 있다.
+- th:text는 ${...}을 해석해서 태그의 텍스트 노드
+```html
+<div th:text="${lastName}">Lee</div>
+<div>[[${lastName}]]</div>
+```
+
+- 문자열 결합과 리터럴 치환
+
+```html
+<span th:text="'My name is' + ${lastName} + ',' + ${firstName}"></span>
+<span th:text="|My name is ${lastName} ,${firstName}|"></span>
+
+th:utext는 태그의  <, >를 &lt; &gt;로 바꾸지 않고 그대로 출력해준다.
+
+<span th:text="${'<i>Hyeonjun,Lee</i>'}">Hyeonjun, Lee</span> 엔티티 코드로 나온다.
+<span th:utext="${'<i>Hyeonjun,Lee</i>'}">Hyeonjun, Lee</span> 실제 태그로 나온다.
+```
+
+## 제어문
+
+1. **th:if="${}"**,**th:unless="${}"**
+	- JAVA의 조건문에 해당하는 속성이다. 각각 if와 else를 뜻한다.
+```html
+조건에 맞을 때 렌더링 한다.
+<tr th:if="${list.size()}==0">
+    <td> 게시물이 없습니다.</td>
+</tr>
+
+조건이 맞을 때 렌더링 하지 않는다.
+<tr th:unless="${list.size()}!=0">
+    <td> 게시물이 없습니다.</td>
+</tr>
+
+```
+	
+1. **th:switch**, **th:case**
+	- JAVA의 switch-case문과 동일하다.
+	- switch case문으로 제어할 태그를 th:block으로 설정하고 그 안에 코드를 작성한다.
+	- 다음은 nuserNum이라는 변수의 값이 1이거나 2일때 동작하는 예제이다.
+
+### th:block
+- 타임리프에서 자체적으로 제공하는 블록태그이다.
+- 타임리프 특성상 HTML 태그안에 속성으로 기능을 정의하여 사용하는데, 사용하기 애매한 경우에 사용한다.
+```html
+<th:block th:switch="${userNum}"> 
+  <span th:case="1">권한1</span> 
+  <span th:case="2">권한2</span> 
+</th:block>
+
+<div th:switch="${user.grade}">
+    <span th:case="A">특급</span>
+    <span th:case="B">고급</span>
+    <span th:case="C">중급</span>
+    <span th:case="*">기타</span> 어디에도 속하지 않을때
+</div>
+```
+
+3. **th:each="변수 : ${list}"**
+	- JSP의 JSTL에서 <c:foreach> 그리고 JAVA의 반복문 중 for문을 뜻한다.
+	- ${list}에 받아온 것을 변수로 하나씩 가져온다는 뜻으로 변수는 이름을 마음대로 지정할 수 있다.
+
+```html
+<select multiple>
+        <option th:each="opt:${list}" th:value="${opt}">[[${opt}]]</option>
+</select>
+
+
+<!--th:each를 쓰기 어려운 경우 th:block으로 처리-->
+<th:block th:each="opt:${list}">
+    <input type="checkbox" th:value="${opt}">[[${opt}]]<br>
+</th:block>
+<body>
+  <li th:each="pageButton" : ${#numbers.sequece(paging.firstPage, paging.lastPage)}></li>
+</body>
+```
+### status변수
+- 타임리프에서 th:each를 사용하면 반복 상태를 추적할수 있는 status변수를 제공해준다.
+- 이 변수는 객체이고 다양한 속서을 제공한다.
+- index : 0부터 인덱스값
+- count : 1부터 개수세기
+- size : 요소의 개수
+- current : 현재 요소
+- even : 현재 반복이 짝수인지 여부(boolean)
+- odd : 현재 반복이 홀수인지 여부(boolean)
+- first : 현재 반복이 첫번째인지 여부(boolean)
+- last : 현재 반복이 마지막인지 여부(boolean)
+
+```html
+<!-- multiple은 select를 펼쳐서 보여주는 키워드-->
+<select multiple>
+        <option th:each="opt,status:${list}" th:value="${opt}">
+            [[${status.index}]].[[${opt}]]
+        </option>
+</select>
+
+<!--status변수의 선언을 생략하면, '변수명Stat'으로 사용 가능하다. -->
+<select multiple>
+        <option th:each="opt:${list}" th:value="${opt}" th:selected="${optStat.first}">
+            [[${optStat.index}]].[[${opt}]]
+        </option>
+</select>
+```
+
+#### ex04.html
+```html
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<th:block th:each="opt : ${list}">
+	<input type="checkbox" th:value="${opt}">[[${opt}]]</br>
+</th:block>
+	<select name="" id="" multiple>
+		<option th:each="opt : ${list}" th:value="${opt}">[[${opt}]]</option>
+	</select>
+</body>
+</html>
+```
 
 ---
 
@@ -210,16 +339,12 @@ public class ServletContext1 implements WebMvcConfigurer {
 
 <br>
 
-1. **th:text="${}"**
 
-```html
-<div th:text="${data}"></div>
-```
-- JSP의 EL표현식인 ${}와 마찬가지로 ${}표현식을 사용해서 컨트롤러에서 전달받은 데이터에 접근할 수 있다.<br>
+
 
 <br>
 
-2. **th:href="@{}"**
+1. **th:href="@{}"**
 
 ```html
  <a th:href="@{/boardListPage?currentPageNum={page}}"></a>
@@ -297,32 +422,7 @@ public class ServletContext1 implements WebMvcConfigurer {
     - **th:field**을 이용한 사용자 입력 필드는 id, name, value속성 값이 자동으로 매핑된다.
     - **th:object**와 **th:field**는 Controller에서 특정 클래스의 객체를 전달 받을 경우에만 사용 가능하다.
 	
-## 제어문
-1. **th:if="${}"**,**th:unless="${}"**
-	- JAVA의 조건문에 해당하는 속성이다. 각각 if와 else를 뜻한다.
-	- **th:unless**는 일반적인 언어의 else문과는 달리 **th:if**에 들어가는 조건과 동일한 조건을 지정해야 한다.
-	
-2. **th:switch**, **th:case**
-	- JAVA의 switch-case문과 동일하다.
-	- switch case문으로 제어할 태그를 th:block으로 설정하고 그 안에 코드를 작성한다.
-	- 다음은 nuserNum이라는 변수의 값이 1이거나 2일때 동작하는 예제이다.
-	
-```html
-<th:block th:switch="${userNum}"> 
-  <span th:case="1">권한1</span> 
-  <span th:case="2">권한2</span> 
-</th:block>	
-```
 
-3. **th:each="변수 : ${list}"**
-	- JSP의 JSTL에서 <c:foreach> 그리고 JAVA의 반복문 중 for문을 뜻한다.
-	- ${list}에 받아온 것을 변수로 하나씩 가져온다는 뜻으로 변수는 이름을 마음대로 지정할 수 있다.
-
-```html
-<body>
-  <li th:each="pageButton" : ${#numbers.sequece(paging.firstPage, paging.lastPage)}></li>
-</body>
-```
 	
 # Thymeleaf 실습
 
