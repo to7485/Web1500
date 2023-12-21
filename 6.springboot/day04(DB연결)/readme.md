@@ -314,6 +314,7 @@ public interface ProductMapper {
 ```
 
 ## DBController 클래스 생성하기
+
 ```java
 package com.korea.db.controller;
 
@@ -332,7 +333,11 @@ import lombok.RequiredArgsConstructor;
 public class DBController {
 	
 	private final ProductMapper productMapper;
-	
+
+	//@RequestMapping(value="register", method={RequestMethod.GET,RequestMethod.POST})
+    	//RequestMapping은 GET,POST 둘다 사용이 가능한것이다.
+
+	//@RequestMapping(value="register", method=RequestMethod.POST)	
     @GetMapping("register")
     public String register(Model model){
         model.addAttribute("productVO", new ProductVO());
