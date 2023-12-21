@@ -176,11 +176,20 @@ spring java reconcile -> yes
 
 ![image](https://github.com/to7485/Web1500/assets/54658614/35034f1f-6c01-4304-a53e-c94d5f89397d)
 
-# 의존성 주입
 
 - 스프링의 작동 순서
 
 ![image](https://github.com/to7485/Web1500/assets/54658614/3ba05405-2f85-4520-818d-8651936136e1)
+
+1. DispatcherServlet이 모든 요청을 다 받는다.
+- 입력을 받고 필요하면 타입을 변환을 해준다.
+- Model 객체를 생성한다.
+
+
+
+# 의존성 주입
+
+
 
 ## 필드주입
 
@@ -573,6 +582,144 @@ public class ComputerTest {
 	
 }
 
+```
+
+<hr>
+
+# 수정중
+
+# 관심사의 분리, MVC 패턴
+- 서블릿에서는 하나의 메서드에 입력,처리, 출력의 세가지 관심사가 들어있다.
+- 이런 관심사의 분리를 Separation of Concerns라고 한다.
+- 하나의 메서드에는 하나의 관심사만 들어있어야 한다.
+
+## 코드의 분리
+1. 관심사
+2. 변하는것과 (잘)변하지 않는것은 분리할것
+3. 중복코드 -> 별도의 메서드로 만들어서 분리하기
+
+## 객체 지향 설계 5대 원칙 - SOLID
+### 1. 단일 책임원칙(SRP, Single Responsibility Principle)
+- 하나의 메서드는 하나의 관심사(책임)만 가져야 한다.
+### 2. 개방 폐쇄 원칙(OCP, Open-Closed Principle)
+- 상속에는 Open, 변경에는 Close 해야한다.
+- 코드를 변경할일 있으면 변경하지 말고 웬만하면 상속을 통해서 변경해라
+### 3. 리스코프 치환 원칙(LSP, Liskov Subtitution Principle)
+- 같은 조상의 다른 클래스로 바꿔도 동작해야 한다(다형성)
+### 4. 인터페이스 분리 원칙(ISP, Interface Segregation Principle)
+- 유사한 인터페이스가 있더라도 목적이 다르면 분리해야 한다.
+
+### 5. 의존관계 역전 원칙(DIP, Dependency Inversion Principle)
+- 추상화에 의존한 코드를 작성해야 한다.
+- 코드가 너무 구체적이면 변경에 불리하다.
+
+```java
+@Controller
+public class YoilTeller {
+    @RequestMapping("/getYoil") // http://localhost:8080/ch2/getYoil?year=2021&month=10&day=1
+    //    public static void main(String[] args) {
+    public void main(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        // 1. 입력
+        String year = request.getParameter("year");
+        String month = request.getParameter("month");
+        String day = request.getParameter("day");
+
+        int yyyy = Integer.parseInt(year);
+        int mm = Integer.parseInt(month);
+        int dd = Integer.parseInt(day);
+
+        // 2. 처리 -> 잘 안변함
+        Calendar cal = Calendar.getInstance();
+        cal.set(yyyy, mm - 1, dd);
+
+        int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
+        char yoil = " 일월화수목금토".charAt(dayOfWeek);   // 일요일:1, 월요일:2, ... 
+
+        // 3. 출력 -> 자주 변경될 수 있음
+        response.setContentType("text/html");    // 응답의 형식을 html로 지정
+        response.setCharacterEncoding("utf-8");  // 응답의 인코딩을 utf-8로 지정
+        PrintWriter out = response.getWriter();  // 브라우저로의 출력 스트림(out)을 얻는다.
+        out.println("<html>");
+        out.println("<head>");
+        out.println("</head>");
+        out.println("<body>");
+        out.println(year + "년 " + month + "월 " + day + "일은 ");
+        out.println(yoil + "요일입니다.");
+        out.println("</body>");
+        out.println("</html>");
+        out.close();
+    }
+}
+```
+
+## 입력의 분리
+- java에서 기본으로 제공하는 reflection api가 메서드가 가지고 있는 정보를 읽는다.
+- 넘어온 정보를 매개변수에 알아서 집어넣어준다.
+
+```java
+    @RequestMapping("/getYoil") // http://localhost:8080/ch2/getYoil?year=2021&month=10&day=1
+    //    public static void main(String[] args) {
+    public void main(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        // 1. 입력
+        String year = request.getParameter("year");
+        String month = request.getParameter("month");
+        String day = request.getParameter("day");
+
+        int yyyy = Integer.parseInt(year);
+        int mm = Integer.parseInt(month);
+        int dd = Integer.parseInt(day);
+
+```
+↓↓↓↓↓↓↓↓↓↓↓
+
+```java
+@RequestMapping("/getYoil") // http://localhost:8080/ch2/getYoil?year=2021&month=10&day=1
+    //    public static void main(String[] args) {
+    public void main(int year, int month, int day, HttpServletResponse response) throws IOException {
+
+        /*
+		스프링이 타입변환까지 해주기때문에 필요가 없다.
+        int yyyy = Integer.parseInt(year);
+        int mm = Integer.parseInt(month);
+        int dd = Integer.parseInt(day);
+		*/
+```
+
+## 출력의 분리
+- 변하는 것과 변하지 않는 것의 분리
+
+```java
+@Controller
+public class YoilTeller {
+    @RequestMapping("/getYoil") // http://localhost:8080/ch2/getYoil?year=2021&month=10&day=1
+    //    public static void main(String[] args) {
+    public void main(int year, int month, int day, HttpServletResponse response) throws IOException {
+
+        // 2. 처리 -> 잘 안변함
+        Calendar cal = Calendar.getInstance();
+        cal.set(yyyy, mm - 1, dd);
+
+        int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
+        char yoil = " 일월화수목금토".charAt(dayOfWeek);   // 일요일:1, 월요일:2, ... 
+
+	//////////////////////////////////////////////////////////////////////////////////////
+
+
+        // 3. 출력 -> 자주 변경될 수 있음
+        response.setContentType("text/html");    // 응답의 형식을 html로 지정
+        response.setCharacterEncoding("utf-8");  // 응답의 인코딩을 utf-8로 지정
+        PrintWriter out = response.getWriter();  // 브라우저로의 출력 스트림(out)을 얻는다.
+        out.println("<html>");
+        out.println("<head>");
+        out.println("</head>");
+        out.println("<body>");
+        out.println(year + "년 " + month + "월 " + day + "일은 ");
+        out.println(yoil + "요일입니다.");
+        out.println("</body>");
+        out.println("</html>");
+        out.close();
+    }
+}
 ```
 
 
