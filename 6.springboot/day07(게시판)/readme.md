@@ -467,6 +467,8 @@ public class BoardController {
 	//HTTP파라미터 이름이 변수 이름과 같은면 ("변수명)은 생략이 가능하다.
 	//만약 원하는 값이 넘어오지 않을 때 required 옵션을 주어 true는 필수, false는 필수가 아닌것으로 설정할 수 있다.
 	//required = false일때 요청 파라미터에 값이 없으면 null이 저장된다.
+	//필수 입력이 아니라서 null이 들어올때 defaultValue 속성을 통해 기본값을 설정할 수 있다.
+	//ex) defaultValue="1"
 	@GetMapping("board_list")
 	public String list(Model model, @RequestParam("page") String page) {
 		int nowPage = 1;
