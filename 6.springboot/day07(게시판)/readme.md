@@ -459,7 +459,14 @@ public class BoardController {
 	private final BoardDAO board_dao;
 	
 	private final HttpServletRequest request;
-	
+
+
+	//@RequestParam
+	//request객체의 getParameter와 동일한 기능을 한다고 보면된다.
+	//@RequestParam("변수명") 넘어온 데이터를 해당 변수명으로 바인딩한다.
+	//HTTP파라미터 이름이 변수 이름과 같은면 ("변수명)은 생략이 가능하다.
+	//만약 원하는 값이 넘어오지 않을 때 required 옵션을 주어 true는 필수, false는 필수가 아닌것으로 설정할 수 있다.
+	//required = false일때 요청 파라미터에 값이 없으면 null이 저장된다.
 	@GetMapping("board_list")
 	public String list(Model model, @RequestParam("page") String page) {
 		int nowPage = 1;
