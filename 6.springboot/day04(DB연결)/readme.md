@@ -132,6 +132,7 @@ import lombok.RequiredArgsConstructor;
 public class MyBatisConfig {
     private final ApplicationContext applicationContext; 
 
+    // 외부 설정을 해당 클래스의 필드에 바인딩하기 위한 어노테이션
     @ConfigurationProperties(prefix = "spring.datasource.hikari")
     @Bean
     public HikariConfig hikariConfig() {
