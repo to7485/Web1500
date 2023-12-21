@@ -188,11 +188,7 @@ spring java reconcile -> yes
 
 
 # 의존성 주입
-
-
-
 ## 필드주입
-
 ### dependency 패키지 생성하기
 - main 파일이 들어있는 패키지 안에 생성해야 한다.
 - 
@@ -583,10 +579,23 @@ public class ComputerTest {
 }
 
 ```
-
 <hr>
 
 # 수정중
+
+## 어노테이션
+### @RequestParam
+- 요청 파라미터를 연결할 때 매개변수에 붙이는 어노테이션
+- 스프링에서 안쓰긴 했는데 
+```java
+public String main2(@RequestParam(name="year", required=false) String year){
+	System.out.printf([%s]year=[%s]%n", new Date(), year);
+	return "yoil";
+```
+
+
+
+
 
 # 관심사의 분리, MVC 패턴
 - 서블릿에서는 하나의 메서드에 입력,처리, 출력의 세가지 관심사가 들어있다.
