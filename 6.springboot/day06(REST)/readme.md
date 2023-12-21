@@ -288,6 +288,12 @@ public class OrderController {
     }
 }
 ```
+### @RestController
+- @RestController는 Restful Web API를 좀 더 쉽게 만들기 위해 스프링 프레임워크 4.0에 도입된 기능이다.
+- @Controller와 @ResponseBody를 합쳐놓은 어노테이션이다.
+- 클래스 이름 위에 @Controller 어노테이션을 선언하면 해당 클래스의 요청을 처리하는 컨트롤러로 사용한다.
+- @ResponseBody 어노테이션은 자바 객체를 HTTP응답 본문 객체로 변환해 클라이언트에 전송한다.
+
 
 ## product.html 코드 작성하기
 - 주문내역 버튼을 눌렀을 때만 테이블 보이게 하기
