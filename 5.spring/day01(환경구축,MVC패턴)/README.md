@@ -917,6 +917,13 @@ public class YoilTellerMVC {
 
 # 어노테이션 기반의 설정파일 생성하기
 
+## config 패키지 생성하기
+- web.xml, root-context.xml, servlet-context.xml 삭제하기
+
+![image](image/delete.png)
+
+- src/main/java에 config패키지 생성하기
+
 ## web.xml 역할을 하는 WebInitializer.java 생성하기
 ```java
 package config;
@@ -1053,7 +1060,6 @@ public class ServletContext implements WebMvcConfigurer {
 
 ```
 
-
 ## vo패키지에 PersonVO클래스 만들기
 ```java
 package vo;
@@ -1109,13 +1115,6 @@ public class PersonVO {
 ![image](image/person.png)
 
 jsp까지는 구조가 복잡한 형태는 아니지만 스프링은 구동되는 순서가 다르면 이해하기 힘들다<br>
-
-## config 패키지 생성하기
-- web.xml, root-context.xml, servlet-context.xml 삭제하기
-
-![image](image/delete.png)
-
-
 
 ## PersonVO 코드 수정하기
 ```java
