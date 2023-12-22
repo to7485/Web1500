@@ -1,6 +1,12 @@
-## 의존성 주입
+# 의존성 주입
+- Dependency Injection : 각 객체 간의 의존관계를 스프링 컨테이너가 개발자가 정의한 Bean등록 정보를 바탕으로 자동으로 주입해주는 기능
 
-## Ex_날짜_SpringMVC
+## 의존성 주입의 종류
+- 필드 주입(Field Injection)
+- 수정자 주입(Setter Injection)
+- 생성자 주입(Constructor Injection)
+
+## Ex_날짜_DI
 - com.korea.test_di
 
 ## pom.xml 복사해오기, config패키지 복사해오기

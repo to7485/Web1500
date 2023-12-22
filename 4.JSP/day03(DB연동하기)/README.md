@@ -486,7 +486,7 @@ public class SawonVO {
 ```
 
 #### sawon_list.jsp 생성하기
-```
+```jsp
 <%@page import="java.sql.ResultSet"%>
 <%@page import="java.sql.PreparedStatement"%>
 <%@page import="java.util.ArrayList"%>
@@ -591,7 +591,7 @@ public class SawonVO {
 
 
 #### Gogek.java 클래스 만들기
-```
+```java
 package vo;
 
 public class GogekVO {
@@ -629,7 +629,7 @@ public class GogekVO {
 ```
 
 #### 고객 테이블 출력해보기 gogek.jsp
-```
+```jsp
 <%@page import="java.sql.ResultSet"%>
 <%@page import="java.sql.PreparedStatement"%>
 <%@page import="java.util.ArrayList"%>

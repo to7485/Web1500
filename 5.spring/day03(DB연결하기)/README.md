@@ -1,13 +1,11 @@
 # MVC 패턴에 대해서 자세히 알아보자
 - 스프링의 구조에 대해서 총 정리하는 시간
-
-## Ex_날짜_SpringMVC
-- com.korea.mvc
+## Ex_날짜_DB
+- com.korea.db
 
 ![image](image/artifactId.png)
 
 프로젝트의 마지막 계층은 구별을 해주는 식별자의 역할도 한다.
-
 ## pom.xml, config패키지 복사해서 넣기
 
 ![image](image/mvc2.png)
@@ -100,7 +98,7 @@ import org.springframework.web.servlet.view.JstlView;
 
 @Configuration
 @EnableWebMvc
-@ComponentScan("com.korea.mvc")
+@ComponentScan("com.korea.db")
 //어노테이션에도 상속관계가 있다
 /*
  *@Component
@@ -285,12 +283,6 @@ public class TestController {
 
 # 파라미터 넘기기
 
-## Ex_날짜_SpringParam
-- com.korea.param
-- pom.xml,config패키지 복사해오기
-- 나머지 xml 삭제하기
-- util패키지 복사해오기
-
 ## vo 패키지에 PersonVO 클래스 만들기
 ```java
 package vo;
@@ -305,7 +297,7 @@ public class PersonVO {
 
 ```
 ## views 폴더에 insert_form.jsp 만들기
-```java
+```jsp
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>

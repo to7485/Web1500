@@ -159,30 +159,9 @@ Spring은 아래 그림과 같이 기본 틀을 제공하고 필요한 기능들
 - 단계는 .으로 구분한다.
 - 패키지는 단순히 저장을 하는 용도만이 아니라 프로젝트끼리 구별하는 식별자로도 활용이된다.
 
+- com.korea.first
+
 ![image](https://user-images.githubusercontent.com/54658614/236692385-71be89b4-d28e-44b5-85d6-dd8ccc7311ea.png)
-
-### MVC 디자인 패턴
-- MVC는 Model, View, Controller의 약자로, 클라이언트와 상호작용하는 소프트웨어를 설계함에 있어 세가지 요소로 나누는 것을 말한다.
-
-#### Model
-- Model은 어플리케이션의 정보, 데이터의 가공을 책임지여 데이터베이스와 상호작용하여 비즈니스 로직을 처리하는 모듈
-- 사용자가 이용하려는 모든 데이터를 가지고 있어야 한다.
-- View(뷰) 또는 Controller(컨트롤러)에 대한 어떤 정보도 알 수 없어야 한다.
-- 변경이 일어났을 때 처리 방법을 구현해야 한다.
-- 모델은 재사용이 가능해야 하며 다른 인터페이스에서도 변하지 않아야 한다.
-
-#### View
-- View는 클라이언트 단에서 보여지는 결과화면을 반환하는 모듈
-- Model(모델)이 가지고 있는 데이터를 저장하면 안된다.
-- 데이터를 받안 단순히 화면에 표시해주는 역할만 가진다.
-- 재사용이 가능하게끔 설계를 해야 하며 다른 정보들을 표현할 때 쉽게 설계해야 한다.
-
-#### Controller
-- Controller는 client로부터 request가 들어왔을 때 그 입력을 처리하고 어떤 로직을 실행시킬지 Model(모델)과 View(뷰)를 연결해주며 제어하는 모듈
-- Model(모델)또는 View(뷰)에 대한 정보를 알아야 한다.
-- Model(모델)또는 View(뷰)의 변경을 인지하여 대처를 해야 한다.
-- 모델이나 뷰의 변경을 통지 받으면 이를 해석해서 각각의 구성 요소에게 통지해야 한다.
-- 어플리케이션의 메인 로직을 담당한다.
 
 # 프로젝트의 기본 경로
 |경로|설명|
@@ -559,7 +538,7 @@ public class HomeController {
 		
 		String formattedDate = dateFormat.format(date);
 		
-		뭔지는 잘 모르겠지만 model이라는 애가 request와 비슷한 역할을 한다.
+		model이 request와 비슷한 역할을 한다.
 		model.addAttribute("serverTime", formattedDate );
 		model.addAttribute("hello","스프링은 처음입니다.");
 		
@@ -641,7 +620,7 @@ public class HomeController {
 
 - 혹시 모르니 pom.xml에도 알려주자
 
-```
+```xml
 <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
 <dependency>
     <groupId>org.projectlombok</groupId>
@@ -662,13 +641,291 @@ public class HomeController {
 
 * * *
 
-# 의존성 주입
-- Dependency Injection : 각 객체 간의 의존관계를 스프링 컨테이너가 개발자가 정의한 Bean등록 정보를 바탕으로 자동으로 주입해주는 기능
+# MVC 디자인 패턴 이론
+- MVC는 Model, View, Controller의 약자로, 클라이언트와 상호작용하는 소프트웨어를 설계함에 있어 세가지 요소로 나누는 것을 말한다.
 
-## 의존성 주입의 종류
-- 필드 주입(Field Injection)
-- 수정자 주입(Setter Injection)
-- 생성자 주입(Constructor Injection)
+#### Model
+- Model은 어플리케이션의 정보, 데이터의 가공을 책임지여 데이터베이스와 상호작용하여 비즈니스 로직을 처리하는 모듈
+- 사용자가 이용하려는 모든 데이터를 가지고 있어야 한다.
+- View(뷰) 또는 Controller(컨트롤러)에 대한 어떤 정보도 알 수 없어야 한다.
+- 변경이 일어났을 때 처리 방법을 구현해야 한다.
+- 모델은 재사용이 가능해야 하며 다른 인터페이스에서도 변하지 않아야 한다.
+
+#### View
+- View는 클라이언트 단에서 보여지는 결과화면을 반환하는 모듈
+- Model(모델)이 가지고 있는 데이터를 저장하면 안된다.
+- 데이터를 받안 단순히 화면에 표시해주는 역할만 가진다.
+- 재사용이 가능하게끔 설계를 해야 하며 다른 정보들을 표현할 때 쉽게 설계해야 한다.
+
+#### Controller
+- Controller는 client로부터 request가 들어왔을 때 그 입력을 처리하고 어떤 로직을 실행시킬지 Model(모델)과 View(뷰)를 연결해주며 제어하는 모듈
+- Model(모델)또는 View(뷰)에 대한 정보를 알아야 한다.
+- Model(모델)또는 View(뷰)의 변경을 인지하여 대처를 해야 한다.
+- 모델이나 뷰의 변경을 통지 받으면 이를 해석해서 각각의 구성 요소에게 통지해야 한다.
+- 어플리케이션의 메인 로직을 담당한다.
+
+## 코드의 분리
+1. 관심사
+2. 변하는것과 (잘)변하지 않는것은 분리할것
+3. 중복코드 -> 별도의 메서드로 만들어서 분리하기
+
+## 객체 지향 설계 5대 원칙 - SOLID
+### 1. 단일 책임원칙(SRP, Single Responsibility Principle)
+- 하나의 메서드는 하나의 관심사(책임)만 가져야 한다.
+### 2. 개방 폐쇄 원칙(OCP, Open-Closed Principle)
+- 상속에는 Open, 변경에는 Close 해야한다.
+- 코드를 변경할일 있으면 변경하지 말고 웬만하면 상속을 통해서 변경해라
+### 3. 리스코프 치환 원칙(LSP, Liskov Subtitution Principle)
+- 같은 조상의 다른 클래스로 바꿔도 동작해야 한다(다형성)
+### 4. 인터페이스 분리 원칙(ISP, Interface Segregation Principle)
+- 유사한 인터페이스가 있더라도 목적이 다르면 분리해야 한다.
+
+### 5. 의존관계 역전 원칙(DIP, Dependency Inversion Principle)
+- 추상화에 의존한 코드를 작성해야 한다.
+- 코드가 너무 구체적이면 변경에 불리하다.
+
+
+## com.korea.first 패키지에 YoilTellerMVC클래스 생성하기
+```java
+@Controller
+public class YoilTeller {
+    @RequestMapping("/getYoil") // http://localhost:8080/ch2/getYoil?year=2021&month=10&day=1
+	
+    //    public static void main(String[] args) {
+    public void main(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        // 1. 입력
+        String year = request.getParameter("year");
+        String month = request.getParameter("month");
+        String day = request.getParameter("day");
+
+        int yyyy = Integer.parseInt(year);
+        int mm = Integer.parseInt(month);
+        int dd = Integer.parseInt(day);
+
+        // 2. 처리 -> 잘 안변함
+        Calendar cal = Calendar.getInstance();
+        cal.set(yyyy, mm - 1, dd);
+
+        int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
+        char yoil = " 일월화수목금토".charAt(dayOfWeek);   // 일요일:1, 월요일:2, ... 
+
+        // 3. 출력 -> 자주 변경될 수 있음
+        response.setContentType("text/html");    // 응답의 형식을 html로 지정
+        response.setCharacterEncoding("utf-8");  // 응답의 인코딩을 utf-8로 지정
+        PrintWriter out = response.getWriter();  // 브라우저로의 출력 스트림(out)을 얻는다.
+        out.println("<html>");
+        out.println("<head>");
+        out.println("</head>");
+        out.println("<body>");
+        out.println(year + "년 " + month + "월 " + day + "일은 ");
+        out.println(yoil + "요일입니다.");
+        out.println("</body>");
+        out.println("</html>");
+        out.close();
+    }
+}
+```
+
+## 입력의 분리
+- java에서 기본으로 제공하는 reflection api가 메서드가 가지고 있는 정보를 읽는다.
+- 넘어온 정보를 매개변수에 알아서 집어넣어준다.
+
+```java
+    @RequestMapping("/getYoil") // http://localhost:8080/ch2/getYoil?year=2021&month=10&day=1
+    //    public static void main(String[] args) {
+    public void main(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        // 1. 입력
+        String year = request.getParameter("year");
+        String month = request.getParameter("month");
+        String day = request.getParameter("day");
+
+        int yyyy = Integer.parseInt(year);
+        int mm = Integer.parseInt(month);
+        int dd = Integer.parseInt(day);
+
+```
+↓↓↓↓↓↓↓↓↓↓↓
+
+```java
+@RequestMapping("/getYoil") // http://localhost:8080/ch2/getYoil?year=2021&month=10&day=1
+    //    public static void main(String[] args) {
+    public void main(int year, int month, int day, HttpServletResponse response) throws IOException {
+
+        /*
+		스프링이 타입변환까지 해주기때문에 필요가 없다.
+        int yyyy = Integer.parseInt(year);
+        int mm = Integer.parseInt(month);
+        int dd = Integer.parseInt(day);
+		*/
+```
+
+## 출력의 분리
+- 변하는 것과 변하지 않는 것의 분리
+
+```java
+@Controller
+public class YoilTeller {
+    @RequestMapping("/getYoil") // http://localhost:8080/ch2/getYoil?year=2021&month=10&day=1
+    //    public static void main(String[] args) {
+    //public void main(int year, int month, int day, Model model) throws IOException {
+	public String main(int year, int month, int day, Model model) throws IOException {	
+
+        // 2. 처리 -> 잘 안변함
+        Calendar cal = Calendar.getInstance();
+        cal.set(yyyy, mm - 1, dd);
+
+        int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
+        char yoil = " 일월화수목금토".charAt(dayOfWeek);   // 일요일:1, 월요일:2, ... 
+
+		//내가정보를 보여주고 싶은 페이지를 지정한다.
+		return "yoil"; // /WEB-INF/views/yoil.jsp
+
+
+        // 3. 출력 -> 자주 변경될 수 있음
+		//여기에 작성하지 않고 JSP에 작성을 한다.
+        // response.setContentType("text/html");    // 응답의 형식을 html로 지정
+        // response.setCharacterEncoding("utf-8");  // 응답의 인코딩을 utf-8로 지정
+        // PrintWriter out = response.getWriter();  // 브라우저로의 출력 스트림(out)을 얻는다.
+        // out.println("<html>");
+        // out.println("<head>");
+        // out.println("</head>");
+        // out.println("<body>");
+        // out.println(year + "년 " + month + "월 " + day + "일은 ");
+        // out.println(yoil + "요일입니다.");
+        // out.println("</body>");
+        // out.println("</html>");
+        // out.close();
+    }
+}
+```
+
+## 처리부분 메서드로 만들기
+```java
+package com.korea.first;
+
+import java.io.IOException;
+import java.util.Calendar;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+
+@Controller
+public class YoilTellerMVC {
+    @RequestMapping("/getYoil") // http://localhost:8080/ch2/getYoil?year=2021&month=10&day=1
+    //    public static void main(String[] args) {
+    //public void main(int year, int month, int day, Model model) throws IOException {
+	public String main(int year, int month, int day, Model model) throws IOException {	
+
+        // 2. 처리 -> 잘 안변함
+    	
+    	//유효성 검사
+    	if(!isValid(year,month,day)) {
+    		return "yoilError"; //넘어온 값이 올바르지 않다면 넘어갈 페이지
+    	}
+
+    	char yoil = getYoil(year,month,day);
+
+
+		//내가정보를 보여주고 싶은 페이지를 지정한다.
+		return "yoil"; // /WEB-INF/views/yoil.jsp
+
+    }
+    
+    //현재클래스에서만 사용하기 위해 private으로 설정
+    private boolean isValid(int year, int month, int day) {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	private char getYoil(int year, int month, int day) {
+        Calendar cal = Calendar.getInstance();
+        cal.set(year, month - 1, day);
+        
+        int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
+        char yoil = " 일월화수목금토".charAt(dayOfWeek);   // 일요일:1, 월요일:2, ... 
+        
+        return yoil;
+    }  
+}
+
+```
+
+### src/main/webapp/WEB-INF/views에 yoil.jsp,yoilError.jsp 만들기
+```jsp
+<%@ page contentType="text/html;charset=utf-8" %>
+<html>
+<head>
+	<title>YoilTellerMVC</title>
+</head>
+<body>
+<h1>잘못된 요청입니다. 다시 요청해 주세요.</h1>
+<h1>year, month, day를 모두 올바른 값으로 입력하셔야합니다. </h1>
+</body>
+</html>
+```
+
+```jsp
+<%@ page contentType="text/html;charset=utf-8" %>
+<html>
+<head>
+	<title>YoilTellerMVC</title>
+</head>
+<body>
+<h1>${year}년 ${month}월 ${day}일은 ${yoil}요일입니다.</h1>
+</body>
+</html>
+```
+
+- 하지만 실행해도 값이 넘어오지 않을것이다.
+- 왜냐하면 넘기려는 결과를 model에 묶지 않았기 때문이다.
+
+### 데이터 model 객체에 묶기
+```java
+ @RequestMapping("/getYoil") // http://localhost:8080/ch2/getYoil?year=2021&month=10&day=1
+    //    public static void main(String[] args) {
+    //public void main(int year, int month, int day, Model model) throws IOException {
+	public String main(int year, int month, int day, Model model) throws IOException {	
+
+        // 2. 처리 -> 잘 안변함
+    	
+    	//유효성 검사
+    	if(!isValid(year,month,day)) {
+    		return "yoilError"; //넘어온 값이 올바르지 않다면 넘어갈 페이지
+    	}
+
+    	char yoil = getYoil(year,month,day);
+
+	    model.addObject("year",  date.getYear());     	
+      	model.addObject("month", date.getMonth());     	
+      	model.addObject("day",   date.getDay());
+        model.addObject("myDate", date);
+      	model.addObject("yoil", yoil);    
+
+		//내가정보를 보여주고 싶은 페이지를 지정한다.
+		return "yoil"; // /WEB-INF/views/yoil.jsp
+
+    }
+```
+
+- 다시 확인하기
+
+
+![image](image/mvc.png)
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ##  Ex_날짜_SpringArchitecture 프로젝트 생성하기
 
@@ -778,6 +1035,7 @@ public class WebInitializer extends AbstractAnnotationConfigDispatcherServletIni
 	//DispatcherServlet이 사용할 설정 클래스를 반환한다.
 	//Spring MVC 웹 영역 설정을 담당한다.
 	//VIEW와 Controller 관련 설정을 담당하는 메서드
+
 	@Override
 	protected Class<?>[] getServletConfigClasses() {
 		return new Class[] { ServletContext.class };
@@ -832,8 +1090,23 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
 @Configuration
+//@Configuration : 설정파일을 만들기 위한 어노테이션, Bean을 등록하기 위한 어노테이션
+
 @EnableWebMvc
+//@EnableWebMvc : Enable로 시작하는 어노테이션을 @Configuration이 붙은 설정 클래스에 붙임으로써 이와 관련된 기능들을 편리하게 제공하고 있다.
+//어노테이션 기반의 SpringMvc를 구성할때 필요한 Bean 설정들을 자동으로 해주는 어노테이션이다.
+//예)
+//DispatcherServlet : SpringMVC의 핵심이며, 클라이언트의 HTTP요청을 적절한 컨트롤러로 보내주는 역할
+//ContextLoaderListener : SpringApplicationContext를 생성하고 로드하는 역할을 한다. 
+//						  어플리케이션 전반에 걸쳐 사용되는 Bean을 정의한 rootContext를 초기화 한다.
+//ServletConfig : DispatcherServlet이 사용할 설정을 지정한다.
+//RequestMappingHandlerMapping : @RequestMapping 어노테이션을 기반으로 URL과 컨트롤러 메서드를 매핑하는 역할을 하는 Bean
+//RequestMappingHandlerAdapter : 컨트롤러 메서드의 실행을 처리하고, 반환값을 적절한 HTTP응답으로 변환하는 역할
+//ViewResolver: 뷰의 논리적인 이름을 실제 뷰로 매핑합니다. 
+
 @ComponentScan("컨트롤러 있는 패키지")
+//@ComponentScan : @Component어노테이션 및 streotype(@Service, @Repository, @Controller)어노테이션이 부여된 Class들을
+//자동으로 Scan하여 Bean으로 등록해주는 역할을 하는 어노테이션이다.
 public class ServletContext implements WebMvcConfigurer {
 
 	@Override
@@ -852,7 +1125,6 @@ public class ServletContext implements WebMvcConfigurer {
 }
 
 ```
-
 
 ## PersonVO 코드 수정하기
 ```java

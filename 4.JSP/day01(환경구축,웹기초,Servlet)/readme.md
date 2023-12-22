@@ -331,14 +331,17 @@ public class HelloServlet extends HttpServlet{
 @Override
 	public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException {
 		// 1. 입력
-		// 2. 처리
-		// 3. 출력
+		
+	
 		System.out.println("[HelloServlet] service() is called");
 
+		// 2. 처리
 		int total = 0;
 		for(int i = 1; i < 101; i++)
 			total += i;
-		
+
+
+		// 3. 출력
 		response.setContentType("text/html; charset=utf-8");
 		PrintWriter out = response.getWriter();
 		out.println("<html>");
