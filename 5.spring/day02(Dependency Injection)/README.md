@@ -10,6 +10,7 @@
 - com.korea.test_di
 
 ## pom.xml 복사해오기, config패키지 복사해오기
+- pom.xml의 내용을 복사해서 붙혀넣고 groupId와 ArtifactId수정하기
 - root-context.xml,servlet-context.xml,web.xml 삭제하기
 
 ## dao 패키지에 BoardDAO 인터페이스 만들기
