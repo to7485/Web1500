@@ -538,7 +538,7 @@ public class HomeController {
 		
 		String formattedDate = dateFormat.format(date);
 		
-		model이 request와 비슷한 역할을 한다.
+		//model이 request와 비슷한 역할을 한다.
 		model.addAttribute("serverTime", formattedDate );
 		model.addAttribute("hello","스프링은 처음입니다.");
 		
@@ -639,7 +639,6 @@ public class HomeController {
 |@RequiredArgsConstructor|final이나 @NonNull인 필드 값만 파라미터로 받는 생성자를 만들어줍니다.|
 |@Data|@Getter, @Setter, @RequiredArgsConstructor, @ToString, @EqualsAndHashCode을 한꺼번에 설정|
 
-* * *
 
 # MVC 디자인 패턴 이론
 - MVC는 Model, View, Controller의 약자로, 클라이언트와 상호작용하는 소프트웨어를 설계함에 있어 세가지 요소로 나누는 것을 말한다.
@@ -914,81 +913,9 @@ public class YoilTellerMVC {
 
 ![image](image/mvc.png)
 
+<hr>
 
-
-
-
-
-
-
-
-
-
-
-
-
-##  Ex_날짜_SpringArchitecture 프로젝트 생성하기
-
-## vo패키지에 PersonVO클래스 만들기
-```java
-package vo;
-
-import org.springframework.stereotype.Component;
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class PersonVO {
-	private String name,tel;
-	private int age;
-}
-
-```
-## non_spring.jsp 만들기
-- 더이상 서블릿에서 내용을 가져오는게 아니기 때문에 스크립트릿을 사용해보자.
-```jsp
-<%@page import="vo.PersonVO"%>
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<%
-	PersonVO p1 = new PersonVO();
-	p1.setName("일길동");
-	p1.setAge(30);
-	p1.setTel("010-111-2222");
-	
-	PersonVO p2 = new PersonVO("이길동","010-3333-3333",35);
-	
-	request.setAttribute("p1", p1);
-	request.setAttribute("p2", p2);
-
-%>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
-	<p>${ p1.name } / ${ p1.age } / ${ p1.tel }</p>
-	<p>${ p2.name } / ${ p2.age } / ${ p2.tel }</p>
-	
-</body>
-</html>
-
-```
-
-![image](image/person.png)
-
-jsp까지는 구조가 복잡한 형태는 아니지만 스프링은 구동되는 순서가 다르면 이해하기 힘들다<br>
-
-## config 패키지 생성하기
-- web.xml, root-context.xml, servlet-context.xml 삭제하기
-
-![image](image/delete.png)
+# 어노테이션 기반의 설정파일 생성하기
 
 ## web.xml 역할을 하는 WebInitializer.java 생성하기
 ```java
@@ -1125,6 +1052,70 @@ public class ServletContext implements WebMvcConfigurer {
 }
 
 ```
+
+
+## vo패키지에 PersonVO클래스 만들기
+```java
+package vo;
+
+import org.springframework.stereotype.Component;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class PersonVO {
+	private String name,tel;
+	private int age;
+}
+
+```
+## non_spring.jsp 만들기
+- 더이상 서블릿에서 내용을 가져오는게 아니기 때문에 스크립트릿을 사용해보자.
+```jsp
+<%@page import="vo.PersonVO"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%
+	PersonVO p1 = new PersonVO();
+	p1.setName("일길동");
+	p1.setAge(30);
+	p1.setTel("010-111-2222");
+	
+	PersonVO p2 = new PersonVO("이길동","010-3333-3333",35);
+	
+	request.setAttribute("p1", p1);
+	request.setAttribute("p2", p2);
+
+%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<p>${ p1.name } / ${ p1.age } / ${ p1.tel }</p>
+	<p>${ p2.name } / ${ p2.age } / ${ p2.tel }</p>
+	
+</body>
+</html>
+
+```
+
+![image](image/person.png)
+
+jsp까지는 구조가 복잡한 형태는 아니지만 스프링은 구동되는 순서가 다르면 이해하기 힘들다<br>
+
+## config 패키지 생성하기
+- web.xml, root-context.xml, servlet-context.xml 삭제하기
+
+![image](image/delete.png)
+
+
 
 ## PersonVO 코드 수정하기
 ```java
