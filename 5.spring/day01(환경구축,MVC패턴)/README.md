@@ -685,6 +685,7 @@ public class HomeController {
 
 
 ## com.korea.first 패키지에 YoilTellerMVC클래스 생성하기
+
 ```java
 @Controller
 public class YoilTeller {
@@ -852,18 +853,6 @@ public class YoilTellerMVC {
 ```
 
 ### src/main/webapp/WEB-INF/views에 yoil.jsp,yoilError.jsp 만들기
-```jsp
-<%@ page contentType="text/html;charset=utf-8" %>
-<html>
-<head>
-	<title>YoilTellerMVC</title>
-</head>
-<body>
-<h1>잘못된 요청입니다. 다시 요청해 주세요.</h1>
-<h1>year, month, day를 모두 올바른 값으로 입력하셔야합니다. </h1>
-</body>
-</html>
-```
 
 ```jsp
 <%@ page contentType="text/html;charset=utf-8" %>
@@ -877,12 +866,25 @@ public class YoilTellerMVC {
 </html>
 ```
 
-- 하지만 실행해도 값이 넘어오지 않을것이다.
-- 왜냐하면 넘기려는 결과를 model에 묶지 않았기 때문이다.
+```jsp
+<%@ page contentType="text/html;charset=utf-8" %>
+<html>
+<head>
+	<title>YoilTellerMVC</title>
+</head>
+<body>
+<h1>잘못된 요청입니다. 다시 요청해 주세요.</h1>
+<h1>year, month, day를 모두 올바른 값으로 입력하셔야합니다. </h1>
+</body>
+</html>
+```
+- 컨트롤러에서 작업을 한 부분이 JSP까지 넘어오지 않았다.
+
 
 ### 데이터 model 객체에 묶기
+- 더이상 response객체도 필요가 없고 Model 객체가 필요하다.
 ```java
- @RequestMapping("/getYoil") // http://localhost:8080/ch2/getYoil?year=2021&month=10&day=1
+ @RequestMapping("/getYoil") // http://localhost:8080/ch2/getYoil?year=2021&month=10&day=1 주소창에 입력하기
     //    public static void main(String[] args) {
     //public void main(int year, int month, int day, Model model) throws IOException {
 	public String main(int year, int month, int day, Model model) throws IOException {	
@@ -896,22 +898,47 @@ public class YoilTellerMVC {
 
     	char yoil = getYoil(year,month,day);
 
-	    model.addObject("year",  date.getYear());     	
-      	model.addObject("month", date.getMonth());     	
-      	model.addObject("day",   date.getDay());
-        model.addObject("myDate", date);
-      	model.addObject("yoil", yoil);    
+		//3. 계산한 결과를 model에 저장
+	    model.addAttribute("year",  year);     	
+      	model.addAttribute("month", month);     	
+      	model.addAttribute("day",   day);
+      	model.addAttribute("yoil", yoil);   
 
 		//내가정보를 보여주고 싶은 페이지를 지정한다.
 		return "yoil"; // /WEB-INF/views/yoil.jsp
 
     }
+
+	...
+
 ```
 
 - 다시 확인하기
 
 
 ![image](image/mvc.png)
+
+### 메서드의 반환값이 View로 바뀐 이유
+- servlet-context.xml이 웹과 관련된 설정을 담고 있다.
+- 설정은 자신의 마음대로 바꿀수 있다.
+
+![image](image/servlet-context.png)
+
+```xml
+...
+
+<!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
+	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<beans:property name="prefix" value="/WEB-INF/views/" /> <!-- 접두사로 붙여라 -->
+		<beans:property name="suffix" value=".jsp" /> <!-- 접미사로 붙여라 -->
+	</beans:bean>
+
+...
+
+```
+
+## @RequestParam, @ModelAttribute
+
 
 <hr>
 
