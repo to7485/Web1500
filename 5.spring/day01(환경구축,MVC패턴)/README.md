@@ -937,6 +937,127 @@ public class YoilTellerMVC {
 
 ```
 
+### 스프링 MVC로 나누기 총정리
+1. 입력받을 값들을 매개변수로 선언해서 값들을 받는다.
+2. 메서드 내부에서 받은 값들을 처리한다.
+3. 처리한 결과를 model에 저장한다음 view를 반환해준다.
+4. DispatcherServlet이 모델객체의 값을 읽어서 View에 전달해준다.
+
+## 메서드의 반환형이 될 수 있는 타입
+### 1. void
+##### 매핑된 url에 의해 View의 이름이 결정된다.
+- 잘은 안쓰지만 가능은 하다.
+- View(jsp)의 이름이 바뀌었을때 매핑만 바꾸면 되서 관리해야 할 부분이 줄어든다.
+```java
+@Controller
+public class YoilTellerMVC {
+    @RequestMapping("/getYoil")
+	public void main(int year, int month, int day, Model model) throws IOException {	
+
+    	if(!isValid(year,month,day)) {
+    		return "yoilError";
+    	}
+
+    	char yoil = getYoil(year,month,day);
+    	
+	    model.addAttribute("year",  year);     	
+      	model.addAttribute("month", month);     	
+      	model.addAttribute("day",   day);
+      	model.addAttribute("yoil", yoil);    
+
+		return "yoil";
+
+    }
+```
+- 매핑이 잘 되는지 getYoil.jsp 만들어보기
+
+
+### 2. ModelandView
+- 매개변수로 model을 받을 수 있기때문에 얘도 잘 안쓰지만 알아만두자.
+```java
+@Controller
+public class YoilTellerMVC2 {
+    @RequestMapping("/getYoil")
+	public ModelAndView main(int year, int month, int day) throws IOException {	
+    	
+    	ModelAndView mv = new ModelAndView();
+
+    	if(!isValid(year,month,day)) {
+    		mv.setViewName("yoilError");
+    		return mv;
+    	}
+
+    	char yoil = getYoil(year,month,day);
+    	
+    	mv.addObject("year",  year);     	
+    	mv.addObject("month", month);     	
+    	mv.addObject("day",   day);
+    	mv.addObject("yoil", yoil);
+    	
+    	//결과를 보여줄 View를 지정해야 한다.
+    	mv.setViewName("yoil");
+    	
+    	//메서드는 하나의 값만 반환할 수 있기 때문에 mv객체에 값과 view를 같이 넣어서 반환한다.
+    	return mv;
+    }
+```
+
+## MVC패턴의 원리
+[Java Reflection API  설명 링크](https://inpa.tistory.com/entry/JAVA-%E2%98%95-%EB%88%84%EA%B5%AC%EB%82%98-%EC%89%BD%EA%B2%8C-%EB%B0%B0%EC%9A%B0%EB%8A%94-Reflection-API-%EC%82%AC%EC%9A%A9%EB%B2%95)
+```java
+package com.korea.first;
+
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
+import java.util.StringJoiner;
+
+public class MethodInfo {
+	public static void main(String[] args) throws Exception{
+
+		//1. YoilTellerMVC클래스의 객체를 생성
+		//Java.lang.Class 클래스
+		//클래스의 정보를 얻어오기위한 클래스이다.
+		//forName() : 클래스의 파일명을 인자로 넣어주면 해당하는 클래스를 반환해준다.
+		Class clazz = Class.forName("com.korea.first.YoilTellerMVC");
+		
+		//새로운 객체를 생성하는 방법
+		//프로그램이 동작하는 시점에 이름이 결정되는 경우에 사용한다.
+		Object obj = clazz.newInstance();
+		
+		//getDelcaredmethods()
+		//상속한 메서드를 제외하고 접근지정자에 상관없이 모든 메서드를 가져온다.
+		Method[] methodArr = clazz.getDeclaredMethods();
+		
+		for(Method m : methodArr) {
+			String name = m.getName();
+			Parameter[] paramArr = m.getParameters();
+//			Class[] paramTypeArr = m.getParameterTypes();
+			Class returnType = m.getReturnType();
+			
+			StringJoiner paramList = new StringJoiner(", ", "(", ")");
+			
+			for(Parameter param : paramArr) {
+				String paramName = param.getName();
+				Class  paramType = param.getType();
+				
+				paramList.add(paramType.getName() + " " + paramName);
+			}
+			
+			System.out.printf("%s %s%s%n", returnType.getName(), name, paramList);
+		}
+	} // main
+}
+
+/* [실행결과]
+java.lang.String main(java.lang.String year, java.lang.String month, java.lang.String day, org.springframework.ui.Model model)
+boolean isValid(int year, int month, int day)
+*/
+
+```
+###  스프링이 매개변수를 얻어오는 두가지 방법
+1. Reflection API
+2. Class File
+
 ## @RequestParam, @ModelAttribute
 
 
