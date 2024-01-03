@@ -1,5 +1,5 @@
 # Mybatis
-- Mybatis는 자바 오브젝트와 SQL사이의 자동 매핑 기능을 지원하는 ORM(Object relational Mapping)프레임워크이다.
+- Mybatis는 자바 오브젝트와 SQL사이의 자동 매핑 기능을 지원하는 sql mapper프레임워크이다.
 - SQL을 별도의 파일로 분리해서 관리하게 해준다.
 - Mybatis를 사용하지 않고 직접 JDBC를 사용할 경우의 문제점
     - 개발자가 반복적으로 작성해야할 코드가 많고, 서비스 로직 코드와 쿼리를 분리하기 어렵다.
