@@ -883,14 +883,16 @@ public int board_insert(BoardVO vo) {
 		}
 
 		$.ajax({
-			url: "/board/del",
-			type: post,
-			data: JSON.stringify({idx: $idx}),
-			contentType: "application/json; charset=utf-8",
-			success: function () {
-				window.location.href = "/board/board_list?page=" + page;
-			}
-		});
+	            url: '/board/del',
+	            type: 'POST',
+	            data: JSON.stringify({'idx': $idx}),
+	            dataType: "json",
+	            contentType: "application/json; charset=utf-8",
+	            success: function (data) {
+	                alert(data["param"])
+	                window.location.href = "/board/board_list?page=" + $page;
+	            }
+	        })
 	})
 </script>
 
@@ -900,15 +902,34 @@ public int board_insert(BoardVO vo) {
 ## BoardController에 매핑 만들기
 ```java
 @PostMapping("del")
-@ResponseBody
-public void delete(int idx) {
-	BoardVO vo = board_dao.selectOne(idx);
-	
-	vo.setSubject("이미 삭제된 게시글 입니다.");
-	vo.setName("unknown");
-	
-	int res = board_dao.del_update(vo);
-}
+    @ResponseBody
+    public String del(@RequestBody String body) {
+        ObjectMapper om = new ObjectMapper();
+
+        Map<String, String> data = null;
+
+        try {
+            data = om.readValue(body, new TypeReference<Map<String, String>>() {
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        
+        int intIdx = Integer.parseInt(data.get("idx"));
+        
+        BoardDTO dto = boardDAO.selectOne(intIdx);
+        
+        dto.setSubject("deleted");
+        dto.setName("unknown");
+        
+        int res = boardDAO.del_update(dto);
+        
+        if(res > 0) {
+            return "{\"param\": \"success\"}";
+        }
+        return "{\"param\": \"fail\"}";
+    }
 ```
 
 ## board.xml에 쿼리문 작성하기
