@@ -1039,54 +1039,50 @@ public String reply_form(int idx, int page, Model model) {
 ### BoardController에 매핑하기
 ```java
 @GetMapping("reply")
-public String reply(BoardDTO dto,int idx, int page) {
+public RedirectView reply(BoardDTO dto, int idx, @RequestParam(defaultValue= "1")int page) {
 	String ip = request.getRemoteAddr();
-
-
-	//같은 레퍼런스를 가지고 있는 데이터들 중에서 지금 내가 추가하려고 하는
-	//step값 이상인 애들을 +1을 해놔야 하기 때문에 insert를 먼저하지 않는다.
-
-	//기준글의 idx를 이용해서 댓글을 달고싶은 게시글의 정보를 가져온다.
+	
+	//기준글의 idx를 이용하여 댓글을 달고싶은 게시글의 정보 가져오기
 	BoardDTO base_dto = board_dao.selectOne(idx);
-
-	//기준글에 step이상 값은 step = step + 1 처리
-	int res = board_dao.update_step(base_dto); //-> dao에 만들러 가기
-
-	vo.setIp(ip);
-
-	//댓글이 들어갈 위치 선정
-	vo.setRef(base_dto.getRef());
-	vo.setStep(base_dto.getStep()+1);
-	vo.setDepth(base_dto.getDepth()+1);
-
+	
+	//기준글에 step 이상값은 step = step + 1 처리
+	int res = board_dao.update_step(base_dto);
+	
+	dto.setIp(ip);
+	
+	//답글이 들어갈 위치 선정
+	dto.setRef(base_dto.getRef());
+	dto.setStep(base_dto.getStep()+1);
+	dto.setDepth(base_dto.getDepth()+1);
+	
 	res = board_dao.reply(dto);
-
-	if(res > 0) {
-		return "redirect:board_list.do?page="+page;
-	}
-
-	return null;
+	
+	return new RedirectView("/board/board_list?page="+page);
 }
 ```
 
 ### BoardMapper에 메서드 만들기
 ```java
-//댓글추가를 위한 step+1
-public int update_step(BoardDTO dto);
+//step증가
+public int board_update_step(BoardDTO dto);
 
-//댓글추가
-public int reply(BoardDTO dto);
+//답글 추가
+public int board_reply(BoardDTO dto);
 ```
 
 ### BoardDAO에 연결하기
 ```java
-public int update_step(BoardDTO dto){
-	return BoardMapper.update_step(dto);
+//step 증가
+public int update_step(BoardDTO dto) {
+	int res = boardMapper.board_update_step(dto);
+	return res;
 }
 
-public int reply(BoardDTO dto){
-	 BoardMapper.reply(dto);
-};
+//답글추가
+public int reply(BoardDTO dto) {
+	int res = boardMapper.board_reply(dto);
+	return res;
+}
 ```
 
 ### 쿼리문 추가하기
