@@ -980,52 +980,139 @@ public String reply_form(int idx, int page, Model model) {
 ```html
 <!DOCTYPE html>
 <html>
+
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-<script>
+	<meta charset="EUC-KR">
+	<title>Insert title here</title>
+	<script>
 	function send_check(){
 		var f = document.f;
-		
 		f.submit();
 	}
-</script>
-</head>			<!-- reply.do?subject=ooo&name=홍길동&content=aaaaaaa.... -->
+	</script>
+</head>
+
 <body>
-	<form name="f"
-		  method="post"
-		  action="reply.do">
-	<input type="hidden" name="idx" value="${param.idx}">
-	<input type="hidden" name="page" value="${param.page}">
-		  
-	<table border="1">
-		<caption>:::댓글 쓰기:::</caption>
-		<tr>
-			<th>제목</th>
-			<td><input name="subject" style="width:370px;"></td>
-		</tr>
-		<tr>
-			<th>작성자</th>
-			<td><input name="name" style="width:370px;"></td>
-		</tr>
-		<tr>
-			<th>내용</th>
-			<td><textarea name="content" rows="10" cols="50" style="resize:none;"></textarea></td>
-		</tr>
-		<tr>
-			<th>비밀번호</th>
-			<td><input name="pwd" type="password"></td>
-		</tr>
-		<tr>
-			<td colspan="2">
-				<img src="img/btn_reg.gif" onclick="send_check();">
-				<img src="img/btn_back.gif" onclick="location.href='board_list.do'">
-			</td>
-		</tr>
-	</table>
+	<form name="f" th:action="@{/board/reply}" th:object="${dto}" method="get">
+		 <input type="hidden" name="page" th:value="${param.page}"/> //BoardController에서 넘어온 page 받아주기
+		<table border="1">
+			<caption>:::새 글 쓰기:::</caption>
+
+			<tr>
+				<th>제목</th>
+				<td><input th:field="*{subject}" style="width:370px;"></td>
+			</tr>
+			<tr>
+				<th>작성자</th>
+				<td><input th:field="*{name}" style="width:370px;"></td>
+			</tr>
+			<tr>
+				<th>내용</th><!-- 가로로 50글자 세로로 엔터 10번정도 칠수 있는 크기 -->
+				<td><textarea th:field="*{content}" rows="10" cols="50" style="resize:none;"></textarea></td>
+			</tr>
+			<tr>
+				<th>비밀번호</th>
+				<td><input th:field="*{pwd}" type="password"></td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<img src="/img/btn_reg.gif" id="send_check" style="cursor:pointer;">
+					<a th:href="@{/board/board_list(page=${param.page})}">
+						<img src="/img/btn_back.gif" style="cursor:pointer;">
+					</a>
+				</td>
+			</tr>
+		</table>
 	</form>
 </body>
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script>
+	const $sendBtn = $("img#send_check");
+
+	$sendBtn.on("click", function () {
+		$("form[name='f']").submit();
+	});
+</script>
 </html>
 ```
 
+### BoardController에 매핑하기
+```java
+@GetMapping("reply")
+public String reply(BoardDTO dto,int idx, int page) {
+	String ip = request.getRemoteAddr();
+
+
+	//같은 레퍼런스를 가지고 있는 데이터들 중에서 지금 내가 추가하려고 하는
+	//step값 이상인 애들을 +1을 해놔야 하기 때문에 insert를 먼저하지 않는다.
+
+	//기준글의 idx를 이용해서 댓글을 달고싶은 게시글의 정보를 가져온다.
+	BoardDTO base_dto = board_dao.selectOne(idx);
+
+	//기준글에 step이상 값은 step = step + 1 처리
+	int res = board_dao.update_step(base_dto); //-> dao에 만들러 가기
+
+	vo.setIp(ip);
+
+	//댓글이 들어갈 위치 선정
+	vo.setRef(base_dto.getRef());
+	vo.setStep(base_dto.getStep()+1);
+	vo.setDepth(base_dto.getDepth()+1);
+
+	res = board_dao.reply(dto);
+
+	if(res > 0) {
+		return "redirect:board_list.do?page="+page;
+	}
+
+	return null;
+}
+```
+
+### BoardMapper에 메서드 만들기
+```java
+//댓글추가를 위한 step+1
+public int update_step(BoardDTO dto);
+
+//댓글추가
+public int reply(BoardDTO dto);
+```
+
+### BoardDAO에 연결하기
+```java
+public int update_step(BoardDTO dto){
+	return BoardMapper.update_step(dto);
+}
+
+public int reply(BoardDTO dto){
+	 BoardMapper.reply(dto);
+};
+```
+
+### 쿼리문 추가하기
+```xml
+<!-- 댓글작성을 위한 STEP 증가 -->
+<update id="board_update_step" parameterType="board">
+	update board set step = step + 1
+	where ref = #{ref} and step > #{step}
+</update>
+
+<!-- 댓글달기 -->
+<insert id="board_reply" parameterType="board">
+	insert into board values(
+		seq_board_idx.nextVal,
+		#{name},
+		#{subject},
+		#{content},
+		#{pwd},
+		#{ip},
+		sysdate,
+		0,
+		#{ref},
+		#{step},
+		#{depth},
+		0
+	)
+</insert>
+```
 
