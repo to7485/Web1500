@@ -836,10 +836,10 @@ public int board_insert(BoardVO vo) {
 ![image](https://github.com/to7485/Web1500/assets/54658614/7a7a2566-0f38-45bf-8969-0c8f9e31596c)
 
 
-# 삭제하기
+## 삭제하기
 - 삭제 버튼을 누르면 삭제된것 처럼 보이게 하기
 
-## board_view.html에 메서드 작성하기
+### board_view.html에 메서드 작성하기
 ```html
 		<tr>
 			<th>비밀번호</th>
@@ -899,7 +899,7 @@ public int board_insert(BoardVO vo) {
 </html>
 ```
 
-## BoardController에 매핑 만들기
+### BoardController에 매핑 만들기
 ```java
 @PostMapping("del")
     @ResponseBody
@@ -932,7 +932,7 @@ public int board_insert(BoardVO vo) {
     }
 ```
 
-## board.xml에 쿼리문 작성하기
+### board.xml에 쿼리문 작성하기
 ```xml
 <!-- 게시글 삭제(된 것 처럼 업데이트) -->
 <update id="del_update">
@@ -943,18 +943,42 @@ public int board_insert(BoardVO vo) {
 </update>
 ```
 
-## BoardMapper에 메서드 작성하기
+### BoardMapper에 메서드 작성하기
 ```java
 //게시글 삭제
 public int del_update(BoardVO vo);
 ```
 
-## BoardDAO에 메서드 작성하기
+### BoardDAO에 메서드 작성하기
 ```java
 //게시글 삭제
 public int del_update(BoardVO vo) {
 	return boardMapper.del_update(vo);
 }
+```
+
+## 답글 달기
+
+### board_view.html 수정하기
+- reply()메서드 작성하기
+```html
+function reply(){
+	location.href="reply_form?idx=${vo.idx}&page=${param.page}";
+}
+```
+
+### boardController에 매핑하기
+```java
+@GetMapping("reply_form")
+public String reply_form(int idx, int page, Model model) {
+	model.addAttribute("dto",new BoardDTO);
+	return "reply_from.jsp?idx="+idx+"&page="+page;
+}
+```
+
+### reply_form.html 생성하기
+```html
+
 ```
 
 
