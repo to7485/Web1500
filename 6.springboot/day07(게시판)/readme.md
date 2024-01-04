@@ -26,7 +26,7 @@ CREATE TABLE board(
 	ref int,  --기준글번호(댓글을 달기위한 메인글)
 	step int, --댓글순서(수직적)
 	depth int, --댓글의깊이(댓글의 댓글 개념)
-	del_info NUMBER(2) default 0
+	delInfo NUMBER(2) default 0
 );
 
 --샘플데이터 추가(메인글1 -> 댓글1)
@@ -545,35 +545,35 @@ public class BoardController {
 			<th width="100">작성일</th>
 			<th width="50">조회수</th>
 		</tr>
-		<th:block th:each="vo : ${list}">
-			<tr th:object="${vo}">
+		<th:block th:each="dto : ${list}">
+			<tr th:object="${dto}">
 				<td align="center" th:text="*{idx}"></td>
 
 				<td>
 					<!--depth가 0보다 크면 depth의 수만큼 반복하여 띄어쓰기를 해라-->
-					<th:block th:if="${vo.depth > 0}">
+					<th:block th:if="${dto.depth > 0}">
 						<span th:each="depth : ${#numbers.sequence(1,vo.depth)}">&nbsp;</span>
 					</th:block>
 
 					<!--depth가 0이 아니면 댓글이기 때문에 ㄴ을 써라-->
-					<th:block th:if="${vo.depth ne 0}">ㄴ</th:block>
+					<th:block th:if="${dto.depth ne 0}">ㄴ</th:block>
 
-					<!-- del_info가 -1이 아니면 삭제가 안된 글이기 때문에 누를수 있게 해주자.-->
-					<th:block th:if="${vo.del_info ne -1}">
+					<!-- delInfo가 -1이 아니면 삭제가 안된 글이기 때문에 누를수 있게 해주자.-->
+					<th:block th:if="${dto.delInfo ne -1}">
 						<a th:href="@{/board/view(idx=*{idx},page=${param.page})}">
 							<font color="black" th:text="*{subject}"></font>
 						</a>
 					</th:block>
 
-					<!-- del_info가 -1면 삭제된 글이기 때문에 누를수 없게 해주자.-->
-					<th:block th:if="${del_info eq -1}">
+					<!-- delInfo가 -1면 삭제된 글이기 때문에 누를수 없게 해주자.-->
+					<th:block th:if="${delInfo eq -1}">
 						<font color="gray" th:text="*{subject}"></font>
 					</th:block>
 				</td>
 
-				<!--del_info가 -1이면 unknown으로 나오게 아니면 작성자명이 나오게 해주자.-->
-				<td th:if="${vo.del_info eq -1}" th:text="unknown"></td>
-				<td th:unless="${vo.del_info eq -1}" th:text="*{name}"></td>
+				<!--delInfo가 -1이면 unknown으로 나오게 아니면 작성자명이 나오게 해주자.-->
+				<td th:if="${vo.delInfo eq -1}" th:text="unknown"></td>
+				<td th:unless="${vo.delInfo eq -1}" th:text="*{name}"></td>
 				<td th:text="${#strings.substring(vo.regdate,0,10)}"></td>
 				<td th:text="*{readhit}"></td>
 			</tr>
@@ -938,7 +938,7 @@ public int board_insert(BoardVO vo) {
 <update id="del_update">
 	update board set subject = #{subject},
 	name = #{name},
-	del_info = -1
+	delInfo = -1
 	where idx=#{idx}
 </update>
 ```
