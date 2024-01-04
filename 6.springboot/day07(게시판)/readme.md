@@ -1112,3 +1112,223 @@ public int reply(BoardDTO dto) {
 </insert>
 ```
 
+## 로그인 기능 만들기
+### board_list.html에 코드 추가하기
+```html
+<table border="1" width="700">
+<tr>
+	<td colspan="5" align="right">
+		<th:block th:if="${session.id == null}">
+			<input type="button" value="로그인" name="login_form">
+			<input type="button" value="회원가입" name="join">
+		</th:block>
+		<th:block th:unless="${session.id == null}">
+			<input type="button" value="로그아웃" name="logout">
+		</th:block>
+</tr>
+<tr>
+	<td colspan="5"><img src="/img/title_04.gif"></td>
+</tr>
+
+js코드 추가
+let $loginFormButton = $("input[name='login_form']")
+	
+	$loginFormButton.on("click", function(){
+		window.location.href="/board/login_form";
+	})
+```
+
+### BoardController에 코드 매핑해주기
+```java
+@GetMapping("login_form")
+public String login_form(@ModelAttribute("dto") MemberDTO dto) {
+	return "/board/login_form";
+}
+```
+
+### login_form.html 작성하기
+```html
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<form th:action="@{/board/login}" th:object="${dto}" method="get">
+		<table border="1" align="center">
+			<caption>:::로그인:::</caption>
+			<tr>
+				<th>아이디</th>
+				<td><input th:field="*{id}"></td>
+			</tr>
+			<tr>
+				<th>비밀번호</th>
+				<td><input th:field="*{pwd}" type="password"></td>
+			</tr>
+			<tr>
+				<td colspan="2" align="center">
+					<input type="button" value="로그인" name="login">
+				</td>
+			</tr>
+		</table>
+	</form>
+</body>
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script>
+	let $loginButton = $("input[name='login']")
+
+	
+	$loginButton.on("click", function(){
+		let $id = $("input[name='id']").val()
+		let $pwd = $("input[name='pwd']").val()
+		
+		if($id == ''){
+			alert("아이디를 입력해주세요")
+			return;
+		}
+		
+		if($pwd == ''){
+			alert("비밀번호를 입력해주세요")
+			return;
+		}
+		
+		
+		$.ajax({
+			url:'/board/login',
+			type:'POST',
+			data:JSON.stringify({'id' : $id, 'pwd' : $pwd}),
+			dataType:'json',
+			contentType:'application/json; charset=utf-8',
+			success: function(data){
+				if(data["param"] == 'no_id'){
+					alert('아이디가 존재하지 않습니다.');
+					return;
+				} else if(data["param"] == 'no_pwd'){
+					alert('비밀번호가 일치하지 않습니다.');
+					return;
+				} else {
+					alert('로그인 성공');
+					window.location.href = "/board/board_list"
+				}
+				
+				
+			}
+		})
+		
+	})
+</script>
+</html>
+```
+
+### BoardController에 매핑하기
+```java
+@PostMapping("login")
+@ResponseBody
+public String login(@RequestBody String body) {
+	ObjectMapper om = new ObjectMapper();
+	
+	Map<String, String> data = null;
+	
+	try {
+		data = om.readValue(body, new TypeReference<Map<String,String>>(){
+		});
+	} catch (Exception e) {
+		// TODO: handle exception
+	}
+	
+	String id = data.get("id");
+	String pwd = data.get("pwd");
+	
+	MemberDTO dto = member_dao.loginCheck(id);
+	
+	if(dto == null) {
+		return "{\"param\":\"no_id\"}";
+	}
+	
+	if(!dto.getPwd().equals(pwd)) {
+		return "{\"param\":\"no_pwd\"}";
+	}
+	
+	session.setAttribute("id", dto);
+	
+	return "{\"param\":\"clear\"}";
+	
+}
+```
+
+### MemberDAO 생성하기
+```java
+package com.korea.board.dao;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.korea.board.dto.MemberDTO;
+import com.korea.board.mapper.MemberMapper;
+
+@Repository
+
+public class MemberDAO {
+
+	@Autowired
+	private MemberMapper memberMapper;
+	
+	//로그인체크
+	public MemberDTO loginCheck(String id) {
+		return memberMapper.loginCheck(id);
+	}	
+}
+```
+
+### MemberMapper 생성하기
+```java
+package com.korea.board.mapper;
+
+import org.apache.ibatis.annotations.Mapper;
+
+import com.korea.board.dto.MemberDTO;
+
+@Mapper
+public interface MemberMapper {
+
+	//로그인체크
+	public MemberDTO loginCheck(String id);
+}
+```
+
+### member.xml 생성하기
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+	  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0/EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.korea.board.mapper.MemberMapper">
+
+		<select id="loginCheck">
+			select * from member where id=#{id}
+		</select>
+</mapper>
+```
+## 로그아웃하기
+### board_list.html에 코드 작성하기
+```html
+//로그아웃버튼
+let $logoutButton = $("input[name='logout']")
+
+$logoutButton.on("click", function(){
+	window.location.href='/board/logout';
+})
+```
+
+### BoardController에 매핑 잡아주기
+```java
+@GetMapping("logout")
+public RedirectView logout() {
+	session.removeAttribute("id");
+	return new RedirectView("/board/board_list");
+}
+```
+
+
+
+
