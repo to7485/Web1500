@@ -323,6 +323,7 @@ public class BoardListAction extends HttpServlet {
 			<th width="120">작성자</th>
 			<th width="100">작성일</th>
 			<th width="50">조회수</th>
+		</tr>
 			<!-- 게시물들을 보여줄 for each -->
 			<c:forEach var="vo" items="${list}">
 			<tr>
