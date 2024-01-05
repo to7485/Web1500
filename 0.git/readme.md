@@ -100,6 +100,61 @@
 ### 12. git merge
 - 개별 branch에서 마친 작업을 master branch로 병합
 
+## git 설치하기
+
+### 1. 크롬에서 git 입력 후 페이지 들어가서 설치하기
+![image](image/git_download.png)
+
+![image](image/git_download2.png)
+
+### 2. 로컬 저장소 만들기
+- 로컬저장소로 사용하기 위한 폴더 생성하기
+- 우클릭 하여 gitbash열기
+- git init으로 로컬저장소로 확정
+  - 보기 -> 숨김파일 표시, 확장자 표시
+
+#### 로컬폴더내의 변경사항을 stage에 등록
+- 현재 디렉토리의 일부만 stage에 올리기
+  - git add 파일명
+- 현재 디렉토리의 모든 변경내용을 stage에 올리기
+  - git add .
+- 작업 디렉토리 내의 모든 변경내용을 모두 stage영역에 올리기
+  - git add -A
+
+#### 현재 상태 확인하기
+- git status
+
+#### stage에서 내리기
+- git rm --cached 파일명
+
+#### commit 하기
+- stage 상태의 파일들을 영구적으로 저장
+  - git commit;
+- 커밋을 하면서 메세지를 같이 할 수있는 옵션
+  - git commit -m '커밋 메세지'
+
+### 3. branch만들기
+#### 브랜치 생성하기
+- git branch 브랜치명
+
+#### 브랜치 이동하기
+- git checkout 브랜치명
+
+※ commit이 완료되지 않으면 다른 브랜치로 이동 불가<br>
+- 바로 이전 브랜치로 돌아가기 : git checkout - 
+- branch생성과 동시에 해당 branch로 이동하기 : git checkout -b 브랜치명
+
+## 3. 로컬에 있는 두 branch를 merge하기
+1. Branch A에서부터 Branch B를 생성한다고 가정
+2. Branch B에서 작업 완료 후 Branch A에 Branch B의 내용 Merge하기
+
+### Merge 방법
+#### 1. branch A로 이동하기
+- git checkout branchA
+
+#### 2. branch B를 branch A에 Merge한다.
+- git merge branchB
+
 ## 깃허브(Github)란 무엇인가?
 - git을 사용하는 프로젝트를 지원하는 웹 호스팅 서비스
 
