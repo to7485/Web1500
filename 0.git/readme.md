@@ -114,6 +114,8 @@
 - git init으로 로컬저장소로 확정
   - 보기 -> 숨김파일 표시, 확장자 표시
 
+![image](image/git_1.png)
+
 #### 로컬폴더내의 변경사항을 stage에 등록
 - 현재 디렉토리의 일부만 stage에 올리기
   - git add 파일명
@@ -145,6 +147,13 @@
 - 바로 이전 브랜치로 돌아가기 : git checkout - 
 - branch생성과 동시에 해당 branch로 이동하기 : git checkout -b 브랜치명
 
+![image](image/git_2.png)
+
+- 다시 master로 이동하면 bye라는 파일은 없다
+- second라는 이름의 branch에만 존재하기 때문이다.
+
+![image](image/git_3.png)
+
 ## 3. 로컬에 있는 두 branch를 merge하기
 1. Branch A에서부터 Branch B를 생성한다고 가정
 2. Branch B에서 작업 완료 후 Branch A에 Branch B의 내용 Merge하기
@@ -155,6 +164,9 @@
 
 #### 2. branch B를 branch A에 Merge한다.
 - git merge branchB
+
+- master branch로 이동하고 second branch에 있는 내용을 merge한다.
+![image](image/git_4.png)
 
 ## 깃허브(Github)란 무엇인가?
 - git을 사용하는 프로젝트를 지원하는 웹 호스팅 서비스
