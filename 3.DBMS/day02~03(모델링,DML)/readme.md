@@ -291,20 +291,20 @@ SELECT first_name, salary FROM employees WHERE salary >= 10000 AND salary <= 130
 
 문제) 사원테이블에서 입사일이 05년9월21일인 사원의 정보를 사번, 이름, 입사일 순으로 출력
 
-select employee_id, first_name, hire_date from employees where hire_date='09/21/2005';
+select employee_id, first_name, hire_date from employees where hire_date='2005-09-21';
 
 
 예) 사원테이블에서 입사일이 05년9월21일 이후에 입사한 사원의 정보를 사번, 이름, 입사일 순으로 출력
 
-select employee_id, first_name, hire_date from employees where hire_date >='09/21/2005';
+select employee_id, first_name, hire_date from employees where hire_date >='2005-09-21';
 
 
 - 데이터베이스는 날짜의 크기비교가 가능하다.
 
 예) 사원테이블에서 06년도에 입사한 사원들의 정보를 사번, 이름, 직종, 입사일 순으로 출력
 
-select employee_id, first_name, job_id, hire_date from employees where hire_date>='01/01/2006' 
-and hire_date<='12/31/2006'
+select employee_id, first_name, job_id, hire_date from employees where hire_date>='2006-01-01' 
+and hire_date<='2006-12-31'
 
 문제) 사원테이블에서 급여가 4000~ 8000사이의 사원의 이름,직종,급여를 출력
 select first_name, job_id, salary from employees where salary >=4000 and salary<=8000;
