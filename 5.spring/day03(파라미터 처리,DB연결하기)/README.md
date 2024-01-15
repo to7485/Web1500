@@ -562,6 +562,9 @@ public class ParamController {
 ```
 
 ## ParamController.java에서 매핑 잡아주기
+### @ModelAttribute
+- 적용 대상을 Model의 속성으로 자동 추가해주는 어노테이션
+- 반환 타입 또는 컨트롤러 메서드의 매개변수에 적용이 가능하다.
 ```java
 package com.korea.param;
 
@@ -603,18 +606,26 @@ public class ParamController {
 	}
 	
 	@RequestMapping("insert2")
-	public String insert2(@RequestParam PersonDTO dto, Model model) {
-		//파라미터로 넘어온 name,age,tel을 vo 객체에 자동으로 setting을 해준다.
+	//public String insert2(@ModelAttribute("persontDTO") PersonDTO dto){
+	public String insert2(@ModelAttribute PersonDTO dto) {
+
 		//vo에 있는 이름이 있다면 따로 받는 파라미터에 같은 이름이 있으면 오류가 난다.
 		
 		현재 PersonVO에 변수가 세 개 있는데 파라미터를 두개(name과 age)만 던지면 tel는 자동으로 null값이 들어간다.
 		하지만 PersonVO에 있는 변수보다 많은 개수의 파라미터를 던지게 되면 문제가 된다.
-		model.addAttribute("dto",dto);
+
+		//model.addAttribute("dto",dto);
 		return MyPath.PATH + "insert_result.jsp";
 	}
-}
 
+	//컨트롤러의 매개변수가 기본형이거나 String일 경우 @RequestParam이 생략되어 있고
+	//참조형일때는 @ModelAttribute가 생략되어있다.
+}
 ```
+
+![image](image/getAge.png)
+
+- 메서드를 실행하고 난 결과를 어노테이션에 붙은 단어를 키값으로 model에 바로 바인딩을 해준다.
 
 ## views폴더에 insert_result.jsp 만들기
 ```java
