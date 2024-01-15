@@ -1,7 +1,7 @@
-# MVC 패턴에 대해서 자세히 알아보자
+# 스프링 프로젝트의 구성 살펴보기
 - 스프링의 구조에 대해서 총 정리하는 시간
-## Ex_날짜_DB
-- com.korea.db
+## Ex_날짜_mvc
+- com.korea.mvc
 
 ![image](image/artifactId.png)
 
@@ -98,7 +98,7 @@ import org.springframework.web.servlet.view.JstlView;
 
 @Configuration
 @EnableWebMvc
-@ComponentScan("com.korea.db")
+@ComponentScan("com.korea.mvc")
 //어노테이션에도 상속관계가 있다
 /*
  *@Component
@@ -283,20 +283,187 @@ public class TestController {
 
 # 파라미터 넘기기
 
-## vo 패키지에 PersonVO 클래스 만들기
-```java
-package vo;
+## @RequestParam, @ModelAttribute
+### @RequestParam
+- 요청의 파라미터를 연결할 매개변수에 붙히는 어노테이션
 
-@Getter
-@Setter
-public class PersonVO {
+```java
+@RequestParam("가져올 데이터의 이름") [데이터타입] [가져온데이터를 담을 변수]
+```
+
+```java
+package com.korea.study;
+
+import java.util.Date;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+@Controller
+public class RequestParamTest {
+	@RequestMapping("/requestParam")
+	public String main(HttpServletRequest request) {
+		String year = request.getParameter("year");
+//		http://localhost/ch2/requestParam         ---->> year=null
+//		http://localhost/ch2/requestParam?year=   ---->> year=""
+//		http://localhost/ch2/requestParam?year    ---->> year=""
+		System.out.printf("[%s]year=[%s]%n", new Date(), year);
+		return "yoil";
+	}
+
+	@RequestMapping("/requestParam2")
+	//생략가능
+	//name="year"는 파라미터 이름
+	//required 필수여부 true: 반드시 값이 넘어와야함
+//	public String main2(@RequestParam(name="year", required=false) String year) {   // 아래와 동일 
+	public String main2(String year) {   
+//		http://localhost/ch2/requestParam2         ---->> year=null
+//		http://localhost/ch2/requestParam2?year    ---->> year=""
+		System.out.printf("[%s]year=[%s]%n", new Date(), year);
+		return "yoil";
+	}
+
+	@RequestMapping("/requestParam3")
+//		public String main3(@RequestParam(name="year", required=true) String year) {   // 아래와 동일 
+		public String main3(@RequestParam String year) {   
+//		http://localhost/ch2/requestParam3         ---->> year=null   400 Bad Request. required=true라서 
+//		http://localhost/ch2/requestParam3?year    ---->> year=""
+		System.out.printf("[%s]year=[%s]%n", new Date(), year);
+		return "yoil";	
+	}
+
+	@RequestMapping("/requestParam4")
+	public String main4(@RequestParam(required=false) String year) {   
+//		http://localhost/ch2/requestParam4         ---->> year=null 
+//		http://localhost/ch2/requestParam4?year    ---->> year=""   
+		System.out.printf("[%s]year=[%s]%n", new Date(), year);
+		return "yoil";
+	}
+
+	@RequestMapping("/requestParam5")
+	public String main5(@RequestParam(required=false, defaultValue="1") String year) {   
+//		http://localhost/ch2/requestParam5         ---->> year=1   
+//		http://localhost/ch2/requestParam5?year    ---->> year=1   
+		System.out.printf("[%s]year=[%s]%n", new Date(), year);
+		return "yoil";
+	}
+	
+// =======================================================================
+	
+// 	year가 int일때
+
+	@RequestMapping("/requestParam6") 
+	public String main6(int year) {   
+//		http://localhost/ch2/requestParam6        ---->> 500 java.lang.IllegalStateException: Optional int parameter 'year' is present but cannot be translated into a null value due to being declared as a primitive type. Consider declaring it as object wrapper for the corresponding primitive type.
+//		http://localhost/ch2/requestParam6?year   ---->> 400 Bad Request, nested exception is java.lang.NumberFormatException: For input string: "" 
+		System.out.printf("[%s]year=[%s]%n", new Date(), year);
+		return "yoil";
+	}
+	
+	@RequestMapping("/requestParam7") 
+	public String main7(@RequestParam int year) {   
+//		http://localhost/ch2/requestParam7        ---->> 400 Bad Request, Required int parameter 'year' is not present
+//		http://localhost/ch2/requestParam7?year   ---->> 400 Bad Request, nested exception is java.lang.NumberFormatException: For input string: "" 
+		System.out.printf("[%s]year=[%s]%n", new Date(), year);
+		return "yoil";
+	}
+
+	@RequestMapping("/requestParam8") 
+	public String main8(@RequestParam(required=false) int year) {   
+	//	http://localhost/ch2/requestParam8        ---->> 500 java.lang.IllegalStateException: Optional int parameter 'year' is present but cannot be translated into a null value due to being declared as a primitive type. Consider declaring it as object wrapper for the corresponding primitive type.
+	//	http://localhost/ch2/requestParam8?year   ---->> 400 Bad Request, nested exception is java.lang.NumberFormatException: For input string: "" 
+		System.out.printf("[%s]year=[%s]%n", new Date(), year);
+		return "yoil";
+	}
+	
+	@RequestMapping("/requestParam9") 
+	public String main9(@RequestParam(required=true) int year) {   
+	//	http://localhost/ch2/requestParam9        ---->> 400 Bad Request, Required int parameter 'year' is not present
+	//	http://localhost/ch2/requestParam9?year   ---->> 400 Bad Request, nested exception is java.lang.NumberFormatException: For input string: "" 
+		System.out.printf("[%s]year=[%s]%n", new Date(), year);
+		return "yoil";
+	}
+	
+	@RequestMapping("/requestParam10")   
+	public String main10(@RequestParam(required=true, defaultValue="1") int year) {   
+	//	http://localhost/ch2/requestParam10        ---->> year=1   
+	//	http://localhost/ch2/requestParam10?year   ---->> year=1   
+		System.out.printf("[%s]year=[%s]%n", new Date(), year);
+		return "yoil";
+	}
+
+	@RequestMapping("/requestParam11")   
+	public String main11(@RequestParam(required=false, defaultValue="1") int year) {   
+//		http://localhost/ch2/requestParam11        ---->> year=1   
+//		http://localhost/ch2/requestParam11?year   ---->> year=1   
+		System.out.printf("[%s]year=[%s]%n", new Date(), year);
+		return "yoil";
+	}
+} // class
+```
+
+### yoil.jsp에 코드 추가하기
+```jsp
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>YoilTellerMVC</title>
+</head>
+<body>
+
+	<h1>year = <%= request.getParameter("year") %></h1>
+
+
+	<h1>${year}년 ${month}월 ${day}일은 ${yoil}요일입니다.</h1>
+</body>
+</html>
+```
+- 여러가지 매핑 넣어주면서 결과 확인하기
+
+## dto 패키지에 PersonDTO 클래스 만들기
+```java
+package dto;
+
+public class PersonDTO {
+
 	private String name, tel;
-	private int age;	
+	private int age;
+	
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getTel() {
+		return tel;
+	}
+	public void setTel(String tel) {
+		this.tel = tel;
+	}
+	public int getAge() {
+		return age;
+	}
+	public void setAge(int age) {
+		this.age = age;
+	}
+	
+	@Override
+	public String toString() {
+		return "PersonDTO [name=" + name + ", tel=" + tel + ", age=" + age + "]";
+	}	
 	
 }
 
 ```
 ## views 폴더에 insert_form.jsp 만들기
+
 ```jsp
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
@@ -312,13 +479,14 @@ public class PersonVO {
 </html>
 ```
 
-## com.korea.param 패키지에 ParamController.java 만들기
+## ParamController.java 만들기
 ```java
 @Controller
 public class ParamController {
 	value라고 하는 속성은 배열 형식으로 여러 가지 매핑을 줄 수 있다.
 	바인딩을 할게 없으면 return을 써서 바로 포워딩을 해주면 된다.
-	@RequestMapping(value= {"/","/insert_form.do"}) 가장 첫페이지 정도만 두개를 갖는다.
+	@RequestMapping(value= {"/","/insert_form"}) 
+	가장 첫페이지 정도만 두개를 갖는다.
 	public String insert_form() {
 		return MyPath.PATH + "insert_form.jsp";
 	}
@@ -417,42 +585,36 @@ public class ParamController {
 		return MyPath.PATH + "insert_form.jsp";
 	}
 	
-	@RequestMapping("/insert1.do")//name=홍길동&age=100&tel=010111111111
-	public String insert1(Model model, String name, int age, String tel) {
+	//name=홍길동&age=100&tel=010111111111
+	@RequestMapping("insert1")
+	public String insert1(@RequestParam String name,
+						  @RequestParam String tel, 
+						  @RequestParam int age,
+						  Model model) {
 		
-		jsp에서는 서블릿에서 파라미터를 받을 때 request객체를 이용하여 받았지만
-		스프링에서는 넘어오는 파라미터하고 메서드에서 받아주는 파라미터의 이름이 같다면
-		그냥 받아줄 수 있다.
-
-		정수는 정수로 들어와서 Integer.parseInt가 필요 없다.
 		
-		원래 post로 한글을 작성하면 깨진다. 그래서 request객체를 이용해서 setCharacterEncoding을 해줬는데
-		스프링에서는 해줘도 깨진다. 그래서 우리가 Filter를 추가해준것.
+		PersonDTO dto = new PersonDTO();
+		dto.setName(name);
+		dto.setTel(tel);
+		dto.setAge(age);
 		
-		PersonVO vo = new PersonVO();
-		vo.setName(name);
-		vo.setAge(age);
-		vo.setTel(tel);
-		
-		model.addAttribute("vo",vo);
+		model.addAttribute("dto",dto);
 		return MyPath.PATH + "insert_result.jsp";
 	}
 	
-	@RequestMapping("/insert2.do")
-	public String insert2(Model model, PersonVO vo) {
+	@RequestMapping("insert2")
+	public String insert2(@RequestParam PersonDTO dto, Model model) {
 		//파라미터로 넘어온 name,age,tel을 vo 객체에 자동으로 setting을 해준다.
 		//vo에 있는 이름이 있다면 따로 받는 파라미터에 같은 이름이 있으면 오류가 난다.
 		
 		현재 PersonVO에 변수가 세 개 있는데 파라미터를 두개(name과 age)만 던지면 tel는 자동으로 null값이 들어간다.
 		하지만 PersonVO에 있는 변수보다 많은 개수의 파라미터를 던지게 되면 문제가 된다.
-		model.addAttribute("vo",vo);
+		model.addAttribute("dto",dto);
 		return MyPath.PATH + "insert_result.jsp";
 	}
 }
 
 ```
-
-
 
 ## views폴더에 insert_result.jsp 만들기
 ```java
@@ -474,6 +636,97 @@ public class ParamController {
 	 컨트롤러를 거쳐서 jsp로 전환을 해줘야 한다.  -->
 </body>
 </html>
+```
+
+## 입력을 따로 했는데 어떻게 알아서 객체로 전달이 되는가
+```java
+package com.korea.study;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.util.StringUtils;
+
+public class SetterCall {
+	public static void main(String[] args) throws Exception{
+		
+		//요청한 값이 해쉬맵에 담겨있다고 했을 때
+		Map<String, String> map = new HashMap<>();
+		map.put("name", "홍길동");
+		map.put("tel", "010-1111-1111");
+		map.put("age", "10");
+		
+		Class<?> type = Class.forName("dto.PersonDTO");
+
+		// PersonDTO인스턴스를 생성하고, map의 값으로 초기화한다. 
+		Object obj = dataBind(map, type);
+		System.out.println("obj="+obj); // obj=[name=홍길동, tel=010-1111-1111, age=10]
+	} // main
+
+	private static Object dataBind(Map<String, String> map, Class<?> clazz) throws Exception {
+		// 1. PersonDTO인스턴스 생성
+//		Object obj = clazz.newInstance(); // deprecated method
+		Object obj = clazz.getDeclaredConstructor().newInstance(new Object[0]);
+
+		// 2. PersonDTO인스턴스의 setter를 호출해서, map의 값으로 MyDate를 초기화
+		// 	 2-1. PersonDTO의 모든 필드들을 돌면서 map에 있는지 찾는다.
+		// 	 2-2. 찾으면, 찾은 값을 setter로 객체에 저장한다.
+		Field[] ivArr = clazz.getDeclaredFields();
+		
+		for(int i=0;i<ivArr.length;i++) {
+			String name = ivArr[i].getName();
+			Class<?>  type = ivArr[i].getType();
+			
+			// map에 같은 이름의 key가 있으면 가져와서 setter호출 
+			Object value = map.get(name); // 못찾으면 value의 값은 null
+			Method method = null;
+			
+			try {   // map에 iv와 일치하는 키가 있을 때만, setter를 호출
+				if(value==null) continue;
+				
+				method = clazz.getDeclaredMethod(getSetterName(name), type); // setter의 정보 얻기	
+				System.out.println("method="+method);
+				method.invoke(obj, convertTo(value, type)); // obj의 setter를 호출
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		System.out.println(Arrays.toString(ivArr));
+		
+		return obj;
+	}
+
+	private static Object convertTo(Object value, Class<?> type) {
+		// value의 타입과 type의 타입이 같으면 그대로 반환
+		if(value==null || type==null || type.isInstance(value))
+			return value;
+		
+		// value의 타입과 type이 다르면, 변환해서 반환
+		if(String.class.isInstance(value) && type==int.class) // String -> int
+			return Integer.valueOf(""+value);
+
+		return value;
+	}
+
+	// iv의 이름으로 setter의 이름을 만들어서 반환하는 메서드("name" -> "setName")
+	private static String getSetterName(String name) {
+//		return "set"+name.substring(0,1).toUpperCase()+name.substring(1);
+		return "set" + StringUtils.capitalize(name); // org.springframework.util.StringUtils
+	}
+}
+
+/*
+[실행결과]
+method=public void dto.PersonDTO.setName(java.lang.String)
+method=public void dto.PersonDTO.setTel(java.lang.String)
+method=public void dto.PersonDTO.setAge(int)
+[private java.lang.String dto.PersonDTO.name, private java.lang.String dto.PersonDTO.tel, private int dto.PersonDTO.age]
+obj=PersonDTO [name=홍길동, tel=010-1111-1111, age=10]
+ */
 ```
 
 # Mybatis연동하기
