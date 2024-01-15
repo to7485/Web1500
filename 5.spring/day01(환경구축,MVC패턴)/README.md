@@ -965,7 +965,7 @@ public class YoilTellerMVC {
       	model.addAttribute("day",   day);
       	model.addAttribute("yoil", yoil);    
 
-		return "yoil";
+		//return "yoil";
 
     }
 ```
@@ -1003,7 +1003,17 @@ public class YoilTellerMVC2 {
 ```
 
 ## MVC패턴의 원리
+
+###  스프링이 매개변수를 얻어오는 두가지 방법
+1. Reflection API
+- 먼저 Reflection API를 통해서 매개변수 이름을 얻어오려고 시도한다.
+2. Class File
+- 실패하면 클래스파일을 직접 읽어서 매개변수의 이름을 가져온다.
+
+
+#### JavaReflection API 방식
 [Java Reflection API  설명 링크](https://inpa.tistory.com/entry/JAVA-%E2%98%95-%EB%88%84%EA%B5%AC%EB%82%98-%EC%89%BD%EA%B2%8C-%EB%B0%B0%EC%9A%B0%EB%8A%94-Reflection-API-%EC%82%AC%EC%9A%A9%EB%B2%95)
+
 ```java
 package com.korea.first;
 
@@ -1015,6 +1025,7 @@ public class MethodInfo {
 	public static void main(String[] args) throws Exception{
 
 		//1. YoilTellerMVC클래스의 객체를 생성
+
 		//Java.lang.Class 클래스
 		//클래스의 정보를 얻어오기위한 클래스이다.
 		//forName() : 클래스의 파일명을 인자로 넣어주면 해당하는 클래스를 반환해준다.
@@ -1024,16 +1035,22 @@ public class MethodInfo {
 		//프로그램이 동작하는 시점에 이름이 결정되는 경우에 사용한다.
 		Object obj = clazz.newInstance();
 		
+
+		//2. 모든 메서드 정보를 가져와서 배열에 저장
+
 		//getDelcaredmethods()
 		//상속한 메서드를 제외하고 접근지정자에 상관없이 모든 메서드를 가져온다.
 		Method[] methodArr = clazz.getDeclaredMethods();
 		
 		for(Method m : methodArr) {
-			String name = m.getName();
-			Parameter[] paramArr = m.getParameters();
+			String name = m.getName();//메서드의 이름
+			Parameter[] paramArr = m.getParameters(); //매개변수
 //			Class[] paramTypeArr = m.getParameterTypes();
-			Class returnType = m.getReturnType();
+			Class returnType = m.getReturnType();//반환 타입
 			
+			//", " : 구분자
+			//"(" : 접두사
+			//")" : 접미사
 			StringJoiner paramList = new StringJoiner(", ", "(", ")");
 			
 			for(Parameter param : paramArr) {
@@ -1047,16 +1064,28 @@ public class MethodInfo {
 		}
 	} // main
 }
+```
+- 매변수의 이름이 year,month,day인데 arg0, arg1 이런식으로 저장이 되어있다.
+- 스프링은 매개변수의 타입은 중요하지만 이름은 중요하지 않게 생각한다.
+- javac -parameters 옵션을 줘야 한다. 그래야 컴파일러가 매개변수의 이름까지 저장을한다.
+- windows - preferences - compiler - Store information about method... 체크하기
 
+#### class 파일로 매개변수 얻어오는지 확인하기
+- show view -> navigator 클릭
+- target에 빌드된 .class파일이 저장이 된다.
+- 클래스파일에서 우클릭하고 openwith -> class File Viewer를 통해서 해석해서 보여준다.
+- local variable table에 매개변수의 이름을 읽어서 스프링이 값을 넣어준다.
+
+```java
 /* [실행결과]
 java.lang.String main(java.lang.String year, java.lang.String month, java.lang.String day, org.springframework.ui.Model model)
+
 boolean isValid(int year, int month, int day)
 */
-
 ```
-###  스프링이 매개변수를 얻어오는 두가지 방법
-1. Reflection API
-2. Class File
+
+
+
 
 ## @RequestParam, @ModelAttribute
 
