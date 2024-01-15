@@ -6,6 +6,38 @@
 - 수정자 주입(Setter Injection)
 - 생성자 주입(Constructor Injection)
 
+### 1. 변경에 유리한 코드 작성하기
+```java
+class Car{};
+class SportCar extends Car{};
+class Truck extends Car{};
+```
+- 변경사항이 발생했을 때 타입과 생성자 부분을 모두 변경해줘야 한다.
+```java
+
+SportCar car = new SportCar();
+↓↓↓↓↓			↓↓↓↓↓↓
+Truct car = new Truck();
+
+```
+- 다형성을 이용하면 수정을 해야 하는곳이 적어진다.
+```java
+Car car = new SportCar();
+				↓↓↓↓↓↓
+Car car = new Truck();
+```
+- 별도의 메서드를 만들어서 객체를 생성하면 수정 포인트를 더 줄일 수 있다.
+```java
+Car car = getCar(); //-> 사용하는곳은 여러군데일 수 있다.
+//고칠 필요가 없다.
+
+static Car getCar(){
+	return new SportCar(); //-> 기능 제공
+	//return new Truck();
+}
+```
+
+
 ## Ex_날짜_DI
 - com.korea.test_di
 
