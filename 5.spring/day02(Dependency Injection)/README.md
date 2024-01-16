@@ -356,6 +356,30 @@ Object getBean(Class clazz){
 }
 ```
 
+### SpringDITest 클래스 생성하기
+```java
+package com.korea.study;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
+public class SpringDITest {
+	public static void main(String[] args) {
+		ApplicationContext ac = new AnnotationConfigApplicationContext(Coding.class, Computer.class);
+		
+		Coding coding = (Coding)ac.getBean(Coding.class);
+		Computer computer = (Computer)ac.getBean(Computer.class);
+		
+		coding.computer = computer;
+		System.out.println(coding.getComputer().getRam());
+		
+	}
+
+}
+```
+
+
+
 
 
 
