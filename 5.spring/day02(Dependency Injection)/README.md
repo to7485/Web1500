@@ -280,6 +280,25 @@ public class Main2 {
 ```
 
 ### 4. 객체 자동 등록하기
+- @Component 어노테이션을 이용한 객체 등록하기
+
+```java
+ClassLoader classloader = AppContext.class.getClassLoader();
+ClassPath classPath = ClassPath.from(classloader);
+
+//패키지 내의 모든 클래스를 읽어서 Set에 저장
+Set<ClassPath.ClassInfo> set = classPath.getTopLevelClasses("com.korea.study");
+
+for(ClassPath.ClassInfo classInfo : set){
+	Class clazz = classInfo.load();
+	Component component = (Component)clazz.getAnnotation(Component.class);
+
+	if(component != null){
+		String id = StringUtils.uncapitalize(classInfo.getSimpleName());// Car ->car
+		map.put(id,clazz.newInstance());
+	}
+}
+```
 - Computer 클래스 생성하기
 ```java
 package com.korea.study;
@@ -296,7 +315,6 @@ public class Computer {
 	}
 
 }
-
 ```
 
 - Coding 클래스 생성하기
@@ -314,6 +332,26 @@ public class Coding {
 	
 	public Computer getComputer() {
 		return computer;
+	}
+}
+```
+
+#### AppContext로 객체 찾기
+```java
+AppContext ac = new AppContext();
+Car car = (Car)ac.getBean("car"); //by Name
+Car car2 = (Car)ac.getBean(Car.class); //by Type
+
+Object getBean(String id){
+	return map.get(id);
+}
+
+Object getBean(Class clazz){
+	for(Object obj : map.values()){
+		if(clazz.instance(obj)){ // obj instanceof clazz
+			return obj;
+		}
+		return null;
 	}
 }
 ```
