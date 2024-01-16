@@ -6,7 +6,8 @@
 - 수정자 주입(Setter Injection)
 - 생성자 주입(Constructor Injection)
 
-### 1. 변경에 유리한 코드 작성하기
+## SpringDI 흉내내기
+### 변경에 유리한 코드1 - 다형성,factory method
 ```java
 class Car{};
 class SportCar extends Car{};
@@ -37,6 +38,108 @@ static Car getCar(){
 }
 ```
 
+### 변경에 유리한 코드2 - Map과 외부파일
+```java
+Car car = getCar();
+
+static Car getCar() throws Exception{
+
+	//java.util.Properties
+	//키와 값의 쌍으로 구성된 속성 목록을 관리할때 사용
+	//일반적으로 구성 파일이나 속성파일에서 설정 정보를
+	//읽거나 쓸 때 사용한다.
+
+	//Map과 비슷하다 Map은 (Object, Object)를 저장하지만
+	//Properties는 (String,String)을 저장한다.
+
+	//config.txt를 읽어서 Properties에 저장
+	Properties p = new Properties();
+
+	//load()메서드가 어떤 파일에서 데이터를 읽어오기 편하게 되어있다.
+	p.load(new FileReader("config.txt"));
+
+	//클래스 객체(설계도)를 얻어서
+	Class clazz = Class.forName(p.getProperty("car"));
+	
+	return (Car)clazz.newInstance();//객체를 생성해서 반환
+
+}
+```
+
+#### config.txt
+- 수정하려면 이 파일만 고치면 된다.
+```txt
+car = com.korea.di.SprotCar
+↓↓↓↓↓			↓↓↓↓↓
+key				value
+
+car = com.korea.id.Truck
+```
+
+- 코드를 변경하면 테스트가 필수이지만 코드는 변경되지 않았기 때문에 테스트를 할 필요가 없어진다.
+- 그래서 항상 프로그램의 변경을 최소화 할까 고민해야 한다.
+
+### Main1 클래스파일 생성하기
+```java
+package com.korea.study;
+
+import java.io.FileReader;
+import java.util.Properties;
+
+class Car{};
+class SportCar extends Car{};
+class Truck extends Car{};
+
+public class Main1 {
+	public static void main(String[] args)throws Exception {
+		Car car = getCar();
+		System.out.println("car= " + car);
+	}
+	
+	static Car getCar()throws Exception {
+		Properties p = new Properties();
+		p.load(new FileReader("config.txt"));
+		
+		Class clazz = Class.forName(p.getProperty("car"));
+		
+		return (Car)(clazz.newInstance());
+	}
+
+}
+```
+
+- 프로젝트 우클릭하여 new -> File -> config.txt 파일 생성하기
+
+```
+car=com.korea.study.SportCar
+```
+
+### 코드를 조금더 유연하게 바꿔보자
+```java
+class Car{};
+class SportCar extends Car{};
+class Truck extends Car{};
+
+public class Main1 {
+	public static void main(String[] args)throws Exception {
+		Car car = (Car)getObject("car");
+		System.out.println("car= " + car);
+	}
+	
+	static Object getObject(String key)throws Exception {
+		Properties p = new Properties();
+		p.load(new FileReader("config.txt"));
+		
+		Class clazz = Class.forName(p.getProperty(key));
+		
+		return (Car)(clazz.newInstance());
+	}
+
+}
+```
+
+
+<hr>
 
 ## Ex_날짜_DI
 - com.korea.test_di
