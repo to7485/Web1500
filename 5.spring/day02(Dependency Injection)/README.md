@@ -378,10 +378,68 @@ public class SpringDITest {
 }
 ```
 
+### 필드주입
+- @Autowired를 이용하여 만들어진 객체를 필드에 직접 주입을 한다.
+```java
+package com.korea.study;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
+public class Coding {
+	
+	@Autowired
+	Computer computer;
+	
+	public Computer getComputer() {
+		return computer;
+	}
+}
+```
 
+### setter주입
+```java
+package com.korea.study;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+@Component
+public class Coding {
+	
+	Computer computer;
+	
+	public Computer getComputer() {
+		return computer;
+	}
+
+	public void setComputer(Computer computer){
+		this.computer = computer;
+	}
+}
+```
+### 생성자주입
+```java
+package com.korea.study;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+@Component
+public class Coding {
+	
+	Computer computer;
+
+	public Coding(Computer computer){
+		this.computer = computer;
+	}
+	
+	public Computer getComputer() {
+		return computer;
+	}
+}
+```
 
 
 
