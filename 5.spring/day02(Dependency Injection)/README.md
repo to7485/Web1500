@@ -6,6 +6,15 @@
 - 수정자 주입(Setter Injection)
 - 생성자 주입(Constructor Injection)
 
+<br>
+
+# Ex_날짜_DI 프로젝트 생성하기
+- com.korea.test_di
+
+## pom.xml 복사해오기, config패키지 복사해오기
+- pom.xml의 내용을 복사해서 붙혀넣고 groupId와 ArtifactId수정하기
+- root-context.xml,servlet-context.xml,web.xml 삭제하기
+
 ## SpringDI 흉내내기
 ### 변경에 유리한 코드1 - 다형성,factory method
 ```java
@@ -115,10 +124,19 @@ car=com.korea.study.SportCar
 ```
 
 ### 코드를 조금더 유연하게 바꿔보자
+- config.txt 수정하기
+```
+car=com.korea.study.SportCar
+engine=com.korea.study.Engine
+```
+
+- getObject로 메서드 수정하기
+
 ```java
 class Car{};
 class SportCar extends Car{};
 class Truck extends Car{};
+class Engine {};
 
 public class Main1 {
 	public static void main(String[] args)throws Exception {
@@ -137,16 +155,177 @@ public class Main1 {
 
 }
 ```
+### 3. 객체 컨테이너(ApplicationContext)만들기
+```java
+AppContext ac = new AppContext();
+Car car = (Car)ac.getBean("car");
+Engine engine = (Engine)ac.getBean("Engine");
+```
+
+- AppContext의 구조
+```java
+class AppContext{
+	Map map;
+
+	AppContext(){
+		map = new HashMap();
+		map.put("car",new SportCar());
+		map.put("engine", new Engine());
+	}
+
+	Object getBean(String id) {return map.get(id);}
+
+}
+```
+### Main2 클래스 생성하기
+- Main1에 Car클래스등 이미 선언한 클래스가 있어 오류가 난다.
+```java
+package com.korea.study;
+
+import java.util.HashMap;
+import java.util.Map;
+
+class Car{};
+class SportCar extends Car{};
+class Truck extends Car{};
+class Engine {};
+
+class AppContext{
+	Map map; //객체 저장소
+	
+	public AppContext() {
+		map = new HashMap();
+		map.put("car", new SportCar());
+		map.put("engine", new Engine());
+	}
+	
+	Object getBean(String key) {
+		return map.get(key);
+	}
+}
+
+public class Main2 {
+	
+	public static void main(String[] args)throws Exception {
+		AppContext ac = new AppContext();
+		
+		
+		Car car = (Car)ac.getBean("car");
+		System.out.println("car= " + car);
+		
+		Engine engine = (Engine)ac.getBean("engine");
+		System.out.println("engine= " + engine);
+	}
+}
+
+```
+- 하드코딩은 좋지 않으니 코드를 수정해주자
+
+```java
+package com.korea.study;
+
+import java.io.FileReader;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+
+class Car{};
+class SportCar extends Car{};
+class Truck extends Car{};
+class Engine {};
+
+class AppContext{
+	Map map; //객체 저장소
+	
+	public AppContext() {
+		
+		
+		try {
+			Properties p = new Properties();
+			p.load(new FileReader("config.txt"));
+			
+			//Properties에 저장된 내용을 Map에 저장
+			map = new HashMap(p);
+			
+			//반복문으로 클래스 이름을 얻어서 객체를 생성해서 다시 map에 저장
+			for(Object key : map.keySet()) {
+				Class clazz = Class.forName((String)map.get(key));
+				map.put(key, clazz.newInstance());
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+	}
+	
+	Object getBean(String key) {
+		return map.get(key);
+	}
+}
+
+public class Main2 {
+	
+	public static void main(String[] args)throws Exception {
+		AppContext ac = new AppContext();
+		
+		
+		Car car = (Car)ac.getBean("car");
+		System.out.println("car= " + car);
+		
+		Engine engine = (Engine)ac.getBean("engine");
+		System.out.println("engine= " + engine);
+	}
+}
+
+```
+
+### 4. 객체 자동 등록하기
+- Computer 클래스 생성하기
+```java
+package com.korea.study;
+
+import org.springframework.stereotype.Component;
+
+@Component
+public class Computer {
+	
+	int ram = 16;
+	
+	public int getRam() {
+		return ram;
+	}
+
+}
+
+```
+
+- Coding 클래스 생성하기
+
+```java
+package com.korea.study;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+@Component
+public class Coding {
+	
+	Computer computer;
+	
+	public Computer getComputer() {
+		return computer;
+	}
+}
+```
+
+
+
+
 
 
 <hr>
 
-## Ex_날짜_DI
-- com.korea.test_di
 
-## pom.xml 복사해오기, config패키지 복사해오기
-- pom.xml의 내용을 복사해서 붙혀넣고 groupId와 ArtifactId수정하기
-- root-context.xml,servlet-context.xml,web.xml 삭제하기
 
 ## dao 패키지에 BoardDAO 인터페이스 만들기
 
