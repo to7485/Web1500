@@ -998,7 +998,7 @@ public class SjDAO {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 
-		String sql = "delete from sungtb where=?";
+		String sql = "delete from sungtb where no=?";
 
 		try {
 			//1.Connection획득
