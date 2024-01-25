@@ -16,6 +16,9 @@
 - root-context.xml,servlet-context.xml,web.xml 삭제하기
 
 ## SpringDI 흉내내기
+- 사실 의존성 주입이라고 하는건 이미 자바에서 다 배운 이론이다.
+- 하지만 이것을 스프링이 대신 해주기 때문에 헷갈리는것이다.
+
 ### 변경에 유리한 코드1 - 다형성,factory method
 ```java
 class Car{};
@@ -76,7 +79,8 @@ static Car getCar() throws Exception{
 ```
 
 #### config.txt
-- 수정하려면 이 파일만 고치면 된다.
+- 만약 스포츠카에서 트럭으로 교체하려면 
+- 이 파일만 고치면 된다.
 ```txt
 car = com.korea.di.SprotCar
 ↓↓↓↓↓			↓↓↓↓↓
