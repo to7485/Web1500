@@ -370,6 +370,88 @@ CREATE TABLE TBL_MEMBER(
 );
 ```
 
+## 자료형(데이터타입)
+- 데이터타입이란 컬럼이 저장되는 데이터의 유형을 말합니다.
+
+### 문자 데이터 타입
+<table>
+<tr>
+	 <th>데이터타입</th>	
+	 <th>특징</th>
+</tr>
+<tr>
+	<td>CHAR(n)</td>
+	<td>고정길이 문자 / 최대 2000byte / 디폴트 값은 1byte </td>
+</tr>
+<tr>
+	<td> VARCHAR2(n)</td>
+	<td>가변길이 문자 / 최대 4000BYTE / 디폴트 값은 1byte </td>
+</tr>
+<tr>
+	<td>NCHAR(n)</td>
+	<td>고정길이 유니코드 문자(다국어 입력가능) / 최대 2000byte / 디폴트 값은 1byte </td>
+</tr>
+<tr>
+	<td> NVARCHAR(n)</td>
+	<td>가변길이 유니코드 문자(다국어 입력가능) / 최대 2000byte / 디폴트 값은 1byte</td>
+</tr>
+<tr>
+	<td>LONG</td>
+	<td>최대 2GB 크기의 가변길이 문자형 </td>
+</tr>
+<tr>
+	<td>CLOB</td>
+	<td>대용량 텍스트 데이터 타입(최대 4Gbyte)</td>
+</tr>
+<tr>
+	<td> NCLOB</td>
+	<td>대용량 텍스트 유니코드 데이터 타입(최대 4Gbyte)</td>
+</tr>
+	
+</table>
+
+### 숫자 데이터 타입
+- 대부분 NUMBER형을 사용한다.
+<table>
+<tr>
+	 <th>데이터타입</th>	
+	 <th>특징</th>
+</tr>
+<tr>
+	<td>NUMBER(P,S)</td>
+	<td>가변숫자 / P (1 ~ 38, 디폴트 : 38) / S (-84 ~ 127, 디폴트 값 : 0)  / 최대 22byte </td>
+</tr>
+<tr>
+	<td>FLOAT(P)</td>
+	<td>NUMBER의 하위타입 / P (1~128 .디폴트 : 128) / 이진수 기준 / 최대 22byte </td>
+</tr>
+<tr>
+	<td>BINARY_FLOAT</td>
+	<td>32비트 부동소수점 수 / 최대 4byte </td>
+</tr>
+<tr>
+	<td> BINARY_DOUBLE</td>
+	<td> 64비트 부동소수점 수 / 최대 8byte </td>
+</tr>	
+</table>
+
+### 날짜 데이터 타입
+<table>
+<tr>
+	 <th>데이터타입</th>	
+	 <th>특징</th>
+</tr>
+<tr>
+	<td> DATE</td>
+	<td>BC 4712년 1월 1일부터 9999년 12월 31일, 연, 월, 일, 시, 분, 초 까지 입력 가능</td>
+</tr>
+<tr>
+	<td>TIMESTAMP</td>
+	<td>연도, 월, 일, 시, 분, 초 + 밀리초까지 입력가능</td>
+</tr>
+
+</table>
+
 ## CAR 테이블 생성
 - 테이블을 생성하며 제약조건을 같이 줘보자.
 - CONSTRAINT [제약조건이름] [제약조건 종류] (컬럼명)
