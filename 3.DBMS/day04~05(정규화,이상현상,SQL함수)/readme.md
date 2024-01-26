@@ -505,6 +505,63 @@ SELECT DEPARTMENT_ID, MAX(SALARY) FROM EMPLOYEES GROUP BY DEPARTMENT_ID;
 
 SELECT DEPARTMENT_ID, SUM(SALARY) FROM EMPLOYEES GROUP BY DEPARTMENT_ID ORDER BY SUM(SALARY) DESC;
 ```
+## 그룹함수
+
+```SQL
+CREATE TABLE 월별매출 (
+    상품ID VARCHAR2(5),
+    월 VARCHAR2(10),
+    회사 VARCHAR2(10),
+    매출액 INTEGER );
+    
+INSERT INTO  월별매출 VALUES ('P001', '2019.10', '삼성', 15000);
+INSERT INTO  월별매출 VALUES ('P001', '2019.11', '삼성', 25000);
+INSERT INTO  월별매출 VALUES ('P002', '2019.10', 'LG', 10000);
+INSERT INTO  월별매출 VALUES ('P002', '2019.11', 'LG', 20000);
+INSERT INTO  월별매출 VALUES ('P003', '2019.10', '애플', 15000);
+INSERT INTO  월별매출 VALUES ('P003', '2019.11', '애플', 10000);
+
+SELECT * FROM 월별매출;
+```
+
+- ROLLUP
+    - ROLLUP(A) : A 그룹핑 -> 합계
+    - ROLLUP(A,B) : A,B그룹핑 -> A소계/합계
+    - ROLLUP(A,B,C) : A,B,C그룹핑 -> (A소계,B소계)/합계
+ 
+```SQL
+SELECT 상품ID, 월, SUM(매출액) AS 매출액
+FROM 월별매출
+GROUP BY ROLLUP(상품ID, 월);
+```
+
+![image](https://github.com/to7485/DBMS1900/assets/54658614/0cce5aea-3337-477c-94c6-f6e60754f04b)
+
+- CUBE
+    - CUBE(A) : A그룹핑 -> 합계
+    - CUBE(A,B) : A,B그룹핑/A그룹핑/B그룹핑 -> A소계,B소계/합계
+    - CUBE(A,B,C) : A,B,C그룹핑/A,B그룹핑/A,C그룹핑/B,C그룹핑/A그룹핑/B그룹핑/C그룹핑 -> (A소계,B소계),(A소계),(B소계)/합계
+
+```SQL
+SELECT 상품ID, 월, SUM(매출액) AS 매출액
+FROM 월별매출
+GROUP BY CUBE(상품ID, 월);
+```
+
+![image](https://github.com/to7485/DBMS1900/assets/54658614/bf9caa9e-af05-48f6-9c92-356542b60073)
+
+- GROUPING SETS
+    - GROUPING SETS(A,()) : A그룹핑 -> 합계
+    - GROUPING SETS(A,B,()) : A그룹핑/B그룹핑 -> 합계
+ 
+ ```SQL
+SELECT 상품ID, 월, SUM(매출액) AS 매출액
+FROM 월별매출
+GROUP BY GROUPING SETS(상품ID, 월);
+ ```
+ 
+ ![image](https://github.com/to7485/DBMS1900/assets/54658614/0d56776f-7458-4702-894d-50627e57ee79)
+
 
 ## HAVING절
 - Having 절은 Group by로 집계된 값 중 where 절 처럼 특정 조건을 추가한다고 생각 하시면 됩니다.
