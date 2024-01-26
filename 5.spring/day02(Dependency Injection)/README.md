@@ -15,7 +15,7 @@
 - pom.xml의 내용을 복사해서 붙혀넣고 groupId와 ArtifactId수정하기
 - root-context.xml,servlet-context.xml,web.xml 삭제하기
 
-## SpringDI 흉내내기
+## 1. SpringDI 흉내내기
 - 사실 의존성 주입이라고 하는건 이미 자바에서 다 배운 이론이다.
 - 하지만 이것을 스프링이 대신 해주기 때문에 헷갈리는것이다.
 
@@ -50,7 +50,7 @@ static Car getCar(){
 }
 ```
 
-### 변경에 유리한 코드2 - Map과 외부파일
+### 변경에 유리한 코드2 - Map과 외부파일(이론)
 ```java
 Car car = getCar();
 
@@ -92,7 +92,7 @@ car = com.korea.id.Truck
 - 코드를 변경하면 테스트가 필수이지만 코드는 변경되지 않았기 때문에 테스트를 할 필요가 없어진다.
 - 그래서 항상 프로그램의 변경을 최소화 할까 고민해야 한다.
 
-### Main1 클래스파일 생성하기
+### Main1 클래스파일 생성하기(실습)
 ```java
 package com.korea.study;
 
@@ -159,28 +159,12 @@ public class Main1 {
 
 }
 ```
-### 3. 객체 컨테이너(ApplicationContext)만들기
-```java
-AppContext ac = new AppContext();
-Car car = (Car)ac.getBean("car");
-Engine engine = (Engine)ac.getBean("Engine");
-```
+## 2. 객체 컨테이너(ApplicationContext)만들기
 
-- AppContext의 구조
-```java
-class AppContext{
-	Map map;
+### ApplicationCeontext
+- 객체 저장소라고 한다.
+- 클래스 안에 Map으로 객체를 저장한다.
 
-	AppContext(){
-		map = new HashMap();
-		map.put("car",new SportCar());
-		map.put("engine", new Engine());
-	}
-
-	Object getBean(String id) {return map.get(id);}
-
-}
-```
 ### Main2 클래스 생성하기
 - Main1에 Car클래스등 이미 선언한 클래스가 있어 오류가 난다.
 ```java
@@ -199,12 +183,14 @@ class AppContext{
 	
 	public AppContext() {
 		map = new HashMap();
-		map.put("car", new SportCar());
+		map.put("car", new SportCar()); //객체 생성과 저장
 		map.put("engine", new Engine());
 	}
 	
+	//getBean 메서드를 통해 key를 매개변수로 전달하면
+	//key에 담겨있는 value 즉, 객체를 반환하게 된다.
 	Object getBean(String key) {
-		return map.get(key);
+		return map.get(key); 
 	}
 }
 
@@ -221,9 +207,9 @@ public class Main2 {
 		System.out.println("engine= " + engine);
 	}
 }
-
 ```
-- 하드코딩은 좋지 않으니 코드를 수정해주자
+#### 하드코딩은 좋지 않으니 코드를 수정해주자
+- properties에 있는 내용을 읽어서 map에 저장하자
 
 ```java
 package com.korea.study;
@@ -288,6 +274,7 @@ public class Main2 {
 
 ```java
 ClassLoader classloader = AppContext.class.getClassLoader();
+
 ClassPath classPath = ClassPath.from(classloader);
 
 //패키지 내의 모든 클래스를 읽어서 Set에 저장
