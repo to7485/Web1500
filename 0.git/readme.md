@@ -232,3 +232,23 @@
 - 설정해도 되고 안해도 되고 자유이다.
 ## 9. git과의 연동 완료
 ![image](image/연동완료.png)
+
+# 프로젝트 github에 연결하기
+1. 프로젝트 우클릭 >> Team >> Share Project
+
+![image](image/프로젝트연동1.png)
+
+2. Local Storage 선택
+
+![image](image/프로젝트연동2.png)
+
+3. Commit
+
+![image](image/프로젝트연동3.png)
+
+- ++를 선택하면 Stage로 소스가 이동한다.
+- --를 선택하면 이동전으로 소스가 이동한다.
+- Commit and Push : Local Storage로 Commit되고, Github로 Push된다.
+- Commit : Local Storage로 Commit된다.
+- Commit Message를 넣어줘야 한다.
+
