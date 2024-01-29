@@ -178,3 +178,57 @@
 ## 깃허브(Github)란 무엇인가?
 - git을 사용하는 프로젝트를 지원하는 웹 호스팅 서비스
 
+# sts와 github 연동하는법
+
+## 1. github 회원가입하기
+
+## 2. 새 repository만들기
+
+![image](image/repo만들기.png)
+
+## 3. showView에서 git Repositories 선택하기
+
+![image](image/showview설정.png)
+
+
+## 4. Clone a Git repository 선택
+
+
+![image](image/gitClone.jpeg)
+
+## 5. 레포지토리 경로 잡아주기
+
+![image](image/gitClone2.png)
+- Store in Secure Store
+  - User와 Password를 기억한다.
+
+### repository 주소 복사해오기
+
+![image](image/repo주소.png)
+
+### 유저 토큰 발급받기
+1. github 로그인하고 오른쪽 위 프로필 눌러서 Settings로 가기
+2. 왼쪽 메뉴탭 맨 아래 Developer settings로 누르기
+3. Personal access tokens 눌러서 Tokens(classic) 누르고
+4. generate new token 누르고 클래식 누르기
+
+![image](image/토큰발급.png)
+
+5. Generate token 눌러서 발급받기
+6. 발급받은키 복사해놓기
+
+## 6. Next누르고 branch 선택하기
+
+![image](image/branch선택하기.png)
+
+## 7. Local Storage 선택
+
+![image](image/로컬저장소설정.png)
+
+- Directory부분은 Local(자신의 PC)에 저장될 Repository 경로를 설정하는 부분이다.
+- 경로는 기본적으로 지정되어 있는데, 필요하면 Browser버튼을 눌러 변경하면 된다.
+
+## 8. 비밀번호 힌트
+- 설정해도 되고 안해도 되고 자유이다.
+## 9. git과의 연동 완료
+![image](image/연동완료.png)
