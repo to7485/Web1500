@@ -175,28 +175,28 @@
 - master branch로 이동하고 second branch에 있는 내용을 merge한다.
 ![image](image/git_4.png)
 
-## 깃허브(Github)란 무엇인가?
+### 깃허브(Github)란 무엇인가?
 - git을 사용하는 프로젝트를 지원하는 웹 호스팅 서비스
 
 # sts와 github 연동하는법
 
-## 1. github 회원가입하기
+### 1. github 회원가입하기
 
-## 2. 새 repository만들기
+### 2. 새 repository만들기
 
 ![image](image/repo만들기.png)
 
-## 3. showView에서 git Repositories 선택하기
+### 3. showView에서 git Repositories 선택하기
 
 ![image](image/showview설정.png)
 
 
-## 4. Clone a Git repository 선택
+### 4. Clone a Git repository 선택
 
 
 ![image](image/gitClone.jpeg)
 
-## 5. 레포지토리 경로 잡아주기
+### 5. 레포지토리 경로 잡아주기
 
 ![image](image/gitClone2.png)
 - Store in Secure Store
@@ -217,20 +217,20 @@
 5. Generate token 눌러서 발급받기
 6. 발급받은키 복사해놓기
 
-## 6. Next누르고 branch 선택하기
+### 6. Next누르고 branch 선택하기
 
 ![image](image/branch선택하기.png)
 
-## 7. Local Storage 선택
+### 7. Local Storage 선택
 
 ![image](image/로컬저장소설정.png)
 
 - Directory부분은 Local(자신의 PC)에 저장될 Repository 경로를 설정하는 부분이다.
 - 경로는 기본적으로 지정되어 있는데, 필요하면 Browser버튼을 눌러 변경하면 된다.
 
-## 8. 비밀번호 힌트
+### 8. 비밀번호 힌트
 - 설정해도 되고 안해도 되고 자유이다.
-## 9. git과의 연동 완료
+### 9. git과의 연동 완료
 ![image](image/연동완료.png)
 
 # 프로젝트 github에 연결하기
@@ -251,4 +251,26 @@
 - Commit and Push : Local Storage로 Commit되고, Github로 Push된다.
 - Commit : Local Storage로 Commit된다.
 - Commit Message를 넣어줘야 한다.
+
+
+
+# branch만들기
+1. 프로젝트 우클릭 > Team > Switch To > new Branch > Branch name입력 후 finish
+- checkout branch 체크하면 생성하고 해당 branch로 이동
+
+![image](image/branch생성하기1.png)
+
+![image](image/branch생성하기2.png)
+
+2. 생성된 로컬 branch에서 개발
+
+![image](image/branch생성하기3.png)
+
+3. 수정한 소스 커밋
+  - 프로젝트 우클릭 > Team > commit
+  - 수정한 소스가 Staged Changes에 들어갔는지 확인
+  - 메세지 입력후 Commit 클릭
+  - Commit and Push는 안됨(신규 생성한 브랜치가 remote에 올라가기 때문)
+
+4. Push Branch 브랜치명
 
