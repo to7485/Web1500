@@ -92,7 +92,10 @@ car = com.korea.id.Truck
 - 코드를 변경하면 테스트가 필수이지만 코드는 변경되지 않았기 때문에 테스트를 할 필요가 없어진다.
 - 그래서 항상 프로그램의 변경을 최소화 할까 고민해야 한다.
 
-### Main1 클래스파일 생성하기(실습)
+
+
+### com.korea.di 아래에 di1패키지 만들기
+- Main1 클래스파일 생성하기(실습)
 ```java
 package com.korea.study;
 
@@ -165,8 +168,8 @@ public class Main1 {
 - 객체 저장소라고 한다.
 - 클래스 안에 Map으로 객체를 저장한다.
 
-### Main2 클래스 생성하기
-- Main1에 Car클래스등 이미 선언한 클래스가 있어 오류가 난다.
+### com.korea.di 아래에 di1패키지 만들기
+- Main2 클래스 생성하기
 ```java
 package com.korea.study;
 
