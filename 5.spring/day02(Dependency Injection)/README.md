@@ -140,6 +140,11 @@ engine=com.korea.study.Engine
 - getObject로 메서드 수정하기
 
 ```java
+package com.korea.dependency.di1;
+
+import java.io.FileReader;
+import java.util.Properties;
+
 class Car{};
 class SportCar extends Car{};
 class Truck extends Car{};
@@ -149,6 +154,9 @@ public class Main1 {
 	public static void main(String[] args)throws Exception {
 		Car car = (Car)getObject("car");
 		System.out.println("car= " + car);
+		
+		Engine engine = (Engine)getObject("engine");
+		System.out.println("engine= " + engine);
 	}
 	
 	static Object getObject(String key)throws Exception {
@@ -156,8 +164,9 @@ public class Main1 {
 		p.load(new FileReader("config.txt"));
 		
 		Class clazz = Class.forName(p.getProperty(key));
-		
-		return (Car)(clazz.newInstance());
+
+		//형변환 해줄 필요 없음
+		return clazz.newInstance();
 	}
 
 }
@@ -168,7 +177,7 @@ public class Main1 {
 - 객체 저장소라고 한다.
 - 클래스 안에 Map으로 객체를 저장한다.
 
-### com.korea.di 아래에 di1패키지 만들기
+### com.korea.di 아래에 di2패키지 만들기
 - Main2 클래스 생성하기
 ```java
 package com.korea.study;
@@ -212,7 +221,7 @@ public class Main2 {
 }
 ```
 #### 하드코딩은 좋지 않으니 코드를 수정해주자
-- properties에 있는 내용을 읽어서 map에 저장하자
+- config.txt에 있는 내용을 읽어서 map에 저장하자
 
 ```java
 package com.korea.study;
@@ -273,6 +282,7 @@ public class Main2 {
 ```
 
 ### 4. 객체 자동 등록하기
+
 - @Component 어노테이션을 이용한 객체 등록하기
 
 ```java
