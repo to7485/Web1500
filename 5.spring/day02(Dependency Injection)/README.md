@@ -1,5 +1,5 @@
-# 의존성 주입
-- Dependency Injection : 각 객체 간의 의존관계를 스프링 컨테이너가 개발자가 정의한 Bean등록 정보를 바탕으로 자동으로 주입해주는 기능
+# 의존성 주입(Dependency Injection)
+- 각 객체 간의 의존관계를 스프링 컨테이너가 개발자가 정의한 Bean등록 정보를 바탕으로 자동으로 주입해주는 기능
 
 ## 의존성 주입의 종류
 - 필드 주입(Field Injection)
@@ -29,14 +29,14 @@ class Truck extends Car{};
 ```java
 
 SportCar car = new SportCar();
-↓↓↓↓↓			↓↓↓↓↓↓
+↓↓↓↓↓		↓↓↓↓↓↓
 Truct car = new Truck();
 
 ```
 - 다형성을 이용하면 수정을 해야 하는곳이 적어진다.
 ```java
 Car car = new SportCar();
-				↓↓↓↓↓↓
+	       ↓↓↓↓↓↓
 Car car = new Truck();
 ```
 - 별도의 메서드를 만들어서 객체를 생성하면 수정 포인트를 더 줄일 수 있다.
@@ -83,8 +83,8 @@ static Car getCar() throws Exception{
 - 이 파일만 고치면 된다.
 ```txt
 car = com.korea.di.SprotCar
-↓↓↓↓↓			↓↓↓↓↓
-key				value
+↓↓↓		↓↓↓↓↓
+key		value
 
 car = com.korea.id.Truck
 ```
