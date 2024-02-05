@@ -835,8 +835,10 @@ public class YoilTellerMVC {
     
     //현재클래스에서만 사용하기 위해 private으로 설정
     private boolean isValid(int year, int month, int day) {
-		// TODO Auto-generated method stub
-		return true;
+	    	if(year==-1 || month==-1 || day==-1) 
+	    		return false;
+	    	
+	    	return (1<=month && month<=12) && (1<=day && day<=31); // 간단히 체크 
 	}
 
 	private char getYoil(int year, int month, int day) {
