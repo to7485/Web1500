@@ -92,12 +92,9 @@ car = com.korea.id.Truck
 - 코드를 변경하면 테스트가 필수이지만 코드는 변경되지 않았기 때문에 테스트를 할 필요가 없어진다.
 - 그래서 항상 프로그램의 변경을 최소화 할까 고민해야 한다.
 
-
-
 ### com.korea.di 아래에 di1패키지 만들기
 - Main1 클래스파일 생성하기(실습)
 ```java
-package com.korea.study;
 
 import java.io.FileReader;
 import java.util.Properties;
@@ -282,27 +279,164 @@ public class Main2 {
 ```
 
 ### 4. 객체 자동 등록하기
+- Component Scaning
+  - 클래스 앞에 @Component 어노테이션을 붙이고 패키지에 컴포넌트 어노테이션이 붙어있는 클래스를 찾아서 객체로 만들어서 맵으로 저장하는 기법
 
-- @Component 어노테이션을 이용한 객체 등록하기
-
+### com.korea.di.di3패키지 생성
+- Main3클래스 생성하기
+- mvnrepository.com에서 guava검색
+- Guava: Google Core Libraries For Java » 31.0-jre
+- maven 복사 후 pom.xml에 붙혀넣기
 ```java
-ClassLoader classloader = AppContext.class.getClassLoader();
+package com.korea.dependency.di3;
 
-ClassPath classPath = ClassPath.from(classloader);
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
-//패키지 내의 모든 클래스를 읽어서 Set에 저장
-Set<ClassPath.ClassInfo> set = classPath.getTopLevelClasses("com.korea.study");
+//import 자동으로 안될 수 있음
+/////////////////////////////////////////////////
+import org.springframework.stereotype.Component;
+//////////////////////////////////////////////
+import org.springframework.util.StringUtils;
 
-for(ClassPath.ClassInfo classInfo : set){
-	Class clazz = classInfo.load();
-	Component component = (Component)clazz.getAnnotation(Component.class);
+import com.google.common.reflect.ClassPath;
 
-	if(component != null){
-		String id = StringUtils.uncapitalize(classInfo.getSimpleName());// Car ->car
-		map.put(id,clazz.newInstance());
+@Component class Car{};
+@Component class SportCar extends Car{};
+@Component class Truck extends Car{};
+@Component class Engine {};
+
+class AppContext{
+	Map map; //객체 저장소
+	
+	public AppContext() {
+		map = new HashMap();
+		doComponentScan();
+		
+		//구아바 라이브러리 다운로드하기!
+		
+	}
+	
+	private void doComponentScan() {
+		
+		try {
+		//1. 패키지내의 클래스 목록을 가져온다.
+		//2. 반복문으로 클래스를 하나씩 읽어와서 @Component가 붙어있는지 확인
+		//3. @Component가 붙어있으면 객체를 생성해서 map에 저장
+		
+		ClassLoader classLoader = AppContext.class.getClassLoader();
+		ClassPath classPath = ClassPath.from(classLoader);
+		
+		Set<ClassPath.ClassInfo> set = classPath.getTopLevelClasses("com.korea.dependency.di3");
+		
+		for(ClassPath.ClassInfo classInfo : set) {
+			Class clazz = classInfo.load();
+			Component component = (Component)clazz.getAnnotation(Component.class);
+			if(component != null) {
+				String id = StringUtils.uncapitalize(classInfo.getSimpleName());
+				map.put(id, clazz.newInstance());
+			}
+		}
+		} catch(Exception e) {
+			
+		}
+		
+	}
+	
+	Object getBean(String key) {
+		return map.get(key);
+	}
+}
+
+public class Main3 {
+	
+	public static void main(String[] args)throws Exception {
+		AppContext ac = new AppContext();
+		
+		
+		Car car = (Car)ac.getBean("car");
+		System.out.println("car= " + car);
+		
+		Engine engine = (Engine)ac.getBean("engine");
+		System.out.println("engine= " + engine);
+	}
+}
+
+```
+### 5. 객체 찾기
+- by Name, by Type
+```java
+AppContext ac = new AppContext();
+Car car = (Car)ac.getBean("Car"); //이름(id)로 찾기
+Car car2 = (Car)ac.getBean(Car.class); //타입으로 찾기
+
+//이름으로 찾기
+Object getBean(String id){
+	return map.get(id);
+}
+
+//타입으로 찾기
+Object getBean(Class clazz){
+	for(Object obj : map.values()){
+		if(clazz.isInstance(obj)){// obj instanceof clazz
+			return obj;
+		}
+		return null;
 	}
 }
 ```
+
+### Main3 클래스에 코드 추가하기
+```java
+...
+		for(ClassPath.ClassInfo classInfo : set) {
+			Class clazz = classInfo.load();
+			Component component = (Component)clazz.getAnnotation(Component.class);
+			if(component != null) {
+				String id = StringUtils.uncapitalize(classInfo.getSimpleName());
+				map.put(id, clazz.newInstance());
+			}
+		}
+		} catch(Exception e) {
+			
+		}
+		
+	}
+	
+	Object getBean(String key) {
+		return map.get(key);
+	}
+
+	Object getBean(Class clazz) {
+		for(Object obj : map.values()) {
+			if(clazz.isInstance(obj)) {
+				return obj;
+			}
+		}
+		return null;
+	}
+}
+
+public class Main3 {
+	
+	public static void main(String[] args)throws Exception {
+		AppContext ac = new AppContext();
+		
+		
+		Car car = (Car)ac.getBean("car"); //byName으로 객체를 검색
+		System.out.println("car= " + car);
+		
+		Car car2 = (Car)ac.getBean(Car.class); //byType으로 객체를 검색
+		System.out.println("car2= " + car2);
+		
+		Engine engine = (Engine)ac.getBean("engine");
+		System.out.println("engine= " + engine);
+	}
+}
+```
+
+
 - Computer 클래스 생성하기
 ```java
 package com.korea.study;
