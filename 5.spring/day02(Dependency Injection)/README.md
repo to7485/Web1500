@@ -728,8 +728,8 @@ public class Main4 {
 		
 		Door door = (Door)ac.getBean(Door.class);
 		
-		//주석처리하고 실행하면 당연히 객체변수에 대입이 안되기 때문에 null값이 나올것이다.
 		
+		//doAutowired메서드가 알아서 주입을 해준다.
 		//car.engine=engine;
 		//car.door = door;
 		
@@ -742,11 +742,7 @@ public class Main4 {
 }
 
 ```
-
-
-
-
-<hr>
+### Spring DI 활용하기 
 
 # 구 코드
 
