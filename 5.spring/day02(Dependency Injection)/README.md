@@ -19,7 +19,7 @@
 - 사실 의존성 주입이라고 하는건 이미 자바에서 다 배운 이론이다.
 - 하지만 이것을 스프링이 대신 해주기 때문에 헷갈리는것이다.
 
-### 변경에 유리한 코드1 - 다형성,factory method
+### 1. 변경에 유리한 코드1 - 다형성,factory method
 ```java
 class Car{};
 class SportCar extends Car{};
@@ -50,7 +50,7 @@ static Car getCar(){
 }
 ```
 
-### 변경에 유리한 코드2 - Map과 외부파일(이론)
+### 2. 변경에 유리한 코드2 - Map과 외부파일(이론)
 ```java
 Car car = getCar();
 
@@ -92,7 +92,7 @@ car = com.korea.id.Truck
 - 코드를 변경하면 테스트가 필수이지만 코드는 변경되지 않았기 때문에 테스트를 할 필요가 없어진다.
 - 그래서 항상 프로그램의 변경을 최소화 할까 고민해야 한다.
 
-### com.korea.di 아래에 di1패키지 만들기
+##### com.korea.di 아래에 di1패키지 만들기
 - Main1 클래스파일 생성하기(실습)
 ```java
 
@@ -127,7 +127,7 @@ public class Main1 {
 car=com.korea.study.SportCar
 ```
 
-### 코드를 조금더 유연하게 바꿔보자
+##### 코드를 조금더 유연하게 바꿔보자
 - config.txt 수정하기
 ```
 car=com.korea.study.SportCar
@@ -168,13 +168,13 @@ public class Main1 {
 
 }
 ```
-## 2. 객체 컨테이너(ApplicationContext)만들기
+### 3. 객체 컨테이너(ApplicationContext)만들기
 
-### ApplicationCeontext
+#### ApplicationCeontext
 - 객체 저장소라고 한다.
 - 클래스 안에 Map으로 객체를 저장한다.
 
-### com.korea.di 아래에 di2패키지 만들기
+##### com.korea.di 아래에 di2패키지 만들기
 - Main2 클래스 생성하기
 ```java
 package com.korea.study;
@@ -217,7 +217,7 @@ public class Main2 {
 	}
 }
 ```
-#### 하드코딩은 좋지 않으니 코드를 수정해주자
+##### 하드코딩은 좋지 않으니 코드를 수정해주자
 - config.txt에 있는 내용을 읽어서 map에 저장하자
 
 ```java
@@ -287,6 +287,7 @@ public class Main2 {
 - mvnrepository.com에서 guava검색
 - Guava: Google Core Libraries For Java » 31.0-jre
 - maven 복사 후 pom.xml에 붙혀넣기
+- 
 ```java
 package com.korea.dependency.di3;
 
@@ -407,7 +408,7 @@ Object getBean(Class clazz){
 	Object getBean(String key) {
 		return map.get(key);
 	}
-
+///////////////////////////////////////////////////////
 	Object getBean(Class clazz) {
 		for(Object obj : map.values()) {
 			if(clazz.isInstance(obj)) {
@@ -416,6 +417,7 @@ Object getBean(Class clazz){
 		}
 		return null;
 	}
+///////////////////////////////////////////////////////
 }
 
 public class Main3 {
@@ -436,6 +438,317 @@ public class Main3 {
 }
 ```
 
+### 6. 객체를 자동 연결하기
+#### @Autowired 어노테이션을 이용하기
+```java
+class Car{
+	Engine engine;
+	Door door
+
+}
+
+AppContext ac = new AppContext();
+Car car = (Car)ac.getBean("car");
+Engine engine = (Engine)ac.getBean("engine");
+Door door = (Door)ac.getBean("door");
+
+필드에 이렇게 직접 객체를 넣어줘야했다(수동)
+car.engine = engine;
+car.door = door;
+```
+- 스프링에서는 @Autowired를 이용하여 byType형식으로 주입해줄 수 있다.
+- 직접 객체변수에 대입을 해줄 필요가 없는것이다.
+```java
+
+class Car{
+	@Autowired
+	Engine engine;
+
+	@Autowired
+	Door door;
+}
+
+AppContext ac = new AppContext();
+Car car = (Car)ac.getBean("car");
+Engine engine = (Engine)ac.getBean("engine");
+Door door = (Door)ac.getBean("door");
+```
+
+
+
+#### @Resources 어노테이션을 이용하기
+- @Resources는 byName형태로 찾는다.
+```java
+class Car{
+	//이름을 생략하면 타입의 첫글자를 소문자로 만들어서 이름으로 사용한다.
+	//@Resources(name="engine")
+	@Resources
+	Engine engine;
+
+	@Resources
+	Door door;
+}
+
+AppContext ac = new AppContext();
+Car car = (Car)ac.getBean("car");
+Engine engine = (Engine)ac.getBean("engine");
+Door door = (Door)ac.getBean("door");
+```
+
+### com.korea.di.di4패키지 생성
+- Main3 복사하여 Main4로 만들기
+```java
+package com.korea.dependency.di4;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
+//import 자동으로 안될 수 있다
+/////////////////////////////////////////////////
+import org.springframework.stereotype.Component;
+//////////////////////////////////////////////
+import org.springframework.util.StringUtils;
+
+import com.google.common.reflect.ClassPath;
+
+//자동차는 엔진과 문을 필요로한다!
+@Component class Car{
+	Engine engine;
+	Door door;
+	@Override
+	public String toString() {
+		return "Car [engine=" + engine + ", door=" + door + "]";
+	}
+	
+	
+};
+@Component class SportCar extends Car{};
+@Component class Truck extends Car{};
+@Component class Engine {};
+@Component class Door{};
+
+class AppContext{
+	Map map; //객체 저장소
+	
+	public AppContext() {
+		map = new HashMap();
+		doComponentScan();
+		
+		//구아바 라이브러리 다운로드하기!
+		
+	}
+	
+	private void doComponentScan() {
+		
+		try {
+		ClassLoader classLoader = AppContext.class.getClassLoader();
+		ClassPath classPath = ClassPath.from(classLoader);
+		
+		//패키지 di4로 변경해주기
+		Set<ClassPath.ClassInfo> set = classPath.getTopLevelClasses("com.korea.dependency.di4");
+		
+		for(ClassPath.ClassInfo classInfo : set) {
+			Class clazz = classInfo.load();
+			Component component = (Component)clazz.getAnnotation(Component.class);
+			if(component != null) {
+				String id = StringUtils.uncapitalize(classInfo.getSimpleName());
+				map.put(id, clazz.newInstance());
+			}
+		}
+		} catch(Exception e) {
+			
+		}
+		
+	}
+	
+	Object getBean(String key) {
+		return map.get(key);
+	}
+	
+	Object getBean(Class clazz) {
+		for(Object obj : map.values()) {
+			if(clazz.isInstance(obj)) {
+				return obj;
+			}
+		}
+		return null;
+	}
+}
+
+public class Main4 {
+	
+	public static void main(String[] args)throws Exception {
+		AppContext ac = new AppContext();
+		
+		
+		Car car = (Car)ac.getBean("car"); //byName으로 객체를 검색
+		
+		Engine engine = (Engine)ac.getBean("engine");
+		
+		Door door = (Door)ac.getBean(Door.class);
+		
+		//이부분을 주석처리하고 다시 실행하면 객체 변수에 대입이 안되기 때문에
+		//car에 null값이 뜰것이다.
+		car.engine=engine;
+		car.door = door;
+		
+		System.out.println("car= " + car);
+		System.out.println("engine= " + engine);
+		System.out.println("door= " + door);
+		
+		
+	}
+}
+
+/*
+JavaApplication으로 실행하기
+결과
+car= Car [engine=com.korea.dependency.di4.Engine@371a67ec, door=com.korea.dependency.di4.Door@5ed828d]
+engine= com.korea.dependency.di4.Engine@371a67ec
+door= com.korea.dependency.di4.Door@5ed828d
+*/
+```
+
+- @AutoWired로 대신 주입하기
+- AppContext클래스에 메서드 추가하기
+```java
+package com.korea.dependency.di4;
+
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
+import org.springframework.beans.factory.annotation.Autowired;
+//import 자동으로 안될 수 있
+/////////////////////////////////////////////////
+import org.springframework.stereotype.Component;
+//////////////////////////////////////////////
+import org.springframework.util.StringUtils;
+
+import com.google.common.reflect.ClassPath;
+
+@Component class Car{
+	Engine engine;
+	Door door;
+	@Override
+	public String toString() {
+		return "Car [engine=" + engine + ", door=" + door + "]";
+	}
+	
+	
+};
+@Component class SportCar extends Car{};
+@Component class Truck extends Car{};
+@Component class Engine {};
+@Component class Door{};
+
+class AppContext{
+	Map map; //객체 저장소
+	
+	public AppContext() {
+		map = new HashMap();
+		doComponentScan();
+		///////////////////
+		doAutowired();
+		///////////////////
+	
+		
+	}
+	//////////////////////////////////////////////////////////
+	private void doAutowired() {
+		//map에 저장된 객체의 객체변수중에 @Autowired가 붙어 있으면
+		//객체변수의 타입에 맞는 객체를 찾아서 연결(객체의 주소를 객체변수에 저장)
+		
+		try {
+		for(Object bean : map.values()) {//map의 value에 저장된것들 중에서
+			for(Field fld : bean.getClass().getDeclaredFields()) {
+				if(fld.getAnnotation(Autowired.class)!=null) { //오토 와이어드가 붙어있는지 보고 붙어있으면 해당하는 타입을 찾아서 저
+					fld.set(bean, getBean(fld.getType()));
+				}
+			}
+		}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	//////////////////////////////////////////////////////////
+	
+	private void doComponentScan() {
+		
+		try {
+		//1. 패키지내의 클래스 목록을 가져온다.
+		//2. 반복문으로 클래스를 하나씩 읽어와서 @Component가 붙어있는지 확인
+		//3. @Component가 붙어있으면 객체를 생성해서 map에 저장
+		
+		ClassLoader classLoader = AppContext.class.getClassLoader();
+		ClassPath classPath = ClassPath.from(classLoader);
+		
+		Set<ClassPath.ClassInfo> set = classPath.getTopLevelClasses("com.korea.dependency.di4");
+		
+		for(ClassPath.ClassInfo classInfo : set) {
+			Class clazz = classInfo.load();
+			Component component = (Component)clazz.getAnnotation(Component.class);
+			if(component != null) {
+				String id = StringUtils.uncapitalize(classInfo.getSimpleName());
+				map.put(id, clazz.newInstance());
+			}
+		}
+		} catch(Exception e) {
+			
+		}
+		
+	}
+	
+	Object getBean(String key) {
+		return map.get(key);
+	}
+	
+	Object getBean(Class clazz) {
+		for(Object obj : map.values()) {
+			if(clazz.isInstance(obj)) {
+				return obj;
+			}
+		}
+		return null;
+	}
+}
+
+public class Main4 {
+	
+	public static void main(String[] args)throws Exception {
+		AppContext ac = new AppContext();
+		
+		
+		Car car = (Car)ac.getBean("car"); //byName으로 객체를 검색
+		
+		Engine engine = (Engine)ac.getBean("engine");
+		
+		
+		Door door = (Door)ac.getBean(Door.class);
+		
+		//주석처리하고 실행하면 당연히 객체변수에 대입이 안되기 때문에 null값이 나올것이다.
+		
+		//car.engine=engine;
+		//car.door = door;
+		
+		System.out.println("car= " + car);
+		System.out.println("engine= " + engine);
+		System.out.println("door= " + door);
+		
+		
+	}
+}
+
+```
+
+
+
+
+<hr>
+
+# 구 코드
 
 - Computer 클래스 생성하기
 ```java
