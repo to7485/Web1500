@@ -743,6 +743,81 @@ public class Main4 {
 
 ```
 ### Spring DI 활용하기 
+- Car 클래스 생성하기
+```java
+package com.korea.dependency;
+
+import org.springframework.stereotype.Component;
+
+import lombok.ToString;
+
+@Component
+@ToString
+public class Car {
+
+	Engine engine;
+	Door door;
+}
+```
+
+- Engine 클래스 생성하기
+```java
+package com.korea.dependency;
+
+import org.springframework.stereotype.Component;
+
+@Component
+public class Engine {
+
+}
+```
+
+- Door 클래스 생성하기
+```java
+package com.korea.dependency;
+
+import org.springframework.stereotype.Component;
+
+@Component
+public class Door {
+
+}
+```
+
+- SpringDiTest클래스 생성하기
+```java
+package com.korea.dependency;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
+public class SpringDiTest {
+	public static void main(String[] args) {
+		
+		ApplicationContext ac = new AnnotationConfigApplicationContext("com.korea.dependency");
+		Car car = (Car)ac.getBean(Car.class);
+		Engine engine = (Engine)ac.getBean(Engine.class);
+		Door door = (Door)ac.getBean(Door.class);
+		
+		System.out.println("car="+car);
+		System.out.println("engine=" + engine);
+		System.out.println("door="+door);
+	}
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # 구 코드
 
