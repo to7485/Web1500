@@ -122,6 +122,30 @@ public class ProductDAO {
 
 Mapper -> DAO -> Service -> Controller 순으로 거쳐오면 된다.
 
+## product.xml namespace수정하기
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.korea.tier.mapper.ProductMapper">
+	
+	<insert id="insert">
+		INSERT INTO PRODUCT
+		(PRODUCT_ID, PRODUCT_NAME,PRODUCT_STOCK,PRODUCT_PRICE)
+		VALUES(SEQ_PRODUCT.NEXTVAL, #{productName},#{productStock},#{productPrice})
+	</insert>
+	
+	<select id="selectAll">
+		SELECT PRODUCT_ID, PRODUCT_NAME, PRODUCT_STOCK, PRODUCT_PRICE, REGISTER_DATE, UPDATE_DATE FROM PRODUCT
+	</select>
+	
+</mapper>
+```
+
+
+
+
+
+
 ## com.korea.tier패키지 안에 service 패키지 생성하고 ProductService 인터페이스 생성하기
 - 지금은 컨트롤러 하나에 하나의 쿼리가 나가기 때문에 서비스에 대한 목적이 두드러지지 않는다.
 - 여러개를 연동하다보면 하나의 서비스에 여러개의 쿼리가 필요하다 보니 묶어서 메서드 하나로 처리하기 위해 추가해주자.
@@ -219,7 +243,7 @@ public class ProductController {
 	@PostMapping("register")
 	public RedirectView register(ProductVO productVO) {
 		productService.register(productVO);
-		return new RedirectView("product/list");
+		return new RedirectView("list");
 	}
 	
 	@GetMapping("list")
