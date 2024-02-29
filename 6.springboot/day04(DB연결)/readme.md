@@ -444,7 +444,7 @@ public interface ProductMapper {
 		values (seq_product.nextVal, #{productName}, #{productStock}, #{productPrice})
 	</insert>
 	
-	<select id="selectAll" resultType="productVO">
+	<select id="selectAll">
         	SELECT PRODUCT_ID, PRODUCT_NAME, PRODUCT_STOCK, PRODUCT_PRICE, REGISTER_DATE, UPDATE_DATE FROM PRODUCT
     	</select>
 </mapper>
