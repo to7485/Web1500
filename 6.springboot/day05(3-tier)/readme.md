@@ -649,7 +649,7 @@ public class OrderController {
     });
 
     $done.on("click", function(){ //order-done 버튼의 클릭이벤트를 처리하는 함수
-        if(i) {
+        if(i+1) {
             console.log(i);
             $form.find("input[name='productId']").val($radios.eq(i).val());
 	    //폼 내에서 name 속성이 "productId"인 입력 필드를 선택하고, 선택된 라디오 버튼의 값을 설정합니다.
