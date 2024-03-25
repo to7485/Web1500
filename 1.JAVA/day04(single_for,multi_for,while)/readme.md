@@ -82,6 +82,19 @@ int n = scan.nextInt();
   	}
 }//main
 
+//10개의 정수를 입력받아 그 수들 중 짝수가 몇개인지 출력하는 프로그램
+int count = 0;
+for(int i = 0; i < 10; i++) {
+	System.out.print("정수 입력 : ");
+	int a = sc.nextInt();
+	
+	if( a % 2 == 0) {
+		count++;
+	}
+}
+
+System.out.println("입력받은 짝수는 "+count+"개입니다.");
+
 
 자바 1주차(2) 문제 - 2
 Scanner를 통해 정수 n1, n2를 입력받는다.
