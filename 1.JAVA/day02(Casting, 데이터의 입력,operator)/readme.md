@@ -289,8 +289,23 @@ System.out.println("||연산결과: " + result2);
 
 ### !는 not의 의미를 가지고 있다. True를 False로 False를 True로 바꿔준다.
 ```java
-//! 는not의 뜻. true는 false로, false는 true로 바꿔서나타낸다.
-System.out.println("!연산결과: " + !result2);
+System.out.println("true의 부정 : " + !true);
+System.out.println("false의 부정 : " + !false);
+
+Scanner sc = new Scanner(System.in);
+
+System.out.print("정수 하나 입력 : ");
+int num = sc.nextInt();
+
+System.out.println("입력한 정수가 짝수인가? " + !(!(num % 2 == 0)));
+System.out.println("입력한 정수가 짝수인가? " + !(num % 2 != 0));
+
+//위에서 입력 받은 수가 3의 배수인지 확인하여 출력하세요
+System.out.println("입력한 정수가 3의 배수인가? " + !(!(num % 3 == 0)));
+System.err.println("입력한 정수가 3의 배수인가? " + !(num % 3 != 0));
+
+System.out.println("입력한 정수가 양수인가? " + (num > 0));
+System.out.println("입력한 정수가 양수인가? " + !(num <= 0));
 ```
 
 ## 비트연산자.
