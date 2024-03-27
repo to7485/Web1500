@@ -24,6 +24,7 @@
 - 이후 브라우저에서는 요청할 때마다 로그인 정보가 담긴 쿠키를 함께 서버로 보낸다.
 - 브라우저에서 매번 요청할 때마다 서버 입장에서는 로그인 정보가 담긴 쿠키를 받게 되는것이다.
 
+
 ## 쿠키의 장점
 - 기존 로그인 정보를 사용하기 때문에 인증을 위한 추가적인 데이터 저장이 필요없다.
 
@@ -31,6 +32,12 @@
 - 사용자의 주요 정보를 매번 요청에 담기 때문에 보안상에 문제가 있을 수 있다.
 - 클라이언트에서 쿠키 정보를 쉽게 변경, 삭제할 수 있고, 가로채기 당할 수도 있다.
 - 쿠키 사이즈가 커질수록 네트워크 부하가 심해진다.
+
+## 쿠키의 활용
+- 쿠키는 서버와의 상호작용 뿐만 아니라, 웹사이트 환경 설정이나 검색 기록을 유지하여 이용자가 웹사이트를 다시 방문할 때 사용 경험을 제공해 주기도 한다.
+1. 세션 관리(Session Management) : 서버간 일시적인 연결 유지에 이용(로그인)
+2. 개인화(Personalization) : 웹사이트에 대한 사용자 선호, 테마 등의 세팅(다크모드, 언어 설정, 메뉴 순서 최적화)
+3. 트래킹(Tracking) : 사용자 행동을 기록하고 분석하는 용도(분석 데이터 수집, 광고에 기여)
 
 ## 쿠키의 구성요소
 - Name(이름) : 각각의 쿠키를 구별하는 데 사용되는 이름
@@ -47,11 +54,7 @@
 
 > 일단 웹 브라우저에 쿠키가 저장되면 웹 브라우저는 쿠키가 삭제되기 전까지 웹 서버에 쿠키를 전송합니다
 
-
-
-
 ![image](image/쿠키동작과정.png)
-
 
 #### Cookie 클래스의 메서드 종류
 
@@ -73,33 +76,14 @@
 |setValue(String)|void|쿠키의 값을 설정합니다.|
 |setVersion(int)|void|쿠키의 버전을 설정합니다.|
 
-#### 쿠키와 세션의 차이
-
-|구분|쿠키|세션|
-|----|------|-------|
-|사용 클래스|Cookie 클래스|HttpSessin 인터페이스|
-|저장 형식|텍스트 형식|Object 형|
-|저장 장소|클라이언트|서버(세션 아이디만 클라이언트에 저장)|
-|종료 시점|쿠키 저장 시 설정(설정하지 않을 경우 브라우저 종료 시 소멸)|정확한 시점을 알 수 없음|
-|리소스|클라이언트의 리소스 사용|서버의 리소스 사용|
-|보안|클라이언트에 저장되므로 사용자의 변경이 가능하여 보안에 취약|서버에 저장되어 있어 상대적으로 안정적|
-
-## 쿠키 생성
-
-- 쿠키를 사용하려면 먼저 Cookie 클래스를 사용하여 쿠키를 생성
-- 쿠키를 생성하는 데이는 Cookie() 생성자를 사용합니다.
-- 쿠키를 생성한 후에는 반드시 response 내장 객체의 addCookie() 메서드로 쿠키를 설정해야 합니다.
-
 ```java
 Cookie Cookie(String name, String value)
 ```
 
+## Ex_날짜_login 프로젝트 생성하기
 
-
-## Ex_날짜_Cookie_Session 프로젝트 생성하기
-
-## SetCookieAction 서블릿 생성하기
-```
+### SetCookieAction 서블릿 생성하기
+```java
 package action;
 
 import javax.servlet.RequestDispatcher;
@@ -113,7 +97,9 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Servlet implementation class SetCookieAction
  */
-@WebServlet("/cookie.do")
+
+//사용자가 주소에 cookie를 치고 요청을 한다.
+@WebServlet("/cookie")
 public class SetCookieAction extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -122,7 +108,10 @@ public class SetCookieAction extends HttpServlet {
 	 */
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
+		//쿠키를 클래스를 통해 쿠키를 생성하고 정보를 담아준다.
 		Cookie cookie = new Cookie("param1", "asdf");
+
+		//응답에 생성한 쿠키를 담아준다.
 		response.addCookie(cookie);
 		
 		response.sendRedirect("ex01_Cookie.jsp");
@@ -149,37 +138,25 @@ public class SetCookieAction extends HttpServlet {
 </body>
 </html>
 ```
-![image](https://user-images.githubusercontent.com/54658614/233833376-6ae14eb3-c78a-40b5-bacc-299c84df3fa6.png)
+- SetCookieAction 서블릿에서 실행하면 다음과 같은 결과를 볼 수 있다.
 
+![image](image/요청과%20쿠키.png)
 
+- Application탭에서 저장된 쿠키들을 확인할 수 있다.
 
-![image](https://user-images.githubusercontent.com/54658614/233546625-a0a67b82-7b25-4f61-9ff8-b8667a7f8a08.png)
+![image](image/쿠키확인.png)
 
-응답헤더에 쿠키가 잘 저장이 되어있는걸 볼 수 있다.
+### 쿠키 저장방식
+- 쿠키는 key=value 형태로 저장되는 문자열로서 여러개의 데이터를 콤마(,)로 열거하여 저장해 구분한다.
+- 쿠키는 유효 기간이나 도메인 등을 설정한 파라미터들을 세미콜론(;)을 통해 열거한다.
 
-쿠키는 개인의 컴퓨터에 저장이된다.
+![image](image/쿠키의요소.png)
 
-![image](https://user-images.githubusercontent.com/54658614/233546899-d581dc18-3677-40ad-9e07-91caef204449.png)
-
-쿠키는 브라우저 자체에 저장이 된다.
-
-쿠키는 브라우저에 저장이 되고 요청시마다 전송이 되기 때문에 보안에 취약하다는 문제가 있다.<br>
-그래서 텍스트를 그대로 저장하지는 않고 암호화를 통해서 저장한다<br>
-
-아래는 네이버 로그인 후 블로그에 접속했을 때 까지의 쿠키에 대한 정보이다.
-
-![image](https://user-images.githubusercontent.com/54658614/233548583-18d97aa9-e171-4884-97f8-3a704ad4039c.png)
-
-Domain : 현재 응답한 서버의 도메인 (도메인만 내 쿠키의 Value에 접근할 수 있다고 보면 된다.)<br>
-Path : 쿠키의 경로<br>
-Expires : 만료시간을 정할 수 있다.( ex)일주일동안 팝업창 띄우지 않기)<br>
-HttpOnly : 원래 쿠키는 JS와 같은 프론트단에서도 접근할 수 있다. 그러면 해커의 공격에 더 취약해지기 때문에<br> &nbsp;&nbsp;&nbsp;&nbsp; HttpOnly를 체크하면 Servlet과 같은 소스에서만 접근할 수 있도록 해준다.
-
-쿠키의 이름과 들어있는 내용들을 조회해보자.
 
 ### 쿠키 객체 얻기 
 - 클라이언트에 저장된 모든 쿠키 객체를 가져오려면 request 내장 객체의 getCookies() 메서드를 사용합니다.
 - 쿠키 객체가 여러 개 일때는 배열 형태로 가져옵니다.
+
 ```java
 Cookie[] requst.getCookies()
 ```
@@ -191,26 +168,16 @@ Cookie[] cookies = request.getCookies();
 
 ### 쿠키 객체의 정보 얻기
 ```java
-String getName() - 쿠키 이름
-String getValue() - 쿠키 값 
+String getName() //쿠키 이름
+String getValue() //쿠키 값 
 ```
 
-## 쿠키 기한 정하기 SetCookieAction서블릿 코드 추가하기
-```
+## 쿠키 기한 정하기 
+- 만료 날짜를 생략하면 브라우저 종료시 까지만 유지된다.(세션 쿠키)
+- 만료 날짜를 입력하면 해당 날짜까지 유지된다.(영속쿠키)
+```java
 package action;
-
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-/**
- * Servlet implementation class SetCookieAction
- */
-@WebServlet("/cookie.do")
+@WebServlet("/cookie")
 public class SetCookieAction extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -221,16 +188,48 @@ public class SetCookieAction extends HttpServlet {
 		
 		Cookie cookie = new Cookie("param1", "asdf");
 		cookie.setMaxAge(60*60*24*7);//일주일
+
 		response.addCookie(cookie);
 		
-
 		response.sendRedirect("ex01_Cookie.jsp");
 	}
 }
 ```
 
-![image](https://user-images.githubusercontent.com/54658614/233834027-ebc7a46e-bdd3-4271-8fd9-d80a3c0f8149.png)
+![image](image/만료날짜.png)
 
+## 쿠키Path
+- 쿠키에 경로를 설정하면, 해당 페이지 경로에서만 쿠키 사용 접근이 가능하다.
+- 해당 경로의 하위 경로를 모두 포함한다.
+- 그렇기 때문에 루트경로(/)로 설정하면 모든 경로에 쿠키가 유효하다.
+- path를 설정하지 않으면 루트경로로 자동 입력 된다.
+- 단, 쿠키의 범위를 좁게 잡을 수록 보안에는 좋다.
+
+```java
+package action;
+@WebServlet("/cookie")
+public class SetCookieAction extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * @see HttpServlet#service(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		Cookie cookie = new Cookie("param1", "asdf");
+		cookie.setMaxAge(60*60*24*7);//일주일
+
+		//만료 날짜를 생략하면 브라우저 종료시 까지만 유지된다.(세션 쿠키)
+		//만료 날짜를 입력하면 해당 날짜까지 유지된다.(영속쿠키)
+
+		cookie.setPath("/");
+
+		response.addCookie(cookie);
+		
+		response.sendRedirect("ex01_Cookie.jsp");
+	}
+}
+```
 
 ## 쿠키 삭제
 - Cookie 클래스는 쿠키를 삭제하는 기능을 별도로 제공하지 않는다.
@@ -249,14 +248,22 @@ response.addCookie(cookie);
 ```
 
 # 세션
-- 세션은 클라이언트와 웹 서버 간의 상태를 지속적으로 유지하는 방법2) 세션은 웹서버에서만 접근이 가능하므로 보안유지에 유리하며 데이터를 저장하는 데 한계가 적습니다.
-- 세션은 오직 웹 서버에 존재하는 객체로 웹 브라우저마다 하나씩 존재하므로 웹 서버의 서비스를 제공받는 사용자를 구분하는 단위가 됩니다.
-- 세션을 사용하면 클라이언트가 웹 서버의 세션에 의해 가상으로 연결된 상태가 되며, 웹브라우저를 닫기 전까지 웹 페이지를 이동하더라도 사용자의 정보가 웹 서버에 보관되어 있어 사용자 정보를 잃지 않습니다.
-- JSP 페이지는 세션 기능을 사용할 수 있도록 session 내장 객체를 제공합니다.
+- 서버에서 일정시간 동안 클라이언트의 상태를 유지하기 위해 사용한다.
+- 서버에서 클라이언트별 세션 ID를 부여하고, 세션 정보를 서버에 저장한다.
+  - 세션 ID : 사용자의 주요 정보가 아닌, 단지 사용자를 식별할 수 있는 값
+- 서버에서 생성한 세션 ID는 클라이언트의 쿠키값(세션 쿠키)로 저장된다.
+- 클라이언트에서 요청을 보낼 때 이 세션쿠키를 함께 보낸다.
+- 서버에서는 클라이언트별 세션 쿠키 값이 저장되어 있으니, 요청으로 온 세션쿠키 값을 보고 어떤 클라이언트인지 식별할 수 있다.
 
-## 개인의 정보를 어떻게 저장하는가?
-- 쿠키값:JSESSIONID
-- 브라우저별로 구별할 수 있는 유일한 값
+## 세션의 장점
+- 사용자의 로그인 정보를 주고 받지 않기 때문에 상대적으로 안전하다.
+- 사용자마다 고유한 세션ID가 발급되기 때문에, 요청이 들어올 때마다 회원DB를 찾지 않아도 된다.
+  - 쿠키값:JSESSIONID
+
+## 세션의 단점
+- 사용자를 식별할 수 있는 값인 세션 ID를 생성하고, 서버에 저장해야 하는 작업이 생긴다.
+- 서버 세션 저장소를 사용하므로 요청이 많아지면 서버 부하가 심해진다.
+
 
 #### session 내장객체 메서드 종류
 - javax.servlet.http.HttpSession
@@ -426,7 +433,7 @@ check_login.jsp를 거쳐서 나오게 해보자
 ```
 ## login_form.jsp 생성하기
 - 아이디가 틀렸으면 아이디가 없다고, 비밀번호가 틀렸으면 비밀번호가 틀렸다고 유효성체크 나눠서 해주기
-```
+```JS
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -528,7 +535,7 @@ public class MemberVO {
 ```
 
 ## LoginAction 생성
-```
+```JAVA
 package action;
 
 import java.io.IOException;
@@ -564,7 +571,7 @@ public class LoginAction extends HttpServlet {
 }
 ```
 ## MemberDAO 클래스 생성
-```
+```java
 package dao;
 
 import java.sql.Connection;
@@ -644,7 +651,7 @@ id가 없어도 null이 들어오고 비밀번호가 틀려도 null이 들어온
 ```
 ## LoginAction 에 코드 추가하기
 
-```
+```java
 .....
 MemberVO vo = MemberDAO.getInstance().selectOne(id); 
 
@@ -687,7 +694,7 @@ response.getWriter().print(resultStr);
 여기서 할 일을 마쳤으니 콜백메서드로 돌아가자
 ```
 ## login_form.jsp 콜백메서드에 코드 작성하기
-```
+```js
 function myCheck(){
 	if(xhr.readyState == 4 && xhr.status == 200){
 		var data = xhr.responseText;
@@ -700,15 +707,15 @@ function myCheck(){
 		}else {
 			alert("로그인 성공");
 			location.href="main_content.jsp";
-	로그인에 성공하면 메인 화면으로 이동할건데 로그인 하지 않아도 위의 주소를 치면 이동이 가능하다는 치명적인 단점이 있다.
-	이걸 잡아줘야 한다.
+	//로그인에 성공하면 메인 화면으로 이동할건데 로그인 하지 않아도 위의 주소를 치면 이동이 가능하다는 치명적인 단점이 있다.
+	//이걸 잡아줘야 한다.
 		}
 	}
 }
 ```
 
 ## check_login.jsp 수정하기
-```
+```js
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:if test="${empty vo }"> <!-- vo가 비어있다는 것은 세션에 저장을 못했다는것! -->
 	<script>
@@ -718,7 +725,7 @@ function myCheck(){
 </c:if>
 ```
 ## 로그아웃 기능 만들기
-```
+```js
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -737,7 +744,7 @@ function myCheck(){
 </html>
 ```
 ## LogoutAction 생성하기
-```
+```java
 package action;
 
 import java.io.IOException;
@@ -782,7 +789,7 @@ public class LogoutAction extends HttpServlet {
 
 
 ### layout.jsp 생성하기
-```
+```js
 <%@ page language="java" contentType="text/html; charset=EUC-KR"
     pageEncoding="EUC-KR"%>
 <html>
@@ -814,9 +821,9 @@ public class LogoutAction extends HttpServlet {
 ```
 
 ### top.jsp 생성하기
-```
-<%@ page language="java" contentType="text/html; charset=EUC-KR"
-    pageEncoding="EUC-KR"%>
+```js
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <html>
 <head>
     <title>top</title>
@@ -830,7 +837,7 @@ public class LogoutAction extends HttpServlet {
 ```
 
 ### bottom.jsp 생성하기
-```
+```JS
 <%@ page language="java" contentType="text/html; charset=EUC-KR"
     pageEncoding="EUC-KR"%>
 <html>
@@ -847,7 +854,7 @@ public class LogoutAction extends HttpServlet {
 ```
 
 ### content.jsp
-```
+```JS
 <%@ page language="java" contentType="text/html; charset=EUC-KR"
     pageEncoding="EUC-KR"%>
 <html>
