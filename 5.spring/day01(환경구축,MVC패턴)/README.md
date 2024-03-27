@@ -37,21 +37,79 @@ Spring은 아래 그림과 같이 기본 틀을 제공하고 필요한 기능들
 - 각각의 계층이나 서비스들 간에 의존성이 존재할 경우 프레임워크가 서로 연결시켜준다.
 
 ### 3. 제어 역행(IoC : Inversion of Control)
-- 제어의 주체가 개발자가 아닌 프레임워크라는 뜻으로 때에 따라 프레임워크가 작성된 코드를 호출하는 기술
+- 제어의 흐름을 전통적인 방식과 다르게 뒤바꾸는것.
+```java
+//사용자 코드가 Framework코드를 호출
+Car car = new Car();
+car.turboDrive();
+
+//누군가 만든 기능
+void turboDrive(){
+	engine = new TurboEngine();
+	engine.start();
+	...
+}
+```
+↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+
+```java
+//Framework가 사용자 코드를 호출
+//아래의 코드는 객체를 수동으로 주입해주는것
+Car car = new Car();
+car.drive(new SuperEngine());
+
+//누군가 만든 기능
+//터보엔진으로 바꾸고 싶어도 아래의 코드는 수정하지 않아도 된다.
+void drive(Engine engine){
+	engine.start();
+	...
+}
+```
+
 - 객체의 생명주기의 관리까지 모든 객체에 대한 제어권을 프레임워크가 가진다.
 - 일반적인 상황에서는 개발자가 new 연산자를 통해 객체를 생성하고 직접 제어를 해야했다.
 - Spring에서는 xml파일 또는 어노테이션 방식으로 스프링 컨테이너에 Bean을 등록하기만 하면된다.
 - Spring은 Bean객체의 생명주기(생성 -> 의존성 설정 -> 초기화 -> 소멸)를 전부 관리해준다.
-- ##### Bean(빈)이란 무엇인가?
-	- 스프링 IoC컨테이너가 관리하는 객체
-	- 스프링 IoC컨테이너에 등록된 Bean들은 의존성 관리가 수월해진다.
-	- 스프링 IoC컨테이너에 등록된 Bean들은 싱글톤의 형태이다.
+- 
+##### Bean(빈)이란 무엇인가?
+- JavaBeans로부터 시작했다.
+  - 재사용이 가능한 컴포넌트 상태
+  - GUI형태로 클라이언트 측에 보여주는 형태로 밀어주려고 했다.
+  - 한번 만들어 놓으면 다른 개발자들이 조금만 수정해서 사용하면 되기때문이다.(AWT -> Swing -> Fx)
+- 자바가 서버측 언어로 각광받기 시작하면서 Servlet & JspBean - MVC의 Model, EL, scope, JSP container가 관리
+- Enterprise Java Beans가 나오면서 규칙이 복잡해지고 EJB container가 관리(빈의 생성,소멸)
+#### Spring Bean
+- POJO : Plane Old Java Object(순수 자바 객체)
+  - EJB등에서 사용되는 Java Bean이 아닌 필드와 Getter,Setter로 구성된 가장 순수한 형태의 기본 클래스이다.
+- 스프링 컨테이너가 관리하는 객체
+
+### Spring container
+- Bean의 저장소
+- Bean을 관리(생성,소멸,연결)
+1. BeanFactory - Bean을 생성, 연결 등의 기본 기능을 정의해놓은 인터페이스
+2. ApplicationContext - BeanFactory를 확장해서 여러 기능을 추가 정의
+
+Springcontainer와 AppcliationContext는 거의 같은말이다.
+
+3. ApplicationContext도 인터페이스이고 다양한 구현체를 제공한다.
+
+|AC의 종류|XML|Java Config|
+|--------|----|----------|
+|non-Web|GenericXml<b>ApplicationContext</b>|AnnotationConfig<b>ApplicationContext</b>|
+|Web|Xml<b>WebApplicationContext<b>|AnnotationConfig<b>WebApplicationContext</b>|
+
+4. ApplicationContext의 주요 메서드
+
+|반환형|메서드|
+|-----|------|
+|Object|getBean(Class<T> requiredType)|
+|Object|getBean(String name)|
+
 
 ### 4. 관점지향 프로그래밍(AOP : Aspect-Oriented Programming)
 - 객체지향적으로 프로그래밍을 했음에도 로그, 트랜잭션, 성능확인 등 공통적인 관심사가 중복되는 문제점을 해결하기 위해 프록시 패턴을 사용하여 코드를 분리하여 관리하는 기술
 
-### 5. POJO : Plane Old Java Object(순수 자바 객체)
-- EJB등에서 사용되는 Java Bean이 아닌 필드와 Getter,Setter로 구성된 가장 순수한 형태의 기본 클래스이다.
+
 
 	
 * * *
