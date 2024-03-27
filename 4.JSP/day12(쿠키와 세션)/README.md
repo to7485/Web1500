@@ -50,9 +50,7 @@
 
 
 
-<img src="image/쿠키동작과정.png" width="640px" height="500px">
-
-
+<img src="image/쿠키동작과정.png" width="480px" height="480px">
 
 
 #### Cookie 클래스의 메서드 종류
