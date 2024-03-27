@@ -80,7 +80,7 @@
 Cookie Cookie(String name, String value)
 ```
 
-## Ex_날짜_login 프로젝트 생성하기
+## Ex_날짜_auth 프로젝트 생성하기
 
 ### SetCookieAction 서블릿 생성하기
 ```java
@@ -364,12 +364,11 @@ void setAttribute(String name, Object value)
 ```
 
 # DB에서 아이디 비밀번호 가져와서 로그인하기
-
-Ex_날짜_login 프로젝트 생성하기
+- Ex_날짜_login 프로젝트 생성하기
 
 ## 테이블 생성하기
 이미 있는 사람은 추가하지 않아도 된다.
-```
+```SQL
 --일련번호 관리객체
 create sequence seq_member_idx;
 
@@ -552,7 +551,7 @@ import vo.MemberVO;
 /**
  * Servlet implementation class LoginAction
  */
-@WebServlet("/login.do")
+@WebServlet("/login")
 public class LoginAction extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -596,10 +595,10 @@ public class MemberDAO {
 	}
 	
 	//로그인 체크
-실수를 많이 하는부분 id랑 pwd를 둘다 받았다고 가정해보자 쿼리문이
-select * from member where id=? and pwd=? 이렇게 만드는 순간
-id가 없어도 null이 들어오고 비밀번호가 틀려도 null이 들어온다.
-아이디나 비밀번호가 잘못되었습니다 라고 나옴;;
+	/*실수를 많이 하는부분 id랑 pwd를 둘다 받았다고 가정해보자 쿼리문이
+	select * from member where id=? and pwd=? 이렇게 만드는 순간
+	id가 없어도 null이 들어오고 비밀번호가 틀려도 null이 들어온다.
+	아이디나 비밀번호가 잘못되었습니다 라고 나옴;;*/
 	public MemberVO selectOne(String id) {
 
 		MemberVO vo = null;
@@ -759,7 +758,7 @@ import javax.servlet.http.HttpSession;
 /**
  * Servlet implementation class LogoutAction
  */
-@WebServlet("/logout.do")
+@WebServlet("/logout")
 public class LogoutAction extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
