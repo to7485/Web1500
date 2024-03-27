@@ -50,7 +50,7 @@
 
 
 
-![image](image/쿠키동작과정.png)
+<img src="image/쿠키동작과정.png" width="640px" height="640px">
 
 
 
