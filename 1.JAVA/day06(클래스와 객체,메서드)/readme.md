@@ -343,6 +343,18 @@ public class ValueTest {
 ```java
 
 public class MethodTest {
+
+//배열의 최대값을 찾는 maxFinder메서드
+public void maxFinder(int[] arr) {
+	//탐색 알고리즘
+	int max = arr[0];
+	for(int x : arr) {
+		if(x > max) max = x;
+	}
+	
+	System.out.println("최대값 : " + max);
+}
+
 //main 함수에서 반지름을 받은 후 원의 넓이를 구하는 메소드 circleArea을 만들고
 //원의 둘레를 구하는 메소드 circleRound를 만들어라
 //단, circleArea 메소드는 함수 안에서 출력문을 출력하고
