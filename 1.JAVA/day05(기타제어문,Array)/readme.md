@@ -151,6 +151,21 @@ w : while( n < 10) {
 
 ```
 
+# 데이터 타입의 분류
+- 기본타입과 참조타입으로 분류한다.
+- 참조 타입이란 객체의 주소를 참조하는 타입으로 배열, 열거형, 클래스, 인터페이스가 있다.
+
+## 자바 메모리 영역
+### 메서드 영역
+- 바이트코드 파일을 읽은 내용이 저장되는 영역으로 클래스별로 상수, static, 메서드코드, 생성자 코드 등이 저장된다.
+
+### 힙영역
+- 객체가 생성되는 영역이다. 객체의 주소는 메서드 영역과 스택 영역의 상수와 변수에서 참조할 수 있다.
+
+### 스택영역
+- 지역변수와 메서드의 매개변수가 만들어지는 영역이다.
+- 
+
 # 배열(Array)
 - 같은 자료형의 변수를 지정하여 여러 데이터를 저장할 수 있는 저장공간을 의미한다.
 - 이렇게 여러 데이터를 담을 수 있는 구조를 자료구조(data structure)라고 한다.
@@ -607,12 +622,19 @@ public class Test{
 		for(int i =0; i < cards.length; i++) {
 			newCards[i] = cards[i];
 		}
+
+
+		//System클래스를 이용한 깊은 복사
+		int[] newCards3 = new int[5];
+
+		System.arraycopy(cards, 0, newCards3, 0, cards.length);
 		
 		newCards[1] = 100;
 		
 		System.out.println("cards 배열 : " + Arrays.toString(cards));
 		System.out.println("newCards 배열 : " + Arrays.toString(newCards));
 		System.out.println("newCards2 배열 : " + Arrays.toString(newCards2));
+		System.out.println("newCards3 배열 : " + Arrays.toString(newCards3));
 	}
 }
 ```
