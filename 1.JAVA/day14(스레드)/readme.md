@@ -234,13 +234,98 @@ public class SleepMain{
 }
 ```
 
+#### 스레드 동기화(Synchronized)
+- 휴대폰으로 음악이나 영상을 동기화 하게되면, 동기화가 끝날때까지 휴대폰은 다른작업을 할 수가 없다.
+- 두 개 이상의 스레드가 하나의 자원을 공유할 경우, 동기화 문제가 발생한다.
+- 변수는 하나인데, 두 개의 스레드가 동시에 한 변수의 값을 변경하다가 오류가 발생할수도 있기 때문입니다.
+- 예를 들어, 내가 컴퓨터로 작업을 하다가 잠시 자리를 비운 사이에 누군가가 내 컴퓨터에 손을 대서 내가 하고 있던 작업내용을 바꿔버리지 못하게 하기 위해서, 내 문서작업이 끝날때까지 다른사람이 손대지 못하도록 컴퓨터를 잠궈둘 필요가 있다.
+- 이처럼 특정 스레드들이 공유하는 한 개의 자원을 사용중일 때, 현재 자원을 사용중이지 않은 다른스레드가 작업을 수행하지 못하게 하기 위해 동기화가 필요하다.
+
+#### SynchronizedEx 클래스 정의
+```java
+public class SynchronizedEx implements Runnable{
+
+	private long money = 10000;//잔액
+	//money로 셋터겟터부터 만듦
+	//run()정의
+	
+	@Override
+	public void run() {
+		
+		//synchronized키워드를 사용하면 
+		//해당 키워드가 명시되어있는 영역이 마무리 될 때까지
+		//다른 스레드에서 접근하지 못하게 된다.
+		synchronized (SynchronizedEx.class) { //this
+			
+			for(int i = 0; i < 10; i++){
+				
+				try {
+					Thread.sleep(500);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+					
+				if(getMoney() <= 0)
+					break;//잔액이 0이면 for문을 탈출
+				//Main까지 만들어 결과 찍어서 보여준 후에
+				//if문 주석달고 son이 구동되는 것도 확인해보자.
+				//그리고 위의 synchronized (SynchronizedEx.class) 영역도 주석처리해서
+				//엄마와 아들이 동시에 돈을 찾는 현상도 확인해보자
+				
+				//outMoney()함수 먼저 정의한 후에 추가
+				outMoney(1000);
+			}//for
+		}//synchronized
+	}//run()
+
+	public long getMoney() {
+		return money;
+	}
+
+	public void setMoney(long money) {
+		this.money = money;
+	}
+	
+	public void outMoney(long howMuch){//출금...ㅠㅠ;; 영어모름ㅠ
+				
+		//해당 스레드의 이름을 가져옴.
+		//이름은 해당 스레드를 생성하는 클래스에서 기재하게 됨
+		String threadName = Thread.currentThread().getName();
+		
+		if(getMoney() > 0){//잔액이 0이상일때 출금가능
+		   money -= howMuch;//잔액에서 출금액을 마이너스		
+		   System.out.println(threadName + " - 잔액 : " + getMoney() + "원");
+			
+		}else{
+			System.out.println(threadName + " - 잔액이 없습니다.");
+		}
+	}
+}
+```
+#### SyncMain 클래스 정의
+
+```java
+public class SyncMain {
+	public static void main(String[] args) {
+		SynchronizedEx atm = new SynchronizedEx();
+		Thread mom = new Thread(atm, "엄마");
+		//Thread.currentThread().getName();이 "엄마"가 된다.
+
+		Thread son = new Thread(atm, "아들");
+		
+		mom.start();
+		son.start();
+	}
+}
+```
+
 ## wait()와 notify()
 - 여러 개의 스레드가 동시에 동작하다 보면, 하나의 스레드가 완료되어야 다음 스레드가 동작할 수 있는 경우가 있다.
 - 예를 들어 한쪽에서는 물건을 나르고, 다른 한쪽에서는 물건을 쌓는 스레드가 있다고 가정해보자.
 - 만약 쌓을 물건이 없다면 물건을 나르는 스레드는 할일이 없어진다.
 - 이때, 물건을 나르는 스레드를 잠시 중지시키고, 물건이 오면 다시 나르도록 할 수 있다.
 - wait()메서드는 스레드를 대기시키고, notify()메서드는 대기중인 스레드를 다시 동작시킬 때 사용한다.
-
+- 두 개 이상의 스레드가 구동중일 때 한 개의 동기화 스레드가 작업을 완전히 마칠때까지 기다렸다가 다른 스레드의 작업이 수행되는 것이 아니라 동기화 진행중에 일시적으로 스레드를 정지시키고 다른 스레드가 작업을 할 수 있다.
 
 ### Storage클래스
 ```java
@@ -253,6 +338,7 @@ public class Storage {
 		if(this.stackCount >= 10) {
 			System.out.println("== 스레드 깨우기 ===");
 			notify();
+			//wait()을 만나 대기상태에 빠진 스레드는 notify()를 만나 재 구동된다.
 		}
 	}
 	
@@ -267,6 +353,8 @@ public class Storage {
 			if(this.stackCount == 0) {
 				System.out.println("== 짐 없음 대기 ===");
 				wait();
+				//스레드가 진행중에 wait()을 만나면 일시적으로 정지된다.
+				//스레드가 구동되고 있을 때 일시적으로 대기상태에 보내고, 다른 스레드에게 제어권을 넘긴다.
 				System.out.println("==짐 없음 대기완료===");
 			}
 		} catch (Exception e) {
@@ -338,6 +426,94 @@ public class ThreadWaitExample {
 	}
 	
 	
+}
+```
+
+#### Account클래스 정의
+```java
+public class Account {
+	
+	int balance = 1000;//잔액
+	
+	//출금메서드
+	public synchronized void withdraw(int money){
+		
+		//잔액이 출금액보다 적을 경우
+		if(balance < money){
+			
+			try {
+				
+				wait();//스레드가 일시적으로 정지상태에 빠짐
+				
+			} catch (Exception e) {
+				// TODO: handle exception
+			}						
+		}
+		
+		balance -= money;
+	}//withdraw()
+	
+	//입금메서드
+	public synchronized void deposit(int money){
+		balance += money;
+		notify();//정지된 스레드를 실행
+	}
+}
+```
+
+#### AccountThread클래스 생성
+
+```java
+public class AccountThread implements Runnable{
+
+	Account acc;//Account객체 준비
+	
+	//생성자 정의
+	public AccountThread(Account acc) {
+		this.acc = acc;
+	}
+	
+	@Override
+	public void run() {
+
+		while(true){
+			
+			try {
+				
+				Thread.sleep(500);
+				
+			} catch (Exception e) {
+				// TODO: handle exception
+			}			
+			
+			//출금액을 100 ~ 300원 사이의 난수로 지정
+			int money = (new Random().nextInt(3) + 1) * 100;
+			acc.withdraw(money);
+			System.out.println("잔액 : " + acc.balance);
+		}
+	}
+}
+```
+#### AccountMain클래스 정의
+```java
+public class AccountMain {
+	public static void main(String[] args) {
+
+		Account acc = new Account();
+
+		Runnable r = new AccountThread(acc);
+		Thread t1 = new Thread(r);
+
+		t1.start();//스레드 구동
+
+		//스레드와는 별개로 값을받아 입금 시키는
+		//코드를 수행할 while()문
+		while(true){
+			Scanner scan = new Scanner(System.in);
+			int n = scan.nextInt();
+			acc.deposit(n);
+		}
+	}
 }
 ```
 
@@ -577,3 +753,7 @@ public class QuizMain {
 	}
 }
 ```
+
+
+
+
