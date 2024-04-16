@@ -261,7 +261,7 @@ public interface Consumer {
 
 https://docs.oracle.com/javase/8/docs/api/java/util/function/Consumer.html
 
-### Calculrator5 클래스 생성하기
+### Calculrator4 클래스 생성하기
 ```java
 package calculator;
 
@@ -280,28 +280,6 @@ public class Calculrator5 {
 		list.forEach(System.out::println);
 	}
 }
-```
-### Calculrator6 클래스 생성하기
-- 람다식을 반환값으로 사용하기
-
-```java
-package test;
-
-public class Calculator6 {
-	public static void main(String[] args) {
-		MyCalculator calc = myCalc();
-		System.out.println(calc.plus(30, 50));
-		
-	}
-	
-	static MyCalculator myCalc() {
-		//MyCalculator calc = (num1,num2) -> num1 + num2;
-		//return calc;
-		
-		return (num1,num2) -> num1 + num2;
-	}
-}
-
 ```
 ## java.util.function패키지
 - 대부분의 메서드는 타입이 비슷하다
