@@ -100,89 +100,54 @@ public interface MyCalculator {
 
 ![image](https://user-images.githubusercontent.com/54658614/224226019-2b79461e-208f-4815-8563-ace38207c754.png)
 
-### Calculator 클래스 만들기
+### Calculator클래스
 ```java
-package calculator;
+package ex2_lamda;
 
-public class Calculator2 {
+//MyCalculator 인터페이스를 구현
+public class Calculator implements MyCalculator{
+
+	//추상메서드를 오버라이딩
+	@Override
+	public int plus(int num1, int num2) {
+		return num1 + num2;
+	}
+
+}
+```
+### CalMain 클래스 만들기
+```java
+package ex2_lamda;
+
+public class CalMain {
 	public static void main(String[] args) {
-
-		//인터페이스 객체를 익명 클래스 선언으로 정의
-		MyCalculator cal = new MyCalculator() {
-
-			//메서드 구현
+		//클래스를 직접 생성하고 구현하여 기능 만들기
+		MyCalculator cal1 = new Calculator();
+		int res = cal1.plus(10, 20);
+		System.out.println("cal1 : " + res);
+		
+		//익명클래스를 통한 구현
+		MyCalculator cal2 = new MyCalculator() {
 			@Override
 			public int plus(int num1, int num2) {
 				return num1 + num2;
 			}
 		};
-	}
-}
-```
-### CalculatorImpl 클래스 생성하기
-```java
-package calculator;
-
-public class CalculatorImpl {
-	public static void main(String[] args) {
-		//인터페이스 객체 선언 시 람다식을 이용해 함수를 구현
-		MyCalculator calc = (int num1, int num2)->{
-			return num1 + num2;
-		};
+		res = cal2.plus(10, 20);
 		
-		int result = calc.plus(20, 30);
-		System.out.println(result);
-	}
-}
-```
-## 람다식과 외부변수의 관계
-- 람다식을 사용할 때 매개변수로 값을 전달하는 것 외에 외부에서 정의 된 지역변수를 사용하는 경우가 있다.
-- 람다식 내부에서 지역변수를 사용하려면 그 지역변수는 final로 선언되어야 한다.
-
-### Calculator2 클래스 생성
-```java
-package calculator;
-
-public class Calculator2 {
-	public static void main(String[] args) {
-		int num3 = 30;
-		MyCalculator cal = new MyCalculator() {
+		System.out.println("cal2 : " + res);
+		
+		//람다식을 통한 구현
+		MyCalculator cal3 = (num1,num2)->num1 +num2;
+		
+		res = cal3.plus(10, 20);
+		
+		System.out.println("cal3 : " + res);
 			
-			@Override
-			public int plus(int num1, int num2) {//내부 익명클래스로 만들었더라도 인터페이스 이기 때문에
-				//num3 = 40; -> final int num3 -> 지역변수의 상수화
-				// TODO Auto-generated method stub
-				return 0;
-			}
-		};
 	}
 }
+
 ```
-- 지역변수는 Stack메모리 영역에 생성되고, 람다식의 경우 익명 객체를 만들기 때문에 Heap영역에 생성된다.
-- 서로 생성되는 위치가 다르므로 간섭할 수 없다.
-- 람다식 내부에서 지역변수를 사용할 경우 복사해 사용하므로 값을 그대로 사용하는 것은 가능하지만 수정할 수 없다.
-- JDK1.8이전에는 람다식 또는 익명 클래스 안에 지역변수를 사용할 경우, final키워드를 부여해 변경 불가 변수임을 명시해야 했다.
-- 그러나 JDK1.8이후 부터는 지역변수를 내부에서 사용할 때, 변경하지 않는다면 final변수로 인정해주는 effective final기능을 지원한다.
-
-#### Calculrator3 클래스만들기
-```java
-package calculator;
-
-public class Calculator3 {
-	public static void main(String[] args) {
-		MyCalculator calc = (int num1,int num2) ->{
-			return num1 + num2;
-		};
-		
-		//자료형도 생략이 가능하다 인터페이스에 정의가 되어있기 때문에!
-		//자료형을 하나만 남겨놔도 안된다. 지우려면 다 지우자.
-		//중괄호와 return도 생략가능하다.
-		MyCalculator calc2 = (num1, num2) -> num1 + num2;
-	}
-}
-```
-
-
 ### MyFunction 람다식 인터페이스 생성하기
 ```java
 package calculator;
@@ -193,52 +158,86 @@ public interface MyFunction {
 	void method(int num);
 }
 ```
-### Calculator3 에 코드 추가하기
+### CalMain 에 코드 추가하기
 ```java
-package calculator;
+package ex2_lamda;
+
+public class CalMain {
+	public static void main(String[] args) {
+		//클래스를 직접 생성하고 구현하여 기능 만들기
+		MyCalculator cal1 = new Calculator();
+		int res = cal1.plus(10, 20);
+		System.out.println("cal1 : " + res);
+		
+		//익명클래스를 통한 구현
+		MyCalculator cal2 = new MyCalculator() {
+			@Override
+			public int plus(int num1, int num2) {
+				return num1 + num2;
+			}
+		};
+		res = cal2.plus(10, 20);
+		
+		System.out.println("cal2 : " + res);
+		
+		//람다식을 통한 구현
+		MyCalculator cal3 = (num1,num2)->num1 +num2;
+		
+		res = cal3.plus(10, 20);
+		
+		System.out.println("cal3 : " + res);
+		
+		//::(이중콜론) : 메서드 참조 연산자
+		//람다식을 보다 간결하게 사용할 수 있도록 해준다.
+		MyFunction mf = System.out::println;
+		mf.method(5);
+	
+	}
+}
+```
+### Calculrator2 클래스 만들기
+- 람다식을 메서드의 매개변수로 사용하기
+```java
+package ex2_lamda;
+
+@FunctionalInterface
+interface Iadd{
+	int add(int x, int y);
+}
+
+public class Calculator2 {
+	public static void main(String[] args) {
+		//람다식을 매개변수로 활용할 수 있다.
+		Iadd add = (x,y) -> x+y;
+		int res = result(add);
+		System.out.println("람다식 매개변수로 활용 : " + res);
+	}
+	
+	public static int result(Iadd lamda) {
+		return lamda.add(1, 2);
+	}
+}
+```
+### Calculator3 클래스 만들기
+- 람다식을 반환값에 넣는다.
+```java
+package ex2_lamda;
+
+interface Iminus{
+	int minus(int x, int y);
+}
 
 public class Calculator3 {
 	public static void main(String[] args) {
-		MyCalculator calc = (num1, num2) ->{
-			return num1 + num2;
-		};
+		//람다식을 반환값에 넣는다.
 		
-		//중괄호와 return도 생략가능하다.
-		MyCalculator calc2 = (num1, num2) -> num1 + num2;
-		
-		//매개변수가 하나일 때는 소괄호가 생략이 가능하다.
-		MyFunction myfunction = num -> System.out.println(num);
-		
-		//::(이중콜론) : 메서드 참조 연산자.
-		//람다식을 보다 간결하게 사용할 수 있도록 해준다.
-		MyFunction myfunc = System.out::println;
-	}		
-}
-```
-
-### Calculrator4 클래스 만들기
-- 람다식을 메서드의 매개변수로 사용하기
-```java
-package test;
-
-public class Test {
-	public static void main(String[] args) {
-		MyCalculator calc = (num1,num2) -> num1 + num2;
-		int result = myCalc(calc);
-		System.out.println(result);
-		
-		//위 방법보다 간단하게 표현할 수 있다.
-		int result2 = myCalc((num1,num2) -> num1 + num2);
-		System.out.println(result2);
+		Iminus im = makeFunction();
+		int res = im.minus(3, 1);
+		System.out.println(res);
 	}
 	
-	//매개변수로 MyCalculator 객체를 필요로 한다.
-	static int myCalc(MyCalculator calc) {
-		
-		//인터페이스에 정의된 plus메서드를 calc객체를 통해 호출한다.
-		//이때 사용된 calc객체는 람다식으로 생성한 객체 또는 직접 메서드 호출시에 생성한
-		//객체일 수 있으며, 이를 통해 다양한 계산을 수행할 수 있다.
-		return calc.plus(1,2);
+	public static Iminus makeFunction() {
+		return (x,y) -> x - y;
 	}
 }
 
