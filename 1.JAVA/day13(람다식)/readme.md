@@ -115,11 +115,11 @@ public class Calculator implements MyCalculator{
 
 }
 ```
-### CalMain 클래스 만들기
+### Ex1_function 클래스 만들기
 ```java
 package ex2_lamda;
 
-public class CalMain {
+public class Ex1_function {
 	public static void main(String[] args) {
 		//클래스를 직접 생성하고 구현하여 기능 만들기
 		MyCalculator cal1 = new Calculator();
@@ -148,21 +148,22 @@ public class CalMain {
 }
 
 ```
-### MyFunction 람다식 인터페이스 생성하기
+### 파라미터가 한개인 경우 생략해보기
+- MyFunction 람다식 인터페이스 생성하기
 ```java
 package calculator;
 
 @FunctionalInterface
 public interface MyFunction {
-	//파라미터가 한개인 경우 생략해보기
 	void method(int num);
 }
 ```
-### CalMain 에 코드 추가하기
+
+### Ex1_function 에 코드 추가하기
 ```java
 package ex2_lamda;
 
-public class CalMain {
+public class Ex1_function {
 	public static void main(String[] args) {
 		//클래스를 직접 생성하고 구현하여 기능 만들기
 		MyCalculator cal1 = new Calculator();
@@ -195,7 +196,8 @@ public class CalMain {
 	}
 }
 ```
-### Calculrator2 클래스 만들기
+
+### Ex2_function 클래스 만들기
 - 람다식을 메서드의 매개변수로 사용하기
 ```java
 package ex2_lamda;
@@ -205,7 +207,7 @@ interface Iadd{
 	int add(int x, int y);
 }
 
-public class Calculator2 {
+public class Ex2_function {
 	public static void main(String[] args) {
 		//람다식을 매개변수로 활용할 수 있다.
 		Iadd add = (x,y) -> x+y;
@@ -218,7 +220,7 @@ public class Calculator2 {
 	}
 }
 ```
-### Calculator3 클래스 만들기
+### Ex3_function 클래스 만들기
 - 람다식을 반환값에 넣는다.
 ```java
 package ex2_lamda;
@@ -227,7 +229,7 @@ interface Iminus{
 	int minus(int x, int y);
 }
 
-public class Calculator3 {
+public class Ex3_function {
 	public static void main(String[] args) {
 		//람다식을 반환값에 넣는다.
 		
@@ -242,7 +244,7 @@ public class Calculator3 {
 }
 
 ```
-### Calculrator5 클래스 만들기
+### Ex4_function 클래스 만들기
 - 컬렉션 프레임워크와 함수형 인터페이스
 - 컬렉션 프레임워크의 인터페이스에 다수의 디폴트 메서드가 추가 되었고 그 중 일부는 함수형 인터페이스를 사용한다.
 - ArrayList에 forEach()메서드가 있고 Consumer 라는 매개변수를 받는다 자바 공식문서에서 검색해보면 FunctionalInterface라는걸 알 수 있다.
@@ -261,13 +263,13 @@ public interface Consumer {
 
 https://docs.oracle.com/javase/8/docs/api/java/util/function/Consumer.html
 
-### Calculrator4 클래스 생성하기
+### Ex4_function 클래스 생성하기
 ```java
 package calculator;
 
 import java.util.*;
 
-public class Calculrator5 {
+public class Calculrator4 {
 	public static void main(String[] args) {
 		ArrayList<String> list = new ArrayList<String>();
 		list.add("이름1");
@@ -281,6 +283,7 @@ public class Calculrator5 {
 	}
 }
 ```
+
 ## java.util.function패키지
 - 대부분의 메서드는 타입이 비슷하다
 - 매개변수가 없거나 한 개, 두 개, 반환값이 없거나 한 개이다.
@@ -296,7 +299,7 @@ public class Calculrator5 {
 |Supplier<T>|T get()|매개변수는 없고 반환값만 있음|
 |Consumer<T>|void accept(T t)|Supplier와 반대로 매개변수만 있고, 반환값이 없음|
 |Function<T,R>|R apply(T t)|일반적인 함수. 하나의 매개변수를 받아서 결과를 반환|
-|Predicate<T>|boolean test(T t)|조건식을 표현하는데 사용됨.   매개변수는 하나. 반환값은 boolean|
+|Predicate<T>|boolean test(T t)|조건식을 표현하는데 사용됨. 매개변수는 하나. 반환값은 boolean|
 
 #### 참고) 타입문자 'T'는 'Type'을 'R'은 'Return Type'을 의미한다.
 
@@ -313,24 +316,48 @@ public class Calculrator5 {
 - 참고) Supplier는 매개변수는 없고 반환값만 존재하는데, 매서드는 두 개의 값을 반환할 수 없으므로 BiSupplier가 없다.
 - 두 개 이상의 매개변수를 갖는 함수형 인터페이스가 필요하면 직접 만들어 써야 한다.
 
-### Ex1_function 클래스 생성
-
-![image](https://user-images.githubusercontent.com/54658614/224505449-4aeb4039-3830-4aea-a6be-3704f4759f39.png)
-
+### Ex5_function 클래스 생성
 ```java
-package test;
+package ex2_lamda;
 
-import java.util.ArrayList;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 
-public class Test {
+public class Calculator5 {
 	public static void main(String[] args) {
-
-		ArrayList<Integer> list = new ArrayList<Integer>();
-		for(int i = 1; i <=10; i++) {
-			list.add(i);
+		Consumer<String> c1 = t -> System.out.println("입력값 : " +t);
+		c1.accept("홍길동");
+		
+		BiConsumer<String, Integer> c2 = (x,y) -> System.out.println("입력값 1 : " + x+", 입력값 2 : " + y);
+		c2.accept("제임스", 100);
+		
+		Supplier<Object> s1 = () -> new Object();
+		System.out.println("주소 : " + s1.get());
+		
+		Function<Integer, String> f1 = x -> String.valueOf(x);
+		String str = f1.apply(100);
+		System.out.println("문자열 str : " + str);
+		
+		BiFunction<String, String, Boolean> f2 = (x,y) -> x.equals(y);
+		if(f2.apply("토마토", "토마토")) {
+			System.out.println("두 문자열의 값은 같습니다.");
 		}
-		list.removeIf(x -> x %2 == 0);//홀수만 반환
-		System.out.println(list);
+		
+		Predicate<Integer> p1 = t -> t>=60;
+		
+		int score = 65;
+		
+		boolean pass = p1.test(score);
+		
+		if(pass) {
+			System.out.println("홍길동님의 점수는" +score+"이고 합격입니다.");
+		}else {
+			System.out.println("홍길동님의 점수는" +score+"이고 불합격입니다.");
+		}	
 	}
 }
 ```
@@ -369,8 +396,8 @@ Function<String, String> f = x -> x;
 Function<String, String> f = Function.identity(); // 위 문장과 동일
 System.out.println(f.apply("Hello")); // Hello가 그대로 출력됨
 ```
-#### Ex4_function 클래스 생성
-```
+#### Ex6_function 클래스 생성
+```java
 package day18;
 import java.util.function.*;
 public class FunctionComposeExam {
