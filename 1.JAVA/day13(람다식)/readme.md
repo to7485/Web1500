@@ -100,7 +100,7 @@ public interface MyCalculator {
 
 ![image](https://user-images.githubusercontent.com/54658614/224226019-2b79461e-208f-4815-8563-ace38207c754.png)
 
-### Calculator클래스
+### Calculator클래스 만들기
 ```java
 package ex2_lamda;
 
