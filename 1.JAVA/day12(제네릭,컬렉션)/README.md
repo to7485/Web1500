@@ -6,78 +6,6 @@
 - JDK 1.5부터 도입된 제네릭을 사용하면 컴파일할 때 타입이 미리 정해지므로 타입 검사나 변환과 같은 번거로운 작업을 생략할 수 있다.
 - 클래스나 메서드 내부에 사용될 데이터 타입의 안정성을 높일 수 있다.
 
-### DataList클래스 생성
-```java
-package test;
-
-public class DataList {
-	private Object[] data;
-	private int size;
-	private int defaultSize = 10;
-	
-	public DataList() {
-		data = new Object[defaultSize];
-	}
-	
-	public DataList(int size) {
-		data = new Object[size];
-	}
-	
-	public void add(Object value) {
-		data[size++] = value;
-	}
-	
-	public Object get(int index) {
-		return data[index];
-	}
-	
-	public int size() {
-		return size;
-	}
-}
-```
-
-### DataListExample클래스
-```java
-package test;
-
-public class DataListExample {
-	public static void main(String[] args) {
-		
-		DataList list = new DataList();
-		
-		//정수 저장
-		list.add(10);
-		
-		//문자 저장
-		list.add("문자");
-		
-		//실수 저장
-		list.add(10.33);
-		
-		//데이터 출력
-		for(int i =0 ; i < list.size(); i++) {
-			//데이터 가져오기
-			Object data = list.get(i);
-			
-			System.out.println(data.getClass().getName());
-			
-//			//저장된 데이터 타입이 어떤 타입인지 검사
-//			if(data instanceof Integer) {
-//				System.out.println("정수  : " + data);
-//			} else if(data instanceof Double) {
-//				System.out.println("실수 : " + data);
-//			} else if(data instanceof String) {
-//				System.out.println("문자열 : " + data);
-//			}
-		}	
-	}
-}
-```
-- 말 그대로 Object는 최상위 클래스이기 때문에 모든 타입의 데이터가 다 들어올 수 있다.
-- 그렇기 때문에 어떤게 들어있는지 정확하게 알 수 없는 경우가 생길 수도 있다.
-- 형변환을 하는 과정을 거쳐야 하는데 잘못 형변환을 하게 되면 오류가 난다.
-
 ## 제네릭 타입 매개변수
 - 제네릭은 <> 꺾쇠 괄호 키워드를 사용하는 데 이를 다이아몬드 연산자라고 한다.
 - 꺾쇠 괄호 안에 식별자 기호를 지정함으로써 파라미터화 할 수 있다.
@@ -88,6 +16,66 @@ public class DataListExample {
 Class<T> class = new Class<>();
 
 ```
+### 타입 파라미터 기호 네이밍
+- 제네릭 기호를 <T>와 같이 써서 표현했지만 사실 식별자 기호는 문법적으로 정해진것은 없다.
+- 다만 우리가 for문을 이용할 때 루프 변수를 i로 지정해서 사용하듯이, 제네릭의 표현변수를 T로 표현한다고 보면 된다. 만일 두번째, 세번째 제네릭이 필요하다고 하면 S,U로 이어나간다.
+- 명명하고 싶은대로 아무 단어나 넣어도 문제는 없지만, 대중적으로 통하는 통상적인 네이밍이 있으면 개발이 용이해지기 때문에 암묵적인 규칙(convention)이 존재한다.
+
+|타입|설명|
+|----|----|
+|\<T>|타입(Type)|
+|\<E>|요소(Element)|
+|\<K>|키(Key)|
+|\<V>|값(Value)|
+|\<N>|숫자(Number)|
+
+## 제네릭 사용시 주의사항
+### 1. 제네릭 타입의 객체는 생성할 수 없다.
+- 제네릭 타입 자체로 타입을 지정하여 객체를 생성하는 것은 불가능하다.
+```java
+class Sample<T> {
+    public void someMethod() {
+        // Type parameter 'T' cannot be instantiated directly
+        T t = new T();
+    }
+}
+```
+### 2. static 멤버에 제네릭 타입이 올 수 없음
+- static 변수의 데이터 타입으로 제네릭 타입 파라미터가 올 수는 없다.
+- 왜냐하면 static 멤버는 클래스가 동일하게 공유하는 변수로서 제네릭 객체가 생성되기도 전에 이미 자료 타입이 정해져 있어야 하기 때문이다.
+```java
+class Student<T> {
+    private String name;
+    private int age = 0;
+
+    // static 메서드의 반환 타입으로 사용 불가
+    public static T addAge(int n) {
+
+    }
+}
+
+class Student<T> {
+    private String name;
+    private int age = 0;
+
+    // static 메서드의 매개변수 타입으로 사용 불가
+    public static void addAge(T n) {
+
+    }
+}
+```
+### 3. 제네릭으로 배열 선언 주의점
+- 기본적으로 제네릭 클래스 자체를 배열로 만들 수는 없다.
+```java
+class Sample<T> { 
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Sample<Integer>[] arr1 = new Sample<>[10];
+    }
+}
+```
 
 ### GenEx 클래스 정의
 ```java
@@ -95,7 +83,6 @@ public class GenEx<T>{
   //public class 클래스명<T>{}
   //public interface 인터페이스명<T>{}
 
-  //다른 글자를 사용해도 되는데 E(Element),K(key),V(Value)를 많이 사용한다.
 	T value;
 
 	public T getValue() {
@@ -107,9 +94,9 @@ public class GenEx<T>{
 	}
 }
 ```
-### GenEx_Main클래스 정의
+### Ex2_Generic클래스 생성
 ```java
-public class GenEx_Main {
+public class Ex2_Generic {
 	public static void main(String[] args) {
 		// 사용자가 원하는 형태로 객체 생성
 		GenEx<String> v1 = new GenEx<String>(); 
@@ -143,9 +130,31 @@ public class GenEx_Main {
 ```
 
 - 또한 제네릭 타입 파라미터에 클래스가 타입으로 온다는 것은, 클래스끼리 상속을 통해 관계를 맺는 객체 지향 프로그래밍의 다형성의 원리가 그대로 적용이 된다는 뜻이다.
-
+- 
+### Ex3_Generic클래스 만들기
 ```java
+class Fruit { }
+class Apple extends Fruit { }
+class Banana extends Fruit { }
 
+class FruitBox<T> {
+    List<T> fruits = new ArrayList<>();
+
+    public void add(T fruit) {
+        fruits.add(fruit);
+    }
+}
+
+public class Ex3_Generic {
+    public static void main(String[] args) {
+        FruitBox<Fruit> box = new FruitBox<>();
+        
+        // 제네릭 타입은 다형성 원리가 그대로 적용된다.
+        box.add(new Fruit());
+        box.add(new Apple());
+        box.add(new Banana());
+    }
+}
 ```
 
 ## 멀티타입 파라미터
@@ -174,9 +183,9 @@ class People<T,M>{
     }
   }
 ```
-### ExGeneric 클래스 생성
+### Ex4_Generic 클래스 생성
 ```java
-public class ExGeneric {
+public class Ex4_Generic {
     public static void main(String []args){
         //타입 파라미터 지정
         People<String,Integer> p1 = new People<String,Integer>("Jack",20);
@@ -192,32 +201,97 @@ public class ExGeneric {
     }
 } 
 ```
-## 제네릭 메서드
-- 메서드의 선언부에 지네릭 타입이 선언된 메서드를 제네릭 메서드라고 한다.
-- 선언 위치는 반환 타입 바로 앞이고, 작성한 제네릭 타입으로 리턴 타입, 파라미터의 타입이 결정된다.
 
-![image](https://github.com/to7485/Java1900/assets/54658614/b1add606-7d95-4434-96c0-495721a8368f)
+## 중복타입 파라미터
+- 제네릭 객체를 제네릭 타입 파라미터로 받는 형식도 표현할 수 있다.
+- ArrayList 자체도 하나의 타입으로서 제네릭 타입 파라미터가 될 수 있기 때문에 중첩형식으로 사용할 수 있다.
 
-- 형식과 사용은 제네릭 클래스와 똑같지만, 클래스의 <T>와 제네릭 메서드 <T>는 다른 것이다.
+### Ex5_Generic클래스 생성
 ```java
-class Student<T>{
+public static void main(String[] args) {
+    // LinkedList<String>을 원소로서 저장하는 ArrayList
+    ArrayList<LinkedList<String>> list = new ArrayList<LinkedList<String>>();
 
-    public T getOneStudent(T id){ return id; }  // 1
-    
-    public <T> T getId(T id){return id;} // 2 제네릭 클래스의 T와 다름
+    LinkedList<String> node1 = new LinkedList<>();
+    node1.add("aa");
+    node1.add("bb");
+
+    LinkedList<String> node2 = new LinkedList<>();
+    node2.add("11");
+    node2.add("22");
+
+    list.add(node1);
+    list.add(node2);
+    System.out.println(list);
 }
 ```
 
-- 위 사람의 정보를 저장하는 코드에서 객체들의 이름이 일치하면 true, 다르면 false
-- 나이가 일치하면 true, 다르면 false를 받아 논리연산하는 함수 만들기
- ```java
-   public static<T,V> boolean compare(People<T,V>p1, People<T,V>p2) {
-      boolean nameCompare = p1.getName().equals(p2.getName());
-      boolean ageCompare =p1.getAge().equals(p2.getAge());
-      return nameCompare && ageCompare;
-  } 
- ```
+## 제네릭 인터페이스
+- 인터페이스에도 제네릭을 적용할 수 있다.
+- 단, 인터페이스를 구현(implements)한 클래스에서도 오버라이딩한 메서드를 제네릭타입에 맞춰서 똑같이 구현해야 한다.
 
+### Ex6_Generic클래스 생성
+```java
+interface ISample<T> {
+    public void addElement(T t, int index);
+    public T getElement(int index);
+}
+
+class Sample<T> implements ISample<T> {
+    private T[] array;
+
+    public Sample() {
+        array = (T[]) new Object[10];
+    }
+
+    @Override
+    public void addElement(T element, int index) {
+        array[index] = element;
+    }
+
+    @Override
+    public T getElement(int index) {
+        return array[index];
+    }
+}
+
+public class Ex6_Generic{
+	public static void main(String[] args) {
+    	Sample<String> sample = new Sample<>();
+    	sample.addElement("This is string", 5);
+    	sample.getElement(5);
+	}
+}
+```
+
+## 제네릭 메서드
+
+### Ex7_Generic 클래스 생성
+```java
+class FruitBox<T> {
+
+	//1. 아래와 같이 제네릭 클래스에서 제네릭 타입 파라미터를 사용하는 메서드를
+	//제네릭 메서드라고 착각하기 쉬운데, 이것은 그냥 타입 파라미터로 타입을 지정한
+	//메서드일 뿐이다.
+    public T addBox(T x, T y) {
+        // ...
+    }
+
+	//2. 제네릭 메서드란, 메서드의 선언부에 <T>가 선언된 메서드를 말한다.
+	//직접 메서드에 <T>을 설정함으로서 동적으로 타입을 받아와 사용할 수 있는
+	//독립적으로 운용 가능한 제네릭 메서드라고 이해하면 된다.
+    public static <T> T addBoxStatic(T x, T y) {
+        // ...
+    }
+
+}
+
+public class Ex7_Generic{
+	public static void main(String[] args){
+		FruitBox.<Integer>addBoxStatic(1,2);
+	}
+}
+```
 ### 제네릭 실습
 - Gen클래스를 만들어 제네릭 타입T를 갖는 printArr메서드를 생성한다.
 - printArr메서드 내부에서 배열을 순차적으로 보여줄수 있게 하는 코드를 작성.
@@ -268,6 +342,111 @@ public class GenEx{
 		gen.printArr(cArr);
 	}
 }
+```
+
+## 제네릭 타입 범위 한정하기
+- 제네릭에 타입을 지정해줌으로서 클래스의 타입을 컴파일 타임에 정하여 타입 예외에 대한 안정성을 확보하는 것은 좋지만 문제는 너무 자유롭다는 점이다.
+
+### Ex8_Generic
+```java
+// 숫자만 받아 계산하는 계산기 클래스 모듈
+class Calculator<T> {
+    void add(T a, T b) {}
+    void min(T a, T b) {}
+    void mul(T a, T b) {}
+    void div(T a, T b) {}
+}
+
+public class Main {
+    public static void main(String[] args) {
+        // 제네릭에 아무 타입이나 모두 할당이 가능
+        Calculator<Number> cal1 = new Calculator<>();
+        Calculator<Object> cal2 = new Calculator<>();
+        Calculator<String> cal3 = new Calculator<>();
+        Calculator<Main> cal4 = new Calculator<>();
+    }
+}
+```
+
+## 타입 한정 키워드 extends
+### 사용법
+```java
+<T extends [제한타입]>
+```
+
+### Ex8_Generic 수정하기
+```java
+// 숫자만 받아 계산하는 계산기 클래스 모듈
+class Calculator<T extends Number> {
+    void add(T a, T b) {}
+    void min(T a, T b) {}
+    void mul(T a, T b) {}
+    void div(T a, T b) {}
+}
+
+public class Main {
+    public static void main(String[] args) {
+        // 제네릭에 아무 타입이나 모두 할당이 가능
+        Calculator<Number> cal1 = new Calculator<>();
+        Calculator<Object> cal2 = new Calculator<>();
+        Calculator<String> cal3 = new Calculator<>();
+        Calculator<Main> cal4 = new Calculator<>();
+    }
+}
+```
+
+## 인터페이스 타입 한정
+- extends 키워드 다음에 올 타입은 일반 클래스, 추상 클래스, 인터페이스 모두 올 수 있다.
+
+### Ex9_Geneirc 클래스 생성
+```java
+interface Readable {
+}
+
+// 인터페이스를 구현하는 클래스
+public class Student implements Readable {
+}
+ 
+// 인터페이스를 Readable를 구현한 클래스만 제네릭 가능
+public class School <T extends Readable> {
+}
+
+public class Ex9_Geneirc{
+	public static void main(String[] args) {
+		// 타입 파라미터에 인터페이스를 구현한 클래스만이 올수 있게 됨	
+		School<Student> a = new School<Student>();
+	}
+}
+```
+
+## 다중 타입 한정
+- 만일 2개 이상의 타입을 동시에 상속(구현)한 경우로 타입 제한을 하고 싶다면 &연산자를 사용하면 된다.
+- 해당 인터페이스들을 동시에 구현한 클래스가 제네릭 타입의 대상이 되게 한다.
+- 단, 자바에서는 다중 상속을 지원하지 않기 때문에 클래스로는 다중 extends는 불가능하고 오로지 인터페이스로만이 가능하다.
+```java
+interface Readable {}
+interface Closeable {}
+
+class BoxType implements Readable, Closeable {}
+
+class Box<T extends Readable & Closeable> {
+    List<T> list = new ArrayList<>();
+
+    public void add(T item) {
+        list.add(item);
+    }
+}
+
+public class Ex10_Generic{
+	public static void main(String[] args) {
+    // Readable 와 Closeable 를 동시에 구현한 클래스만이 타입 할당이 가능하다
+    Box<BoxType> box = new Box<>();
+
+    // 심지어 최상위 Object 클래스여도 할당 불가능하다
+    Box<Object> box2 = new Box<>(); // ! Error
+}
+}
+
 ```
 
 # 컬렉션 프레임워크(Collection FrameWork)
