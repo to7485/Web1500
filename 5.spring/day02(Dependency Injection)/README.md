@@ -287,7 +287,7 @@ public class Main2 {
 - mvnrepository.com에서 guava검색
 - Guava: Google Core Libraries For Java » 31.0-jre
 - maven 복사 후 pom.xml에 붙혀넣기
-- 
+
 ```java
 package com.korea.dependency.di3;
 
@@ -519,10 +519,9 @@ import com.google.common.reflect.ClassPath;
 	@Override
 	public String toString() {
 		return "Car [engine=" + engine + ", door=" + door + "]";
-	}
-	
-	
+	}	
 };
+
 @Component class SportCar extends Car{};
 @Component class Truck extends Car{};
 @Component class Engine {};

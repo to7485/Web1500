@@ -100,150 +100,151 @@ public interface MyCalculator {
 
 ![image](https://user-images.githubusercontent.com/54658614/224226019-2b79461e-208f-4815-8563-ace38207c754.png)
 
-### Calculator 클래스 만들기
+### Calculator클래스 만들기
 ```java
-package calculator;
+package ex2_lamda;
 
-public class Calculator2 {
+//MyCalculator 인터페이스를 구현
+public class Calculator implements MyCalculator{
+
+	//추상메서드를 오버라이딩
+	@Override
+	public int plus(int num1, int num2) {
+		return num1 + num2;
+	}
+
+}
+```
+### Ex1_function 클래스 만들기
+```java
+package ex2_lamda;
+
+public class Ex1_function {
 	public static void main(String[] args) {
-
-		//인터페이스 객체를 익명 클래스 선언으로 정의
-		MyCalculator cal = new MyCalculator() {
-
-			//메서드 구현
+		//클래스를 직접 생성하고 구현하여 기능 만들기
+		MyCalculator cal1 = new Calculator();
+		int res = cal1.plus(10, 20);
+		System.out.println("cal1 : " + res);
+		
+		//익명클래스를 통한 구현
+		MyCalculator cal2 = new MyCalculator() {
 			@Override
 			public int plus(int num1, int num2) {
 				return num1 + num2;
 			}
 		};
-	}
-}
-```
-### CalculatorImpl 클래스 생성하기
-```java
-package calculator;
-
-public class CalculatorImpl {
-	public static void main(String[] args) {
-		//인터페이스 객체 선언 시 람다식을 이용해 함수를 구현
-		MyCalculator calc = (int num1, int num2)->{
-			return num1 + num2;
-		};
+		res = cal2.plus(10, 20);
 		
-		int result = calc.plus(20, 30);
-		System.out.println(result);
-	}
-}
-```
-## 람다식과 외부변수의 관계
-- 람다식을 사용할 때 매개변수로 값을 전달하는 것 외에 외부에서 정의 된 지역변수를 사용하는 경우가 있다.
-- 람다식 내부에서 지역변수를 사용하려면 그 지역변수는 final로 선언되어야 한다.
-
-### Calculator2 클래스 생성
-```java
-package calculator;
-
-public class Calculator2 {
-	public static void main(String[] args) {
-		int num3 = 30;
-		MyCalculator cal = new MyCalculator() {
+		System.out.println("cal2 : " + res);
+		
+		//람다식을 통한 구현
+		MyCalculator cal3 = (num1,num2)->num1 +num2;
+		
+		res = cal3.plus(10, 20);
+		
+		System.out.println("cal3 : " + res);
 			
-			@Override
-			public int plus(int num1, int num2) {//내부 익명클래스로 만들었더라도 인터페이스 이기 때문에
-				//num3 = 40; -> final int num3 -> 지역변수의 상수화
-				// TODO Auto-generated method stub
-				return 0;
-			}
-		};
 	}
 }
+
 ```
-- 지역변수는 Stack메모리 영역에 생성되고, 람다식의 경우 익명 객체를 만들기 때문에 Heap영역에 생성된다.
-- 서로 생성되는 위치가 다르므로 간섭할 수 없다.
-- 람다식 내부에서 지역변수를 사용할 경우 복사해 사용하므로 값을 그대로 사용하는 것은 가능하지만 수정할 수 없다.
-- JDK1.8이전에는 람다식 또는 익명 클래스 안에 지역변수를 사용할 경우, final키워드를 부여해 변경 불가 변수임을 명시해야 했다.
-- 그러나 JDK1.8이후 부터는 지역변수를 내부에서 사용할 때, 변경하지 않는다면 final변수로 인정해주는 effective final기능을 지원한다.
-
-#### Calculrator3 클래스만들기
-```java
-package calculator;
-
-public class Calculator3 {
-	public static void main(String[] args) {
-		MyCalculator calc = (int num1,int num2) ->{
-			return num1 + num2;
-		};
-		
-		//자료형도 생략이 가능하다 인터페이스에 정의가 되어있기 때문에!
-		//자료형을 하나만 남겨놔도 안된다. 지우려면 다 지우자.
-		//중괄호와 return도 생략가능하다.
-		MyCalculator calc2 = (num1, num2) -> num1 + num2;
-	}
-}
-```
-
-
-### MyFunction 람다식 인터페이스 생성하기
+### 파라미터가 한개인 경우 생략해보기
+- MyFunction 람다식 인터페이스 생성하기
 ```java
 package calculator;
 
 @FunctionalInterface
 public interface MyFunction {
-	//파라미터가 한개인 경우 생략해보기
 	void method(int num);
 }
 ```
-### Calculator3 에 코드 추가하기
-```java
-package calculator;
 
-public class Calculator3 {
+### Ex1_function 에 코드 추가하기
+```java
+package ex2_lamda;
+
+public class Ex1_function {
 	public static void main(String[] args) {
-		MyCalculator calc = (num1, num2) ->{
-			return num1 + num2;
+		//클래스를 직접 생성하고 구현하여 기능 만들기
+		MyCalculator cal1 = new Calculator();
+		int res = cal1.plus(10, 20);
+		System.out.println("cal1 : " + res);
+		
+		//익명클래스를 통한 구현
+		MyCalculator cal2 = new MyCalculator() {
+			@Override
+			public int plus(int num1, int num2) {
+				return num1 + num2;
+			}
 		};
+		res = cal2.plus(10, 20);
 		
-		//중괄호와 return도 생략가능하다.
-		MyCalculator calc2 = (num1, num2) -> num1 + num2;
+		System.out.println("cal2 : " + res);
 		
-		//매개변수가 하나일 때는 소괄호가 생략이 가능하다.
-		MyFunction myfunction = num -> System.out.println(num);
+		//람다식을 통한 구현
+		MyCalculator cal3 = (num1,num2)->num1 +num2;
 		
-		//::(이중콜론) : 메서드 참조 연산자.
+		res = cal3.plus(10, 20);
+		
+		System.out.println("cal3 : " + res);
+		
+		//::(이중콜론) : 메서드 참조 연산자
 		//람다식을 보다 간결하게 사용할 수 있도록 해준다.
-		MyFunction myfunc = System.out::println;
-	}		
+		MyFunction mf = System.out::println;
+		mf.method(5);
+	
+	}
 }
 ```
 
-### Calculrator4 클래스 만들기
+### Ex2_function 클래스 만들기
 - 람다식을 메서드의 매개변수로 사용하기
 ```java
-package test;
+package ex2_lamda;
 
-public class Test {
+@FunctionalInterface
+interface Iadd{
+	int add(int x, int y);
+}
+
+public class Ex2_function {
 	public static void main(String[] args) {
-		MyCalculator calc = (num1,num2) -> num1 + num2;
-		int result = myCalc(calc);
-		System.out.println(result);
-		
-		//위 방법보다 간단하게 표현할 수 있다.
-		int result2 = myCalc((num1,num2) -> num1 + num2);
-		System.out.println(result2);
+		//람다식을 매개변수로 활용할 수 있다.
+		Iadd add = (x,y) -> x+y;
+		int res = result(add);
+		System.out.println("람다식 매개변수로 활용 : " + res);
 	}
 	
-	//매개변수로 MyCalculator 객체를 필요로 한다.
-	static int myCalc(MyCalculator calc) {
+	public static int result(Iadd lamda) {
+		return lamda.add(1, 2);
+	}
+}
+```
+### Ex3_function 클래스 만들기
+- 람다식을 반환값에 넣는다.
+```java
+package ex2_lamda;
+
+interface Iminus{
+	int minus(int x, int y);
+}
+
+public class Ex3_function {
+	public static void main(String[] args) {
+		//람다식을 반환값에 넣는다.
 		
-		//인터페이스에 정의된 plus메서드를 calc객체를 통해 호출한다.
-		//이때 사용된 calc객체는 람다식으로 생성한 객체 또는 직접 메서드 호출시에 생성한
-		//객체일 수 있으며, 이를 통해 다양한 계산을 수행할 수 있다.
-		return calc.plus(1,2);
+		Iminus im = makeFunction();
+		int res = im.minus(3, 1);
+		System.out.println(res);
+	}
+	
+	public static Iminus makeFunction() {
+		return (x,y) -> x - y;
 	}
 }
 
 ```
-### Calculrator5 클래스 만들기
+### Ex4_function 클래스 만들기
 - 컬렉션 프레임워크와 함수형 인터페이스
 - 컬렉션 프레임워크의 인터페이스에 다수의 디폴트 메서드가 추가 되었고 그 중 일부는 함수형 인터페이스를 사용한다.
 - ArrayList에 forEach()메서드가 있고 Consumer 라는 매개변수를 받는다 자바 공식문서에서 검색해보면 FunctionalInterface라는걸 알 수 있다.
@@ -262,13 +263,13 @@ public interface Consumer {
 
 https://docs.oracle.com/javase/8/docs/api/java/util/function/Consumer.html
 
-### Calculrator5 클래스 생성하기
+### Ex4_function 클래스 생성하기
 ```java
 package calculator;
 
 import java.util.*;
 
-public class Calculrator5 {
+public class Calculrator4 {
 	public static void main(String[] args) {
 		ArrayList<String> list = new ArrayList<String>();
 		list.add("이름1");
@@ -282,28 +283,7 @@ public class Calculrator5 {
 	}
 }
 ```
-### Calculrator6 클래스 생성하기
-- 람다식을 반환값으로 사용하기
 
-```java
-package test;
-
-public class Calculator6 {
-	public static void main(String[] args) {
-		MyCalculator calc = myCalc();
-		System.out.println(calc.plus(30, 50));
-		
-	}
-	
-	static MyCalculator myCalc() {
-		//MyCalculator calc = (num1,num2) -> num1 + num2;
-		//return calc;
-		
-		return (num1,num2) -> num1 + num2;
-	}
-}
-
-```
 ## java.util.function패키지
 - 대부분의 메서드는 타입이 비슷하다
 - 매개변수가 없거나 한 개, 두 개, 반환값이 없거나 한 개이다.
@@ -319,7 +299,7 @@ public class Calculator6 {
 |Supplier<T>|T get()|매개변수는 없고 반환값만 있음|
 |Consumer<T>|void accept(T t)|Supplier와 반대로 매개변수만 있고, 반환값이 없음|
 |Function<T,R>|R apply(T t)|일반적인 함수. 하나의 매개변수를 받아서 결과를 반환|
-|Predicate<T>|boolean test(T t)|조건식을 표현하는데 사용됨.   매개변수는 하나. 반환값은 boolean|
+|Predicate<T>|boolean test(T t)|조건식을 표현하는데 사용됨. 매개변수는 하나. 반환값은 boolean|
 
 #### 참고) 타입문자 'T'는 'Type'을 'R'은 'Return Type'을 의미한다.
 
@@ -336,24 +316,48 @@ public class Calculator6 {
 - 참고) Supplier는 매개변수는 없고 반환값만 존재하는데, 매서드는 두 개의 값을 반환할 수 없으므로 BiSupplier가 없다.
 - 두 개 이상의 매개변수를 갖는 함수형 인터페이스가 필요하면 직접 만들어 써야 한다.
 
-### Ex1_function 클래스 생성
-
-![image](https://user-images.githubusercontent.com/54658614/224505449-4aeb4039-3830-4aea-a6be-3704f4759f39.png)
-
+### Ex5_function 클래스 생성
 ```java
-package test;
+package ex2_lamda;
 
-import java.util.ArrayList;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 
-public class Test {
+public class Calculator5 {
 	public static void main(String[] args) {
-
-		ArrayList<Integer> list = new ArrayList<Integer>();
-		for(int i = 1; i <=10; i++) {
-			list.add(i);
+		Consumer<String> c1 = t -> System.out.println("입력값 : " +t);
+		c1.accept("홍길동");
+		
+		BiConsumer<String, Integer> c2 = (x,y) -> System.out.println("입력값 1 : " + x+", 입력값 2 : " + y);
+		c2.accept("제임스", 100);
+		
+		Supplier<Object> s1 = () -> new Object();
+		System.out.println("주소 : " + s1.get());
+		
+		Function<Integer, String> f1 = x -> String.valueOf(x);
+		String str = f1.apply(100);
+		System.out.println("문자열 str : " + str);
+		
+		BiFunction<String, String, Boolean> f2 = (x,y) -> x.equals(y);
+		if(f2.apply("토마토", "토마토")) {
+			System.out.println("두 문자열의 값은 같습니다.");
 		}
-		list.removeIf(x -> x %2 == 0);//홀수만 반환
-		System.out.println(list);
+		
+		Predicate<Integer> p1 = t -> t>=60;
+		
+		int score = 65;
+		
+		boolean pass = p1.test(score);
+		
+		if(pass) {
+			System.out.println("홍길동님의 점수는" +score+"이고 합격입니다.");
+		}else {
+			System.out.println("홍길동님의 점수는" +score+"이고 불합격입니다.");
+		}	
 	}
 }
 ```
@@ -392,8 +396,8 @@ Function<String, String> f = x -> x;
 Function<String, String> f = Function.identity(); // 위 문장과 동일
 System.out.println(f.apply("Hello")); // Hello가 그대로 출력됨
 ```
-#### Ex4_function 클래스 생성
-```
+#### Ex6_function 클래스 생성
+```java
 package day18;
 import java.util.function.*;
 public class FunctionComposeExam {
