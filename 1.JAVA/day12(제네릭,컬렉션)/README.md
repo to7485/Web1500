@@ -444,10 +444,12 @@ public class Ex10_Generic{
 
     // 심지어 최상위 Object 클래스여도 할당 불가능하다
     Box<Object> box2 = new Box<>(); // ! Error
+	}
 }
-}
-
 ```
+
+## 재귀적 타입 한정
+- 자기 자신이 들어간 표현식을 사용하여 타입 매개변수의 허용 범위를 한정시기키는것을 말한다.
 
 # 컬렉션 프레임워크(Collection FrameWork)
 - 배열은 한번 정한 크기를 변경하거나 삭제할 수 없다.
