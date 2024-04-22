@@ -46,48 +46,13 @@ void forEach(Consumer<? super T> action) {
 3. 결과만들기 : 최종적으로 결과를 만들어내는 작업
 
 
-## 스트림 만들기
+## 스트림 객체 생성
 보통 배열과 컬렉션을 이용해서 스트림을 만들지만 이 외에도 다양한 방법으로 스트림을 만들수 있다.
 
-- 배열
-    - Arrays 클래스 -> static stream()
-    - Stream.of(T[] t)
-    - Stream.of(T...values)
-
-
-![image](https://user-images.githubusercontent.com/54658614/225211207-6d063c3c-8a79-43cb-9643-a5cb12a816b3.png)
-
-
-- 컬렉션
-    - Collection 인터페이스 - stream()
-
-![image](https://user-images.githubusercontent.com/54658614/225211299-91e01eb1-70c0-4d81-9bea-167bc31f9479.png)
-
-- 기본자료형
-    - IntStream, LongStream, DoubleStream
-    - 기본자료형에 유용하게 사용할 수 있는 메서드를 제공한다. 
-
-- 특정 범위의 수
-    - IntStream, LongStream
-    	- range(int start, int end)  start값 이상 end값 미만의 범위
-    	- rangeClosed(int start, int end) start값 이상 end값 이하의 범위
-    
-- 임의의 수
-    - java.util.Random() : 무한스트림이 만들어진다.
-    	- ints()
-    	- longs()
-    	- doubles()
-  
-- 람다식
-    - iterate(), generate();
-    
- ![image](https://user-images.githubusercontent.com/54658614/225215406-7d544837-ea30-49c3-938a-197445713d7b.png)
-
-
-### 배열 스트림
-스트림을 이용하기 위해서는 먼저 생성을 해야한다. 스트림은 배열 또는 컬렉션 객체를 이용해서<br>
-생성할 수 있다. 배열은 다음과 같이 Arrays.stream 메서드를 사용한다.
-
+### 배열을 통한 생성
+- Arrays 클래스 -> static stream()
+- Stream.of(T[] t)
+- Stream.of(T...values)
 ```
 Stream<T> Stream.of(T... values) // 가변인자
 Stream<T> Stream.of(T[])
@@ -110,6 +75,37 @@ IntStream IntStream.of(int[])
 IntStream Arrays.stream(int[])
 IntStream Arrays.stream(int[] array, int startInclusive, inbt endExclusive) // startInclusive이상 endExclusive 미만 범위의 스트림 생성
 ```
+
+![image](https://user-images.githubusercontent.com/54658614/225211207-6d063c3c-8a79-43cb-9643-a5cb12a816b3.png)
+
+### 컬렉션을 통한 생성
+- 컬렉션 타입(Collection,List,Set)의 경우 인터페이스에 추가된 디폴트 메서드 stream을 이용해서 스트림을 만들 수 있다.
+
+```
+모든 컬렉션 프레임워크의 조상인 Collection 인터페이스에 default 메서드로 되어있다.
+public interface Collection<E> extends Iterable<E> {
+  default Stream<E> stream() {
+    return StreamSupport.stream(spliterator(), false);
+  } 
+  // ...
+}
+```
+
+https://docs.oracle.com/en/java/javase/19/docs/api/java.base/java/util/stream/Stream.html
+
+```
+List<Integer> list = Arrays.asList(1,2,3,4,5);
+Stream<Integer> intStream = list.stream();
+intStream.forEach(i -> System.out.println(i));  // 또는 메서드 참조 방식으로 람다식 정의 intStream.forEach(System.out::println);
+```
+
+![image](https://user-images.githubusercontent.com/54658614/225211299-91e01eb1-70c0-4d81-9bea-167bc31f9479.png)
+
+### 기본자료형
+- IntStream, LongStream, DoubleStream
+- 기본자료형에 유용하게 사용할 수 있는 메서드를 제공한다.    
+ ![image](https://user-images.githubusercontent.com/54658614/225215406-7d544837-ea30-49c3-938a-197445713d7b.png)
+
 
 ex1_stream 패키지 생성
 
@@ -139,27 +135,7 @@ public class Ex1_stream {
 }
 ```
 
-### 컬렉션 스트림
-컬렉션 타입(Collection,List,Set)의 경우 인터페이스에 추가된 디폴트 메서드 stream을 이용해서 스트림을 만들 수 있다.
-
-```
-모든 컬렉션 프레임워크의 조상인 Collection 인터페이스에 default 메서드로 되어있다.
-public interface Collection<E> extends Iterable<E> {
-  default Stream<E> stream() {
-    return StreamSupport.stream(spliterator(), false);
-  } 
-  // ...
-}
-```
-https://docs.oracle.com/en/java/javase/19/docs/api/java.base/java/util/stream/Stream.html
-
-```
-List<Integer> list = Arrays.asList(1,2,3,4,5);
-Stream<Integer> intStream = list.stream();
-intStream.forEach(i -> System.out.println(i));  // 또는 메서드 참조 방식으로 람다식 정의 intStream.forEach(System.out::println);
-```
-
-#### Ex2_stream 클래스 생성
+#### Ex1_stream 클래스 생성
 ```java
 package test;
 import java.util.HashSet;
@@ -183,19 +159,6 @@ public class Test{
 		//1) 내부 반복자이므로 처리 속도가 빠르고 병렬처리에 효율적이다.
 		//2) 람다식으로 다양한 요소 처리를 정의할 수 있다.
 		//3) 중간 처리와 최종 처리를 수행하도록 파이프 라인을 형성할 수 있다.
-	}
-}
-```
-![KakaoTalk_20230314_134831767](https://user-images.githubusercontent.com/54658614/224896237-82f20589-728b-4ee4-804f-e9500cfad2a6.jpg)
-
-#### Ex3_stream 클래스 생성
-```java
-package test;
-import java.util.ArrayList;
-import java.util.stream.Stream;
-
-public class Test{
-	public static void main(String[] args) {
 
 		ArrayList<String> names = new ArrayList<String>();
 		names.add("홍길동");
@@ -211,7 +174,6 @@ public class Test{
 	}
 }
 ```
-![image](https://user-images.githubusercontent.com/54658614/224905502-555a7ab2-29d2-4b3e-a377-ec8b39806964.png)
 
 ### 기본타입형 스트림
 
