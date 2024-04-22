@@ -40,7 +40,7 @@ void forEach(Consumer<? super T> action) {
 	}
 }
 ```
-### 스트림 사용 과정
+## 스트림 사용 과정
 1. 생성하기 : 스트림 객체 생성
 2. 가공하기 : 필터링(filtering) 및 맵핑(mapping)등 원하는 결과를 만들어가는 중간작업
 3. 결과만들기 : 최종적으로 결과를 만들어내는 작업
@@ -78,37 +78,6 @@ IntStream Arrays.stream(int[] array, int startInclusive, inbt endExclusive) // s
 
 ![image](https://user-images.githubusercontent.com/54658614/225211207-6d063c3c-8a79-43cb-9643-a5cb12a816b3.png)
 
-### 컬렉션을 통한 생성
-- 컬렉션 타입(Collection,List,Set)의 경우 인터페이스에 추가된 디폴트 메서드 stream을 이용해서 스트림을 만들 수 있다.
-
-```
-모든 컬렉션 프레임워크의 조상인 Collection 인터페이스에 default 메서드로 되어있다.
-public interface Collection<E> extends Iterable<E> {
-  default Stream<E> stream() {
-    return StreamSupport.stream(spliterator(), false);
-  } 
-  // ...
-}
-```
-
-https://docs.oracle.com/en/java/javase/19/docs/api/java.base/java/util/stream/Stream.html
-
-```
-List<Integer> list = Arrays.asList(1,2,3,4,5);
-Stream<Integer> intStream = list.stream();
-intStream.forEach(i -> System.out.println(i));  // 또는 메서드 참조 방식으로 람다식 정의 intStream.forEach(System.out::println);
-```
-
-![image](https://user-images.githubusercontent.com/54658614/225211299-91e01eb1-70c0-4d81-9bea-167bc31f9479.png)
-
-### 기본자료형
-- IntStream, LongStream, DoubleStream
-- 기본자료형에 유용하게 사용할 수 있는 메서드를 제공한다.    
- ![image](https://user-images.githubusercontent.com/54658614/225215406-7d544837-ea30-49c3-938a-197445713d7b.png)
-
-
-ex1_stream 패키지 생성
-
 #### Ex1_stream 클래스 생성
 
 ```java
@@ -135,7 +104,28 @@ public class Ex1_stream {
 }
 ```
 
-#### Ex1_stream 클래스 생성
+### 컬렉션을 통한 생성
+- 컬렉션 타입(Collection,List,Set)의 경우 인터페이스에 추가된 디폴트 메서드 stream을 이용해서 스트림을 만들 수 있다.
+
+```
+모든 컬렉션 프레임워크의 조상인 Collection 인터페이스에 default 메서드로 되어있다.
+public interface Collection<E> extends Iterable<E> {
+  default Stream<E> stream() {
+    return StreamSupport.stream(spliterator(), false);
+  } 
+  // ...
+}
+```
+
+https://docs.oracle.com/en/java/javase/19/docs/api/java.base/java/util/stream/Stream.html
+
+```
+List<Integer> list = Arrays.asList(1,2,3,4,5);
+Stream<Integer> intStream = list.stream();
+intStream.forEach(i -> System.out.println(i));  // 또는 메서드 참조 방식으로 람다식 정의 intStream.forEach(System.out::println);
+```
+
+#### Ex2_stream 클래스 생성
 ```java
 package test;
 import java.util.HashSet;
@@ -175,9 +165,10 @@ public class Test{
 }
 ```
 
-### 기본타입형 스트림
+![image](https://user-images.githubusercontent.com/54658614/225211299-91e01eb1-70c0-4d81-9bea-167bc31f9479.png)
 
-제네릭을 사용하지 않고 직접적으로 해당 타입의 스트림을 다룰 수도 있습니다.
+### 기본타입형 스트림   
+ ![image](https://user-images.githubusercontent.com/54658614/225215406-7d544837-ea30-49c3-938a-197445713d7b.png)
 
 - 요소의 타입이 T인 스트림은 기본적으로 Stream<T>인데, 기본 자료형을 다루려면 오토박싱&언박싱이 발생하여 비효율성이 증가한다(예 - Integer <-> int)
 - 비효율성을 줄이기 위해 데이터 소스의 요소를 기본형으로 다루는 스트림이 제공된다.
@@ -186,7 +177,7 @@ public class Test{
 	
 ![image](https://user-images.githubusercontent.com/54658614/225210056-42f96d3e-368a-456e-a586-73be73e09b33.png)
 	
-#### Ex7_stream 클래스 생성
+#### Ex3_stream 클래스 생성
 
 ```java
 package test;
@@ -208,11 +199,11 @@ public class Test{
 }
 ```
 
-### 스트림의 연산
-#### 중간연산 
+## 스트림의 연산
+### 중간연산 
 연산 결과가 스트림인 연산, 스트림에 연속해서 중간 연산할 수 있다.
 
-##### 스트림의 중간 연산 목록 
+#### 스트림의 중간 연산 목록 
 - 연산의 결과가 스트림이면 중간연산
 
 |중간 연산|설명|
@@ -224,6 +215,18 @@ public class Test{
 |Stream\<T\> peek(Consumer\<T\> action)|스트림의 요소에 작업 수행|
 |Stream\<T\> sorted()<br>Stream\<T\> sorted(Comparator\<T\> comparator)|스트림의 요소를 정렬한다.|
 |Stream\<R\> map(Function\<T,R\> mapper)<br>DoubleStream mapToDouble(ToDoubleFunction\<T\> mapper)<br>IntStream mapToInt(ToIntFunction\<T\> mapper)<br><br>Stream\<R\> flatMap(Function\<T, Stream\<R\>\> mapper)<br>DoubleStream flatMapToDouble(Function\<T, DoubleStream\> m)<br>IntStream flatMapToInt(Function\<T, IntStream\> m)<br>LongStream flatMapToLong(Function\<T, LongStream\> m)|스트림의 요소를 변환한다.|
+
+### 정렬 - sorted()
+```
+Stream<T> sorted()
+Stream<T> sorted(Comparator<? super T> comparator)
+```
+Comparator를 지정하지 않으면 스트림 요소의 기본 정렬 기준(Comparable)으로 정렬한다. 단, 스트림의 요소가 Comparable을 구현한 클래스가 아니면 예외가 발생한다.
+
+```
+Stream<String> strStream = Stream.of("dd", "aaa", "CC", "cc", "b");
+strStream.sort().forEach(System.out::println); 
+```
 
 ### 스트림 자르기 - skip(), limit()
 ```
@@ -254,33 +257,45 @@ intStream.distinct().forEach(System.out::print); // 123456
 IntStream intStream = IntStream.rangeClosed(1, 10); // 1 ~ 10
 IntStream.filter( i -> i % 2 == 0).forEach(System.out::print); // 246810
 ```
-#### Ex11_stream 클래스 생성
+#### Ex4_stream 클래스 생성
 ```java
-package test;
+package ex1_stream;
 
+import java.util.Arrays;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-public class Test{
+public class Ex1_Stream {
 	public static void main(String[] args) {
-		Stream.of("ab","a","abc","abcd","abcdef","abcdefg").filter(x -> x.length() > 2).forEach(System.out::println);
+		Integer[] nums = {1,44,33,21,36,68,88,4,5,6,1,1,1,2,2,2};
+		
+		//1. 스트림 객체 생성
+		Stream<Integer> stream =  Arrays.stream(nums);
+		
+		//2. 스트림에 중간연산
+		stream.distinct()
+			  .sorted()
+			  .limit(5)
+			  .forEach(System.out::println);
+		
+		//skip()
+		//rangeClosed() : 정수 범위를 생성
+		IntStream intStream = IntStream.rangeClosed(1, 10);
+		intStream.skip(3).limit(5).forEach(x-> System.out.print(x+" "));
+		
+		System.out.println();
+
+		//filter()
+		IntStream inStream2 = IntStream.of(1,2,2,3,3,4,5,5,6,7,8,9,10);
+		inStream2.distinct().filter(x -> x % 2 == 0).forEach(x -> System.out.print(x+" ")); //2 4 6 8 10
+		
+		System.out.println();
+		//문자열의 길이가 3이상인 문자열만 출력
+		Stream.of("ab","a","abc","abcd","abcdef","abcdefg").filter(x -> x.length() > 2).forEach(x-> System.out.print(x+" "));
+	
 	}
 }
-
 ```
-
-### 정렬 - sorted()
-```
-Stream<T> sorted()
-Stream<T> sorted(Comparator<? super T> comparator)
-```
-Comparator를 지정하지 않으면 스트림 요소의 기본 정렬 기준(Comparable)으로 정렬한다. 단, 스트림의 요소가 Comparable을 구현한 클래스가 아니면 예외가 발생한다.
-
-```
-Stream<String> strStream = Stream.of("dd", "aaa", "CC", "cc", "b");
-strStream.sort().forEach(System.out::println); 
-```
-보통은 한가지 기준으로 정렬을 하는것이 아닌 여러가지 기준을 세우고 정렬을 한다.
-
 #### Student 클래스 생성
 ```java
 package test;
@@ -351,7 +366,7 @@ thenComparing은 파라미터로 Function을 가지고 있고 Function은 apply 
 ![image](https://user-images.githubusercontent.com/54658614/225517967-f77bc62f-83e5-4d63-91de-5d7f666eb73b.png)
 
 
-#### 최종연산
+### 최종연산
 연산 결과가 스트림이 아닌 연산. 스트림의 요소를 소모하므로 단 한번만 가능
 
 ```
@@ -361,7 +376,7 @@ distinct(), limit(5), sorted() - 중간연산
 forEach - 최종연산
 ```
 
-##### 스트림의 최종 연산 목록
+#### 스트림의 최종 연산 목록
 - 연산의 결과가 스트림이 아니면 최종연산
 
 |최종 연산|설명|
@@ -375,7 +390,7 @@ forEach - 최종연산
 |Optional\<T\> reduce(BinaryOperator\<T\> accumulator)<br>T reduce(T identity, BinaryOperator\<T\> accumulator)|스트림 요소를 하나씩 줄여가면서(리듀싱) 계산한다.|
 |R collect(Collector\<T,A,B\> collector)|스트림의 요소를 수집한다.<br>주로 요소를 그룹화하거나 분할한 결과를 컬렉션에 담아 반환하는데 사용한다.|
 
-#### Ex4_stream 클래스 생성
+#### Ex5_stream 클래스 생성
 ```java
 package test;
 
@@ -392,7 +407,7 @@ public class Test{
 }
 ```
 
-#### Ex5_stream 클래스 생성
+#### Ex6_stream 클래스 생성
 ```java
 package test;
 
@@ -437,13 +452,7 @@ public class Test{
 }
 
 ```
-
-### 지연된연산
-- 최종 연산이 수행되기 전까지는 중간 연산이 수행되지 않는다.
-- 중간 연산을 호출하는 것은 단순히 어떤 작업이 수행되어야하는 지를 지정해주는 것이다.
-- 최종 연산이 수행되어야 스트림의 요소들이 중간 연산을 거처 최종 연산에서 소모된다.
-
-#### Ex6_stream 클래스 생성
+#### Ex7_stream 클래스 생성
 ```java
 package test;
 
@@ -462,8 +471,6 @@ public class Test{
 
 ```
 ![image](https://user-images.githubusercontent.com/54658614/225209478-ee701e04-1dd7-4034-8e32-22202a7fa318.png)
-
-
 
 #### Ex8_stream 클래스 수정하기
 				      
@@ -491,8 +498,7 @@ public class Test{
 }
 
 ```
-
-제네릭을 사용하지 않기 때문에 불필요한 오토박싱(auto-boxing)이 일어나지 않습니다.
+- 제네릭을 사용하지 않기 때문에 불필요한 오토박싱(auto-boxing)이 일어나지 않습니다.
 
 
 - 지정된 범위의 난수를 발생시키는 스트림을 얻는 메서드
@@ -556,8 +562,6 @@ public class Test{
 	}
 }
 ```
-
-
 
 ### 람다식 - iterate(), generate()
 람다식을 매개변수로 받아서 람다식에 의해 계산되는 값들을 요소로 하는 무한 스트림을 생성
@@ -636,10 +640,6 @@ public class Test{
 	}
 }
 ```
-	
-
-## 스트림의 중간 연산
-
 
 ### 변환 - map()
 스트림의 요소에서 저장된 값 중에서 원하는 필드만 뽑아내거나 특정 형태로 변환해야 하는 경우
@@ -692,124 +692,6 @@ public class StudentMain {
 }
 ```
 
-### 조회 - peek()
-- forEach와 비슷하나 스트림의 요소를 소모하지 않는 중간 연산
-- 중간연산이므로 연산 사이에 여러번 넣어도 된다.
-
-### mapToInt(), mapToLong(), mapToDouble()
-map()은 연산결과로 Stream<T> 타입입의 스트림을 반환하지만 기본자료형인 int, long, double으로 반환해 주는 기본 스트림을 반환
-```
-DoubleStream mapToDouble(ToDoubleFunction<? super T> mapper)
-IntStream mapToInt(ToIntFunction<? super T> mapper)
-LongStream mapToLong(ToLongFunction<? super T> mapper)
-```
-![image](https://user-images.githubusercontent.com/54658614/225520614-99c8faa3-5a87-4f16-85e3-f59ae9774409.png)
-
-##### 참고) 기본형 스트림은 숫자를 다루는 편리한 메서드를 제공
-
-|메서드|메서드 설명|
-|-------|------------|
-|int sum()|스트림의 모든 요소의 총합|
-|OptionalDouble average()|스트림 요소의 평균|
-|OptionalInt max()|스트림 요소 중 제일 큰 값|
-|OptionalInt min()|스트림 요소 중 제일 작은 값|
-|IntSummaryStatistics summaryStatistics()|스트림의 통계 요약 정보|
-
-#### StudentMain에 코드 추가하기
-```java
-package test;
-
-import java.util.Comparator;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
-
-public class StudentMain {
-	public static void main(String[] args) {
-		Student[] students = {
-				new Student("이자바", 3, 300),
-				new Student("김자바", 1, 200),
-				new Student("안자바", 2, 100),
-				new Student("박자바", 2, 150),
-				new Student("소자바", 1, 200),
-				new Student("나자바", 3, 290),
-				new Student("강자바", 3, 180)	
-		};
-	
-		Stream.of(students).sorted(Comparator.comparing(Student::getBan)// 반별 정렬
-				.thenComparing(Student::getTotalScore)).forEach(System.out::println); 
-				//성적순 정렬
-		System.out.println();
-		
-		//Students스트림을 score스트림으로 변환하고 점수를 콘솔에 출력하기
-		Stream.of(students).mapToInt(x -> x.getTotalScore()).forEach(score -> System.out.println(score));
-		
-		System.out.println();
-		//학생들의 총합을 구하는 스트림 생성하기
-		IntStream stream = Stream.of(students).mapToInt(x -> x.getTotalScore());
-		//int total = stream.reduce(0,(x,y)-> x+y);
-		
-		System.out.println(total);
-	}
-}
-```
-mapToIntStream에는 여러가지 편리한 계산이 들어있는 summaryStatistics() 메서드가 있다.
-
-![image](https://user-images.githubusercontent.com/54658614/225522075-fc190b42-1644-46a9-98a8-30323de7a7b0.png)
-
-
-![image](https://user-images.githubusercontent.com/54658614/225522041-93420e05-5407-465e-806d-cba915fe1203.png)
-
-#### StudentMain에 코드 수정하기
-```java
-package test;
-
-import java.util.Comparator;
-import java.util.IntSummaryStatistics;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
-
-public class StudentMain {
-	public static void main(String[] args) {
-		Student[] students = {
-				new Student("이자바", 3, 300),
-				new Student("김자바", 1, 200),
-				new Student("안자바", 2, 100),
-				new Student("박자바", 2, 150),
-				new Student("소자바", 1, 200),
-				new Student("나자바", 3, 290),
-				new Student("강자바", 3, 180)	
-		};
-	
-		Stream.of(students).sorted(Comparator.comparing(Student::getBan)// 반별 정렬
-				.thenComparing(Student::getTotalScore)).forEach(System.out::println); 
-				//성적순 정렬
-		System.out.println();
-		
-		//Students스트림을 score스트림으로 변환하고 점수를 콘솔에 출력하기
-		Stream.of(students).mapToInt(x -> x.getTotalScore()).forEach(score -> System.out.println(score));
-		
-		System.out.println();
-		
-		//학생들의 총합을 구하는 스트림 생성하기
-//		IntStream stream = Stream.of(students).mapToInt(x -> x.getTotalScore());
-//		//int total = stream.reduce(0,(x,y)-> x+y);
-//		int total = stream.sum();
-//		System.out.println(total);
-//		
-//		System.out.println();
-		//평균구하기
-		
-//		stream = Stream.of(students).mapToInt(Student::getTotalScore);
-//		double avg = stream.average().getAsDouble();
-//		System.out.println(avg);
-		
-		IntStream stream = Stream.of(students).mapToInt(Student::getTotalScore);
-		IntSummaryStatistics stat = stream.summaryStatistics();
-		System.out.println(stat);
-		//개수, 총합, 최대값, 최소값, 평균 다 구해준다.
-
-	}
-}
 ```
 ### flatMap() - Stream<T[]>를 Stream<T>로 변환
 스트림의 타입이 Stream<T[]>인 경우 Stream<T>로 변환해 준다.
