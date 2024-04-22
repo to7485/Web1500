@@ -213,21 +213,42 @@ public class Test{
 ```
 ![image](https://user-images.githubusercontent.com/54658614/224905502-555a7ab2-29d2-4b3e-a377-ec8b39806964.png)
 
+### 기본타입형 스트림
 
+제네릭을 사용하지 않고 직접적으로 해당 타입의 스트림을 다룰 수도 있습니다.
+
+- 요소의 타입이 T인 스트림은 기본적으로 Stream<T>인데, 기본 자료형을 다루려면 오토박싱&언박싱이 발생하여 비효율성이 증가한다(예 - Integer <-> int)
+- 비효율성을 줄이기 위해 데이터 소스의 요소를 기본형으로 다루는 스트림이 제공된다.
+- IntStream, LongStream, DoubleStream
+- 기본자료형에 유용하게 사용할 수 있는 메서드를 제공한다.
+	
+![image](https://user-images.githubusercontent.com/54658614/225210056-42f96d3e-368a-456e-a586-73be73e09b33.png)
+	
+#### Ex7_stream 클래스 생성
+
+```java
+package test;
+
+import java.util.stream.IntStream;
+
+public class Test{
+	public static void main(String[] args) {
+
+		int total = 0;
+		for(int i = 1; i <= 10; i++) {
+			total += i;
+		}
+		System.out.printf("1~10까지의 합 : %d\n",total);
+		
+		int total2 = IntStream.rangeClosed(1, 10).sum();
+		System.out.printf("1~10까지의 합 : %d\n",total2);
+	}
+}
+```
 
 ### 스트림의 연산
 #### 중간연산 
 연산 결과가 스트림인 연산, 스트림에 연속해서 중간 연산할 수 있다.
-
-#### 최종연산
-연산 결과가 스트림이 아닌 연산. 스트림의 요소를 소모하므로 단 한번만 가능
-
-```
-stream.distinct().limit(5).sorted().forEach(x -> System.out.println(x));
-      
-distinct(), limit(5), sorted() - 중간연산
-forEach - 최종연산
-```
 
 ##### 스트림의 중간 연산 목록 
 - 연산의 결과가 스트림이면 중간연산
@@ -241,6 +262,142 @@ forEach - 최종연산
 |Stream\<T\> peek(Consumer\<T\> action)|스트림의 요소에 작업 수행|
 |Stream\<T\> sorted()<br>Stream\<T\> sorted(Comparator\<T\> comparator)|스트림의 요소를 정렬한다.|
 |Stream\<R\> map(Function\<T,R\> mapper)<br>DoubleStream mapToDouble(ToDoubleFunction\<T\> mapper)<br>IntStream mapToInt(ToIntFunction\<T\> mapper)<br><br>Stream\<R\> flatMap(Function\<T, Stream\<R\>\> mapper)<br>DoubleStream flatMapToDouble(Function\<T, DoubleStream\> m)<br>IntStream flatMapToInt(Function\<T, IntStream\> m)<br>LongStream flatMapToLong(Function\<T, LongStream\> m)|스트림의 요소를 변환한다.|
+
+### 스트림 자르기 - skip(), limit()
+```
+Stream<T> skip(long n)   // n만큼 건너뛰기
+Stream<T> limit(long maxSize) // maxSize 만큼 자르기
+```
+```
+IntStream intStream = IntStream.rangeClosed(1, 10); // 1~10의 요소를 가진 스트림
+intStream.skip(3).limit(5).forEach(System.out::println); // 45678
+```
+
+### 스트림 요소 걸러내기 - filter(), distinct()
+- filter() - 주어진 조건(Predicate)에 맞지 않는 요소를 걸러낸다.
+- distinct() - 스트림에서 중복된 요소를 제거
+```
+Stream<T> filter(Predicate<? super T> predicate)
+Stream<T> distinct()
+```
+
+- distinct() 
+```
+IntStream intStream = IntStream.of(1, 2, 2, 3, 3, 4, 5, 5, 6);
+intStream.distinct().forEach(System.out::print); // 123456
+```
+
+- filter()
+```
+IntStream intStream = IntStream.rangeClosed(1, 10); // 1 ~ 10
+IntStream.filter( i -> i % 2 == 0).forEach(System.out::print); // 246810
+```
+#### Ex11_stream 클래스 생성
+```java
+package test;
+
+import java.util.stream.Stream;
+
+public class Test{
+	public static void main(String[] args) {
+		Stream.of("ab","a","abc","abcd","abcdef","abcdefg").filter(x -> x.length() > 2).forEach(System.out::println);
+	}
+}
+
+```
+
+### 정렬 - sorted()
+```
+Stream<T> sorted()
+Stream<T> sorted(Comparator<? super T> comparator)
+```
+Comparator를 지정하지 않으면 스트림 요소의 기본 정렬 기준(Comparable)으로 정렬한다. 단, 스트림의 요소가 Comparable을 구현한 클래스가 아니면 예외가 발생한다.
+
+```
+Stream<String> strStream = Stream.of("dd", "aaa", "CC", "cc", "b");
+strStream.sort().forEach(System.out::println); 
+```
+보통은 한가지 기준으로 정렬을 하는것이 아닌 여러가지 기준을 세우고 정렬을 한다.
+
+#### Student 클래스 생성
+```java
+package test;
+
+import java.util.stream.Stream;
+
+public class Student implements Comparable<Student>{
+	String name;
+	int ban;
+	int totalScore;
+	Student(String name, int ban, int totalScore) {
+		this.name = name;
+		this.ban = ban;
+		this.totalScore = totalScore;
+	}
+	
+	@Override
+	public String toString() {
+		return String.format("[%s, %d, %d]", name, ban, totalScore).toString();
+	}
+	
+	String getName() { return name; }
+	int getBan() { return ban; }
+	int getTotalScore() { return totalScore; }
+	
+	@Override
+	public int compareTo(Student s) {//성적이 높은 순으로 정렬
+		return s.totalScore - this.totalScore;
+	}
+}
+```
+#### StudentMain 클래스 생성
+```java
+package test;
+
+import java.util.Comparator;
+import java.util.stream.Stream;
+
+public class StudentMain {
+	public static void main(String[] args) {
+		Student[] students = {
+				new Student("이자바", 3, 300),
+				new Student("김자바", 1, 200),
+				new Student("안자바", 2, 100),
+				new Student("박자바", 2, 150),
+				new Student("소자바", 1, 200),
+				new Student("나자바", 3, 290),
+				new Student("강자바", 3, 180)	
+		};
+	
+		Stream.of(students).sorted(Comparator.comparing(Student::getBan)// 반별 정렬
+				.thenComparing(Student::getTotalScore)).forEach(System.out::println); 
+				//성적순 정렬	
+	}
+}
+
+```
+comparing메서드의 반환형이 Comparator<T>라서 뒤에 더 조건을 달 수 있는 것
+
+![image](https://user-images.githubusercontent.com/54658614/225517289-4b2ad218-6f32-4242-818c-dbf859b5b3ec.png)
+
+조건을 더 달 때는 thenComparing을 사용한다.
+
+![image](https://user-images.githubusercontent.com/54658614/225517908-6a3e2e89-d28b-43dc-855c-3ef5e0e99344.png)
+
+thenComparing은 파라미터로 Function을 가지고 있고 Function은 apply 메서드를 가지고 있다.
+
+![image](https://user-images.githubusercontent.com/54658614/225517967-f77bc62f-83e5-4d63-91de-5d7f666eb73b.png)
+
+
+#### 최종연산
+연산 결과가 스트림이 아닌 연산. 스트림의 요소를 소모하므로 단 한번만 가능
+
+```
+stream.distinct().limit(5).sorted().forEach(x -> System.out.println(x));
+      
+distinct(), limit(5), sorted() - 중간연산
+forEach - 최종연산
+```
 
 ##### 스트림의 최종 연산 목록
 - 연산의 결과가 스트림이 아니면 최종연산
@@ -344,39 +501,7 @@ public class Test{
 ```
 ![image](https://user-images.githubusercontent.com/54658614/225209478-ee701e04-1dd7-4034-8e32-22202a7fa318.png)
 
-### 기본타입형 스트림
 
-제네릭을 사용하지 않고 직접적으로 해당 타입의 스트림을 다룰 수도 있습니다.
-
-- 요소의 타입이 T인 스트림은 기본적으로 Stream<T>인데, 기본 자료형을 다루려면 오토박싱&언박싱이 발생하여 비효율성이 증가한다(예 - Integer <-> int)
-- 비효율성을 줄이기 위해 데이터 소스의 요소를 기본형으로 다루는 스트림이 제공된다.
-- IntStream, LongStream, DoubleStream
-- 기본자료형에 유용하게 사용할 수 있는 메서드를 제공한다.
-	
-![image](https://user-images.githubusercontent.com/54658614/225210056-42f96d3e-368a-456e-a586-73be73e09b33.png)
-
-	
-#### Ex7_stream 클래스 생성
-
-```java
-package test;
-
-import java.util.stream.IntStream;
-
-public class Test{
-	public static void main(String[] args) {
-
-		int total = 0;
-		for(int i = 1; i <= 10; i++) {
-			total += i;
-		}
-		System.out.printf("1~10까지의 합 : %d\n",total);
-		
-		int total2 = IntStream.rangeClosed(1, 10).sum();
-		System.out.printf("1~10까지의 합 : %d\n",total2);
-	}
-}
-```
 
 #### Ex8_stream 클래스 수정하기
 				      
@@ -553,130 +678,6 @@ public class Test{
 
 ## 스트림의 중간 연산
 
-### 스트림 자르기 - skip(), limit()
-```
-Stream<T> skip(long n)   // n만큼 건너뛰기
-Stream<T> limit(long maxSize) // maxSize 만큼 자르기
-```
-```
-IntStream intStream = IntStream.rangeClosed(1, 10); // 1~10의 요소를 가진 스트림
-intStream.skip(3).limit(5).forEach(System.out::println); // 45678
-```
-
-### 스트림 요소 걸러내기 - filter(), distinct()
-- filter() - 주어진 조건(Predicate)에 맞지 않는 요소를 걸러낸다.
-- distinct() - 스트림에서 중복된 요소를 제거
-```
-Stream<T> filter(Predicate<? super T> predicate)
-Stream<T> distinct()
-```
-
-- distinct() 
-```
-IntStream intStream = IntStream.of(1, 2, 2, 3, 3, 4, 5, 5, 6);
-intStream.distinct().forEach(System.out::print); // 123456
-```
-
-- filter()
-```
-IntStream intStream = IntStream.rangeClosed(1, 10); // 1 ~ 10
-IntStream.filter( i -> i % 2 == 0).forEach(System.out::print); // 246810
-```
-#### Ex11_stream 클래스 생성
-```java
-package test;
-
-import java.util.stream.Stream;
-
-public class Test{
-	public static void main(String[] args) {
-		Stream.of("ab","a","abc","abcd","abcdef","abcdefg").filter(x -> x.length() > 2).forEach(System.out::println);
-	}
-}
-
-```
-
-### 정렬 - sorted()
-```
-Stream<T> sorted()
-Stream<T> sorted(Comparator<? super T> comparator)
-```
-Comparator를 지정하지 않으면 스트림 요소의 기본 정렬 기준(Comparable)으로 정렬한다. 단, 스트림의 요소가 Comparable을 구현한 클래스가 아니면 예외가 발생한다.
-
-```
-Stream<String> strStream = Stream.of("dd", "aaa", "CC", "cc", "b");
-strStream.sort().forEach(System.out::println); 
-```
-보통은 한가지 기준으로 정렬을 하는것이 아닌 여러가지 기준을 세우고 정렬을 한다.
-
-#### Student 클래스 생성
-```java
-package test;
-
-import java.util.stream.Stream;
-
-public class Student implements Comparable<Student>{
-	String name;
-	int ban;
-	int totalScore;
-	Student(String name, int ban, int totalScore) {
-		this.name = name;
-		this.ban = ban;
-		this.totalScore = totalScore;
-	}
-	
-	@Override
-	public String toString() {
-		return String.format("[%s, %d, %d]", name, ban, totalScore).toString();
-	}
-	
-	String getName() { return name; }
-	int getBan() { return ban; }
-	int getTotalScore() { return totalScore; }
-	
-	@Override
-	public int compareTo(Student s) {//성적이 높은 순으로 정렬
-		return s.totalScore - this.totalScore;
-	}
-}
-```
-#### StudentMain 클래스 생성
-```java
-package test;
-
-import java.util.Comparator;
-import java.util.stream.Stream;
-
-public class StudentMain {
-	public static void main(String[] args) {
-		Student[] students = {
-				new Student("이자바", 3, 300),
-				new Student("김자바", 1, 200),
-				new Student("안자바", 2, 100),
-				new Student("박자바", 2, 150),
-				new Student("소자바", 1, 200),
-				new Student("나자바", 3, 290),
-				new Student("강자바", 3, 180)	
-		};
-	
-		Stream.of(students).sorted(Comparator.comparing(Student::getBan)// 반별 정렬
-				.thenComparing(Student::getTotalScore)).forEach(System.out::println); 
-				//성적순 정렬	
-	}
-}
-
-```
-comparing메서드의 반환형이 Comparator<T>라서 뒤에 더 조건을 달 수 있는 것
-
-![image](https://user-images.githubusercontent.com/54658614/225517289-4b2ad218-6f32-4242-818c-dbf859b5b3ec.png)
-
-조건을 더 달 때는 thenComparing을 사용한다.
-
-![image](https://user-images.githubusercontent.com/54658614/225517908-6a3e2e89-d28b-43dc-855c-3ef5e0e99344.png)
-
-thenComparing은 파라미터로 Function을 가지고 있고 Function은 apply 메서드를 가지고 있다.
-
-![image](https://user-images.githubusercontent.com/54658614/225517967-f77bc62f-83e5-4d63-91de-5d7f666eb73b.png)
 
 ### 변환 - map()
 스트림의 요소에서 저장된 값 중에서 원하는 필드만 뽑아내거나 특정 형태로 변환해야 하는 경우
