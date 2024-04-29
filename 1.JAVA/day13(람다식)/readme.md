@@ -252,9 +252,15 @@ public class Ex3_function {
 
 -forEach()메서드 사용
 
-```
-void forEach(Consumer<? super T> action)
+```java
+void forEach(Consumer<? super T> action){
+	Objects.requireNonNull(action);
+	for(T t : this){
+		action.accept(t);
+	}
+}
 	↓↓↓↓
+
 @FunctionalInterface
 public interface Consumer {
     void accept(T t);
