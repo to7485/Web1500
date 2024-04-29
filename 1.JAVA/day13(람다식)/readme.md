@@ -250,8 +250,8 @@ public class Ex3_function {
 - ArrayList에 forEach()메서드가 있고 Consumer 라는 매개변수를 받는다 자바 공식문서에서 검색해보면 FunctionalInterface라는걸 알 수 있다.
 - 때문에 람다식으로 표현할 수 있다.
 
--forEach()메서드 사용
-
+#### forEach()메서드의 구성
+- List의 forEach()메서드는 향상된 for문이 작동하고 있다.
 ```java
 void forEach(Consumer<? super T> action){
 	Objects.requireNonNull(action);
