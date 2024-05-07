@@ -10,16 +10,25 @@
 ## CSS 기본 문법
 ![image](img/css_grammer.png)
 
-### HTML 요소 속성으로써 적용하는 방법
-- HTML의 각 태그에서 style 속성으로 적용하는 방법이 있습니다. 
-```
+### 1. 선택자(Selector)
+- CSS를 적용하고자 하는 HTML 요소(element)
+### 2. 선언부
+- 하나 이상의 선언들을 세미콜론(;)으로 구분하여 포함할 수 있으며, 중괄호({})를 사용하여 전체를 둘러 싼다.
+- 각 선언은 CSS 속성명(property)과 속성값(value)을 가지며, 그 둘은 콜론(:)으로 연결된다.
+- 이러한 CSS 선언은 언제나 마지막에 세미콜론으로 끝마친다.
+
+## CSS 선언 방식
+
+### 인라인(in-line)방식
+- HTML의 각 태그에서 style 속성에 직접 작성하는 방식
+```html
 <p style="color: red">빨간색</p>
 ```
-- 속성으로써 적용을 하게 되면 적용의 우선 순위가 가장 높으므로 바로 적용됩니다. 
-- 다만 우선순위가 가장 높고, HTML의 요소 안에 분산되어 산재하므로 유지보수에 어려움이 있을 수 있습니다.
 
-### HTML \<style\>~\</style\> 요소로 적용하는 방법
-- 같은 HTML 문서에 <style> 태그 안에 스타일을 적용하는 방식 입니다. 
+### 내장(embaedded)방식
+- 같은 HTML 문서에 \<style\> \</style\> 태그 안에 스타일을 적용하는 방식 입니다. 
+
+### ex01_embedded.html
 ```html
 <!DOCTYPE html>
 	<html>
@@ -53,11 +62,70 @@
 		</body>
 	</html>
 ```
-## 식별자
+
+### 링크(link)방식
+- HMTL <link>를 이용하여 외부 문서로 CSS를 불러와 적용하는 방식
+```html
+<link rel=”stylesheet” type=”text/css” href='css 외부 파일 경로'>
+```
+### css 폴더 만들고 style.css 파일 만들기
+```css
+p{color : red;}
+```
+
+### ex02_link.html
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/style.css" rel="stylesheet" type="text/css">
+    <title>Document</title>
+</head>
+<body>
+    <p>외부 스타일시트 적용</p>
+</body>
+</html>
+```
+
+### @import 방식
+- @import를 이용하여 외부 문서로 CSS를 불러와 적용하는 방식
+
+### ex03_import.html
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        @import url(css/style.css);
+    </style>
+    <title>Document</title>
+</head>
+<body>
+    <p>외부 스타일시트 적용</p>
+</body>
+</html>
+```
+
+## CSS 선택자
+
+### HTML 요소 선택자
+- CSS를 적용할 대상으로 HTML요소의 이름을 직접 선택하여 사용할 수 있다.
+```css
+h2 { color: teal; text-decoration: underline; }
+
+
+<h2>이 부분에 스타일을 적용합니다.</h2>
+```
    
-### class
-- 스타일 변경만을 위해서 사용되는 속성
-- 똑같은 태그가 있을때 구별하기 위한 식별자가 된다.
+### 클래스(class)선택자
+- 특정 집단의 여러 요소를 한 번에 선택할 때 사용한다.
+- 이런 특정 집단을 묶을 수 있는걸 클래스(class)라고 하며, 같은 클래스 이름을 가진 요소들을 모두 선택해준다.
+
+### ex04_class.html
 ```html
 <!DOCTYPE html>
 	<html>
@@ -65,40 +133,40 @@
 			<meta charset="UTF-8">
 			<title>class를 통한 css 적용</title>
 			<style type="text/css">
-			   p{color:#f00; }
-			
-			   /* class의 개념은 똑같은 태그가 있을때 구별하기 위한 식별자가 된다. */
-			h2.text{color:#f00;}
-            
-         	 	/* p태그중에서 text라는 클래스 이름을 가진것에만 css를 적용해줘
-			같은 클래스 이름을 갖고 있어도 좀더 세밀하게 설정할 수 있다.
-			주의! 중간에 띄어쓰기를 넣지 말 것. */
-			p.text{ color:#00f; }
-            
-         		/* .class명 <-- 특정클래스로 접근할 수 있다.*/
-			.text2{ color:#0f0;}
+
+			.headings {
+				color: lime;
+				text-decoration: overline;
+			}
+			.headings2 { 
+				color: blue; 
+				font-size: 50px; 
+			}
+			/*h2 태그에서 class가 headings 인것만 적용*/
+			h2.headings{
+				color : red;
+			}
+
 			</style>
 		</head>
 		
 		<body>
 			<!-- class의 개념은 똑같은 태그가 있을때 구별하기 위한 식별자가 된다. -->
-			<h2 class="text">클래스 연습중</h2>
-			
-			<p class="text2">
-				힘든건 사랑이 아니다
-			</p>
-			
-			<p class="text">
-				내가 널 떠났어야 했는데
-			</p>	
+			<h1>클래스 선택자를 이용한 선택</h1>
+
+			<h2 class="headings">이 부분에 스타일을 적용합니다.</h2>
+
+			<p>클래스 선택자를 이용하여 스타일을 적용할 HTML 요소들을 한 번에 선택할 수 있습니다.</p>
+
+			<h3 class="headings">이 부분에도 같은 스타일을 적용합니다.</h3>
+
+			<h3 class="headings headings2">이 부분에는 다른 스타일과 추가 스타일을 적용합니다.</h3>
 		</body>
 	</html>
 ```
       
-- 같은 문서에 CSS가 HTML 요소로 함께 존재하게 되는 형태입니다. 
-- 여러페이지에 공통 스타일이 있는 경우 중복해서 작성해야 하는 불편함이 있고, 중복된 소스가 분산되어 산재하므로  유지 보수에 어려움이 따를 수 있습니다.
-      
 ### 클래스 활용
+### ex05_class.html
 ```html
 <!DOCTYPE html>
 	<html>
@@ -132,8 +200,13 @@
 ```
       
 ### id
-- id의 경우 나중에 서버로 데이터를 넘겨야 하는 경우도 있기 때문에 중복이 되면 혼란을 야기할 수 있다.
-```
+- CSS를 적용할 대상으로 특정 요소를 선택할 때 사용
+- 이때 #을 써서 구분해준다.
+#### 주의
+- HTML과 CSS에서는 하나에 웹 페이지에 속하는 여러 요소에 같은 아이디 이름을 사용해도 문제없이 동작한다.
+- 하지만 중복된 아이디를 이용해 자바스크립트 작업을 하게 되면 오류가 발생한다.
+- 되도록 하나의 웹 페이지에 속하는 요소에는 다른 아이디 이름을 사용하거나 클래스를 사용하는것이 좋다.
+```html
 <!DOCTYPE html>
 	<html>
 		<head>
@@ -160,8 +233,80 @@
 		</body>
 	</html>      
 ```
-## 테두리(border)
+
+### 그룹(group)선택자
+- 위에서 언급한 여러 선택자를 같이 사용할 때 사용한다.
+- 여러 선택자를 쉼표(,)로 구분하여 연결한다.
+- 그룹 선택자는 코드를 중복해서 작성하지 않도록 하여 코드를 간결하게 만들어준다.
+
+### ex06_group.html
+```html
+<!DOCTYPE html>
+	<html>
+		<head>
+			<meta charset="UTF-8">
+			<title>class를 통한 css 적용</title>
+			<style type="text/css">
+
+			h1, h2, p { background-color: lightgray; }
+
+			</style>
+		</head>
+		
+		<body>
+			<h1>그룹 선택자를 이용한 선택</h1>
+
+			<h2 class="headings">이 부분에 스타일을 적용합니다.</h2>
+
+			<p>그룹 선택자를 이용하여 여러 선택자를 같이 사용할 수 있다.</p>
+
+			<h3 class="headings">선택하지 않으면 적용되지 않는다.</h3>
+
+		</body>
+	</html>
 ```
+
+### 전체 선택자
+- 전체 선택자는 *문자를 사용하여 HTML문서 내의 모든 요소를 선택한다.
+```html
+<!DOCTYPE html>
+	<html>
+		<head>
+			<meta charset="UTF-8">
+			<title>class를 통한 css 적용</title>
+			<style type="text/css">
+
+			* { color: teal; text-decoration: underline; }
+
+			div * { color: teal; text-decoration: underline; }
+
+			</style>
+		</head>
+		
+		<body>
+			<h1>전체 선택자를 이용한 선택</h1>
+
+			<h2>전체가 선택된다.</h2>
+
+			<p>특정 요소 안의 모든 요소를 선택할수도 있다.</p>
+			<div>
+				<h3>선택한 요소 안쪽에만 스타일이 적용된다.</h3>
+			</div>
+
+		</body>
+	</html>
+```
+
+### 스타일 적용 우선순위
+- 인라인 선언 방식
+- 아이디 선택자
+- 클래스 선택자
+- 태그 선택자
+- 전체 선택자
+
+
+## 테두리(border)
+```html
 <!DOCTYPE html>
 	<html>
 	<head>
@@ -237,7 +382,7 @@
 
 ## padding(패딩)
 - 내용(content)와 테두리(border) 사이의 간격의 크기를 설정해주는 속성
-```
+```html
 <!DOCTYPE html>
 	<html>
 		<head>
@@ -277,7 +422,7 @@
 
 ## margin(마진)
 - 요소 주변 여백을 뜻합니다.
-```
+```html
 <!DOCTYPE html>
 	<html>
 		<head>
@@ -314,7 +459,7 @@
 - margin을 주다보면 태그의 크기가 줄어들 수 있다.
 
 ## Font(폰트)
-```
+```html
 <!DOCTYPE html>
 	<html>
 		<head>
@@ -353,24 +498,7 @@
 ![image](https://user-images.githubusercontent.com/54658614/227431474-fb561cc2-3f97-46c1-b564-d78abac58010.png)
 
     
- ### 외부 파일로 적용하는 방법
-- CSS를 외부 파일로 따로 분리하여 작성하는 방식 입니다.
-```
-<link rel=”stylesheet” type=”text/css” href='css 외부 파일 경로'>
-```
-```
-예) 
-<!DOCTYPE html>
-   <html>
-     <head>
-       <meta charset='utf-8'>
-       <link rel=”stylesheet” type=”text/css” href=”css/style/.css”>
-     </head>
-     <body>
-       <p>빨간색 글씨</p>
-     </body>
-  </html> 
-```
+
 ## dl CSS 응용 실습
 - 아래와 같은 모습 만들어보기
 
@@ -381,7 +509,7 @@
 ![image](https://user-images.githubusercontent.com/54658614/227430215-3fd3cb4b-b965-4577-b9fc-a669704b47a1.png)
 
 
-```
+```html
 <!DOCTYPE html>
 	<html>
 		<head>
@@ -428,7 +556,7 @@
 ## 배경이미지
 배포받은 이미지 폴더 넣기
 ![image](https://user-images.githubusercontent.com/54658614/227840344-1e3bbe4b-cb09-4fdd-bee7-e8e079fd3a93.png)
-```
+```html
 <!DOCTYPE html>
 	<html>
 		<head>
@@ -454,7 +582,7 @@
 ```
 ![image](https://user-images.githubusercontent.com/54658614/227840955-6482ede1-6037-41f0-9223-0f3ea3523797.png)
 
-```
+```css
 p{border : 1px solid black;
   width:300px;
   height:300px;
@@ -463,7 +591,7 @@ p{border : 1px solid black;
 ![image](https://user-images.githubusercontent.com/54658614/227841459-c959f15c-a20a-4294-815c-449fb41ce459.png)
   
 ### 이미지 위치 지정하기
-```
+```html
 <!DOCTYPE html>
 	<html>
 		<head>
@@ -507,7 +635,7 @@ p{border : 1px solid black;
 ![image](https://user-images.githubusercontent.com/54658614/227842541-0b16dcd1-b383-4e69-847f-60baf3dd0032.png)
   
 ### ul_background
-```
+```html
 <!DOCTYPE html>
 	<html>
 		<head>
@@ -549,7 +677,7 @@ p{border : 1px solid black;
 ![image](https://user-images.githubusercontent.com/54658614/227843171-490e2c32-3f9f-4fbe-b833-a74a8bb4f20d.png)
   
 ## 후손 선택자
-```
+```html
 <!DOCTYPE html>
 	<html>
 		<head>
@@ -586,7 +714,7 @@ p{border : 1px solid black;
 
 
 ## 자식선택자
-```
+```html
 <!DOCTYPE html>
 	<html>
 		<head>
@@ -640,9 +768,8 @@ p{border : 1px solid black;
 - 블록요소를 인라인 요소로 바꾸고 싶다면 display 속성을 inline으로 주면 된다.
 - 인라인요소를 블록 요소로 바꾸고 싶다면 display 속성을 block으로 주면 된다.
 
-
-		
-```
+	
+```html
 <!DOCTYPE html>
 	<html>
 		<head>
@@ -669,7 +796,7 @@ p{border : 1px solid black;
 ![image](https://user-images.githubusercontent.com/54658614/227845635-62384bc3-8850-428e-a67b-0c3c8a0ac963.png)
 
 ## block_menu
-```
+```html
 <!DOCTYPE html>
 	<html>
 		<head>
@@ -697,7 +824,7 @@ p{border : 1px solid black;
 
 점도 제거하고 마우스를 올렸을 때 색깔이 바뀌도록 만들어보자<br>
 
-```
+```html
 <!DOCTYPE html>
 	<html>
 		<head>
@@ -749,7 +876,7 @@ p{border : 1px solid black;
 ![image](https://user-images.githubusercontent.com/54658614/227846065-491da9d9-ac52-45c9-8031-f06ec987df30.png)
 
 ## overflow
-```
+```html
 <!DOCTYPE html>
 	<html>
 		<head>
@@ -788,7 +915,7 @@ p{border : 1px solid black;
 
 ## 가상클래스
 - 제일 위쪽이나 제일 아래쪽에 대해서는 CSS를 적용할 수는 있으나 중간의 요소에는 적용시킬 수 없다는 단점이 있다.
-```
+```html
 <!DOCTYPE html>
 	<html>
 		<head>
@@ -822,7 +949,7 @@ p{border : 1px solid black;
 ![image](https://user-images.githubusercontent.com/54658614/227848081-8e9c2f19-b621-49f3-8a37-8a2e6b010b78.png)
 
 ## pseudo(슈도)클래스
-```
+```html
 <!DOCTYPE html>
 <html>
 	<head>
@@ -860,7 +987,7 @@ p{border : 1px solid black;
 ![image](https://user-images.githubusercontent.com/54658614/227848660-0dd50dc8-ea3f-44fc-b85a-12bd1552e698.png)
 
 ## link 가상클래스
-```
+```html
 <!DOCTYPE html>
 <html>
 	<head>
@@ -896,7 +1023,7 @@ p{border : 1px solid black;
 ![image](https://user-images.githubusercontent.com/54658614/227849252-ea370975-0670-4850-9b64-11ec34e0e1b5.png)
 
 ## z-index
-```
+```html
 <!DOCTYPE html>
 <html>
 	<head>
@@ -935,12 +1062,14 @@ p{border : 1px solid black;
 ![image](https://user-images.githubusercontent.com/54658614/228431870-9c5776d2-c42c-4937-a9a1-422750decb7f.png)
 
 ## float
-- float는 원래 '뜨다'라는 의미이다. 웹페이지에서 이미지를 어떻게 띄워서 텍스트와 함께 배치할 것인가에 대한 속성
+- float 프로퍼티는 해당 요소를 다음 요소 위에 떠 있게 한다. 
+- 여기서 떠 있다(float)는 의미는 요소가 기본 레이아웃 흐름에서 벗어나 요소의 모서리가 페이지의 왼쪽이나 오른쪽에 이동하는 것이다.
+- 보통 레이아웃을 구성할 때 요소를 가로 정렬하기 위해 사용되는 기법이다.
 - inherit : 부모 요소에서 상속
-- left : 외쪽에 부유하는 블록 박스를 생성
-- right : 오른쪽에 부유하는 블록 박스를 생성
-- none : 요소를 부유시키지 않음
-```
+- left : 요소를 왼쪽으로 이동시킨다.
+- right : 요소를 오른쪽으로 이동시킨다.
+- none : 요소를 떠 있게 하지 않는다.(기본값)
+```html
 <!DOCTYPE html>
 <html>
 	<head>
@@ -948,139 +1077,62 @@ p{border : 1px solid black;
 		<title>float(왼쪽, 오른쪽 정렬)</title>
 		
 		<style type="text/css">
-			*{margin:0;padding:0;}
-			
-			#container{ margin:10px auto; /*좌우를 auto로 결정하면 가운데로 알아서 정렬이 된다  */
-						width:500px;
-						border:5px solid #caa;
-						padding:10px; /* 너비를 유지하면서 padding이 적용되기 때문에 실제 크기는 500px보다 클 수 있다. */
-						background: #fdd;
-						overflow:hidden;}/* 자식태그가 float속성을 가지고 있다면 그 부모는 대부분 overflow:hidden을 가지고 있어야한다. */
-						
-			h1 {text-align: center;}
 			
 			/* float : 블록요소의 객체를 왼쪽이나 오른쪽으로 나란히 정렬하기 위한 속성
 			float은 '부유하다'의 의미를 가지고 있으므로, 부모영역에 영향을 받지 않고 공중에 떠오른 형태가 된다. */
-			
-			.div1 { width:200px;
-				   height:100px;
-				   padding:15px;
-				   background:#dda;
-				   float:left;}
-				   
-			.div2 { width:200px;
-				   height:100px;
-				   padding:15px;
-				   background:#ba7;
-				   float:right;}
+
+			div.page {
+				border: 3px solid #CD5C5C;
+				overflow: auto;
+			}
+
+			/* float 속성을 사용하면 해당 요소는 일반적인 흐름에서 벗어나게 되어 요소의 부모 요소는 해당 요소의 높이를 인식하지 못하게 되는데, 이 경우 부모 요소에 overflow : hidden 속성을 추가하여 해결할 수 있다. */
+
+			h2 { text-align: center; }
+
+			header { border: 3px solid #FFD700; }
+
+			nav {
+				border: 3px solid #FF1493;
+				width: 150px;
+				float: left; // 네비게이션은 왼쪽 위치
+			}
+
+			section {
+				border: 3px solid #00BFFF;
+				margin-left: 156px;
+			}
+
+			footer{ border: 3px solid #00FA9A; }
 		</style>
 	</head>
 	
 	<body>
-		<div id="container">
-			<h1>float연습</h1>
-			
-			<div class="div1"><p>float을 통한 정렬 예제</p></div>
-			<div class="div2"><p>float을 통한 정렬 예제</p></div>
-		</div>
+		<h1>float 속성을 이용한 레이아웃</h1>
+<div class="page">
+
+    <header>
+        <h2>header 영역</h2>
+    </header>
+    <nav>
+        <h2>nav 영역</h2>
+        <p>여기에는 보통 메뉴가 들어갑니다.</p>
+    </nav>
+    <section>
+        <h2>section 영역</h2>
+        <p>여기에는 페이지에 해당하는 내용이 들어갑니다.<br>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ornare sapien suscipit tincidunt ullamcorper. Cras ac sem sed mauris maximus rhoncus vel in metus. Nam pharetra arcu sit amet dolor interdum, eget scelerisque libero finibus. Phasellus quis vulputate ante. Fusce sit amet viverra justo. Donec id elementum mauris. Nam id porttitor nisl, et suscipit nunc. Vestibulum sit amet volutpat quam. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Duis placerat sem eu facilisis ultricies.
+        </p>
+    </section>
+    <footer>
+        <h2>footer 영역</h2>
+    </footer>
+</div>
 	</body>
 </html>
 ```
 ![image](https://user-images.githubusercontent.com/54658614/228128504-69c6961d-eb32-4135-b992-2252e2ec08cf.png)
 
-## 외부 스타일 시트
-- 웹사이트에 공통적으로 적용해야 하는 스타일이 있다면 하나의 파일을 만들어 한번만 정의해놓고 사용하는 방식입니다.
-- 외부에 작성된 이러한 스타일 시트는 .CSS확장자를 사용하여 저장됩니다.
-- 스타일을 적용할 웹 페이지의 \<head\>태그에 \<link\>태그를 사용하여 외부 스타일 시트를 포함해야만 스타일이 적용됩니다
-
-```
-<!DOCTYPE html>
-	<html>
-		<head>
-			<meta charset="UTF-8">
-			<title>외부스타일시트 참조하기</title>
-		</head>
-		
-		<body>
-			<h1>외부 스타일시트 연습중</h1>
-			<p>안녕하세요</p>
-			
-			<ul>
-				<li>메뉴1</li>
-				<li>메뉴2</li>
-				<li>메뉴3</li>
-			</ul>
-			<a href="#">a링크</a>
-			
-			<table border="1">
-				<tr>
-					<td>테이블1</td>
-					<td>테이블2</td>
-				</tr>
-				<tr>
-					<td>테이블3</td>
-					<td>테이블4</td>
-				</tr>
-			</table>
-		</body>	
-	</html>
-```
-
-WebContent 폴더 아래에 css폴더를 하나 만들자
-
-![image](https://user-images.githubusercontent.com/54658614/228129585-39062a4f-50bc-4d6d-8202-f27d2a1dc1c6.png)
- 
-폴더에서 우클릭하여 CSS파일을 만들어야 한다 없으면 other로 들어가서 만들자.
-
-![image](https://user-images.githubusercontent.com/54658614/228129728-1c8493e7-e2de-428f-876b-f1387aa524e2.png)
-
-![image](https://user-images.githubusercontent.com/54658614/228129826-35a72044-ca7b-4169-8da9-d146875b5300.png)
-
-```
-@charset "UTF-8";
-
-*{padding:0; margin:0;}
-a{text-decoration:none;}
-li{list-style:none;}
-table{border-collapse:collapse;}/*테이블 테두리를 한겹으로*/
-```
-외부 스타일 시트 적용하기
-```
-<!DOCTYPE html>
-	<html>
-		<head>
-			<meta charset="UTF-8">
-			<title>외부스타일시트 참조하기</title>
-			
-			<link rel="stylesheet" href="css/reset.css">
-		</head>
-		
-		<body>
-			<h1>외부 스타일시트 연습중</h1>
-			<p>안녕하세요</p>
-			
-			<ul>
-				<li>메뉴1</li>
-				<li>메뉴2</li>
-				<li>메뉴3</li>
-			</ul>
-			<a href="#">a링크</a>
-			
-			<table border="1">
-				<tr>
-					<td>테이블1</td>
-					<td>테이블2</td>
-				</tr>
-				<tr>
-					<td>테이블3</td>
-					<td>테이블4</td>
-				</tr>
-			</table>
-		</body>	
-	</html>
-```
-
-![image](https://user-images.githubusercontent.com/54658614/228130457-65872c6d-6272-4452-b7e3-5b1be5461c5c.png)
 
 ## position
 - static : 기본적인 위치 지정 방식, 문서의 기본적인 흐름을 따른다.
@@ -1098,7 +1150,7 @@ table{border-collapse:collapse;}/*테이블 테두리를 한겹으로*/
 	- 부모요소가 없다면 포지션 문서의 body를 기준으로 배치된다.
 
 - fixed : fixed 포지션은 화면의 스크롤이나 움직임에 관계 없이 화면의 특정 부분에 고정되는 포지션이다.
-```
+```html
 <!DOCTYPE html>
 <html>
 	<head>
