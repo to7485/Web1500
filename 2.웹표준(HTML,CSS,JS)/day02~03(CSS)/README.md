@@ -1134,6 +1134,121 @@ p{border : 1px solid black;
 ![image](https://user-images.githubusercontent.com/54658614/228128504-69c6961d-eb32-4135-b992-2252e2ec08cf.png)
 
 
+## CSS Flexbox
+- 모던 웹을 위하여 제안된 기본 layout보다 더 세련된 방식으로 만들기 위해 나온 방식이다.
+- 요소의 사이즈가 불명확하거나 동적으로 변화할 때에도 유연한 레이아웃을 실현할 수 있다.
+- 복잡한 레이아웃이라도 적은 코드로 보다 간단하게 표현할 수 있다.
+
+## Flexbox 기본구조
+- flex item
+  - 복수의 자식 요소
+- flex - container
+  - 부모 요소
+
+### flexbox 설정
+- HTML 부모 요소의 display 속성에 flex를 지정한다.(부모 요소가 inline인 경우 inline-flex를 지정한다.)
+
+### flexbox의 속성
+- flex container에 정의하는 속성
+  - 전체적인 정렬이나 흐름에 관련된 속성
+- flex item에 정의하는 속성
+  - 자식 요소의 크기나 순서에 관련된 속성
+
+### Flex Container 속성
+|속성|의미|
+|-----|-----|
+|display| Flex Container를 정의|
+|flex-direction| Flex Items의 주 축(main-axis)을 설정|
+|flex-wrap| Flex Items의 여러 줄 묶음(줄 바꿈) 설정|
+|flex-flow| flex-direction와 flex-wrap의 단축 속성|
+|justify-content| 주 축(main-axis)의 정렬 방법을 설정|
+|align-content| 교차 축(cross-axis)의 정렬 방법을 설정(2줄 이상)|
+|align-items| 교차 축(cross-axis)에서 Items의 정렬 방법을 설정(1줄)|
+
+
+### flex-direction
+- flex 컨테이너의 주축(main-axis) 방향을 설정한다.
+- 주의할 점은, Items 순서를 거꾸로 뒤집거나, 수직으로 설정할 경우, 주 축과 교차축 모두 변하게 된다.
+#### flex-direction : row;
+- 좌에서 우로 수평 배치된다.(기본값)
+
+![image](img/flex_row.png)
+
+
+#### flex-direction : row-reverse;
+- 우에서 좌로 수평 배치된다.
+
+![image](img/flex_row_reverse.png)
+
+#### flex-direction : column;
+- 위에서 아래로 수직 배치된다.
+
+![image](img/flex_column.png)
+#### flex-direction : column-reverse;
+- 아래서 위로 수직 배치된다.
+
+![image](img/flex_column_reverse.png)
+
+### flex-wrap
+- flex 컨테이너의 복수 flex item을 1행으로 또는 복수행으로 배치한다.
+- flex는 기본적으로 1차원 형태이다.
+- flex 컨테이너의 width보다 flex item들의 width의 합계가 더 큰 경우, 한줄로 표현할 것인지, 여러줄로 표현할 것인지를 지정한다.
+
+#### flex-wrap : nowrap;
+- item을 개행하지 않고 1행에 배치한다.
+- 각 item의 폭은 container에 들어갈 수 있는 크기로 축소된다.
+
+![image](img/flex_nowrap.png)
+
+#### flex-wrap : wrap;
+- item들의 width합계가 flex 컨테이너의 width보다 큰 경우, item을 복수행에 배치한다.
+- 기본적으로 좌에서 우로, 위에서 아래로 배치된다.
+
+![image](img/flex_wrap.png)
+
+#### flex-wrap : wrap-reverse;
+- wrap과 동일하나 아래에서 위로 배치된다.
+
+![image](img/flex_wrap_reverse.png)
+
+### flex-flow
+- direction과 wrap속성을 설정하기 위한 shorth and이다.
+
+```css
+/* flex-flow : direction속성  wrap속성*/
+flex-flow : row-reverse wrap;
+```
+
+
+### justify-content
+- container의 main axis를 기준으로 item을 수평 정렬한다.
+
+#### justify-content : flex-start;
+- 좌측을 기준으로 정렬한다. (기본값)
+
+![image](img/justify_start.png)
+
+#### justify-content : flex-end;
+- 우측을 기준으로 정렬한다.
+- flex-direction:row-reverse와 다른점은 1,2,3,4,5 순서는 그대로인점
+
+![image](img/justify_end.png)
+
+#### justify-content : center;
+- 중앙에 정렬한다.
+
+![image](img/justify_center.png)
+
+#### justify-content : space-between;
+- 첫번째와 마지막 item은 끝에 정렬되고 나머지는 균등한 간격으로 정렬된다.
+
+![image](img/justify_between.png)
+
+#### justify-content : sapce-around;
+- 모든 item은 균등한 간격으로 정렬된다.
+
+![image](img/justify_around.png);
+
 ## position
 - static : 기본적인 위치 지정 방식, 문서의 기본적인 흐름을 따른다.
 	- 모든 태그들은 처음에 position : static 상태이다.
@@ -1220,7 +1335,7 @@ p{border : 1px solid black;
 ![image](https://user-images.githubusercontent.com/54658614/228131928-b87cbc3f-4962-4a1b-8e6b-57f18f4fd342.png)
 
 ## CSS응용 드롭다운 메뉴 만들어보기
-```
+```html
 <!DOCTYPE html>
 <html>
 	<head>
