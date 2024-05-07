@@ -505,16 +505,14 @@ s- rc - 이미지 경로를 지정할 수 있습니다.
 ```
 
 ## HTML 링크(Links)
-- HTML에서 링크는 하이퍼링크입니다.
-
-- 하이퍼링크란 
+### 하이퍼링크란 
 - 하이퍼링크는 하이퍼텍스트 문서 안에서 직접 모든 형식의 자료를 연결하고 가리킬 수 있는 참조 고리이다. 이를테면 동영상, 음악, 그림, 프로그램, 파일, 글 등의 특정 위치를 지정할 수 있다. 이는 하이퍼텍스트의 핵심 개념이며, HTML을 비롯한 마크업 언어에서 구현하고 있다. 
 
 - 즉, 하이퍼텍스트 문서는 문서에 다른 문서(다른 HTML)나 이미지, 그림등의 링크를 다수 포함할 수 있고 이동할 수 있는 것을 말하여 그 링크를 하이퍼링크라고 합니다.
  
 
 ### href 속성
-- <a>태그는 하이퍼링크를 정의합니다. a 태그에서 가장 중요한 속성(attribute)는 href 이며 페이지를 이동할 링크(URL)을 지정할 수 있습니다.
+- \<a\>태그는 하이퍼링크를 정의합니다. a 태그에서 가장 중요한 속성(attribute)는 href 이며 페이지를 이동할 링크(URL)을 지정할 수 있습니다.
 ```html
 <a href='https://www.naver.com'>네이버</a>
 ```
@@ -572,36 +570,63 @@ s- rc - 이미지 경로를 지정할 수 있습니다.
 ```
 	
 ## 미디어 태그(media)
+
+### 이미지(img)태그
 - HTML <img>태그는 웹페이지에서 이미지를 표시하기 위해 사용합니다.
 
-프로젝트에 WebContent에 image 폴더 복사해서 넣기
+- 프로젝트에 WebContent에 image 폴더 복사해서 넣기
 
 ![image](https://user-images.githubusercontent.com/54658614/227101972-884fc663-2d4f-47d6-9940-4c084687c08f.png)
 
 
-### 필수 속성
+#### 필수 속성
 \<img\>태그에는 다음 2개의 필수 속성이 있습니다.
 - src - 이미지 경로를 지정할수 있습니다.
 - alt - 이미지 대체 문구(이미지가 노출이 되지 않는 경우에 대체 노출되는 문구)
 
-### width, height 속성
+#### width, height 속성
 - 이미지의 너비와 높이를 지정할 수 있습니다. 다만 이미지의 사이즈는 속성으로 지정하기 보다는 CSS Style로 width, height를 지정하는것이 좋습니다.
 
+
+### ex06_media.html 생성
 ```html
 <!DOCTYPE html>
-<html>
-	<head>
-		<meta charset="UTF-8">
-		<title>이미지태그</title>
-	</head>
-		
-		<body>
-			<!--alt는 이미지에 대한 대체 텍스트, 이미지에 대한 설명  -->
-			<!--img태그는 인라인 태그  -->
-			<img alt="흙산" src="image/background.jpg">
-			<!--title속성은 툴팁(도움말)으로써 마우스 오버시 화면에 표시  -->
-			<img src="image/float.jpg" alt="구름떼" title="새털구름">
-		</body>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!-- img태그 
+    웹 페이지에 이미지를 넣을 때 사용 <img>태그 하나당 1개의 이미지를 삽입할 수 있다.
+    반드시 src 속성을 사용해서 이미지의 경로를 지정해야 한다.-->
+
+    <!-- 이미지를 직접 다운로드 한 뒤, 파일경로를 삽입-->
+    <p>
+        <img src="img/simson.png" alt="심슨 그림" title="심슨 이미지 입니다.">
+    </p>
+    <!-- 이미지의 주소를 붙혀넣기도 가능하다.-->
+    <p>
+        <img src="https://i.namu.wiki/i/d1A_wD4kuLHmOOFqJdVlOXVt1TWA9NfNt_HA0CS0Y_N0zayUAX8olMuv7odG2FiDLDQZIRBqbPQwBSArXfEJlQ.webp">
+    </p>
+    <!-- alt 속성 : 이미지가 안나왔을 때 설명해주는 대체 텍스트 추가-->
+```
+### 오디오태그(audio)
+```html
+    <!-- audio태그 
+    음성파일 삽입
+    controls : 음악 재생 도구를 표시할 것인지 지정. 재생 도구의 외관은 브라우저마다 차이가 있다.-->
+    <audio src="경로" controls></audio>
+```
+### 비디오태그(video)
+```html
+    <!-- video 태그
+    영상을 삽입-->
+    <video controls>
+        <source src="경로">
+    </video>
+</body>
 </html>
 ```
 ## HTML 테이블(Tables)
@@ -611,6 +636,7 @@ s- rc - 이미지 경로를 지정할 수 있습니다.
 - th는 테이블 헤더로 테이블 각 열을 대표하는 셀
 - 또한 테이블 태그는 thead - 헤더영역, tbody - 본문영역, tfoot - 본문영역으로 구분하여 사용할 수 있습니다.
 
+### ex07_tabletag.html 생성하기
 ```html
 <!DOCTYPE html>
 	<html>
@@ -720,25 +746,25 @@ s- rc - 이미지 경로를 지정할 수 있습니다.
 - 순서없는 리스트(Unordered HTML List)
 - 순서 없는 리스트는 <ul>태그로 시작하며 리스트 항목들은 \<li\>~\</li\> 태그를 사용합니다.
 
+### ex08_list.html
 ```html
-예)
-<ul>
-	<li>홍길동</li>
-	<li>김길동</li>
-	<li>마루치</li>
-</ul>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!-- ul태그(Unordered List)-->
+    <ul>
+        <li>홍길동</li>
+        <li>김길동</li>
+        <li>박길동</li>
+    </ul>
 
+    <br> <!-- \n 와 같은 역할-->
 
-<ul>
-	<li>
-	<a href="#">링크 테스트</a>
-	</li>
-	<li>
-	<img alt="스마일" src="image/acid2Test.jpg">
-	</li>
-	<li>일반 텍스트</li>
-
-</ul>
 ```
 
 - 리스트 구분 기본 값은 disc로 색이 채워진 둥근 점 모양입니다.
@@ -771,16 +797,32 @@ s- rc - 이미지 경로를 지정할 수 있습니다.
 - 시작번호 지정할 경우 start="시작번호"로 지정하며 숫자를 변경할 경우 \<li value="변경숫자"\>로 입력합니다.
 
 ```html
-예) 
-<!-- ol(Ordered List) : 순위, 게시판 등의 순서목록 -->
-<ol>
-	<li>임창정</li>
-	<li>힘든건 사랑이 아니다</li>
-	<li>노래 짱좋아</li>
-</ol>
+    <!-- ol태그(Ordered List)
+    순서가 있는 리스트
+    type 속성
+    사용할 수 있는 속성 값
+    1 -> 숫자(default)
+    a -> 영어 소문자
+    A -> 영어 대문자
+    i -> 로마숫자 소문자
+    I -> 로마숫자 대문자
+
+    start 속성
+    중간부터 시작해야 할 때
+
+    reversed 속성
+    역순으로 사용-->
+    <ol type="I" start="3" reversed>
+        <li>물을 끓인다.</li>
+        <li>스프를 넣는다.</li>
+        <li>면을 넣는다.</li>
+    </ol>
+</body>
+</html>
 ```
 
 ### 깊이가 있는 리스트
+### ex09_depthlist.html
 ```html
 <!DOCTYPE html>
 <html>
@@ -864,6 +906,7 @@ s- rc - 이미지 경로를 지정할 수 있습니다.
 - 각 행은 \<dt\>~\</dt\>(항목명)
 - \<dd\>~\</dd\>(항목 설명)으로 구성되어 있습니다.
 
+### ex10_dscription.html
 ```html
 예)
 <!DOCTYPE html>
@@ -884,11 +927,11 @@ s- rc - 이미지 경로를 지정할 수 있습니다.
 	</body>
 </html>
 ```	
-### \<div\>태그
-- div 태그는 Division의 약자로, 레이아웃을 나누는데 주로 쓰입니다.
-- 다른 태그와 다르게 특별한 기능을 갖고 있지는 않지만, 가상의 레이아웃을 설계하는데 쓰이며 주로 CSS와 연동하여 쓰입니다.
+## \<div\>태그
+- body 문서 안에서 각 영역의 세션을 구분 정의 한다.
+- 구역을 나누는 태그, 가로줄 전체를 차지, 너비가 100%
 
-#### div 실습
+### ex11_divtag.html
 ```html
 <!DOCTYPE html>
 <html>
@@ -916,6 +959,15 @@ s- rc - 이미지 경로를 지정할 수 있습니다.
 	</body>
 </html>
 ```
-	
+
+### \<span\>태그
+- 일반적으로 텍스트에 색칠, 크기, 좌우간격을 조절하는데 사용된다.
+- inline 요소이다.
+
+### ex12_spantag.html
+```html
+<p>My mother has <span style="color:blue;font-weight:bold">blue</span> eyes and my father has <span style="color:darkolivegreen;font-weight:bold">dark green</span> eyes.</p>
+```
+
 	
 
