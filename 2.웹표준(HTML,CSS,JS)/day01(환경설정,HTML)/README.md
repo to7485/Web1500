@@ -140,20 +140,21 @@ File > New > Dynamic Web Project
 - 주석은 여러줄 입력 할수 있습니다.
 
 ```html
-예)
-<!DOCTYPE html>
-<html>
-	<head>
-	<!-- Hyper Text Markup Language
-	웹 브라우저의 디자인을 위해 고안된 언어 -->
-		<meta charset="UTF-8">
-		<title>웹표준의 시작</title>
-	</head>
-	
-	<body>
-	<!-- body태그에 작성된 내용이 실제 웹페이지에 표시되는 내용 -->
-		안녕하세요
-	</body>
+<!-- html 주석
+브라우저에서 출력이 되지 않는 문장
+소스코드에 대한 설명을 할 때 사용 -->
+
+<!DOCTYPE html> <!-- HTML5 문서임을 선언, 대소문자 구분 없이 정의해도 상관없음 -->
+<html lang="en"> <!-- HTML에서 최상위 태그(root태그) -->
+<head> <!-- HTML페이지의 meta정보를 포함한다., 초기 페이지 렌더링시에 불러와야 할 외부 링크를 정의(CSS,JS) -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title> <!-- HTML 페이지의 제목, 브라우더 상단의 웹페이지 탭에 제목으로 노출 -->
+</head>
+<body> <!-- HTML문서에서 실질적으로 보이는 영역을 정의하는 구간
+            이미지, 글, 링크, 테이블, 동영상 등등-->
+    안녕하세요
+</body>
 </html>
 ```
 
@@ -280,33 +281,38 @@ s- rc - 이미지 경로를 지정할 수 있습니다.
 - 속성은 소문자, 대문자 상관 없이 인식을 하나 소문자로 쓰는것을 권장합니다(W3C 권장사항)
 - (title, TITLE 상관없이 인식 가능)
 		
-## HTML의 태그들
+# HTML의 태그들
 
-### HTML 헤더(Headings)태그
+## HTML 헤더(Headings)태그
 
 ### 정의
 - 헤더는 글의 제목이나 부제목을 표기할 때 사용합니다.
 - 태그는 h1~h6까지 있으며, 숫자가 작을수록 크기가 큽니다.
 
+### ex02_header.html 만들기
 ```html
 <!DOCTYPE html>
-<html>
-	<head>
-		<meta charset="UTF-8">
-		<title>heading tag</title>
-	</head>
-	
-		<body>
-			<!--h1이 32px
-			일반적으로 1에서 3정도 까지 주로 사용한다.  -->
-			<h1>Heading 1 tag </h1>
-			<h2>Heading 2 tag </h2>
-			<h3>Heading 3 tag </h3>
-			<h4>Heading 4 tag </h4>
-			<h5>Heading 5 tag </h5>
-			<h6>Heading 6 tag </h6>	
-		</body>
-</html>	
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!-- 헤더 태그 
+    글의 제목이나 부제목을 표기할 때 사용
+    태그는 h1 ~ h6까지 있으며, 숫자가 작을수록 크기가 크다.-->
+
+    <h1>Heading 1 tag</h1> <!-- h1이 32px, 보통 1에서 3정도 까지 사용한다.-->
+    <h2>Heading 2 tag</h2>
+    <h3>Heading 3 tag</h3>
+    <h4>Heading 4 tag</h4>
+    <h5>Heading 5 tag</h5>
+    <h6>Heading 6 tag</h6>
+
+    <!-- h1 ~ 6 태그를 단순히 글자 크기를 크게 하거나 강조하는 용도로 사용하지 말것-->
+</body>
+</html>
 ```
 ### 주의사항
 - h1~6 태그의 용도로 헤더 태그를 사용하여야 하며 단순히 글자 크기를 크게하거나(font-size) 강조(bold)표기 용도로 사용하지 말아야 합니다.
@@ -396,50 +402,28 @@ s- rc - 이미지 경로를 지정할 수 있습니다.
 <var>
 ```
 
-### block, inline 태그 실습
-
-### HTML 문단(Paragrahs) 태그
+## HTML 문단(Paragrahs) 태그
 - 하나의 문단을 표기 표기하는 용도로 사용하며 \<p\>~\</p\> 형태로 사용합니다.
 - 문단을 나누는 용도로 사용하는 태그이므로 \<p\> 태그 전 후로 공백이 추가 됩니다.
 
+### ex03_ptag.html
 ```html
 <!DOCTYPE html>
-<html>
-	<head>
-		<meta charset="UTF-8">
-		<title>블록요소와 인라인 요소</title>
-	</head>
-	
-	<body>
-		안녕하세요
-		반갑습니다.
-		저		는 홍길동		입니다.
-		
-		<!--블록요소는 현재 브라우저의 너비만큼 너비를 가득 채우는 영역을 잡고 있다.  -->
-		<p><b>단락</b>을 구별하는 p태그는 블록요소입니다.</p>
-		
-		<!--strong을 쓰는게 권장 사항  -->
-		<p><strong>단락</strong>과 단락 사이는 마진이라는 여백을 통해서 구별되고 있다.</p>
-		<p>
-			<i>링크태그</i>
-			<!--i 와 em 둘다 기울여 쓰기 이지만 em을 권장한다.  -->
-			<em>링크태그2</em>
-			<!--<a>태그는 인라인 요소 : 내가 가지고 있는 내용만큼만 요소를 잡는다  -->
-			<a href="https://www.naver.com/">네이버</a>로가기
-		</p>
-		<p>
-			<a href="ex01_first.html"> ex01로 이동</a>
-			<a href="#"> 페이지4로 이동</a>
-			
-			<!--수평선 태그 : 주로 주제별로 단락을 구별하는 용도로 사용  -->
-			<hr>
-			
-			<!-- br은 강제개행 태그  -->
-			첫번째 줄<br>
-			두번째 줄<br>
-			세번째 줄<br>
-		</p>
-	</body>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!-- 문단(Paragraph) 태그
+    하나의 문단을 표기하는 용도로 사용한다.-->
+</body>
+    안녕하세요.
+    반갑습니다.
+    <!-- 띄어쓰기는 최대 1칸씩만 적용 된다.-->
+    저       는 홍길동          입니다.
+    <p>단락을 구별하는 p태그는 블록요소입니다.</p><p>단락과 단락 사이는 margin이라는 여백을 통해 구별되고 있다.</p>
 </html>
 ```
 
@@ -456,6 +440,69 @@ s- rc - 이미지 경로를 지정할 수 있습니다.
 -\<ins\>	첨가 텍스트 정의
 -\<del\>	지운 텍스트 정의
 -\<mark\>	마킹 / 강조된 텍스트 정의
+
+### ex04_textFormatting.html 만들기
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!-- HTML 서식 태그(Text Formatting)-->
+    안녕하세요.
+    반갑습니다.
+    <!-- 띄어쓰기는 최대 1칸씩만 적용 된다.-->
+    저       는 홍길동          입니다.
+
+    <!-- b태그 굵은 텍스트 정의-->
+    <p><b>단락</b>을 구별하는 p태그는 블록요소입니다.</p>
+    <p><strong>단락</strong>과 단락 사이는 margin이라는 여백을 통해 구별되고 있다.</p>
+    <p>
+        <!-- i태그 텍스트 기울이기-->
+        <i>링크태그</i>
+        <em>링크태그2</em>
+    </p>
+    <p>
+        <!-- del 태그 취소선-->
+        My favorite color is <del>blue</del> red.
+    </p>
+    <p>
+        <!-- small태그 글씨가 작게 나온다.-->
+        HTML <small>Small</small> Formatting
+    </p>
+    <p>
+        <!-- mark태그 하이라이트되서 나온다.-->
+        HTML <mark>Marked</mark> Formmating
+    </p>
+    <p>
+        <!-- sub태그 글이 아래로 나온다.-->
+        This is <sub>subscripted</sub> text
+    </p>
+    <p>
+        <!-- sup태그 글이 위로 나온다.-->
+        This is <sup>superscripted</sup> text
+    </p>
+
+    <!-- pre태그 태그 내의 내용이 작성된 그대로 브라우저에 표시된다.(공백 개행문자 모두 포함해서)-->
+    <pre>
+    var myArray = [];
+    console.log(myArray.length); //0
+
+    myArray[1000] = true;
+
+    console.log(myArray.length); //1001
+    console.log(myArray[0]); //undefined
+    </pre>
+
+    <p>
+        <a href="#">링크 없음</a>
+    </p>
+</body>
+</html>
+```
 
 ## HTML 링크(Links)
 - HTML에서 링크는 하이퍼링크입니다.
@@ -484,8 +531,47 @@ s- rc - 이미지 경로를 지정할 수 있습니다.
 	- ./ 현재 파일이 열려 있는 경로
 	- ../ 현재 파일이 열려 있는 경로보다 1단계 상위 경로
 	- ../../ 현재 파일이 열려 있는 경로보다 2단계 상위 경로
+
+
+### ex05_linktag.html
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!-- a 태그-->
+    <p>
+        <a href="연결할 링크의 경로">내용</a>
+    </p>
+    <p>
+        <a href="https://www.naver.com">네이버로 이동</a>
+    </p>
+
+    <!-- a 태그에서 사용할 수 있는 속성 값
+    절대 URL : 웹사이트 URL
+    상대 URL : 자신의 위치를 기준으로한 대상의 URL
+    # : 실제로는 연결되지 않는, 링크역할만 하도록 만든것-->
+    <p>
+        <a href="ex01_first.html">첫번째 예제로 이동</a>
+    </p>
+    <p>
+        <a href="#">링크 없음</a>
+    </p>
+    <p>
+        <a href="javascript:alert('Hello')">자바스크립트 코드</a>
+    </p>
+    <p>
+        <a href="경로" title="링크 내용에 대한 설명">타이틀 속성</a>
+    </p>
+</body>
+</html>
+```
 	
-## HTML 이미지(Images)
+## 미디어 태그(media)
 - HTML <img>태그는 웹페이지에서 이미지를 표시하기 위해 사용합니다.
 
 프로젝트에 WebContent에 image 폴더 복사해서 넣기
