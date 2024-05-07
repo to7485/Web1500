@@ -1249,6 +1249,42 @@ flex-flow : row-reverse wrap;
 
 ![image](img/justify_around.png);
 
+
+### align-content
+- cross-axis를 기준으로 item을 수직정렬한다.
+
+#### align-content : stretch;
+- 모든 item은 두번째 줄 부터 균등하게 분배된 공간에 정렬된다.
+
+![image](img/content_stretch.png)
+
+#### align-content : flex-start;
+- 모든 item은 flex container의 cross start 기준으로 stack 정렬된다.
+
+![image](img/content_start.png)
+
+#### align-content : flex-end;
+- 모든 item은 container의 cross end 기준으로 stack 정렬된다.
+
+![image](img/content_end.png)
+
+#### align-content : center;
+- 모든 item은 container의 cross axis의 중앙에 stack 정렬된다.
+
+![image](img/content_center.png)
+
+#### align-content : space-between;
+- 첫번째 행은 상단에 마지막 행은 바닥에 배치되며, 나머지 행은 균등 분할된 공간에 배치 정렬된다.
+
+![image](img/content_between.png)
+
+#### align-content : space-around;
+- 모든 item은 균등 분할된 공간 내에 배치 정렬된다.
+
+![image](img/content_around.png)
+
+
+
 ## position
 - static : 기본적인 위치 지정 방식, 문서의 기본적인 흐름을 따른다.
 	- 모든 태그들은 처음에 position : static 상태이다.
