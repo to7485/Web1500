@@ -1277,7 +1277,7 @@ p{border : 1px solid black;
         div{
             width:60px; height : 60px;
             text-align : center;
-            font-size : 2px;
+            font-size : 2rem;
             color : white;
             border : 2px solid black;
             margin : 10px;
@@ -1491,6 +1491,102 @@ flex-flow : row-reverse wrap;
 
 ![image](img/justify_around.png);
 
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        section{ display : flex;}
+        div{width : 50px; height : 50px;
+        margin : 10px;
+        color : white;
+        text-align : center;}
+
+        .a{
+            background : red;
+        }
+        .b{
+            background : yellow;
+        }
+        .c{
+            background : blue;
+        }
+        .d{
+            background : green;
+        }
+        .e{
+            background : violet;
+        }
+
+        .flex-start{
+            justify-content: flex-start;
+        }
+        .center{
+            justify-content: center;
+        }
+        .flex-end{
+            justify-content: flex-end;
+        }
+
+        .space-between{
+            justify-content: space-between;
+        }
+
+        .space-around{
+            justify-content: space-around;
+        }
+    </style>
+</head>
+<body>
+    <h1>justify-content와 align-items</h1>
+    <hr>
+    <p>flex-start</p>
+    <section class="flex-start">
+        <div class="a">a</div>
+        <div class="b">b</div>
+        <div class="c">c</div>
+        <div class="d">d</div>
+        <div class="e">e</div>
+    </section>
+    <p>flex-end</p>
+    <section class="flex-end">
+        <div class="a">a</div>
+        <div class="b">b</div>
+        <div class="c">c</div>
+        <div class="d">d</div>
+        <div class="e">e</div>
+    </section>
+    <p>center</p>
+    <section class="center">
+        <div class="a">a</div>
+        <div class="b">b</div>
+        <div class="c">c</div>
+        <div class="d">d</div>
+        <div class="e">e</div>
+    </section>
+    <p>space-between</p>
+    <section class="space-between">
+        <div class="a">a</div>
+        <div class="b">b</div>
+        <div class="c">c</div>
+        <div class="d">d</div>
+        <div class="e">e</div>
+    </section>
+    <p>space-around</p>
+    <section class="space-around">
+        <div class="a">a</div>
+        <div class="b">b</div>
+        <div class="c">c</div>
+        <div class="d">d</div>
+        <div class="e">e</div>
+    </section>
+</body>
+</html>
+```
+
 
 ### align-content
 - cross-axis를 기준으로 item을 수직정렬한다.
@@ -1525,6 +1621,126 @@ flex-flow : row-reverse wrap;
 
 ![image](img/content_around.png)
 
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        section{ display : flex;
+        flex-wrap : wrap;
+        border : 1px dashed #000;
+        width : 100%; height : 300px;}
+
+        div{
+            width : 100px;
+            color : white;
+            text-align : center;
+            font-size : 2rem;
+            border : 2px solid black;
+            margin : 10px;
+        }
+
+        .a{
+            background : red;
+        }
+        .b{
+            background : yellow;
+            color : black;
+        }
+        .c{
+            background : blue;  
+        }
+        .d{
+            background : green;   
+        }
+        .e{
+            background : violet;
+        }
+
+        .flex-start{
+            align-content : flex-start
+        }
+        .center{
+            align-content : center;
+        }
+        .flex-end{
+           align-content : flex-end;
+        }
+
+        .stretch{
+            align-content : stretch;
+        }
+
+        .space-between{
+            align-content : space-between;
+        }
+
+        .space-around{
+            align-content : space-around;
+        }
+    </style>
+</head>
+<body>
+    <h1>align-items</h1>
+    <hr>
+    <p>stretch</p>
+    <section class="stretch">
+        <div class="a">a</div>
+        <div class="b">b</div>
+        <div class="c">c</div>
+        <div class="d">d</div>
+        <div class="e">e</div>
+    </section>
+    <p>flex-start</p>
+    <section class="flex-start">
+        <div class="a">a</div>
+        <div class="b">b</div>
+        <div class="c">c</div>
+        <div class="d">d</div>
+        <div class="e">e</div>
+    </section>
+    <p>center</p>
+    <section class="center">
+        <div class="a">a</div>
+        <div class="b">b</div>
+        <div class="c">c</div>
+        <div class="d">d</div>
+        <div class="e">e</div>
+    </section>
+    <p>flex-end</p>
+    <section class="flex-end">
+        <div class="a">a</div>
+        <div class="b">b</div>
+        <div class="c">c</div>
+        <div class="d">d</div>
+        <div class="e">e</div>
+    </section>
+    <p>space-between</p>
+    <section class="space-between">
+        <div class="a">a</div>
+        <div class="b">b</div>
+        <div class="c">c</div>
+        <div class="d">d</div>
+        <div class="e">e</div>
+    </section>
+    <p>space-around</p>
+    <section class="space-around">
+        <div class="a">a</div>
+        <div class="b">b</div>
+        <div class="c">c</div>
+        <div class="d">d</div>
+        <div class="e">e</div>
+    </section>
+</body>
+</html>
+```
+
+
+
+
 ### align-items
 - item을 container의 수직방향으로 정렬한다.(한 줄일 경우)
 - align-items 속성은 모든 item에 적용된다.
@@ -1557,32 +1773,95 @@ flex-flow : row-reverse wrap;
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <style>
-        .container {
-            margin: 1em 0;
-            background-color: #c2edc8;
-            display: flex;
-            flex-direction: row;
+        section{ display : flex;}
+        div{width : 100px;
+        margin : 10px;
+        color : white;
+        text-align : center;}
+
+        .a{
+            background : red;
         }
-    
-        .box {
-            padding: 1em;
-            font-size: 2em;
-            background-color: #3f29ef;
-            color: white;
+        .b{
+            background : yellow;
+            color : black;
+            font-size : 36px;
+        }
+        .c{
+            background : blue;
+            font-size : 90px;
+        }
+        .d{
+            background : green;
+            font-size : 50px;
+        }
+        .e{
+            background : violet;
+            font-size : 10px;
         }
 
-        .home{
-            margin-left:auto;
+        .flex-start{
+            align-items : flex-start
+        }
+        .center{
+            align-items : center;
+        }
+        .flex-end{
+           align-items : flex-end;
+        }
+
+        .stretch{
+            align-items : stretch;
+        }
+
+        .baseline{
+            align-items : baseline;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="box">Toy-Crane Blog</div>
-        <div class="box home">Home</div>
-        <div class="box">About</div>
-        <div class="box">Login</div>
-    </div>
+    <h1>align-items</h1>
+    <hr>
+    <p>stretch</p>
+    <section class="stretch">
+        <div class="a">a</div>
+        <div class="b">b</div>
+        <div class="c">c</div>
+        <div class="d">d</div>
+        <div class="e">e</div>
+    </section>
+    <p>flex-start</p>
+    <section class="flex-start">
+        <div class="a">a</div>
+        <div class="b">b</div>
+        <div class="c">c</div>
+        <div class="d">d</div>
+        <div class="e">e</div>
+    </section>
+    <p>center</p>
+    <section class="center">
+        <div class="a">a</div>
+        <div class="b">b</div>
+        <div class="c">c</div>
+        <div class="d">d</div>
+        <div class="e">e</div>
+    </section>
+    <p>flex-end</p>
+    <section class="flex-end">
+        <div class="a">a</div>
+        <div class="b">b</div>
+        <div class="c">c</div>
+        <div class="d">d</div>
+        <div class="e">e</div>
+    </section>
+    <p>baseline</p>
+    <section class="baseline">
+        <div class="a">a</div>
+        <div class="b">b</div>
+        <div class="c">c</div>
+        <div class="d">d</div>
+        <div class="e">e</div>
+    </section>
 </body>
 </html>
 ```
