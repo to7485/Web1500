@@ -1283,7 +1283,54 @@ flex-flow : row-reverse wrap;
 
 ![image](img/content_around.png)
 
+### align-items
+- item을 container의 수직방향으로 정렬한다.(한 줄일 경우)
+- align-items 속성은 모든 item에 적용된다.
 
+#### align-items : stretch;
+- 모든 item은 container의 높이에 꽉찬 높이를 갖는다.
+
+![image](img/item_stretch.png)
+
+#### align-items : flex-start;
+- 모든 item은 container의 cross start 기준으로 정렬된다.
+
+![image](img/item_start.png)
+
+#### align-items : flex-end;
+- 모든 itemdms container의 cross end기준으로 정렬된다.
+
+![image](img/item_end.png)
+
+#### align-items : center;
+- 모든 item은 container의 cross axis 중앙에 정렬된다.
+
+![image](img/item_center.png)
+
+#### align-items : baseline;
+- 모든 item은 container의 baseline을 기준으로 정렬된다.
+- item 박스의 크기가 제각각 이라해도, 안의 텍스트를 기준으로 맞춘다.
+
+![image](img/item_baseline.png)
+
+
+### Flex Item 속성
+|속성|의미|
+|-----|-----|
+|order|Flex Item의 순서를 결정|
+|flex-grow|Flex Item의 증가 너비 비율을 설정|
+|flex-shrink| Flex Items의 감소 너비 비율을 설정|
+|flex-basis|Flex Item의 (공간 배분 전) 기본 너비 설정|
+|flex|flex-grow, flex-shrink, flex-basis의 단축 속성|
+|align-self|교차 축(cross-axis)에서 Item의 정렬 방법을 설정|
+
+
+### order
+- item의 배치 순서를 지정한다.
+- HTML코드를 변경하지 않고 order속성값을 지정하는 것으로 간단히 재배치할 수 있다.
+- 기본 배치 순서는 container에 추가된 순서이다. 기본값은 0이다.
+
+![image](img/order.png)
 
 ## position
 - static : 기본적인 위치 지정 방식, 문서의 기본적인 흐름을 따른다.
