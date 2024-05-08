@@ -1145,8 +1145,79 @@ p{border : 1px solid black;
 - flex - container
   - 부모 요소
 
+```html
+
+<style>
+	.container {
+		display: flex;
+		margin: 1em 0;
+		border: 3px dotted #4a4a4a;
+		padding: 0.5em;
+	}
+	.box {
+		background-color: #3f29ef;
+		color: white;
+		padding: 1em;
+		font-size: 2em;
+		border: 3px solid white;
+	}
+</style>
+<body>
+	<div class="container">
+		<div class="box">ITEM1</div>
+		<div class="box">ITEM2</div>
+		<div class="box">ITEM3</div>
+	</div>
+</body>
+```
+
 ### flexbox 설정
 - HTML 부모 요소의 display 속성에 flex를 지정한다.(부모 요소가 inline인 경우 inline-flex를 지정한다.)
+
+### flex.html
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        /*나중에 추가하기*/
+        section{
+            display : flex;
+        }
+
+        div{
+            width:100px; height : 100px;
+            text-align : center;
+            color : white;
+            border : 2px solid black;
+            margin : 10px;
+        }
+
+        .a{
+            background : yellowgreen;
+        }
+
+        .b{
+            background : violet;
+        }
+
+        .c{
+            background: cornflowerblue;
+        }
+    </style>
+</head>
+<body>
+    <section>
+        <div class="a">01</div>
+        <div class="b">02</div>
+        <div class="c">03</div>
+    </section>
+</body>
+</html>
+```
 
 ### flexbox의 속성
 - flex container에 정의하는 속성
@@ -1189,6 +1260,84 @@ p{border : 1px solid black;
 
 ![image](img/flex_column_reverse.png)
 
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        /*나중에 추가하기*/
+        section{
+            display : flex;
+            border : 1px dashed black;
+        }
+
+        div{
+            width:60px; height : 60px;
+            text-align : center;
+            font-size : 2px;
+            color : white;
+            border : 2px solid black;
+            margin : 10px;
+        }
+
+        div:nth-child(1){
+            background : yellowgreen;
+        }
+
+        div:nth-child(2){
+            background : violet;
+        }
+
+        div:nth-child(3){
+            background: cornflowerblue;
+        }
+
+        .row{
+            flex-direction: row;
+        }
+        .rowReverse{
+            flex-direction: row-reverse;
+        }
+        .column{
+            flex-direction: column;
+        }
+        .columnReverse{
+            flex-direction: column-reverse;
+        }
+    </style>
+</head>
+<body>
+    <h3>row</h3>
+    <section class="row">
+        <div>01</div>
+        <div>02</div>
+        <div>03</div>
+    </section>
+    <h3>row-reverse</h3>
+    <section class="rowReverse">
+        <div>01</div>
+        <div>02</div>
+        <div>03</div>
+    </section>
+    <h3>column</h3>
+    <section class="column">
+        <div>01</div>
+        <div>02</div>
+        <div>03</div>
+    </section>
+    <h3>column-reverse</h3>
+    <section class="columnReverse">
+        <div>01</div>
+        <div>02</div>
+        <div>03</div>
+    </section>
+</body>
+</html>
+```
+
 ### flex-wrap
 - flex 컨테이너의 복수 flex item을 1행으로 또는 복수행으로 배치한다.
 - flex는 기본적으로 1차원 형태이다.
@@ -1210,6 +1359,99 @@ p{border : 1px solid black;
 - wrap과 동일하나 아래에서 위로 배치된다.
 
 ![image](img/flex_wrap_reverse.png)
+
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+         section{
+            display : flex;
+            border : 1px dashed black;
+        }
+
+        div{
+            width:500px; height : 100px;
+            text-align : center;
+            font-size : 20px;
+            color : white;
+            border : 2px solid black;
+            margin : 10px;
+        }
+
+        div:nth-child(1){
+            background : yellowgreen;
+        }
+
+        div:nth-child(2){
+            background : violet;
+        }
+
+        div:nth-child(3){
+            background: cornflowerblue;
+        }
+        div:nth-child(4){
+            background : tomato;
+        }
+
+        div:nth-child(5){
+            background : tan;
+        }
+
+        div:nth-child(6){
+            background: orange;
+        }
+
+        .nowrap{
+            flex-wrap : nowrap;
+        }
+
+        .wrap{
+            flex-wrap : wrap;
+        }
+
+        .wrapReverse{
+            flex-wrap : wrap-reverse;
+        }
+    </style>
+</head>
+<body>
+    <h1>nowrap</h1>
+    <section class="nowrap">
+        <div>01</div>
+        <div>02</div>
+        <div>03</div>
+        <div>04</div>
+        <div>05</div>
+        <div>06</div>
+    </section>
+
+    <h1>wrap</h1>
+    <section class="wrap">
+        <div>01</div>
+        <div>02</div>
+        <div>03</div>
+        <div>04</div>
+        <div>05</div>
+        <div>06</div>
+    </section>
+
+    <h1>wrap-reverse</h1>
+    <section class="wrapReverse">
+        <div>01</div>
+        <div>02</div>
+        <div>03</div>
+        <div>04</div>
+        <div>05</div>
+        <div>06</div>
+    </section>
+</body>
+</html>
+```
 
 ### flex-flow
 - direction과 wrap속성을 설정하기 위한 shorth and이다.
@@ -1307,6 +1549,44 @@ flex-flow : row-reverse wrap;
 
 ![image](img/item_center.png)
 
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .container {
+            margin: 1em 0;
+            background-color: #c2edc8;
+            display: flex;
+            flex-direction: row;
+        }
+    
+        .box {
+            padding: 1em;
+            font-size: 2em;
+            background-color: #3f29ef;
+            color: white;
+        }
+
+        .home{
+            margin-left:auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="box">Toy-Crane Blog</div>
+        <div class="box home">Home</div>
+        <div class="box">About</div>
+        <div class="box">Login</div>
+    </div>
+</body>
+</html>
+```
+
 #### align-items : baseline;
 - 모든 item은 container의 baseline을 기준으로 정렬된다.
 - item 박스의 크기가 제각각 이라해도, 안의 텍스트를 기준으로 맞춘다.
@@ -1329,8 +1609,92 @@ flex-flow : row-reverse wrap;
 - item의 배치 순서를 지정한다.
 - HTML코드를 변경하지 않고 order속성값을 지정하는 것으로 간단히 재배치할 수 있다.
 - 기본 배치 순서는 container에 추가된 순서이다. 기본값은 0이다.
-
+```css
+.flex-item{
+	order : 정수값;
+}
+```
 ![image](img/order.png)
+
+### flex-grow
+- item의 너비에 대한 확대 인자를 지정한다.
+- 기본값은 0이고 음수값은 무효하다.
+- 모든 item이 동일한 grow 속성값을 가디면 모든 itemdms 동일한 너비를 갖는다.
+
+![image](img/flex_grow.png)
+
+ - 예를 들어 Item이 3개이고 총 너비가 400px, 증가 너비가 각각 1,2,1 이라면,
+ - 첫번째 Item은 1, 두번째 Item 은 2, 세번째 Item은 1 비율의 너비를 갖는다.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        @import url(css/flex_grow.css);
+    </style>
+</head>
+<body>
+    EDIT ON
+<h1>flex-grow: </h1>
+
+<div class="container container1">
+  <div class="item">0</div>
+  <div class="item">0</div>
+  <div class="item">0</div>
+  <div class="item">1</div>
+</div>
+
+<div class="container container2">
+  <div class="item">1</div>
+  <div class="item">3</div>
+  <div class="item">1</div>
+  <div class="item">0</div>
+</div>
+
+<div class="container container3">
+  <div class="item">1</div>
+  <div class="item">2</div>
+  <div class="item">1</div>
+  <div class="item">2</div>
+</div>
+</body>
+</html>
+```
+### flex-shrink
+- item의 너비에 대한 축소 인자를 지정한다.
+- 기본값은 1이고 음수값은 무효하다.
+- 0을 지정하면 축소가 해제되어 원래 너비를 유지한다.
+
+![image](img/flex_shrink.png)
+
+- 계산이 까다롭기 때문에 활용도는 조금 떨어진다. 개념정도만 이해하고 넘어가자.
+
+### flex-basis
+- item의 너비 기본값을 px, %등의 단위로 지정한다.
+- 기본값은 auto이다.
+
+![image](img/flex_asis.png)
+
+
+### flex
+- flex-grow, flex-shrink, flex-basis 속성의 단축버전이다.
+- 기본값은 0, 1, auto이다.
+
+### align-self
+- item을 수직방향으로 정렬한다.
+- align-item 속성보다 우선하여 개별 item을 정렬한다.
+- 기본값은 auto이다.
+
+```css
+.flex-item {
+  align-self: auto | flex-start | flex-end | center | baseline | stretch;
+}
+```
+![image](img/align-self.png)
 
 ## position
 - static : 기본적인 위치 지정 방식, 문서의 기본적인 흐름을 따른다.
