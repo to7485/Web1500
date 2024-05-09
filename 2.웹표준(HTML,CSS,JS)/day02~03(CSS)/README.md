@@ -1738,9 +1738,6 @@ flex-flow : row-reverse wrap;
 </html>
 ```
 
-
-
-
 ### align-items
 - item을 container의 수직방향으로 정렬한다.(한 줄일 경우)
 - align-items 속성은 모든 item에 적용된다.
@@ -1974,6 +1971,175 @@ flex-flow : row-reverse wrap;
 }
 ```
 ![image](img/align-self.png)
+
+## Grid
+- Grid가 나오기 이전에는 float이나 table,flex를 이용해 레이아웃을 구성했다.
+- Grid는 핵(Hack)으로 불린 다양한 레이아웃 대체 방식들을 해결하기 위해 만들어진 특별한 CSS 모듈이다.
+
+### Grid용어
+![image](img/grid_word.png)
+
+#### 그리드 컨테이너
+- display : grid로 표기하며 모든 item의 부모 요소이다.
+- 컨테이너가 될 요소에게 grid를 주면 그때부터 자식 요소들은 item가 된다.
+
+#### 그리드 아이템
+- container의 자식 요소이다.
+
+#### 그리드 라인
+- 그리드를 구성하는 분할 선
+
+#### 그리드 트랙
+- 두 개의 그리드 라인 사이의 공간.
+- 그리드의 열 또는 행으로 볼 수 있다.
+
+#### 그리드 셀
+- 그리드의 구성 단위
+
+#### 그리드 영역
+- 네 개의 그리드 라인으로 둘러싸인 공간.
+- 몇 개의 그리드 셀로 구성된다.
+
+#### 그리드 번호
+- Grid라인의 각 번호
+
+#### 그리드 갭
+- Grid 셀 사이의 간격
+
+### 그리드 형태의 정의
+- grid-template-rows : 트랙 기준으로 크기와 갯수를 정한다.(행)
+- grid-template-columns : 트랙 기준으로 크기와 갯수를 정한다.(열)
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .wrapper{
+            display: grid;
+            grid-template-columns : 300px 50px 100px; /* 가로길이를 각각 300 50 100 3개로 나눈다. */
+	        grid-template-rows : 200px 50px; /* 세로 길이를 200 50 으로 두개로 나눈다. */
+			/*repeat() 함수 : repeat(횟수,크기)*/
+
+			/*grid-template-columns: repeat(9, 100px);*/
+			/* grid-template-columns: 100px 100px 100px 100px 100px 100px 100px 100px 100px; */
+
+			/*grid-template-columns: repeat(2, 100px 200px 50px);*/
+			/* grid-template-columns: 100px 200px 50px 100px 200px 50px; */
+
+			/*minmax 함수*/
+			/*grid-template-rows: repeat(3, minmax(100px, auto));
+			최소한 100px, 내용이 많아 100px이 넘어가면 알아서 늘어나도록 처리해준다.*/
+
+			/*auto-fill, auto-fit
+			column의 개수를 미리 정하지 않고 설정된 너비가 허용하는 한 최대한 셀을 채운다.
+			grid-template-columns: repeat(auto-fill, minmax(20%, auto));*/
+
+
+
+        }
+
+        div:nth-child(1){
+            background: yellowgreen;
+        }
+        div:nth-child(2){
+            background: lightpink;
+        }
+        div:nth-child(3){
+            background: lightsalmon;
+        }
+        div:nth-child(4){
+            background: lightskyblue;
+        }
+        div:nth-child(5){
+            background: tan;
+        }
+        div:nth-child(6){
+            background: peru;
+        }
+
+    </style>
+</head>
+<body>
+    <section class="wrapper">
+        <div>1</div>
+        <div>2</div>
+        <div>3</div>
+        <div>4</div>
+        <div>5</div>
+        <div>6</div>
+    </section>
+</body>
+</html>
+```
+### grid-area
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        
+        .wrapper {
+            display: grid;
+            grid-template-columns: 1fr 4fr 4fr 1fr;
+            grid-template-rows: 50px 100px 100px 30px;
+            grid-template-areas:
+            "header header header header"
+            "leftCol midTop midTop rightCol"
+            "leftCol midBottom midBottom rightCol"
+            "footer footer footer footer";
+            grid-gap: 5px;
+        }
+
+        .header{
+        grid-area: header;
+        background-color: LightSeaGreen ;
+        }
+    
+        .leftCol{
+        grid-area: leftCol;
+        background-color: orange;
+        }
+        
+        .rightCol{
+        grid-area: rightCol;
+        background-color: lightblue;
+        }
+        
+        .midTop{
+        grid-area: midTop;
+        background-color: lightgrey;
+        }
+        
+        .midBottom{
+        grid-area: midBottom;
+        background-color: pink;
+        }
+        
+        .footer{
+        grid-area: footer;
+        background-color: lightgreen;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="header">Header</div>
+        <div class="leftCol">LeftCol</div>
+        <div class="rightCol">RightCol</div>
+        <div class="midTop">midTop</div>
+        <div class="midBottom">midBottom</div>
+        <div class="footer">Footer</div>
+      </div>
+</body>
+</html>
+```
 
 ## position
 - static : 기본적인 위치 지정 방식, 문서의 기본적인 흐름을 따른다.
