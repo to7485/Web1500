@@ -1,13 +1,13 @@
-## DCL(Data Controll Language)
+# DCL(Data Controll Language)
 - 데이터 제어어
 - 데이터베이스에 접근하고 객체들을 사용하도록 권한을 주고 회수하는 명령어
 
-### DCL의 종류
+## DCL의 종류
 - GRANT : 권한 부여
 - REVOKE : 권한 강탈
 
 
-### CMD로 오라클에 접속하여 존재하는 계정 검색
+## CMD로 오라클에 접속하여 존재하는 계정 검색
 
 ```SQL
 SQLPLUS SYSTEM/1234
@@ -39,7 +39,7 @@ HR
 sj
 ```
 
-### SCOTT계정 등록하기
+## SCOTT계정 등록하기
 ```SQL
 오라클 설치된 폴더에서 SCOTT 검색
 SQL> @C:\oraclexe\app\oracle\product\11.2.0\server\rdbms\admin\scott.sql
@@ -57,7 +57,7 @@ Connected.
 ```
 
 
-### SCOTT을 통해 BABY라는 아이디를 만드려 했지만 권한이 없어 실패
+## SCOTT을 통해 BABY라는 아이디를 만드려 했지만 권한이 없어 실패
 ```
 SQL> create user baby identified by baby;
 create user baby identified by baby
@@ -173,7 +173,7 @@ SQL> conn baby/baby
 Connected.
 ```
 
-### BABY 계정으로 테이블 만들어보기
+## BABY 계정으로 테이블 만들어보기
 ```SQL
 SQL> create table test001(id varchar2(10), pw varchar2(10), age number, constraints baby_pk primary key(id));
 create table test001(id varchar2(10), pw varchar2(10), age number, constraints baby_pk primary key(id))
@@ -195,4 +195,56 @@ no rows selected
 
 new connection -> oracle -> localhost, xe, baby,baby -> driver Setting
 ok -> test
+```
+
+# INDEX
+- SELECT문을 통해 데이터를 조회하려는 테이블이 너무 거대한 경우, 정렬되지 않은 모든 데이터를 순차적으로 검색하면 조회 결과를 구하기까지 오랜 시간이 걸린다.
+- 오라클 데이터베이스에서 테이블내의 원하는 레코드를 빠르게 찾아갈 수 있도록 만들어진 데이터 구조이다.
+- 원하는 책을 찾은 것과 비슷하다.
+- 책이 정리가 안되어있으면 찾는데 시간이 오래 걸릴 것이다.
+- 도서관처럼 색인을 통해 정리해두는 것이 인덱스이다.
+
+## INDEX의 생성
+- 인덱스는 테이블 내의 1개의 컬럼, 혹은 여러 개의 컬럼을 이용하여 생성될 수 있다.
+- 많은 데이터가 있다면 인덱스를 만들어놓는것이 효과적이다.
+- 데이터가 적으면 정리하고 찾는거보다, 그냥 찾는것이 더 빠르다.
+- 규모가 큰 테이블, 여러 번 생성, 수정, 삭제가 발생하지 않는 테이블에 적합하다.
+
+### 자동 인덱스
+- PRIMARY KEY 또는 UNIQUE에 의해 자동으로 생성되는 INDEX
+- 가장 기본적인 B-Tree INDEX로 인덱스
+
+#### B-Tree
+- 제목의 순서에 따라 책들을 정리해놓고 해당되는 위치를 찾아가는 것이다.
+```
+ㄱ - 가.게.기.고.구...
+ㄴ - 나.네.니.노.누...
+ㄷ - 다.데.디.도.두...
+```
+
+### 수동 인덱스
+- 사용자가 직접 생성한 INDEX를 의미한다.
+```SQL
+CREATE INDEX 인덱스명 ON 테이블명(컬럼1,컬럼2,컬럼3.....);
+```
+
+## INDEX 조회
+- 인덱스는 USER_INDEXES 시스템 뷰에서 조회할 수 있음
+```SQL
+SELECT * FROM ALL_INDEXS WHERE TABLE_NAME = '테이블 명':
+```
+
+## INDEX 삭제
+- 조회 성능을 높이기 위해 만든 객체지만 저장공간을 많이 차지하며 DDL작업(INSERT, DELETE, UPDATE) 시 부하가 많이 발생해 전체적인 데이터베이스 성능을 저하시킨다.
+- DBA는 주기적으로 INDEX를 검토하여 사용하지 않는 인덱스는 삭제하는 것이 데이터베이스 전체 성능을 향상 시킬 수 있다.
+```SQL
+DROP INDEX 인덱스명;
+```
+
+## INDEX REBUILD
+- 생성된 인덱스는 기본적으로 ROOT, BRANCH, LEAF로 구성된 트리 구조를 가지며 DDL 작업이 오랜시간 발생하면 트리의 하위 레벨이 많아져 트리 구조의 한쪽이 무거워지는 현상이 생긴다.
+- 이러한 현상은 인덱스의 검색속도를 저하시키고 전체 데이터베이스의 성능에 영향을 미친다. 그러므로 주기적으로 INDEX를 리빌딩하는 작업을 해줘야 한다.
+
+```SQL
+ALTER INDEX 인덱스명 REBUILD;
 ```
