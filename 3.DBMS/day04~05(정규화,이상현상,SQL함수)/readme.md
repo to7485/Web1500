@@ -206,13 +206,21 @@ select initcap('good/morning') from dual;
 -- 문자열의 길이를 반환한다.
 select length('john') from dual;
 
--- 첫 번째 지정한 문자를 두번째 지정한 문자로 바꿔 반환한다.
+-- 주어지는 두 문자열을 연결한다.
+SELECT CONCAT('Republic of',' Korea') FROM dual;
 
+
+-- 첫 번째 지정한 문자를 두번째 지정한 문자로 바꿔 반환한다.
 문) 부서번호가 50번인 사원들의 이름을 출력하되 이름중 'el'을 모두 '**'로 대체하여 출력하시오
 SELECT REPLACE(FIRST_NAME,'el','**') FROM EMPLOYEES WHERE DEPARTMENT_ID = 50;
 
--- 주어지는 두 문자열을 연결한다.
-SELECT CONCAT('Republic of',' Korea') FROM dual;
+-- 이름이 6글자 이상인 사원의 사번과 이름, 급여를 출력
+SELECT employee_id, first_name, salary
+FROM EMPLOYEES e 
+WHERE length(first_name)>=6;
+
+-- 사원테이블에서 이름, 급여, 급여 1000당 0의 개수를 채워 조회하세요
+-- ex) 급여가 8,000이다. 00000000로 표현
 ```
 
 <hr>
