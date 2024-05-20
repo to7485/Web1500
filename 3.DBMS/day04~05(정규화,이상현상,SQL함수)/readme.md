@@ -209,6 +209,19 @@ select length('john') from dual;
 -- 주어지는 두 문자열을 연결한다.
 SELECT CONCAT('Republic of',' Korea') FROM dual;
 
+-- 문자열의 시작 위치부터 길이만큼 자른 후 반환한다.
+-- 길이는 생략 가능하며, 생략 시 문자열의 끝까지 반환한다.
+
+SELECT SUBSTR('Hello Oracle', 2) AS CASE1,
+    SUBSTR('Hello Oracle', 7, 5) AS CASE2
+FROM dual;
+
+-- LOWER : 문자열을 모두 소문자로 변환하여 반환한다.
+-- UPPER : 문자열을 모두 대문자로 변환하여 반환한다.
+SELECT LOWER('hello ORACLE!') AS LOWER,
+    UPPER('hello ORACLE!') AS UPPER,
+    INITCAP('hello ORACLE!') AS INITCAP
+FROM dual;
 
 -- 첫 번째 지정한 문자를 두번째 지정한 문자로 바꿔 반환한다.
 문) 부서번호가 50번인 사원들의 이름을 출력하되 이름중 'el'을 모두 '**'로 대체하여 출력하시오
@@ -219,8 +232,7 @@ SELECT employee_id, first_name, salary
 FROM EMPLOYEES e 
 WHERE length(first_name)>=6;
 
--- 사원테이블에서 이름, 급여, 급여 1000당 0의 개수를 채워 조회하세요
--- ex) 급여가 8,000이다. 00000000로 표현
+
 ```
 
 <hr>
@@ -265,6 +277,19 @@ SELECT MOD(1,3),MOD(2,3),MOD(3,3),MOD(4,3),MOD(0,3) FROM DUAL;
 -- 주어진 숫자의 지정된 수 만큼 제곱값을 반환한다.
 SELECT POWER(2,1),POWER(2,2),POWER(2,3),POWER(2,0) FROM DUAL;
 
+-- 사원번호가 홀수이면 1, 짝수이면 0을 출력하시오.
+select employee_id, mod(employee_id, 2)
+from employees;
+
+-- 사원번호가 짝수인 사람들의 사원 번호와 이름을 출력하시오.
+select first_name, employee_id
+from emp
+where mod(employee_id,2) = 0;
+
+-- 사원테이블에서 이름, 급여, 급여 1000당 0의 개수를 채워 조회하세요
+-- ex) 급여가 8,000이다. 00000000로 표현
+SELECT first_name, salary, RPAD('■',ROUND(SALARY/1000),'■')
+FROM EMPLOYEES;
 ```
 
 ## 날짜함수
