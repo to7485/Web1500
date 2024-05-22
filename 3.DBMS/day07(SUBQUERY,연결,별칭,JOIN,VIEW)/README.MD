@@ -189,6 +189,30 @@ SELECT 테이블1.열, 테이블2.열
 FROM 테이블1 
 CROSS JOIN 테이블2;
 ```
+
+### 예제
+```sql
+CREATE TABLE 테이블A(
+	A_id NUMBER,
+	A_name varchar2(10)
+);
+
+CREATE TABLE 테이블B(
+	B_id NUMBER,
+	B_name varchar2(20)
+);
+
+
+INSERT INTO 테이블A values(1, 'John');
+INSERT INTO 테이블A values(2, 'Jane');
+INSERT INTO 테이블A values(3, 'Bob');
+
+INSERT INTO 테이블B values(101, 'Apple');
+INSERT INTO 테이블B values(102, 'Banana');
+
+
+SELECT * FROM 테이블A CROSS JOIN 테이블B;
+```
 <hr>
 
 ### OUTER JOIN
