@@ -219,6 +219,68 @@ BEGIN
 END;
 ```
 
+## IF문
+
+1. IF 조건 THEN 실행문;<br>END IF;
+2. IF 조건 THEN 실행문;<br>ELSE 실행문;<br>END IF;
+3. IF 조건 THEN 실행문;<br>ELSIF 조건문 THEN 실행문;<br>ELS 실행문;<br>END IF;
+
+### 점수에 맞는 학점 출력하기
+
+```SQL
+DECLARE declare [선언부] - 변수, 상수를 선언할 수 있습니다
+	SCORE NUMBER := 80; =은 같다 라는 뜻이기 때문에 :=로 써줘야 대입이 된다.
+	GRADE VARCHAR2(5); 어떤 학점인지 정확히 할 수 없기 때문에 초기화를 할 수 없다.
+BEGIN
+	IF SCORE >= 90 THEN GRADE := 'A';
+	ELSIF SCORE >= 80 THEN GRADE := 'B';
+	ELSIF SCORE >= 70 THEN GRADE := 'C';
+	ELSIF SCORE >= 60THEN GRADE := 'D';
+	ELSE GRADE := 'F';
+END IF;
+DBMS_OUTPUT.ENABLE;
+DBMS_OUTPUT.PUT_LINE('당신의 점수: '||SCORE||'점'||CHR(10)||'학점: '||GRADE);
+END;
+
+```
+## 반복문
+
+### 1. FOOR LOOP문
+```SQL
+FOR index in [REVERSE] 시작값 .. END값 LOOP
+	STATEMENT 1    
+	STATEMENT 2    
+	...
+END LOOP;
+
+```
+- index는 자동 선언되는 binary_integer형 변수이고, 1씩 증가 한다.
+- REVERSE 옵션이 사용될 경우 index는 upper_bound에서 lower_bound까지 1씩 감소한다.
+- IN 다음에는 SELECT문이 올 수 있다.
+
+```SQL
+BEGIN	FOR i in 1..4 LOOP	  	
+		if mod(i, 2) = 0 then 			
+			dbms_output.put_line( i || '는 짝수!!');		
+		else
+			dbms_output.put_line( i || '는 홀수!!');	
+		end if;
+	END LOOP;
+END;
+
+```
+### 2. LOOP문
+```SQL
+LOOP
+	PL/SQL STATEMENT 1
+	다른 LOOP를 포함하여 중첩으로 사용 가능
+	EXIT [WHEN CONDITION];
+END LOOP;
+```
+- EXIT문이 사용되었을 경우, 무조건 LOOP문을 빠져나간다.
+- EXIT WHEN 조건이 사용될 경우 WHEN절에서 LOOP를 빠져나가는 조건을 제어할 수 있다.
+
+
 ## 프로시저(PROCEDURE)
 - PL/SQL의 대표적인 부 프로그램에 프로시저가 있다.
 - 데이터베이스에 대한 일련의 작업을 정리한 절차를 RDBMS에 저장한 것으로 영구 저장 모듈이라고도 합니다.
@@ -347,30 +409,6 @@ SELECT * FROM JOBS;
 - 다시 프로시저를 실행하게 되면 PK 위반이라서 오류가 나게 된다.
 - 오류가 나게 하는것이 아니라 PK가 겹치게 되면 수정이 되거나 삭제가되게 만들어보자.
 
-## IF문
-
-1. IF 조건 THEN 실행문;<br>END IF;
-2. IF 조건 THEN 실행문;<br>ELSE 실행문;<br>END IF;
-3. IF 조건 THEN 실행문;<br>ELSIF 조건문 THEN 실행문;<br>ELS 실행문;<br>END IF;
-
-### 점수에 맞는 학점 출력하기
-
-```SQL
-DECLARE declare [선언부] - 변수, 상수를 선언할 수 있습니다
-	SCORE NUMBER := 80; =은 같다 라는 뜻이기 때문에 :=로 써줘야 대입이 된다.
-	GRADE VARCHAR2(5); 어떤 학점인지 정확히 할 수 없기 때문에 초기화를 할 수 없다.
-BEGIN
-	IF SCORE >= 90 THEN GRADE := 'A';
-	ELSIF SCORE >= 80 THEN GRADE := 'B';
-	ELSIF SCORE >= 70 THEN GRADE := 'C';
-	ELSIF SCORE >= 60THEN GRADE := 'D';
-	ELSE GRADE := 'F';
-END IF;
-DBMS_OUTPUT.ENABLE;
-DBMS_OUTPUT.PUT_LINE('당신의 점수: '||SCORE||'점'||CHR(10)||'학점: '||GRADE);
-END;
-
-```
 
 ## 프로시저 수정하기
 - INSERT기능을 하는 프로시저를 만들었는데 PK제약조건으로 인해 겹칠 때가 있다.
