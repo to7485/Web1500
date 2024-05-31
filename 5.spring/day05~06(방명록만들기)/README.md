@@ -273,7 +273,7 @@ public class VisitController {
 ![image](image/css.png)
 
 ## jsp에서 css파일 참조하기
-```
+```html
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
@@ -285,7 +285,7 @@ public class VisitController {
 ```
 
 ## css파일에 코드 작성하기
-```
+```css
 @charset "UTF-8";
 *{margin:0; padding:0;}
 
@@ -331,7 +331,7 @@ h1{
 # 새글 추가하기
 
 ## VisitController에 새글작성을 위한 jsp로 이동하기 위한 매핑 지정하기
-```
+```java
 @RequestMapping("insert_form.do")
 public String insert_form() {
 	return MyCommon.VIEW_PATH+"visit_insert_form.jsp";
@@ -339,7 +339,7 @@ public String insert_form() {
 ```
 
 ## visit폴더에 visit_insert_form.jsp 작성하기
-```
+```jsp
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
