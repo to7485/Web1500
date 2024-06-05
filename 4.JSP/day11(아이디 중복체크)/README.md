@@ -18,8 +18,6 @@ create table myUser(
 --커밋
 commit;
 ```
-
-Ajax를 사용하기 위해 js폴더를 가져오고<br>
 DB와 연결을 하기 위해 context.xml과 service패키지, 라이브러리들을 가져오자
 
 ## vo패키지에 UserVO 클래스 생성하기
@@ -94,7 +92,7 @@ public class UserDAO {
 			ResultSet rs = null;
 			
 			//idx내림차순으로 검색
-			String sql = "select * from myshop order by idx order by desc";
+			String sql = "select * from myuser order by idx desc";
 
 			try {
 				//1.Connection얻어온다
@@ -170,7 +168,7 @@ public class UserDAO {
 ## action패키지에 MemberListAction서블릿 만들기
 
 ```java
-@WebServlet("/user_list.do") //url맵핑 변경!!!!!!!
+@WebServlet("/user_list") 
 
 public class MemberListAction extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -194,7 +192,7 @@ public class MemberListAction extends HttpServlet {
 ```
 
 ## user_list.jsp 생성하기
-```
+```jsp
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     
@@ -215,7 +213,7 @@ public class MemberListAction extends HttpServlet {
 	<table border="1">
 		<tr>
 			<td colspan="5" align="center">
-				<input type="button" value="회원가입" onclick="location.href='member_insert_form.jsp'">
+				<input type="button" value="회원가입" onclick="location.href='user_insert_form.jsp'">
 			</td>
 		</tr>
 		
@@ -245,12 +243,12 @@ public class MemberListAction extends HttpServlet {
 
 ![image](https://user-images.githubusercontent.com/54658614/233264349-a5fc4853-0d8a-4ec2-b1bf-9276ac737dbe.png)
 
-## 회원가입을 위한 member_insert_form.jsp 생성하기
+## 회원가입을 위한 user_insert_form.jsp 생성하기
 
 ![image](https://user-images.githubusercontent.com/54658614/233264878-074b3f58-c00f-43ae-b93a-109ea3e85131.png)
 
 
-```
+```jsp
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -324,8 +322,8 @@ public class MemberListAction extends HttpServlet {
 </html>
 
 ```
-## action패키지에 MemberInsertAction서블릿 생성
-```
+## action패키지에 UserInsertAction서블릿 생성
+```java
 package action;
 
 import java.io.IOException;
@@ -342,7 +340,7 @@ import vo.UserVO;
 /**
  * Servlet implementation class MemberInsertAction
  */
-@WebServlet("/insert.do")
+@WebServlet("/insert")
 public class MemberInsertAction extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -375,7 +373,7 @@ public class MemberInsertAction extends HttpServlet {
 
 ## user_list_form.jsp에 코드 추가하기
 
-```
+```js
 <script type="text/javascript">
 		
 		//아이디 중복여부 체크
@@ -386,18 +384,20 @@ public class MemberInsertAction extends HttpServlet {
 			var id = f.id.value.trim();
 			var pwd = f.pwd.value.trim();
 				.............
-			중복체크 버튼을 눌렀을 때 내가 입력한 id를 DB까지 전달해서 데이터가 없다면 b_idCheck를 true로 바꾸자.			
+			//중복체크 버튼을 눌렀을 때 내가 입력한 id를 DB까지 전달해서 데이터가 없다면 b_idCheck를 true로 바꾸자.			
 			if( !b_idCheck ){
 				alert("아이디 중복체크를 하세요");	
 				return;
 			}
 				
-			f.action = "insert.do";
+			f.action = "insert";
 			f.submit();
 			
 		}//send()			
 		
 		
+		//아이디 중복체크를 위한 메서드
+
 		//아이디 중복체크를 위한 메서드
 		function check_id(){
 
@@ -408,42 +408,57 @@ public class MemberInsertAction extends HttpServlet {
 				alert("아이디를 입력하세요");
 				return;
 			}
-			완전히 새로고침을 하면 텍스트필드에 적혀있는 것도 다 날아간다. 무한으로 중복체크만 하게 될 것이다.
 			
 			//id를 Ajax를 통해서 서버로 전송
-			var url = "check_id.do";//MemberCheckIdAction.java 서블릿
+			//UserCheckIdAction.java 서블릿
+			var url = "check_id?id="+id;
 			
-			//id에 @와 같은 특수문자가 들어가 있는 경우를 대비하여 인코딩하여 보낸다.
-			var param = "id=" + encodeURIComponent(id);
-
-			sendRequest( url, param, resultFn, "POST" );
-			
+			fetch(url)
+			  .then(response => response.json())  // 응답을 JSON으로 변환
+			  // check_id 에서 아이디 중복여부를 json타입으로 전달했다.
+			  // then()에서 response.json()을 통해 받아줘야 한다.
+			  .then(data => {
+			    if (data.param === 'yes') {
+			      alert('사용 가능한 아이디 입니다.')
+			      console.log('서버로부터 받은 데이터:', data.param);
+			      b_idCheck = true;
+			    } else if(data.param === 'no') {
+			      alert('이미 사용중인 아이디 입니다.')
+			      console.log('서버로부터 받은 데이터:', data.param);
+			      return;
+			    }
+			  })
+			  .catch(error => {
+			    console.error('오류 발생:', error);
+			  });
 		}//check_id()
-		
-		function resultFn(){
-			
-		}//resultFn()
 		
 		
 	</script>
 ```
 
-## action패키지에 MemberCheckAction서블릿 생성
+## action패키지에 UserCheckAction서블릿 생성
 
 ![image](https://user-images.githubusercontent.com/54658614/233267529-c63377a8-9a6f-4f95-8f13-debf6c11e30f.png)
 
 
-```
-/**
- * Servlet implementation class MemberIdCheckAction
- */
-@WebServlet("/check_id.do")
-public class MemberIdCheckAction extends HttpServlet {
-	private static final long serialVersionUID = 1L;
+```java
+package action;
 
-	/**
-	 * @see HttpServlet#service(HttpServletRequest request, HttpServletResponse response)
-	 */
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import dao.UserDAO;
+import vo.UserVO;
+
+@WebServlet("/check_id")
+public class UserCheckAction extends HttpServlet {
+	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// /check_id.do?id=aaaa
 		String id = request.getParameter("id");
@@ -454,19 +469,18 @@ public class MemberIdCheckAction extends HttpServlet {
 			res = "yes";
 		}
 		
-		String result = String.format("[{'res':'%s'}]",res);
+		String result = String.format("{\"param\": \"%s\"}",res);
 		//result를 가지고 콜백메서드 복귀
 		response.getWriter().print(result);
-		
 	}
-
 }
+
 ```
 
 ## UserDAO에 selectOne메서드 추가하기
 - 입력받은 아이디를 DB까지 가지고 가서 있는지 검증을 해서 결과를 돌려주자
 
-```
+```java
 //아이디 중복체크
 	public UserVO selectOne(String id) {
 
@@ -518,57 +532,15 @@ public class MemberIdCheckAction extends HttpServlet {
 		return vo;
 	}
 ```
-check_id.do에서 아이디 중복여부를 json타입으로 전달하였기 때문에<br>
-member_insert_form.jsp에서 resultFn() 콜백메서드를 통해 값을 처리해줘야 한다.<br>
-
-## member_insert_form.jsp의 콜백메서드 작성해주기
-```
-<script type="text/javascript">
-		
-	//아이디 중복여부 체크
-	var b_idCheck = false;
-
-	function send(f){
-		.........
-	}//send()			
-
-
-	//아이디 중복체크를 위한 메서드
-	function check_id(){
-			...............
-		sendRequest( url, param, resultFn, "POST" );
-
-	}//check_id()
-
-	function resultFn(){
-		if(xhr.readyState == 4 && xhr.status == 200){
-			//"[{'res':'no'}]"
-			var data = xhr.responseText;
-			//문자열 구조인 data를 실제 JSON형태로 변환
-			var json = eval(data);
-
-			if(json[0].res == 'no'){
-				alert("이미 사용중인 아이디 입니다.");
-				return;
-			} else {
-				//회원가입이 가능한 경우
-				alert("사용 가능한 아이디 입니다");
-				b_idCheck = true;
-			}
-		}
-	}
-
-</script>
-```
-여기에 커다란 오류가 한가지 있다.<br>
-처음에 중복되지 않은 아이디로 중복체크를 하게 되면 b_idCheck 의 값이 true로 바뀌게 되는데<br>
-문제는 그 다음 다시 중복되는 아이디로 적은다음 가입을 누르면 가입이 된다는 점이다.<br>
-
-b_idCheck가 true로 바뀌게 되면서 이미 가입했던 아이디로 가입이 되버린다.<br>
-하지만 테이블에서 만들 때 유니크로 만들었기 때문에 오류가 난다. 오류가 아닌 경고를 띄워주자.<br>
 
 ## member_insert_form.jsp에 코드 추가하기
-```
+
+- 처음에 중복되지 않은 아이디로 중복체크를 하게 되면 b_idCheck 의 값이 true로 바뀌게 된다.
+- 하지만 문제는 다시 중복되는 아이디로 적은다음 가입을 누르면 가입이 된다.
+- b_idCheck가 true로 바뀌게 되면서 이미 가입했던 아이디로 가입이 되버린다.
+- 하지만 테이블에서 만들 때 유니크로 만들었기 때문에 오류가 난다. 오류가 아닌 경고를 띄워주자.
+
+```js
 <script>
 //아이디를 입력받는 입력상자의 값이 변환되면 호출되는 메서드
 function che(){
@@ -577,83 +549,88 @@ function che(){
 
 </script>
 
-
  <tr>
 	<th>아이디</th>
 	<td>
 	oninput : input 태그 안의 값들이 변경될때마다 이벤트가 발생한다.
 	onchange : input태그의 포커스를 벗어났을때(즉, 입력이 끝났을 때) 발생하는 이벤트
 	<input name="id" id="id" onchange="che()">
-	<input type="button" value="중복체크" onclick="check_id()";>
+	<input type="button" value="중복체크" onclick="check_id()">
 	</td>
-</tr>
+ </tr>
 ```
 
 ## 삭제하기
 
 ### user_list.jsp에 내용 추가하기
-```
+```js
 <script type="text/javascript">
 
 	//삭제 메서드
 	function del(idx){			
-		if(confirm("정말 삭제하시겠습니까?") == false){
-			//아니오 버튼 클릭시
-			return;
+	if(confirm("정말 삭제하시겠습니까?") == false){
+		//아니오 버튼 클릭시
+		return;
+	}
+	//삭제를 원하는 사용자의 idx를 Ajax를 통해서 서버로 전송
+	var url = "user_del?idx="+idx;
+
+	fetch(url)
+	.then(response => response.json())
+	.then(data => {
+		if(data.param === 'yes'){
+			alert('삭제되었습니다.')
 		}
-		//삭제를 원하는 사용자의 idx를 Ajax를 통해서 서버로 전송
-		var url = "member_del.do";
-
-	//id에 @와 같은 특수문자가 들어가 있는 경우를 대비해서 인코딩하여 보낸다.
-		var param = "idx=" + encodeURIComponent(idx);
-
-		sendRequest( url, param, resultFn, "GET" );
-	}
-
-	function resultFn(){
-
-	}
+		else if(data.param === 'no'){
+			alert('삭제에 실패했습니다.')
+		}
+		
+		location.href="user_list";
+	})
+}
 
 </script>
 ```
 
-## MemberDelAction.java 서블릿 생성
+## UserDeleteAction.java 서블릿 생성
 
-```
-@WebServlet("member_del.do") //반드시 변경!!!
+```java
+package action;
 
-public class MemberDelAction extends HttpServlet {
-	private static final long serialVersionUID = 1L;
+import java.io.IOException;
 
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import dao.UserDAO;
+import vo.UserVO;
+
+@WebServlet("/check_id")
+public class UserCheckAction extends HttpServlet {
+	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-		request.setCharacterEncoding("utf-8");
-
-		int idx = Integer.parseInt(request.getParameter("idx"));	
-	
-		//db에서 값 제거
-		int res = UserDAO.getInstance().delete(idx); <-- 없으므로 만들어 주자!!
-		//System.out.println("res : " + res);		
+		// /check_id.do?id=aaaa
+		String id = request.getParameter("id");
+		UserVO vo = UserDAO.getInstance().selectOne(id); //DB에 접근
 		
-		String param = "no";
-		if( res > 0 ){//삭제성공시
-			param = "yes";
+		String res = "no";
+		if(vo == null) {//중복조회를 해서 회원가입이 가능한 경우
+			res = "yes";
 		}
 		
-		//JSON배열로 결과값을 보낸다.
-		// {:}<-이렇게가 아니라 [{ : }]<-이렇게 배열로 보내야 안전성이 올라간다.
-		// {:}는 가끔 안가는 경우가 있더라
-		String resultStr = String.format("[{'param':'%s'}]", param);
-		
-		//전송(응답)하기
-		response.getWriter().println(resultStr);	
+		String result = String.format("{\"param\": \"%s\"}",res);
+		//result를 가지고 콜백메서드 복귀
+		response.getWriter().print(result);
 	}
-	
 }
+
 ```
 
 ## UserDAO.java에 delete()메서드 추가하기
-```
+```java
 public class UserDAO {
 
 	//_delete 템플릿
@@ -664,7 +641,7 @@ public class UserDAO {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 
-		String sql = "delete from myshop where idx=?";
+		String sql = "delete from myuser where idx=?";
 
 		try {
 			//1.Connection획득
@@ -686,39 +663,6 @@ public class UserDAO {
 		return res;
 	}//delete()
 }
-```
-
-## 콜백함수로 내용 돌려받기
-
-```
-	//삭제 메서드
-	function del(idx){			
-		...........
-		sendRequest( url, param, resultFn, "GET" );
-	}
-
-	function resultFn(){
-
-		if(xhr.readyState==4 && xhr.status==200)
-		{
-			//도착된 데이터를 읽어오기
-			var data = xhr.responseText;
-
-			//데이터를 JSON표기법으로 파싱
-			//json = [{'param':'yes'}]
-			var json = eval( data );
-
-			if(json[0].param == 'yes'){
-				alert("삭제를 완료하였습니다.");
-			}else{
-				alert("삭제에 실패하였습니다.");
-			}		
-
-			location.href = "user_list.do";
-		}	
-	}
-
-</script>
 ```
 
 
