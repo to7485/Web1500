@@ -73,12 +73,12 @@ public class UserDAO {
 	// 객체1개만생성해서 지속적으로 서비스하자
 
 	//_singleton 템플릿
-	static MemberDAO single = null;
+	static UserDAO single = null;
 
-	public static MemberDAO getInstance() {
+	public static UserDAO getInstance() {
 		//생성되지 않았으면 생성
 		if (single == null)
-			single = new MemberDAO();
+			single = new UserDAO();
 		//생성된 객체정보를 반환
 		return single;
 	}
@@ -88,7 +88,7 @@ public class UserDAO {
 		//_select_list 템플릿
 		public List< UserVO > selectList() {
 
-			List< UserVO > list = new ArrayList<MemberVO>();
+			List< UserVO > list = new ArrayList<UserVO>();
 			Connection conn = null;
 			PreparedStatement pstmt = null;
 			ResultSet rs = null;
@@ -170,7 +170,7 @@ public class UserDAO {
 ## action패키지에 MemberListAction서블릿 만들기
 
 ```java
-@WebServlet("/member_list.do") //url맵핑 변경!!!!!!!
+@WebServlet("/user_list.do") //url맵핑 변경!!!!!!!
 
 public class MemberListAction extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -183,17 +183,17 @@ public class MemberListAction extends HttpServlet {
 		//리퀘스트 영역에 list바인딩
 		request.setAttribute("list", list);
 
-		//member_list.jsp에서 el기법을 사용할수 있도록 하기 위해
+		//user_list.jsp에서 el기법을 사용할수 있도록 하기 위해
 		//위에서 바인딩해준 list정보를 넘겨준다.
 		RequestDispatcher disp = 
-				request.getRequestDispatcher("member_list.jsp");
+				request.getRequestDispatcher("user_list.jsp");
 
 		disp.forward(request, response);
 	}
 }
 ```
 
-## member_list.jsp 생성하기
+## user_list.jsp 생성하기
 ```
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
@@ -315,7 +315,7 @@ public class MemberListAction extends HttpServlet {
 			<tr>
 				<td colspan="2" align="center">
 					<input type="button" value="가입" onclick="send(this.form);">
-					<input type="button" value="취소" onclick="location.href='member_list.do'">
+					<input type="button" value="취소" onclick="location.href='user_list.do'">
 				</td>
 			</tr>
 		</table>
@@ -366,14 +366,14 @@ public class MemberInsertAction extends HttpServlet {
 		int res = UserDAO.getInstance().insert(vo);
 		
 		if(res >=1 ) {
-			response.sendRedirect("member_list.do");
+			response.sendRedirect("user_list.do");
 		}
 	}
 }
 ```
 이제 회원가입을 클릭했을 때 아이디가 중복되면 가입할 수 없도록 처리해보자
 
-## member_list_form.jsp에 코드 추가하기
+## user_list_form.jsp에 코드 추가하기
 
 ```
 <script type="text/javascript">
@@ -591,7 +591,7 @@ function che(){
 
 ## 삭제하기
 
-### member_list.jsp에 내용 추가하기
+### user_list.jsp에 내용 추가하기
 ```
 <script type="text/javascript">
 
@@ -714,7 +714,7 @@ public class UserDAO {
 				alert("삭제에 실패하였습니다.");
 			}		
 
-			location.href = "member_list.do";
+			location.href = "user_list.do";
 		}	
 	}
 
