@@ -409,7 +409,7 @@ public class Main {
 ## 인터페이스 타입 한정
 - extends 키워드 다음에 올 타입은 일반 클래스, 추상 클래스, 인터페이스 모두 올 수 있다.
 
-### Ex9_Geneirc 클래스 생성
+### Ex9_Generic 클래스 생성
 ```java
 interface Readable {
 }
@@ -422,7 +422,7 @@ public class Student implements Readable {
 public class School <T extends Readable> {
 }
 
-public class Ex9_Geneirc{
+public class Ex9_Generic{
 	public static void main(String[] args) {
 		// 타입 파라미터에 인터페이스를 구현한 클래스만이 올수 있게 됨	
 		School<Student> a = new School<Student>();
@@ -434,6 +434,8 @@ public class Ex9_Geneirc{
 - 만일 2개 이상의 타입을 동시에 상속(구현)한 경우로 타입 제한을 하고 싶다면 &연산자를 사용하면 된다.
 - 해당 인터페이스들을 동시에 구현한 클래스가 제네릭 타입의 대상이 되게 한다.
 - 단, 자바에서는 다중 상속을 지원하지 않기 때문에 클래스로는 다중 extends는 불가능하고 오로지 인터페이스로만이 가능하다.
+
+### Ex10_Generic 클래스 생성
 ```java
 interface Readable {}
 interface Closeable {}
@@ -461,6 +463,82 @@ public class Ex10_Generic{
 
 ## 재귀적 타입 한정
 - 자기 자신이 들어간 표현식을 사용하여 타입 매개변수의 허용 범위를 한정시기키는것을 말한다.
+- 실무에선 주로 Comparable 인터페이스와 함께 쓰인다.
+```java
+<E extends Comparable<E>>
+E의 타입 범위를 Comparable<E>로 한정한다는 E를 중첩시킨 표현식
+```
+
+### Ex11_Generic 클래스 생성
+```java
+class Ex11_Generic {
+	// 외부로 들어온 타입 E는 Comparable<E>를 구현한 E 객체 이어야 한다.
+    public static <E extends Comparable<E>> E max(Collection<E> collection) {
+        if(collection.isEmpty()) throw new IllegalArgumentException("컬렉션이 비어 있습니다.");
+
+        E result = null;
+        for(E e: collection) {
+            if(result == null) {
+                result = e;
+                continue;
+            }
+
+            if(e.compareTo(result) > 0) {
+                result = e;
+            }
+        }
+
+        return result;
+    }
+
+	public static void main(String[] args) {
+    Collection<Integer> list = Arrays.asList(56, 34, 12, 31, 65, 77, 91, 88);
+    System.out.println(Compare.max(list)); // 91
+    
+    Collection<Number> list2 = Arrays.asList(56, 34, 12, 31, 65, 77, 91, 88);
+    System.out.println(Compare.max(list2)); // ! Error - Number 추상 메서드는 Comparable를 구현하지않았기 때문에 불가능
+}
+}
+```
+
+## 제네릭 형변환
+### 제네릭 캐스팅 문제
+- 배열과 같은 일반적인 변수 타입과 달리 제네릭 서브 타입간에는 형변환이 불가능하다.
+- 심지어 대입된 타입이 Object일지라도 말이다.
+- 자연스럽게 다형성이 적용될 것이라고 생각할 수 있지만 실상 제네릭은 전달받은 타입으로만 캐스팅이 가능하다.
+
+### Ex12_Generic클래스 생성
+```java
+package test2;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+public class Ex12_Generic {
+	public static void main(String[] args) {
+	    List<Integer> lists = new ArrayList<>(Arrays.asList(1, 2, 3));
+	    print(lists); // ! 컴파일 에러 발생
+	}
+
+	public static void print(List<Object> list) {
+	    for (Object e : list) {
+	        System.out.println(e);
+	    }
+	}
+}
+
+```
+## 제네릭 와일드 카드
+- 제네릭 간의 형변환을 성립되게 하기 위해서는 제네릭에서 제공하는 와일드카드 문법을 이용해야 한다.
+
+### 와일드카드 사용법
+- <?> : Unbounded Wildcards(제한 없음)
+  - 타입 파라미터를 대치하는 구체적인 타입으로 모든 클래스나 인터페이스 타입이 올 수 있다.
+- <? extends 상위타입> : Upper Bounded Wildcards(상위 클래스 제한)
+  - 타입 파라미터를 대치하는 구체적인 타입으로 상위 타입이나 상위 타입의 하위 타입만 올 수 있다.
+- <? super 하위타입> : Lower Bounded Wildcards(하위 클래스 제한)
+  - 타입 파라미터를 대치하는 구체적인 타입으로 하위 타입이나 하위 타입의 상위 타입만 올 수 있다.
 
 # 컬렉션 프레임워크(Collection FrameWork)
 - 배열은 한번 정한 크기를 변경하거나 삭제할 수 없다.
