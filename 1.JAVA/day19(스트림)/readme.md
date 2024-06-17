@@ -211,6 +211,17 @@ public class Test{
 }
 ```
 
+### 람다식을 소스로 하는 스트림 생성하기
+```java
+▶ 람다식을 소스로 하는 스트림 생성하기
+static <T> Stream<T> iterate(T seed,UnaryOperator<T> f) // 이전 요소에종속적 
+static <T> Stream<T> generate(Supplier<T> s) // 이전 요소에 독립적
+
+Stream<Integer> evenStream = Stream.iterate(0, n->n+2); // 0,2,4,6, ...
+Stream<Double> randomStream = Stream.generate(Math::random);
+Stream<Integer> oneStream = Stream.generate(()->1);
+```
+
 ## 스트림의 연산
 ### 중간연산 
 연산 결과가 스트림인 연산, 스트림에 연속해서 중간 연산할 수 있다.
@@ -379,7 +390,8 @@ thenComparing은 파라미터로 Function을 가지고 있고 Function은 apply 
 
 
 ### 최종연산
-연산 결과가 스트림이 아닌 연산. 스트림의 요소를 소모하므로 단 한번만 가능
+- 연산 결과가 스트림이 아닌 연산.
+- 스트림의 요소를 소모하므로 단 한번만 가능
 
 ```
 stream.distinct().limit(5).sorted().forEach(x -> System.out.println(x));
@@ -401,6 +413,9 @@ forEach - 최종연산
 |Object[] toArray()<br>A[] toArray(IntFunction\<A[]\> generator)|스트림의 모든 요소를 배열로 변환|
 |Optional\<T\> reduce(BinaryOperator\<T\> accumulator)<br>T reduce(T identity, BinaryOperator\<T\> accumulator)|스트림 요소를 하나씩 줄여가면서(리듀싱) 계산한다.|
 |R collect(Collector\<T,A,B\> collector)|스트림의 요소를 수집한다.<br>주로 요소를 그룹화하거나 분할한 결과를 컬렉션에 담아 반환하는데 사용한다.|
+
+### forEach(),forEachOrdered()
+- 스트림의 모든 요소에 지정된 작업을 수행
 
 #### Ex5_stream 클래스 생성
 ```java
