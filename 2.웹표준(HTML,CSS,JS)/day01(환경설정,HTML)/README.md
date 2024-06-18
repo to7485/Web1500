@@ -132,6 +132,16 @@ File > New > Dynamic Web Project
 
 
 ## HTML
+### 정의
+- HTML은 Hyper Text Markup Language의 약자입니다.
+- HTML은 웹페이지를 만드는 대표적인 마크업 언어입니다
+- HTML은 웹페이지의 구조를 표현합니다.
+- HTML은 여러 요소로 구성되어 있습니다
+- HTML은 브라우저에 어떻게 내용을 표시할지 알려주는 역할을 합니다.
+
+### 기본 구조
+
+![image](https://user-images.githubusercontent.com/54658614/226808086-fb78d205-363b-4f50-a8b3-739b11d256b3.png)
 
 ## HTML 주석(Comments)
 - 주석은 브라우저에서 출력이 되지 않는 설명문장 입니다. 
@@ -158,30 +168,6 @@ File > New > Dynamic Web Project
 </html>
 ```
 
-### 정의
-- HTML은 Hyper Text Markup Language의 약자입니다.
-- HTML은 웹페이지를 만드는 대표적인 마크업 언어입니다
-- HTML은 웹페이지의 구조를 표현합니다.
-- HTML은 여러 요소로 구성되어 있습니다
-- HTML은 브라우저에 어떻게 내용을 표시할지 알려주는 역할을 합니다.
-
-### 기본 구조
-
-![image](https://user-images.githubusercontent.com/54658614/226808086-fb78d205-363b-4f50-a8b3-739b11d256b3.png)
-
-
-```html
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Page Title</title>
-  </head>
-  <body>
-
-  </body>
-</html>
-```
-
 ### 설명
 - \<!DOCTYPE html\> 
 	- HTML5 문서임을 선언합니다. 
@@ -190,9 +176,6 @@ File > New > Dynamic Web Project
 
 	- 문서에서 한번 만 정의되고 페이지의 가장 상단에 위치합니다.
 	- DOCTYPE -> doctype과 같이 대소문자 구분 없이 정의해도 인식을 합니다.
-
-- \<html\> ~ \</html\>
-	- HTML페이지에서 root 요소입니다(가장 상위 요소)
 
 - \<head\>~\</head\> 
 	- 주로 HTML페이지에서 meta 정보를 포함합니다
@@ -203,11 +186,6 @@ File > New > Dynamic Web Project
 	<link rel="stylesheet" type="text/css" href="style.css">
 	<script src="common.js"></script>
 	```
-
-- \<title\>~\</title\>
-	- HTML 페이지의 제목을 나타냅니다. 
-	- 브라우저 상단의 웹페이지 탭에 제목으로 노출이 됩니다. 
-
 
 - \<body\>~\</body\>
 	- HTML문서에서 실질적으로 보이는 영역을 정의하는 구간입니다.
@@ -220,7 +198,7 @@ File > New > Dynamic Web Project
 
 
 - HTML 요소는 일반적으로 태그라는 명칭이 익숙할 수 있습니다.
--  HTML 요소는 일반적으로 시작 태그와 닫힘 태그로 정의가 됩니다. 다만 시작 태그와 닫힘태그가 없는 유일한 태그도 있습니다.
+- HTML 요소는 일반적으로 시작 태그와 닫힘 태그로 정의가 됩니다. 다만 시작 태그와 닫힘태그가 없는 유일한 태그도 있습니다.
 ```html
    (예 - 줄바꿈 태그 <br> 또는 <br />)
    <태그> 내용 </태그>
@@ -231,25 +209,13 @@ File > New > Dynamic Web Project
 - 속성(attributes)는 HTML 요소에 대한 추가적인 정보를 제공 합니다.
 - 특정 태그에서의 속성이나 사전 정의된 속성은 적용된 기능으로서 추가정보를 활용합니다.
 
-- 예) 특정기능으로써 속성 예시 a태그, input 태그, img 태그
-```html
-<a href='https://www.naver.com' target='_blank'>네이버</a>
-<input type='text' name='subject'>
-<img src='이미지 경로'>
-```
-
-- 예) 추가적인 정보로써 속성 예시
-```html
-<div data-sido='인천광역시'>인천광역시</div>
-```
-
 ### HTML 속성 예시
 - href  - 이동할 페이지 링크를 지정할 수 있습니다.
 ```html
 <a href='https://www.naver.com'>네이버</a>
 ```
 
-s- rc - 이미지 경로를 지정할 수 있습니다.
+- src - 이미지 경로를 지정할 수 있습니다.
 ```html
 <img src='photo.jpg'>
 ```
@@ -267,21 +233,91 @@ s- rc - 이미지 경로를 지정할 수 있습니다.
 ```html
 <p style='color: red;'>빨간색 글씨</p>
 ```
+
 - lang - 웹페이지의 언어를 선언할 수 있습니다. 다만 <html>태그에만 지정할 수 있습니다.
 ```html
 <html lang="ko">
 ```
+
 - title - 툴팁 형태로 노출되는 추가 정보를 지정할 수 있습니다.
 ```html
 <p title='툴팁 메세지로 노출됩니다.'>안녕하세요</p>
 ```
+
+
 	
 ### HTML 속성 권장사항
 - 소문자로 사용
 - 속성은 소문자, 대문자 상관 없이 인식을 하나 소문자로 쓰는것을 권장합니다(W3C 권장사항)
-- (title, TITLE 상관없이 인식 가능)
+
+### HTML 데이터셋 속성
+- 커스텀 사용자 속성을 DOM요소에 저장하는데 표준화된 방법을 제공한다.
+- 자바에서 변수를 사용하듯이, 일종의 html의 변수 역할 이라고 할 수 있다.
+
+### 데이터셋 사용의 장점
+- 고유한 커스텀 값을 지정해 사용할 수 있다.
+
+### 데이터셋 사용법
+- 태그 내에 data로 시작하는 키워드를 기재하고, 그 뒤에 하이픈(-)이 조합된 형태로 개발자가 정의하고 싶은 속성명을 기재해주고 속성값을 써주면 사용자 변수가 완성된다.
+
+### 데이터셋 사용 사례
+- 버튼에 좋아요의 수를 직접 표현함으로써 보다 직관적이게 된다.
+```html
+<button data-id="341">좋아요</button>
+```
+- 데이터셋에 배열, 객체 데이터 저장
+- 객체 형태로 된 문자열과 배열 형태로 된 문자열을 노드에 지정하고 이를 자바스크립트로 별도로 파싱 작업을 통해 사용할 수 있다.
+```html
+<!-- 객체 형태로 된 문자열 데이터셋 -->
+<div data-person='{"name": "Chris Coyier", "job": "Web Person"}'></div>
+
+<!-- 배열 형태로 된 문자열 데이터셋 -->
+<div data-fruit='["apple", "banana", "melon"]'></div>
+```
 		
 # HTML의 태그들
+
+## \<head> 태그 정리
+- 웹 문서의 제목(\<title>)
+- CSS의 링크
+- 파비콘(favicon),
+- 다른 meta 데이터(설명, 작성자, 중요한 키워드와 같은 HTML에 대한 내용)를 포함한다.
+- 그 외 script파일을 불러오거나 웹폰트 파일을 불러오는 link
+
+### \<meta>
+- html문서에 대한 정보
+- 문자 인코딩 및 문서 키워드, 요약 등
+
+### \<title>
+- \<title>안의 내용이 웹브라우저의 제목 표시줄에 표시된다
+- 페이지를 방문하는 방문자나 검색엔진은 제목 표시줄의 제목을 보고 내용을 예측한다.
+
+### \<link>
+- 외부파일을 연결할 때 사용한다.
+```html
+<link href="/style.css" rel="stylesheet" type="text/css" />
+```
+- href : 파일의 위치
+- rel : 연결할 파일이 stylesheet라는 의미
+- type : 스타일시트 코드가 텍스트 파일로된 css유형이라는 의미
+
+### \<style>
+- 스타일 정보를 정의할 때 사용하는 태그
+#### CSS를 사용할 때 \<link>와 \<style>의 차이
+- \<link>는 외부 css파일을 연결할 때, \<style>은 css 설정을 같은 웹페이지 안에서 정의할 때 사용한다.
+
+### \<script>
+- src속성을 넣어 외부에 있는 js파일을 불러와 사용할 수 있다.
+```html
+<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+```
+- 혹은 태그 사이에 자바스크립트 코들르 직접넣어 사용할 수 있다.
+```html
+<script>
+	document.write("Hello World !");
+</script>
+```
+
 
 ## HTML 헤더(Headings)태그
 

@@ -511,7 +511,7 @@ class Ex11_Generic {
 - 제네릭의 타입 변수(꺾쇠 괄호)끼리는 아무라 상속 관계에 놓인다 한들 캐스팅이 불가능하다.
 - 제네릭은 전달받은 타입만으로만 서로 캐스팅이 가능하다.
 
-[image](img/제네릭무공변.png)
+![image](img/제네릭무공변.png)
 
 ### Ex12_Generic클래스 생성
 ```java
@@ -535,20 +535,15 @@ public class Ex12_Generic {
 }
 
 ```
-
-
-
 ## 제네릭 와일드 카드
 - 제네릭 간의 형변환을 성립되게 하기 위해서는 제네릭에서 제공하는 와일드카드 문법을 이용해야 한다.
 
-
-
 ### 와일드카드 사용법
-- <?> : Unbounded Wildcards(제한 없음)
+- \<?> : Unbounded Wildcards(제한 없음)
   - 타입 파라미터를 대치하는 구체적인 타입으로 모든 클래스나 인터페이스 타입이 올 수 있다.
-- <? extends 상위타입> : Upper Bounded Wildcards(상위 클래스 제한)
+- \<? extends 상위타입> : Upper Bounded Wildcards(상위 클래스 제한)
   - 타입 파라미터를 대치하는 구체적인 타입으로 상위 타입이나 상위 타입의 하위 타입만 올 수 있다.
-- <? super 하위타입> : Lower Bounded Wildcards(하위 클래스 제한)
+- \<? super 하위타입> : Lower Bounded Wildcards(하위 클래스 제한)
   - 타입 파라미터를 대치하는 구체적인 타입으로 하위 타입이나 하위 타입의 상위 타입만 올 수 있다.
 
 ### Ex13_Generic클래스 생성
