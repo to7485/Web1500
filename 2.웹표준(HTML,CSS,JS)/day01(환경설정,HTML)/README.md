@@ -193,16 +193,18 @@ File > New > Dynamic Web Project
 
 
 ## HTML 요소 
-
-![image](https://user-images.githubusercontent.com/54658614/226809179-689d77ca-eca9-4989-8b6c-c8888bdcfc9a.png)
-
-
 - HTML 요소는 일반적으로 태그라는 명칭이 익숙할 수 있습니다.
 - HTML 요소는 일반적으로 시작 태그와 닫힘 태그로 정의가 됩니다. 다만 시작 태그와 닫힘태그가 없는 유일한 태그도 있습니다.
 ```html
-   (예 - 줄바꿈 태그 <br> 또는 <br />)
-   <태그> 내용 </태그>
+   <시작태그 속성1="속성값" ... 속성n="속성값">내용</종료태그>
 ```
+|요소|의미|코드 예|
+|----|----|-----|
+|태그(tag)|'<'와'>'로 둘러쌓인 문자열 시작태그<br><>와 종료태그</>로 구성|<b>\<title></b>웹문서내용<b>\</title></b>|
+|내용(content)|태그로 둘러싸인 문자열|\<title><b>웹문서내용</b>\</title>|
+|엘리먼트(element)|태그와 내용을 포함한 전체 문자열<br> HTML문서의 기본 구성 단위<BR>상위 엘리먼트 안에 하위 엘리먼트가 계층적으로 포함될 수 있다.|<b>\<title>웹문서내용\</title></b>|
+|속성(attribute)|엘리먼트의 상세한 표현(기능) 설정 사항을 지시<br>시작 태그 안에 사용|\<title <b>color</b>="red"> \</title>|
+|속성값(value)|속성값(''또는 ""로 감싸야 함)|\<title color=<b>"red"</b>> \</title>|
 
 ## HTML 속성(attributes)
 - 모든 HTML 요소들은 속성(attributes)를 가지고 있습니다. 
@@ -244,8 +246,6 @@ File > New > Dynamic Web Project
 <p title='툴팁 메세지로 노출됩니다.'>안녕하세요</p>
 ```
 
-
-	
 ### HTML 속성 권장사항
 - 소문자로 사용
 - 속성은 소문자, 대문자 상관 없이 인식을 하나 소문자로 쓰는것을 권장합니다(W3C 권장사항)
@@ -318,6 +318,7 @@ File > New > Dynamic Web Project
 </script>
 ```
 
+# 글자/폰트 관련 태그
 
 ## HTML 헤더(Headings)태그
 
@@ -325,7 +326,7 @@ File > New > Dynamic Web Project
 - 헤더는 글의 제목이나 부제목을 표기할 때 사용합니다.
 - 태그는 h1~h6까지 있으며, 숫자가 작을수록 크기가 큽니다.
 
-### ex02_header.html 만들기
+### ex01_header.html 만들기
 ```html
 <!DOCTYPE html>
 <html lang="en">
@@ -442,7 +443,7 @@ File > New > Dynamic Web Project
 - 하나의 문단을 표기 표기하는 용도로 사용하며 \<p\>~\</p\> 형태로 사용합니다.
 - 문단을 나누는 용도로 사용하는 태그이므로 \<p\> 태그 전 후로 공백이 추가 됩니다.
 
-### ex03_ptag.html
+### ex02_ptag.html
 ```html
 <!DOCTYPE html>
 <html lang="en">
@@ -471,13 +472,14 @@ File > New > Dynamic Web Project
 - \<i\>     기울임 꼴 텍스트 정의
 - \<small\>	더 작은 텍스트 정의
 - \<strong\> 중요한 텍스트 정의
--\<sub\>	아래 첨자 텍스트 정의
--\<sup\>	윗 첨자 텍스트 정의
--\<ins\>	첨가 텍스트 정의
--\<del\>	지운 텍스트 정의
--\<mark\>	마킹 / 강조된 텍스트 정의
+- \<sub\>	아래 첨자 텍스트 정의
+- \<sup\>	윗 첨자 텍스트 정의
+- \<ins\>	첨가 텍스트 정의
+- \<del\>	지운 텍스트 정의
+- \<mark\>	마킹 / 강조된 텍스트 정의
+- \<q> 짧은 인용문을 지정한다.
 
-### ex04_textFormatting.html 만들기
+### ex03_textFormatting.html 만들기
 ```html
 <!DOCTYPE html>
 <html lang="en">
@@ -536,6 +538,8 @@ File > New > Dynamic Web Project
     <p>
         <a href="#">링크 없음</a>
     </p>
+
+	<p>WWF's goal is to: <q>Build a future where people live in harmony with nature.</q></p>
 </body>
 </html>
 ```
@@ -567,7 +571,7 @@ File > New > Dynamic Web Project
 	- ../../ 현재 파일이 열려 있는 경로보다 2단계 상위 경로
 
 
-### ex05_linktag.html
+### ex04_linktag.html
 ```html
 <!DOCTYPE html>
 <html lang="en">
@@ -624,7 +628,7 @@ File > New > Dynamic Web Project
 - 이미지의 너비와 높이를 지정할 수 있습니다. 다만 이미지의 사이즈는 속성으로 지정하기 보다는 CSS Style로 width, height를 지정하는것이 좋습니다.
 
 
-### ex06_media.html 생성
+### ex05_media.html 생성
 ```html
 <!DOCTYPE html>
 <html lang="en">
@@ -665,6 +669,7 @@ File > New > Dynamic Web Project
 </body>
 </html>
 ```
+
 ## HTML 테이블(Tables)
 - HTML 테이블은 table, tr, th, td, thead, tbody, tfoot 등으로 구성되어 있으며 
 - tr은 데이터의 행 td, 
@@ -672,7 +677,7 @@ File > New > Dynamic Web Project
 - th는 테이블 헤더로 테이블 각 열을 대표하는 셀
 - 또한 테이블 태그는 thead - 헤더영역, tbody - 본문영역, tfoot - 본문영역으로 구분하여 사용할 수 있습니다.
 
-### ex07_tabletag.html 생성하기
+### ex06_tabletag.html 생성하기
 ```html
 <!DOCTYPE html>
 	<html>
@@ -777,12 +782,39 @@ File > New > Dynamic Web Project
 		</body>
 	</html>
 ```
+
+### thead/tbody/tfoot 요소
+- \<thead> 태그는 HTML테이블에서 헤더 콘텐츠(header content)들을 하나의 그룹으로 묶을 때 사용한다.
+- \<thead> 요소는 테이블의 각 영역(header,body,footer)을 명시하기 위해 \<tbody>, \<tfoot>요소와 함께 사용된다.
+- 기본적으로 웹 페이지의 레이아웃에 전혀 영향을 주지 않지만, 이 요소들의 스타일을 CSS를 사용하여 변경할 수는 있다.
+```html
+<table>
+    <thead>
+        <tr>
+            <th>출장비 내역</th>
+            <th>금액</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>교통비</td>
+            <td>45000</td>
+        </tr>
+    </tbody>
+    <tfoot>
+        <tr>
+            <td>총 합계</td>
+            <td>103000</td>
+        </tr>
+    </tfoot>
+</table>
+```
 ## HTML 리스트(Lists)태그
 
 - 순서없는 리스트(Unordered HTML List)
 - 순서 없는 리스트는 <ul>태그로 시작하며 리스트 항목들은 \<li\>~\</li\> 태그를 사용합니다.
 
-### ex08_list.html
+### ex07_list.html
 ```html
 <!DOCTYPE html>
 <html lang="en">
@@ -858,7 +890,7 @@ File > New > Dynamic Web Project
 ```
 
 ### 깊이가 있는 리스트
-### ex09_depthlist.html
+### ex08_depthlist.html
 ```html
 <!DOCTYPE html>
 <html>
@@ -942,7 +974,7 @@ File > New > Dynamic Web Project
 - 각 행은 \<dt\>~\</dt\>(항목명)
 - \<dd\>~\</dd\>(항목 설명)으로 구성되어 있습니다.
 
-### ex10_dscription.html
+### ex9_dscription.html
 ```html
 예)
 <!DOCTYPE html>
@@ -967,7 +999,7 @@ File > New > Dynamic Web Project
 - body 문서 안에서 각 영역의 세션을 구분 정의 한다.
 - 구역을 나누는 태그, 가로줄 전체를 차지, 너비가 100%
 
-### ex11_divtag.html
+### ex10_divtag.html
 ```html
 <!DOCTYPE html>
 <html>
@@ -1005,5 +1037,44 @@ File > New > Dynamic Web Project
 <p>My mother has <span style="color:blue;font-weight:bold">blue</span> eyes and my father has <span style="color:darkolivegreen;font-weight:bold">dark green</span> eyes.</p>
 ```
 
-	
+## 시맨틱 태그(Semantic Tag)
+- 사람이 이해하기 쉽도록 태그의 이름만 보고도 역할이나 위치를 알 수 있도록 만든 태그들이다.
+- 시맨틱 태그가 나오기 이전에는 \<div> 태그로 일일히 위치 범위를 지정하고 각 태그의 class명으로 이 요소의 역할을 명시해야 했지만, semantic태그를 이용하면 태그 이름에서 이 엘리먼트의 위치와 역할을 단번에 알 수 있기 때문에 더 모던하다고 할 수 있다.
+
+### 시맨틱 태그 구성요소
+![image](img/시맨틱태그.png)
+|태그|설명|
+|----|-----|
+|header|페이지의 머리글, 제목, 로고, 메뉴, 검색 관련, 유틸, 작성자의 이름 등으로 구성|
+|nav|페이지의 네비게이션 영역.(사이트 내, 외부로 이동). 메뉴, 목차, 색인 등등|
+|main|메인 컨텐츠 영역.<br>문서 내에서 반드시 한 번만 사용<br>다른 header,footer,nav,article,section, aside의 하위로 작성할 수 있다.|
+|section|본문의 여러 내용(article)을 포함하는 부분을 의미|
+|article|본문의 주 내용이 들어가는 부분을 의미|
+|aside|간접 컨텐츠, 보조 컨텐츠를 의미하며, 대체적으로 옆에 위치하는 내용의 부분을 의미|
+|footer|하단 바닥글을 의미합니다. 주로 들어가는 정보는 회사정보, 저작권,연락처 등등이 있다.|
+
+### \<header>
+- 문서나 특정 섹션(section)의 헤더(header)를 정의할 때 사용한다.
+- 헤더(header)는 보통 토입부에 해당하는 컨텐츠나 네비게이션 링크의 집합 등과 같은 정보를 포함하게 된다
+```html
+<header>
+     <h3>날씨 정보</h4>
+     <h4>2월 19일</h4>
+     <p>- 기상청 제공 -</p>
+</header>
+```
+### \<footer>
+- 문서나 특정 섹션(section)의 푸터(footer)를 정의할 때 사용합니다.
+푸터(footer)는 보통 <footer> 요소가 포함되어 있는 문서나 섹션에 대한 정보를 포함한다.
+
+### \<address>
+- 사이트 제작자 정보, 연락처 정보
+- 실제 우편 주소를 넣는 태그는 아니지만 웹사이트와 관련된 주소를 넣을 때 사용.
+
+```html
+<footer>
+    <p>Copyright © 2018 tcpschool.co.,Ltd. All rights reserved.</p>
+    <address>Contact webmaster for more information. 070-1234-5678</address>
+</footer>
+```
 
