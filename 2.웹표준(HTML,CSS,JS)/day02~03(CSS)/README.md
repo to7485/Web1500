@@ -12,6 +12,7 @@
 
 ### 1. 선택자(Selector)
 - CSS를 적용하고자 하는 HTML 요소(element)
+
 ### 2. 선언부
 - 하나 이상의 선언들을 세미콜론(;)으로 구분하여 포함할 수 있으며, 중괄호({})를 사용하여 전체를 둘러 싼다.
 - 각 선언은 CSS 속성명(property)과 속성값(value)을 가지며, 그 둘은 콜론(:)으로 연결된다.
@@ -676,79 +677,7 @@ p{border : 1px solid black;
 ```
 ![image](https://user-images.githubusercontent.com/54658614/227843171-490e2c32-3f9f-4fbe-b833-a74a8bb4f20d.png)
   
-## 후손 선택자
-```html
-<!DOCTYPE html>
-	<html>
-		<head>
-			<meta charset="UTF-8">
-			<title>후손선택자</title>
-			<style type="text/css">
-			/* 공백 기호는 후손선택자로서 해당 아이디를 가지는
-			하위 요소들이 모두 영향을 받는다. */
-			#header h1{ color:red;}
-			#contents h1{ color:blue;}
-			</style>
-		</head>
-		
-		<body>
-			<div id="header">
-				<h1>나는 Header의 자식이오</h1>
-				
-				<div id="nav">
-				<h1>navigation</h1>
-				</div>
-				
-				<div id="nav1">
-				<h1>navigation</h1>
-				</div>
-			</div>
-			
-			<div id="contents">
-				<h1>contents의 자식</h1>
-			</div>
-		</body>
-	</html>
-```
-![image](https://user-images.githubusercontent.com/54658614/227844112-dc5f315d-a4c0-4a68-a353-bb4e24d1a695.png)
 
-
-## 자식선택자
-```html
-<!DOCTYPE html>
-	<html>
-		<head>
-			<meta charset="UTF-8">
-			<title>자식선택자</title>
-			<style type="text/css">
-			
-			/*  > : 자식선택자는 직계자식에게만 속성을 적용한다. */
-			#header > h1{ color:red;}
-			#contents > h1{ color:blue;}
-			</style>
-		</head>
-		
-		<body>
-			<div id="header">
-				<h1>Header의 자식</h1>  <!-- header의 직계자식 -->
-				
-				<div id="nav">
-				<h1>navigation</h1>
-				</div>
-				
-				<div id="nav1">
-				<h1>navigation</h1>
-				</div>
-			</div>
-			
-			<div id="contents">
-				<h1>contents의 자식</h1> <!-- contents의 직계자식 -->
-			</div>
-		</body>
-	</html>
-```
-
-![image](https://user-images.githubusercontent.com/54658614/227845091-4a10c682-4c1d-4667-9e37-64c86d78e4b5.png)
 
 ## display
 		
@@ -913,6 +842,80 @@ p{border : 1px solid black;
 ```
 ![image](https://user-images.githubusercontent.com/54658614/227847299-22dccf38-0b7b-4d15-ae1b-451a06c91f43.png)
 
+## 후손 선택자
+```html
+<!DOCTYPE html>
+	<html>
+		<head>
+			<meta charset="UTF-8">
+			<title>후손선택자</title>
+			<style type="text/css">
+			/* 공백 기호는 후손선택자로서 해당 아이디를 가지는
+			하위 요소들이 모두 영향을 받는다. */
+			#header h1{ color:red;}
+			#contents h1{ color:blue;}
+			</style>
+		</head>
+		
+		<body>
+			<div id="header">
+				<h1>나는 Header의 자식이오</h1>
+				
+				<div id="nav">
+				<h1>navigation</h1>
+				</div>
+				
+				<div id="nav1">
+				<h1>navigation</h1>
+				</div>
+			</div>
+			
+			<div id="contents">
+				<h1>contents의 자식</h1>
+			</div>
+		</body>
+	</html>
+```
+![image](https://user-images.githubusercontent.com/54658614/227844112-dc5f315d-a4c0-4a68-a353-bb4e24d1a695.png)
+
+
+## 자식선택자
+```html
+<!DOCTYPE html>
+	<html>
+		<head>
+			<meta charset="UTF-8">
+			<title>자식선택자</title>
+			<style type="text/css">
+			
+			/*  > : 자식선택자는 직계자식에게만 속성을 적용한다. */
+			#header > h1{ color:red;}
+			#contents > h1{ color:blue;}
+			</style>
+		</head>
+		
+		<body>
+			<div id="header">
+				<h1>Header의 자식</h1>  <!-- header의 직계자식 -->
+				
+				<div id="nav">
+				<h1>navigation</h1>
+				</div>
+				
+				<div id="nav1">
+				<h1>navigation</h1>
+				</div>
+			</div>
+			
+			<div id="contents">
+				<h1>contents의 자식</h1> <!-- contents의 직계자식 -->
+			</div>
+		</body>
+	</html>
+```
+
+![image](https://user-images.githubusercontent.com/54658614/227845091-4a10c682-4c1d-4667-9e37-64c86d78e4b5.png)
+
 ## 가상클래스
 - 제일 위쪽이나 제일 아래쪽에 대해서는 CSS를 적용할 수는 있으나 중간의 요소에는 적용시킬 수 없다는 단점이 있다.
 ```html
@@ -1021,6 +1024,17 @@ p{border : 1px solid black;
 - 클릭하면 빨간색으로 바뀜
 
 ![image](https://user-images.githubusercontent.com/54658614/227849252-ea370975-0670-4850-9b64-11ec34e0e1b5.png)
+
+
+## 속성 선택자
+- 태그 내에 특정 속성(attribute)의 값을 가지고 있는 HTML요소를 선택한다.
+```CSS
+속성 attr을 포함한 요소 선택
+E[attr]
+
+속성 attr을 포함하여 속성 값이 value인 요소 선택
+E[attr=value]
+```
 
 ## z-index
 ```html
