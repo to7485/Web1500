@@ -1078,3 +1078,27 @@ File > New > Dynamic Web Project
 </footer>
 ```
 
+## iframe 태그
+- iframe은 inline frame의 줄임말이며, 페이지에 Frame을 넣을 때 사용한다.
+- 여러 기업에서 다른 웹사이트에 Banner 혹은 여러 형태의 Plugin을 제공하기 위해 많이 사용되고 있다.
+```html
+<iframe src="삽입할 페이지 주소" [속성="속성값"]> </iframe>
+```
+
+```html
+<p>
+  <iframe 
+      src="https://www.youtube.com/embed/jSJM9iOiQ1g" 
+      width="560" 
+      height="315" 
+      frameborder="0"
+      style="border:2px dashed red" 
+      allowfullscreen>
+   </iframe>
+</p>
+```
+- src="불러올 주소" : 표시할 내용의 경로 URL을 적는다.
+- srcdoc="\<p>하이?\</p>" : 직접 태그소스를 iframe으로 표시할 수 있다.
+- width : 가로값 설정
+- height : 세로값 설정
+- frameborder : 프레인 테두리 경계선 유무 속성값은 (0/1) 두가지 이다.
