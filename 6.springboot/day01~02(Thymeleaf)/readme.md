@@ -1073,11 +1073,39 @@ public String ex05(Model model) {
     - id와 name은 **th:field**에서 지정한 변수의 이름과 같게 만들어진다.
         - <label>등과 함께 사용시 id가 존재하지 않으면 ide측에서 오류로 간주한다.(타임리프는 렌더링시 만들어주기 때문). 따라서 필요할 시에는 id를 직접 적어야 한다.
         - value는 **th:field**에서 지정한 변수의 값(model에 담긴 값)을 사용한다.
+  
+- 입력폼으로 넘어갈때 비어있는 객체를 같이 전달해줘야 한다.
+## ThymeController에 코드 추가하기
+```java
+	@RequestMapping("/ex09")
+	public String ex09(Model model) {
+		model.addAttribute("vo", new MemberVO());
+		return "/WEB-INF/views/ex09.html";
+	}
+```
+
+## ex09.html 생성하기
+```html
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="EUC-KR">
+<title>Insert title here</title>
+</head>
+<body>
+	<form th:object="${vo}" th:action="@{/result}" method="post">
+		이름 : <input th:field="*{name}" placeholder="이름을 입력해주세요"><br>
+		나이 : <input th:field="*{age}" placeholder="나이를 입력하세요"><br>
+		<input type="submit" value="전송">
+	</form>
+</body>
+</html>
+```
 
 ## ThymeController에 코드 추가하기
 ```java
-	@RequestMapping("/ex08")
-	public String ex08(Model model) {
+	@RequestMapping("/result")
+	public String result(Model model) {
 		MemberVO vo = new MemberVO();
 		
 		vo.setMemNo(Long.valueOf(1));
@@ -1086,11 +1114,11 @@ public String ex05(Model model) {
 		vo.setRegDt(LocalDateTime.now());
 		
 		model.addAttribute("vo", vo);
-		return "/WEB-INF/views/ex08.html";
+		return "/WEB-INF/views/result.html";
 	}
 ```
 
-## ex08.html 파일 생성하기
+## result.html 파일 생성하기
 ```html
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
@@ -1115,79 +1143,4 @@ public String ex05(Model model) {
     </body>
 </html>
 ```
-# 타임리프 페이지 레이아웃
-- 페이지를 구성하다보면 header, footer 등 공통적인 구성 요소들이 존재한다.
-- 각각의 페이지마다 같은 소스코드를 넣는다면 변경이 일어날 때마다 이를 포함하고 있는 모든 페이지를 수정해야 한다.
-- Thymeleaf의 페이지 레이아웃 기능을 사용한다면 공통 요소 관리를 쉽게 할 수 있다.
 
-## /WEB-INF/views/outlines 폴더 생성후 header,footer 만들기
-```html
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-    <header th:fragment="header">
-        header 영역 입니다.
-    </header>
-</html>
-```
-
-```html
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-    <footer th:fragment="footer">
-        footer 영역 입니다.
-    </footer>
-</html>
-```
-
-## /WEB-INF/views/아래에 layouts 폴더를 만들고 main.html 생성하기
-
-```html
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-          xmlns:layout="http:'//www.ultraq.net.nz/thymeleaf/layout">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    
-    <th:block layout:fragment="script"></th:block>
-    <th:block layout:fragment="css"></th:block>
-</head>
-<body>
-    <header th:replace="outlines/header::header"></header>
-    
-    <main layout:fragment="content"></main>
-    
-    <footer th:replace="outlines/footer::footer"></footer>
-</body>
-</html>
-```
-
-## Controller에 매핑하기
-```java
-... 생략
-
-@Controller
-@RequestMapping("/tpl")
-public class BasicController {
-	
-	... 생략
-	
-	@GetMapping("/ex09")
-	public String ex09() {
-		return "ex09";
-	}
-}
-```
-
-## ex09.html 파일 생성하기
-```html
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-          xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-          layout:decorate="~{layouts/main}">
-          
-          <main layout:fragment="content">
-                본문영역 입니다.
-          </main>
-</html>
-```
