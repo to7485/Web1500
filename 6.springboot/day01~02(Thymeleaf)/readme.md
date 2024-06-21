@@ -684,7 +684,6 @@ public class UserDTO {
   - #messages : 자바의 메세지 형식화 국제화 지원
   - #objects : null확인 기능 제공
   - #bools : boolean연산(and, or)기능 제공
-
 ---
 
 ## 12. 기본객체
@@ -726,194 +725,20 @@ public class UserDTO {
 </body>
 </html>
 ```
-<hr>
 
-# 구 자료
 
-## 기본 기능
-- 타임리프는 크게 변수식, 페이지식, 링크 식의 세 가지 식과 선택 변수 식을 제공한다.
-	- <b>변수 식: </b> ${OGNL}
-	- <b>메시지 식:</b> #{코드}
-	- <b>링크 식 :</b> @{링크}
-	- <b>선택 변수 식 :</b> \*{OGNL}
 
-※OGNL : 자바 언어가 지원하는 범위보다 더 단순한 식을 사용하면서 속성(자바빈즈에서 발견되는 setProperty와 getPeroperty 메소드를 통해)을 가져오고 설정하는 것을 허용하고 자바 클래스의 메소드를 실행하는 오픈 소스 표현식 언어(EL)이다. 
-
-<br>
-
-1. **th:with="${}"**
-```html
-<div th:with="userId=${number}" th:text="${usesrId}">
-```
-- 변수형태의 값을 재정의하는 속성이다. 즉 **th:with**를 이용하여 새로운 변수값을 생성할 수 있다.<br>
-
-<br>
-	
-	
-## 타임리프 식 객체
-- 타임리프는 식에서 사용할 수 있는 객체를 제공한다. 이 식 객체를 이용하면 문자열 처리나 날짜 형식 변환 등의 작업을 할 수 있다. "#객체명"을 사용해서 식 객체를 사용한다. 
-- 다음은 dates, 식 객체를 이용해서 Date 타입 변수 값을 형식에 맞게 출력하는 예이다.
-
-```
-<span th:text="${#dates.format(date, 'yyyy-MM-dd')}">date</span>
-```
-	
-## Form태그
-```html
-예시
-<body>
-  <form th:action="@{/join}" th:object="${joinForm}" method="post">
-    <input type="text" id="userId" th:field="*{userId}" >
-    <input type="password" id="userPw" th:field="*{userPw}" >
-  </form>
-</body>
-	
-```
-	
-1. **th:action="@{}"**
-    - \<form\>태그 사용시, 해당 경로로 요청을 보낼 때 사용한다.
-
-2. **th:object="${}"**
-    - \<form\>태그에서 데이터를 보내기 위해 Submit을 할 때 데이터가 th:object 속성을 통해 object에 지정한 객체에 값을 담아 넘긴다.
-    - 이때 값을 **th:field**속성과 함께 사용하여 넘긴다.
-    - Controller와 View 사이의 VO클래스 객체라고 생각하면 된다.
-	
-3. **th:field="*{}"**
-    - **th:object**속성과 함께 **th:field**를 이용해서 HTML태그에 멤버 변수를 매핑할 수 있다.
-    - **th:field**을 이용한 사용자 입력 필드는 id, name, value속성 값이 자동으로 매핑된다.
-    - **th:object**와 **th:field**는 Controller에서 특정 클래스의 객체를 전달 받을 경우에만 사용 가능하다.
 	
 
 	
-# Thymeleaf 실습
 
-## ThymeController 생성하기
-```java
-package com.korea.test3;
 
-import java.time.LocalDateTime;
-
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-/**
- * Handles requests for the application home page.
- */
-@Controller
-public class ThymeController {
 	
-	/**
-	 * Simply selects the home view to render by returning its name.
-	 */
-	@RequestMapping(value = "/")
-	public String home(Model model) {
-		model.addAttribute("data","타임리프 예제입니다.");
-		
-		return "/WEB-INF/views/ex01.html";
-	}	
-}
 
-```
+
+
 	
-## ThymeController 객체 생성하기
-- Servlet_Context 클래스에 객체 생성하기
-```java
-@Bean
-public ThymeController thymeController() {
-	return new ThymeController();
-}
-	
-```
-	
-## views 폴더에 ex01.html 생성하기
-```html
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="utf-8">
-    <title>Title</title>
-</head>
-<body>
-    <p th:text="${data}">Hello Thymeleaf!!</p>
-</body>
-</html>
 
-```
-
-![image](https://github.com/to7485/Web1500/assets/54658614/cb1f90c5-3226-4939-8fff-c681fcef2cc6)
-
-
-# Controller에서 객체 받아서 출력하기
-
-## MemberVO 클래스 생성하기
-
-```java
-package vo;
-
-import java.time.LocalDateTime;
-
-import lombok.Getter;
-import lombok.Setter;
-
-@Setter
-@Getter
-public class MemberVO {
-
-	private Long memNo;
-	private String memId;
-	private String memNm;
-	private LocalDateTime regDt;
-	private LocalDateTime modDt;
-}
-```
-	
-## ThymeController 코드 추가하기
-
-```java
-@RequestMapping("/ex02")
-public String ex02(Model model) {
-	MemberVO vo = new MemberVO();
-
-	vo.setMemNo(1L);
-	vo.setMemId("user1");
-	vo.setMemNm("이름1");
-	vo.setRegDt(LocalDateTime.now());
-
-	model.addAttribute("vo",vo);
-	return "/WEB-INF/views/ex02.html";
-}
-```
-	
-## views에 ex02.html 생성하기
-
-```html
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-	<head>
-		<meta charset="UTF-8">
-		<title>Insert title here</title>
-	</head>
-	<body>
-		<h1>회원정보 출력 예제</h1>
-		<div>
-			회원번호 : <span th:text="${vo.memNo}"></span>
-		</div>
-				<div>
-			아이디 : <span th:text="${vo.memId}"></span>
-		</div>
-				<div>
-			이름 : <span th:text="${vo.memNm}"></span>
-		</div>
-				<div>
-			가입일시 : <span th:text="${#temporals.format(vo.regDt, 'yyyy-MM-dd HH:mm:ss')}"></span>
-		</div>
-		
-	</body>
-</html>	
-```
-
-![image](https://github.com/to7485/Web1500/assets/54658614/0b9cee16-1bcb-4b3d-981e-5d89ffe64346)
 
 
 
