@@ -73,78 +73,67 @@ public class ProductController {
   	</style>
 </head>
 <body>
-    <div>
-		<button type="button" class="register-ready">상품 추가</button>
+<div id="container">
+		<button type="button" class="register-ready">상품추가</button>
 		<div class="register-wrap" th:object="${productForm}">
-			 <div>
-	            <input type="text" th:field="*{productName}" placeholder="상품 이름">
-	        </div>
-	        <div>
-	            <input type="text" th:field="*{productStock}" placeholder="상품 재고">
-	        </div>
-	        <div>
-	            <input type="text" th:field="*{productPrice}" placeholder="상품 가격">
-	        </div>
-	        <input type="button" class="register-done" value="등록">
-        </div>
-        
-        <table border="1">
-            <tr>
-                <th>단일 선택</th>
-                <th>주문 개수</th>
-                <th>상품 번호</th>
-                <th>상품 이름</th>
-                <th>상품 재고</th>
-                <th>상품 가격</th>
-                <th>등록 날짜</th>
-                <th>수정 날짜</th>
-            </tr>
-            <th:block th:each="product : ${list}">
-                <tr th:object="${product}">
-                    <td><input type="radio" name="productId" th:value="*{productId}"></td>
-                    <td><input type="text" class="productCount" readonly></td>
-                    <td th:text="*{productId}"></td>
-                    <td th:text="*{productName}"></td>
-                    <td th:text="*{productStock}"></td>
-                    <td th:text="*{productPrice}"></td>
-                    <td th:text="*{registerDate}"></td>
-                    <td th:text="*{updateDate}"></td>
-                </tr>
-            </th:block>
-        </table>
-        <button type="button" id="order-done">주문 완료</button><button type="button" onclick="location.href='/order/list';">주문 내역</button>
-    </div>
-    <form th:action="@{/order/done}" method="get" name="order-form">
-        <input type="hidden" name="productId">
-        <input type="hidden" name="productCount">
-    </form>
-    
-    
-    
+			<div><input th:field="*{productName}" placeholder="상품 이름"></div>
+			<div><input th:field="*{productStock}" placeholder="상품 재고"></div>
+			<div><input th:field="*{productPrice}" placeholder="상품 가격"></div>
+			<input type="button" class="register-done" value="등록">
+		</div>
+	<table border="1">
+		<tr>
+			<th>단일 선택</th>
+			<th>주문 개수</th>
+			<th>상품 번호</th>
+			<th>상품 이름</th>
+			<th>상품 재고</th>
+			<th>상품 가격</th>
+			<th>등록 날짜</th>
+			<th>수정 날짜</th>
+		</tr>
+		<th:block th:each="product:${list}">
+		<tr th:object="${product}">
+			<td><input type="radio" name="productId" th:value="*{productId}"></td>
+			<td><input class="productCount" readonly></td>
+			<td th:text="*{productId}"></td>
+			<td th:text="*{productName}"></td>
+			<td th:text="*{productStock}"></td>
+			<td th:text="*{productPrice}"></td>
+			<td th:text="*{registerDate}"></td>
+			<td th:text="*{updateDate}"></td>
+		</tr>
+		</th:block>		
+	</table>
+	<button type="button" id="order-done">주문 완료</button><button type="button" onclick="location.href='/order/list'">주문내역</button>	
+</div>
+	<form th:action="@{/order/done}" method="get" name="order-form">
+		<input type="hidden" name="productId">
+		<input type="hidden" name="productCount">
+	</form>
 </body>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
-    const $radios = $("input[type='radio']");
-    const $inputs = $("input[class='productCount']");
-    const $done = $("#order-done");
-    const $form = $("form[name='order-form']");
-    const $registerReady = $("button.register-ready");
-    const $registerDone = $("button.register-done");
-    let $temp, i;
+	const $radios = $("input[type='radio']");
+	const $inputs = $("input[class='productCount']");
+	const $done = $("#order-done");
+	const $form = $("form[name='order-form']");
+	let $temp, i;
     
-	$registerReady.on("click",function(){
-		
+	const $registerReady = $("button.register-ready");
+	const $registerDone = $("input.register-done"); 
+	
+	//상품추가 버튼을 눌렀을 때 입력폼이 보이게 하기
+	$registerReady.on("click", function(){
 		$(this).hide();
 		$("div.register-wrap").show();
+	})
 	
-	});
-	
-	$registerDone.on("click", function(){
-	
+	//등록버튼을 눌렀을 때 입력폼을 숨기고 상품추가버튼 보이기
+	$registerDone.on("click",function(){
 		$("div.register-wrap").hide();
 		$registerReady.show();
-	});
-
+	})
 ...
 
 </script>
