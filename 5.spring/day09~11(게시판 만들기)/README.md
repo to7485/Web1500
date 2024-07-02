@@ -936,18 +936,30 @@ public MemberDAO member_dao(SqlSession sqlSession) {
 				return;
 			}
 			
-			var url = "login.do";
-			var param ="id="+encodeURIComponent(id)+"&pwd="+encodeURIComponent(pwd);
-			
-			sendRequest(url,param,myCheck,"POST");
+			formBody = "id="+id+"&pwd="+pwd;
+			//자바스크립트에 내장되어있는 비동기통신을 위한 메서드
+			//get방식으로 비동기통신을 할 때는 url만 전달해도 된다.
+			//fetch(url)
+			//post방식으로 통신을 할 때는 옵션도 함께 줘야한다.
+			//fetch(url, {옵션})
+			fetch("login",{
+				method : 'post',//전송방식
+				//headers : 내가 전달할 내용의 인코딩타입
+				headers : {'Content-Type' : 'application/x-www-form-urlencoded'},
+				//파라미터 전달
+				body : formBody
+			})
+			.then(response => response.json())
+			.then(data =>{
+				if(data.param === 'yes'){
+					alert('로그인 성공')
+					location.href='board_list';
+				} else {
+					alert('아이디나 비밀번호가 틀렸습니다.')
+				}
+			})
 		}
 		
-		//콜백메서드
-		function myCheck(){
-			if(xhr.readyState == 4 && xhr.status == 200){
-				
-			}
-		}
 	</script>
 </head>
 <body>
@@ -978,33 +990,27 @@ public MemberDAO member_dao(SqlSession sqlSession) {
 ## BoardController에 MemberDAO 주입하고 매핑 추가하기
 
 ```java
-@RequestMapping("login.do")
-@ResponseBody
-public String login(String id, String pwd) {
-
-	MemberVO vo = member_dao.logincheck(id);
-
-	//vo가 null인경우 id자체가 DB에 존재하지 않는다는 의미
-	if(vo==null) {
-		return "[{'param':'no_id'}]";
-	} 
-
-	if(!vo.getPwd().equals(pwd)) {
-		//비밀번호가 일치하지 않을 때
-		return "[{'param':'no_pwd'}]";
+@RequestMapping("login")
+	@ResponseBody
+	public String login(String id, String pwd) {
+		
+		MemberVO vo = memberDAO.loginCheck(id);
+		
+		//id자체가 존재하지 않는 경우 || 비밀번호가 다른 경우
+		if(vo == null || !vo.getPwd().equals(pwd)) {
+			return "{\"param\":\"no\"}";
+		}
+		
+		//아이디와 비빌번호 체크에 문제가 없다면 세션에 바인딩 한다.
+		//세션은 서버의 메모리(램)를 사용하기 때문에 세션을 많이 사용할수록 브라우저가 느려지기 때문에
+		//필요한 곳에서만 세션을 쓰도록 하자
+		
+		//세션유지시간(기본값 30분)
+		//session.setMaxInactiveInterval(3600); //세션이 1시간 유지 초단위로 써줘야함;;
+		session.setAttribute("id", vo); //세션도 autowired로 받아주자
+		
+		return "{\"param\":\"yes\"}";
 	}
-
-	//아이디와 비빌번호 체크에 문제가 없다면 세션에 바인딩 한다.
-	//세션은 서버의 메모리(램)를 사용하기 때문에 세션을 많이 사용할수록 브라우저가 느려지기 때문에
-	//필요한 곳에서만 세션을 쓰도록 하자
-
-	//세션유지시간(기본값 30분)
-	//session.setMaxInactiveInterval(3600); //세션이 1시간 유지 초단위로 써줘야함;;
-	session.setAttribute("id", vo); //세션도 autowired로 받아주자
-
-	//로그인 성공한 경우
-	return "[{'param':'clear'}]";
-}
 ```
 
 ## MemberDAO에서 메서드 작성하기
@@ -1096,27 +1102,6 @@ public String insert_form() {
 @RequestMapping("login_form.do")
 public String login_form() {
 	return Common.VIEW_PATH + "login_form.jsp";
-}
-```
-
-## login_form.jsp의 콜백메서드 채워주기
-
-```
-function myCheck(){
-	if(xhr.readyState == 4 && xhr.status == 200){
-		var data = xhr.responseText;
-		var json = eval(data);
-
-		if(json[0].param == 'no_id'){
-			alert("아이디가 존재하지 않습니다.");
-		}else if(json[0].param == 'no_pwd'){
-			alert("비밀번호가 맞지 않습니다.");
-		}else {
-			alert("로그인 성공");
-			location.href="board_list.do";
-
-		}
-	}
 }
 ```
 
